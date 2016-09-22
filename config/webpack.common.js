@@ -157,7 +157,8 @@ module.exports = {
 
       {
         test: /\.scss$/,
-        loader: 'style!css!sass'
+        exclude: /node_modules/,
+        loader: 'raw-loader!sass-loader'
       },
 
       /* Raw loader support for *.html

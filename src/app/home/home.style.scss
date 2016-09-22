@@ -4,10 +4,11 @@
     flex-direction: column;
     margin: 15px;
     border: 2px dashed #FBC02D;
+
+    md-card {
+      margin: 5px;
+    }
 }
 .sample-content{
     flex: 1;
-}
-.card-container md-card{
-    margin: 5px;
 }
