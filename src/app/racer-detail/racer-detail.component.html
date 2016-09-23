@@ -1,0 +1,26 @@
+<div *ngIf="racer">
+  <h2>{{racer.name}} details!</h2>
+  <div>
+    <label>id: </label>{{racer.id}}</div>
+  <div>
+    <label>name: </label>
+    <input [(ngModel)]="racer.name" placeholder="Name" />
+   </div>
+  <div>
+    <label>Nationality: </label>
+    <input [(ngModel)]="racer.nationality" placeholder='Nationality' />
+  </div>
+  <div>
+    <label>Phone: </label>
+    <input [(ngModel)]="racer.phone" placeholder='Phone' />
+  </div>
+  <button (click)="goBack()">Back</button>
+  <button (click)="save()">Save</button>
+</div>
+
+
+<!-- 
+Copyright 2016 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that
+can be found in the LICENSE file at http://angular.io/license
+-->

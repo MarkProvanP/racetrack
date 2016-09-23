@@ -1,0 +1,27 @@
+<div *ngIf="team">
+  <h2>{{team.name}} details!</h2>
+  <div>
+    <label>id: </label>{{team.id}}
+  </div>
+  <div>
+    <label>name: </label>
+    <input [(ngModel)]="team.name" placeholder="name" />
+  </div>
+  <label>Racers</label>
+  <ul class='team-racers'>
+    <li *ngFor='let racer of team.racers'>
+      <div><label>id: </label>{{racer.id}}</div>
+      <div><label>Name: </label>{{racer.name}}</div>
+      <button (click)="gotoRacerDetail(racer)">View Details</button>
+    </li>
+  </ul>
+  <button (click)="goBack()">Back</button>
+  <button (click)="save()">Save</button>
+</div>
+
+
+<!-- 
+Copyright 2016 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that
+can be found in the LICENSE file at http://angular.io/license
+-->

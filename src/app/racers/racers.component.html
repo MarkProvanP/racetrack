@@ -1,0 +1,29 @@
+<h2>My Racers</h2>
+<div>
+  <label>Racer name:</label> <input #racerName />
+  <button (click)="add(racerName.value); racerName.value=''">
+    Add
+  </button>
+</div>
+<ul class="racers">
+  <li *ngFor="let racer of racers" (click)="onSelect(racer)"
+      [class.selected]="racer === selectedRacer">
+    <span class="badge">{{racer.id}}</span>
+    <span>{{racer.name}}</span>
+    <button class="delete"
+      (click)="delete(racer); $event.stopPropagation()">x</button>
+  </li>
+</ul>
+<div *ngIf="selectedRacer">
+  <h2>
+    {{selectedRacer.name}} is my racer
+  </h2>
+  <button (click)="gotoRacerDetail()">View Details</button>
+</div>
+
+
+<!-- 
+Copyright 2016 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that
+can be found in the LICENSE file at http://angular.io/license
+-->

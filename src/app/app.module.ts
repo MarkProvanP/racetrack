@@ -19,14 +19,25 @@ import { Home } from './home';
 import { About } from './about';
 import { NoContent } from './no-content';
 
+import { RacersComponent } from './racers';
+import { RacerDetailComponent } from './racer-detail';
+import { TeamsComponent } from './teams';
+import { TeamDetailComponent } from './team-detail';
+
+import { DataService } from './data.service';
+
 // Import diretives
 import { XLarge } from './home/x-large';
 
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
-  AppState
+  AppState,
+  DataService
 ];
+
+import { InMemoryWebApiModule} from 'angular2-in-memory-web-api';
+import { InMemoryDataService } from './in-memory-data.service';
 
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
@@ -38,14 +49,19 @@ const APP_PROVIDERS = [
     About,
     Home,
     NoContent,
-    XLarge
+    XLarge,
+    RacersComponent,
+    RacerDetailComponent,
+    TeamsComponent,
+    TeamDetailComponent
   ],
   imports: [ // import Angular's modules
     BrowserModule,
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES, { useHash: true }),
-    MdModule.forRoot()
+    MdModule.forRoot(),
+    InMemoryWebApiModule.forRoot(InMemoryDataService)
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
