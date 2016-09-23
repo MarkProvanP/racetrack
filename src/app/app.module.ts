@@ -25,6 +25,7 @@ import { RacersComponent } from './racers';
 import { RacerDetailComponent } from './racer-detail';
 import { TeamsComponent } from './teams';
 import { TeamDetailComponent } from './team-detail';
+import { DashboardComponent } from './dashboard';
 
 import { DataService } from './data.service';
 
@@ -52,7 +53,8 @@ const APP_PROVIDERS = [
     RacersComponent,
     RacerDetailComponent,
     TeamsComponent,
-    TeamDetailComponent
+    TeamDetailComponent,
+    DashboardComponent
   ],
   imports: [ // import Angular's modules
     BrowserModule,

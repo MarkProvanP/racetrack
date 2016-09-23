@@ -5,12 +5,13 @@ import { NoContent } from './no-content';
 
 import { RacersComponent } from './racers';
 import { TeamsComponent } from './teams';
+import { DashboardComponent } from './dashboard';
 
 import { DataResolver } from './app.resolver';
 
 
 export const ROUTES: Routes = [
-  { path: '',      component: Home },
+  { path: '',      component: DashboardComponent },
   { path: 'home',  component: Home },
   { path: 'about', component: About },
   { path: 'racers', component: RacersComponent },
@@ -18,5 +19,6 @@ export const ROUTES: Routes = [
   {
     path: 'detail', loadChildren: () => System.import('./+detail')
   },
+  { path: 'dashboard', component: DashboardComponent },
   { path: '**',    component: NoContent },
 ];
