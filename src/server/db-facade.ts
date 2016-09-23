@@ -93,3 +93,14 @@ export function getTexts() {
   }
   return textsArray;
 }
+
+export function getTextsByNumber(number) {
+  let textsArray = [];
+  for (var smsSid in texts) {
+    var text = texts[smsSid];
+    if (text.From === number) {
+      textsArray.push(text);
+    }
+  }
+  return textsArray;
+}

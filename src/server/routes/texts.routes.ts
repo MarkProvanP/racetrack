@@ -14,4 +14,10 @@ textsRouter.get('/', function(req, res) {
   res.send(JSON.stringify(db_facade.getTexts()));
 })
 
+textsRouter.get('/byNumber/:number', function(req, res) {
+  let number = req.params.number
+  res.type('application/json');
+  res.send(JSON.stringify(db_facade.getTextsByNumber(number)));
+});
+
 export default textsRouter;
