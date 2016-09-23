@@ -3,6 +3,7 @@ import { Home } from './home';
 import { About } from './about';
 import { NoContent } from './no-content';
 
+import { TextsComponent } from './texts';
 import { RacersComponent } from './racers';
 import { TeamsComponent } from './teams';
 import { DashboardComponent } from './dashboard';
@@ -16,6 +17,7 @@ export const ROUTES: Routes = [
   { path: '',      component: DashboardComponent },
   { path: 'home',  component: Home },
   { path: 'about', component: About },
+  { path: 'texts', component: TextsComponent },
   { path: 'racers', component: RacersComponent },
   { path: 'teams', component: TeamsComponent },
   { path: 'racer/:id', component: RacerDetailComponent },

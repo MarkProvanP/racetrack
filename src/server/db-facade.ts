@@ -78,3 +78,18 @@ export function createTeam(name: string): Team {
 export function deleteTeam(id: number): void {
   delete teams[String(id)];
 }
+
+let texts = {};
+
+export function addText(text) {
+  texts[text.SmsSid] = text;
+}
+
+export function getTexts() {
+  let textsArray = [];
+  for (var smsSid in texts) {
+    var text = texts[smsSid];
+    textsArray.push(text);
+  }
+  return textsArray;
+}

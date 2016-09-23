@@ -14,20 +14,29 @@ export class DataService {
   private baseUrl = this.backendHost + "/r2bcknd/";
   private teamsUrl = this.baseUrl + 'teams';  // URL to web api
   private racersUrl = this.baseUrl + 'racers';
+  private textsUrl = this.baseUrl + "texts";
   private socket;
+
+  private textReceivers: [] = Array();
 
   constructor(private http: Http) {
     this.socket = io(this.backendHost, {path: "/r2bcknd/socket.io"});
-    this.socket.on('receivedText', function(msgObj) {
+    this.socket.on('receivedText', (msgObj) => {
       let parsed = JSON.parse(msgObj);
       let racer = parsed.fromRacer;
       let text = parsed.text;
       console.log(`Received text from ${racer.name}: ${text.Body}`);
+      this.textReceivers.forEach(receiver => receiver(text))
     });
-    this.socket.on('receivedUnknownText', function(text) {
+    this.socket.on('receivedUnknownText', (text) => {
       let parsed = JSON.parse(text);
       console.log(`Received text from unknown person (${parsed.From}): ${parsed.Body}`)
+      this.textReceivers.forEach(receiver => receiver(parsed))
     });
+  }
+
+  onTextReceived(callback) {
+    this.textReceivers.push(callback);
   }
 
   getTeams(): Promise<Team[]> {
@@ -102,6 +111,13 @@ export class DataService {
       .put(url, JSON.stringify(racer), {headers: this.headers})
       .toPromise()
       .then(() => racer)
+      .catch(this.handleError);
+  }
+
+  getTexts(): Promise<[any]> {
+    return this.http.get(this.textsUrl)
+      .toPromise()
+      .then(response => response.json())
       .catch(this.handleError);
   }
 

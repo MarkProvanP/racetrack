@@ -53,12 +53,17 @@ import racersRouter from "./routes/racers.routes";
 
 app.use("/racers", racersRouter);
 
+import textsRouter from "./routes/texts.routes";
+
+app.use("/texts", textsRouter);
+
 http.listen(PORT, function() {
   console.log('app listening on port:', PORT);
 });
 
 function handleTextMessage(text: any) {
   // Find which user, if any, the text came from
+  db_facade.addText(text);
   let fromNumber = text.From;
   let racers = db_facade.getRacers();
   let filtered = racers.filter(racer => racer.phone === fromNumber)
