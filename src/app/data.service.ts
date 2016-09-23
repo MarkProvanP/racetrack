@@ -10,8 +10,9 @@ import { Racer } from '../common/racer';
 export class DataService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
-  private teamsUrl = 'app/teams';  // URL to web api
-  private racersUrl = 'app/racers';
+  private baseUrl = "https://mrp4.host.cs.st-andrews.ac.uk/r2bcknd/";
+  private teamsUrl = this.baseUrl + 'teams';  // URL to web api
+  private racersUrl = this.baseUrl + 'racers';
 
   constructor(private http: Http) {
 
@@ -20,7 +21,7 @@ export class DataService {
   getTeams(): Promise<Team[]> {
     return this.http.get(this.teamsUrl)
                .toPromise()
-               .then(response => response.json().data as Team[])
+               .then(response => response.json() as Team[])
                .catch(this.handleError);
   }
 
@@ -57,7 +58,7 @@ export class DataService {
   getRacers(): Promise<Racer[]> {
     return this.http.get(this.racersUrl)
                .toPromise()
-               .then(response => response.json().data as Racer[])
+               .then(response => response.json() as Racer[])
                .catch(this.handleError);
   }
 

@@ -1,3 +1,5 @@
+import "./rxjs-extensions";
+
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -36,9 +38,6 @@ const APP_PROVIDERS = [
   DataService
 ];
 
-import { InMemoryWebApiModule} from 'angular2-in-memory-web-api';
-import { InMemoryDataService } from './in-memory-data.service';
-
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
@@ -60,8 +59,7 @@ import { InMemoryDataService } from './in-memory-data.service';
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES, { useHash: true }),
-    MdModule.forRoot(),
-    InMemoryWebApiModule.forRoot(InMemoryDataService)
+    MdModule.forRoot()
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
