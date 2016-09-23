@@ -5,7 +5,7 @@ export class Team {
   name: string;
   racers: [Racer];
 
-  constructor(id: number, name: string, racers: [Racer]) {
+  constructor(id: number, name: string, racers?: [Racer]) {
     this.id = id;
     this.name = name;
     this.racers = racers;

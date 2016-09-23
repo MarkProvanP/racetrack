@@ -34,7 +34,7 @@ export class DataService {
 
   deleteTeam(id: number): Promise<void> {
     let url = `${this.teamsUrl}/${id}`;
-    return this.http.delete(url, {headers: this.headers})
+    return this.http.delete(url, {body: "", headers: this.headers})
       .toPromise()
       .then(() => null)
       .catch(this.handleError);
@@ -44,7 +44,7 @@ export class DataService {
     return this.http
       .post(this.teamsUrl, JSON.stringify({name: name}), {headers: this.headers})
       .toPromise()
-      .then(res => res.json().data)
+      .then(res => res.json())
       .catch(this.handleError);
   }
 

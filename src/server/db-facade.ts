@@ -11,14 +11,14 @@ let racers = {
 };
 let nextRacerId = 206;
 
-let teams = [
-  {id: 21, name: 'H2G2', racers: [
+let teams = {
+  "21": new Team(21, 'H2G2', [
     racers["200"], racers["202"], racers["204"] 
-  ]},
-  {id: 22, name: 'Prague or Bust', racers: [
+  ]),
+  "22": new Team(22, 'Prague or Bust', [
     racers["201"], racers["203"], racers["205"]
-  ]}
-];
+  ])
+};
 let nextTeamId = 23;
 
 export function getRacers(): [Racer] {
@@ -51,5 +51,30 @@ export function deleteRacer(id: number): void{
 }
 
 export function getTeams() : [Team] {
-  return <[Team]> teams;
+  let teamsArray : [Team] = <[Team]> [];
+  for (var id in teams) {
+    var team = teams[id];
+    teamsArray.push(team);
+  }
+  return teamsArray;
+}
+
+export function getTeam(id: number): Team {
+  return teams[String(id)];
+}
+
+export function updateTeam(id: number, newTeam: Team) : Team {
+  teams[String(id)] = newTeam;
+  return teams[String(id)];
+}
+
+export function createTeam(name: string): Team {
+  let newTeam = new Team(nextTeamId, name);
+  teams[String(newTeam.id)] = newTeam;
+  nextTeamId++;
+  return newTeam;
+}
+
+export function deleteTeam(id: number): void {
+  delete teams[String(id)];
 }
