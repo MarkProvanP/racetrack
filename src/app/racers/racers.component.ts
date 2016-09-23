@@ -34,6 +34,7 @@ export class RacersComponent implements OnInit {
   }
 
   delete(racer: Racer): void {
+    console.log('deleting racer', racer);
     this.dataService
         .deleteRacer(racer.id)
         .then(() => {

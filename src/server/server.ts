@@ -14,15 +14,17 @@ var twilioClient = twilio(config.accountSid, config.authToken);
 
 var PORT = config.SERVER_PORT;
 
-import * as racer from '../common/racer';
+import { Racer } from '../common/racer';
 
 var path = require('path');
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 app.all('/*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+  res.header("Access-Control-Allow-Methods", "DELETE,PUT,POST");
   next();
 });
 
@@ -50,6 +52,7 @@ let racers = [
   {id: 204, name: 'Jess Swanwick', nationality: 'FR', phone: '+121239123'},
   {id: 205, name: 'Veronica Thomson', nationality: 'DE', phone: '+1289238942'}
 ];
+let nextRacerId = 206;
 let teams = [
   {id: 21, name: 'H2G2', racers: [
     racers[0], racers[2], racers[4] 
@@ -58,6 +61,7 @@ let teams = [
     racers[1], racers[3], racers[5]
   ]}
 ];
+let nextTeamId = 23;
 
 app.get('/teams', function(req, res) {
   res.type('text/json');
@@ -65,8 +69,52 @@ app.get('/teams', function(req, res) {
 })
 
 app.get('/racers', function(req, res) {
+  console.log('GET /racers'); 
   res.type('text/json');
   res.send(JSON.stringify(racers));
+})
+
+app.post('/racers', function(req, res) {
+  console.log('POST /racers')
+  let body = req.body;
+  console.log(req);
+  console.log(body);
+  let newRacerName = body.name;
+  let newRacer = new Racer(nextRacerId, newRacerName);
+  racers.push(newRacer);
+  nextRacerId++;
+  res.type('application/json');
+  res.send(JSON.stringify(newRacer));
+})
+
+app.put('/racers/:id', function(req, res) {
+  console.log('PUT /racers')
+  let body = req.body;
+  console.log(body);
+  let changedRacer = body as Racer;
+  console.log(changedRacer);
+
+  for (let i = 0; i < racers.length; i++) {
+    if (racers[i].id === changedRacer.id) {
+      racers[i] = changedRacer;
+    }
+  }
+  res.end('successfully updated racer');
+})
+
+app.delete('/racers/:id', function(req, res) {
+  console.log('DELETE /racers');
+  let body = req.body;
+  console.log(body);
+  let deletedRacer = body as Racer;
+  console.log(deletedRacer);
+
+  for (let i = 0; i < racers.length; i++) {
+    if (racers[i].id === deletedRacer.id) {
+      racers.splice(i, 1);
+    }
+  }
+  res.end('successfully deleted racer');
 })
 
 http.listen(PORT, function() {

@@ -3,4 +3,9 @@ export class Racer {
   name: string;
   nationality: string;
   phone: string;
+
+  constructor(id: number, name: string) {
+    this.id = id;
+    this.name = name;
+  }
 }
