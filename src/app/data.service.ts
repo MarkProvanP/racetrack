@@ -18,6 +18,16 @@ export class DataService {
 
   constructor(private http: Http) {
     this.socket = io(this.backendHost, {path: "/r2bcknd/socket.io"});
+    this.socket.on('receivedText', function(msgObj) {
+      let parsed = JSON.parse(msgObj);
+      let racer = parsed.fromRacer;
+      let text = parsed.text;
+      console.log(`Received text from ${racer.name}: ${text.Body}`);
+    });
+    this.socket.on('receivedUnknownText', function(text) {
+      let parsed = JSON.parse(text);
+      console.log(`Received text from unknown person (${parsed.From}): ${parsed.Body}`)
+    });
   }
 
   getTeams(): Promise<Team[]> {

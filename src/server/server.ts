@@ -33,15 +33,14 @@ import * as db_facade from './db-facade';
 
 app.post('/twiml', function(req, res) {
   if (twilio.validateExpressRequest(req, config.authToken, {url: config.twilioSMSWebHook})) {
-    var body = req.body;
-    console.log(body);
+    let text = req.body;
+    handleTextMessage(text);
+
     var resp = new twilio.TwimlResponse();
     resp.say('express says hello');
     res.type('text/xml');
     res.send(resp.toString());
   } else {
-    console.log('validation failure');
-    console.log(req);
     res.status(403).send("Error, you're not twilio!");
   }
 });
@@ -58,7 +57,42 @@ http.listen(PORT, function() {
   console.log('app listening on port:', PORT);
 });
 
+function handleTextMessage(text: any) {
+  // Find which user, if any, the text came from
+  let fromNumber = text.From;
+  let racers = db_facade.getRacers();
+  let filtered = racers.filter(racer => racer.phone === fromNumber)
+  if (filtered.length == 1) {
+    let foundRacer = filtered[0];
+    let msgObj = {
+      fromRacer: foundRacer,
+      text: text
+    }
+    sendToWebClients('receivedText', JSON.stringify(msgObj));
+  } else {
+    // Otherwise, send the message on anyway.
+    sendToWebClients('receivedUnknownText', JSON.stringify(text));
+  }
+}
+
+function sendToWebClients(event, message) {
+  webClients.forEach(socket => socket.emit(event, message));
+}
+
+let webClients = [];
+
 io.on('connection', function(socket) {
+  console.log('Web client connected');
+  webClients.push(socket);
+
+  socket.on('disconnect', function() {
+    console.log('Web client disconnecting');
+    let index = webClients.indexOf(socket);
+    if (index > -1) {
+      webClients.splice(index, 1);
+    }
+  });
+
   socket.on('sendMessage', function(msg) {
     console.log('sendMessage');
     var msgObj = JSON.parse(msg);
@@ -76,5 +110,4 @@ io.on('connection', function(socket) {
       }
     })
   });
-  console.log('user connected');
 });
