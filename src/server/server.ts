@@ -46,67 +46,13 @@ app.post('/twiml', function(req, res) {
   }
 });
 
-app.get('/teams', function(req, res) {
-  res.type('text/json');
-  res.send(JSON.stringify(db_facade.getTeams()));
-})
-app.post('/teams', function(req, res) {
-  let newTeamName = req.body.name;
-  let newTeam = db_facade.createTeam(newTeamName);
-  res.type('application/json');
-  res.send(JSON.stringify(newTeam));
-});
-app.put('/teams/:id', function(req, res) {
-  let newDetailsTeam = req.body as Team;
-  let changedTeam = db_facade.updateTeam(Number(req.params.id), newDetailsTeam);
-  res.type('application.json');
-  res.send(JSON.stringify(changedTeam));
-})
-app.delete('/teams/:id', function(req, res) {
-  let deletedTeamId = Number(req.params.id);
-  db_facade.deleteTeam(deletedTeamId);
-  res.send('successfully deleted team');
-});
+import teamsRouter from "./routes/teams.routes";
 
-app.get('/racers', function(req, res) {
-  console.log('GET /racers'); 
-  res.type('text/json');
-  res.send(JSON.stringify(db_facade.getRacers()));
-})
+app.use('/teams', teamsRouter);
 
-app.post('/racers', function(req, res) {
-  console.log('POST /racers')
-  let body = req.body;
-  console.log(req);
-  console.log(body);
-  let newRacerName = body.name;
-  let newRacer = db_facade.createRacer(newRacerName);
-  res.type('application/json');
-  res.send(JSON.stringify(newRacer));
-})
+import racersRouter from "./routes/racers.routes";
 
-app.put('/racers/:id', function(req, res) {
-  console.log('PUT /racers')
-  let body = req.body;
-  console.log(body);
-  let newDetailsRacer = body as Racer;
-
-  let changedRacer = db_facade.updateRacer(Number(req.params.id), newDetailsRacer);
-
-  res.type('application/json');
-  res.send(JSON.stringify(changedRacer));
-})
-
-app.delete('/racers/:id', function(req, res) {
-  console.log('DELETE /racers');
-  let body = req.body;
-  console.log(body);
-  let deletedRacerId = Number(req.params.id);
-
-  db_facade.deleteRacer(deletedRacerId);
-
-  res.end('successfully deleted racer');
-})
+app.use("/racers", racersRouter);
 
 http.listen(PORT, function() {
   console.log('app listening on port:', PORT);
