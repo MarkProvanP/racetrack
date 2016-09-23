@@ -10,12 +10,14 @@ import { Racer } from '../common/racer';
 export class DataService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
-  private baseUrl = "https://mrp4.host.cs.st-andrews.ac.uk/r2bcknd/";
+  private backendHost = "https://mrp4.host.cs.st-andrews.ac.uk";
+  private baseUrl = this.backendHost + "/r2bcknd/";
   private teamsUrl = this.baseUrl + 'teams';  // URL to web api
   private racersUrl = this.baseUrl + 'racers';
+  private socket;
 
   constructor(private http: Http) {
-
+    this.socket = io(this.backendHost, {path: "/r2bcknd/socket.io"});
   }
 
   getTeams(): Promise<Team[]> {

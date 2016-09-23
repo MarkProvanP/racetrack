@@ -73,13 +73,6 @@ http.listen(PORT, function() {
   console.log('app listening on port:', PORT);
 });
 
-console.log('dirname', __dirname);
-
-app.all('*', (req: any, res: any) => {
-  console.log('req', req);
-  res.status(200).sendFile(path.join(__dirname, '/../../www/index.html'));
-})
-
 io.on('connection', function(socket) {
   socket.on('sendMessage', function(msg) {
     console.log('sendMessage');
