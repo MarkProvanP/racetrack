@@ -29,8 +29,9 @@ app.all('/*', function(req, res, next) {
   next();
 });
 
-import { InMemoryDbFacade } from './db-facade';
-let db_facade = new InMemoryDbFacade();
+import { DbFacadeInterface } from './db/db-facade';
+import { InMemoryDbFacade } from './db/in-memory-db-facade';
+let db_facade : DbFacadeInterface = new InMemoryDbFacade();
 
 app.post('/twiml', function(req, res) {
   if (twilio.validateExpressRequest(req, config.authToken, {url: config.twilioSMSWebHook})) {
@@ -42,20 +43,20 @@ app.post('/twiml', function(req, res) {
   }
 });
 
-import teamsRouter from "./routes/teams.routes";
-
+import teamsRouterWithDb from "./routes/teams.routes";
+let teamsRouter = teamsRouterWithDb(db_facade);
 app.use('/teams', teamsRouter);
 
-import racersRouter from "./routes/racers.routes";
-
+import racersRouterWithDb from "./routes/racers.routes";
+let racersRouter = racersRouterWithDb(db_facade);
 app.use("/racers", racersRouter);
 
-import textsRouter from "./routes/texts.routes";
-
+import textsRouterWithDb from "./routes/texts.routes";
+let textsRouter = textsRouterWithDb(db_facade);
 app.use("/texts", textsRouter);
 
-import updatesRouter from "./routes/updates.routes";
-
+import updatesRouterWithDb from "./routes/updates.routes";
+let updatesRouter = updatesRouterWithDb(db_facade);
 app.use("/updates", updatesRouter);
 
 http.listen(PORT, function() {
