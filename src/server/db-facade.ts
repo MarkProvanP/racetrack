@@ -1,5 +1,5 @@
 import { Racer } from "../common/racer";
-import { Team } from "../common/team";
+import { Team, TeamStatus, TeamUpdate, Location } from "../common/team";
 
 let racers = {
   "200": {id: 200, name: 'Tom Smith', nationality: 'GB', phone: '+12134732'},
@@ -50,6 +50,8 @@ export function deleteRacer(id: number): void{
   delete racers[String(id)];
 }
 
+//================================================================
+
 export function getTeams() : [Team] {
   let teamsArray : [Team] = <[Team]> [];
   for (var id in teams) {
@@ -79,6 +81,8 @@ export function deleteTeam(id: number): void {
   delete teams[String(id)];
 }
 
+//================================================================
+
 let texts = {};
 
 export function addText(text) {
@@ -103,4 +107,30 @@ export function getTextsByNumber(number) {
     }
   }
   return textsArray;
+}
+
+//================================================================
+
+let teamUpdates = {};
+let nextTeamUpdateId = 0;
+
+export function createStatusUpdate(properties): TeamUpdate {
+  let newStatusUpdate = new TeamUpdate(
+    nextTeamUpdateId, properties.status, properties.location, properties.notes);
+  teamUpdates[String(newStatusUpdate.id)] = newStatusUpdate;
+  nextTeamUpdateId++;
+  return newStatusUpdate;
+}
+
+export function getStatusUpdates(): [TeamUpdate] {
+  let updatesArray = [];
+  for (var id in teamUpdates) {
+    var update = teamUpdates[id];
+    updatesArray.push(update);
+  }
+  return updatesArray;
+}
+
+export function getStatusUpdate(id: number): TeamUpdate {
+  return teamUpdates[String(id)];
 }

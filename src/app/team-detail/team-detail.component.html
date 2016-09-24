@@ -15,6 +15,12 @@
       <button (click)="gotoRacerDetail(racer)">View Details</button>
     </li>
   </ul>
+  <ul class='team-updates'>
+    <li *ngFor='let update of team.statusUpdates'>
+      <div><label>id: </label>{{update.id}}</div>
+      <div><label>Notes: </label>{{update.notes}}</div>
+    </li>
+  </ul>
   <button (click)="goBack()">Back</button>
   <button (click)="save()">Save</button>
 </div>

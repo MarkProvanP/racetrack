@@ -23,7 +23,9 @@ export class TeamDetailComponent implements OnInit {
     this.route.params.forEach((params: Params) => {
       let id = +params['id'];
       this.dataService.getTeam(id)
-        .then(team => this.team = team);
+        .then(team => {
+          this.team = team as Team;
+        });
     });
   }
 

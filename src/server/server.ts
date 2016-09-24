@@ -35,11 +35,7 @@ app.post('/twiml', function(req, res) {
   if (twilio.validateExpressRequest(req, config.authToken, {url: config.twilioSMSWebHook})) {
     let text = req.body;
     handleTextMessage(text);
-
-    var resp = new twilio.TwimlResponse();
-    resp.say('express says hello');
-    res.type('text/xml');
-    res.send(resp.toString());
+    res.send("ok");
   } else {
     res.status(403).send("Error, you're not twilio!");
   }
@@ -56,6 +52,10 @@ app.use("/racers", racersRouter);
 import textsRouter from "./routes/texts.routes";
 
 app.use("/texts", textsRouter);
+
+import updatesRouter from "./routes/updates.routes";
+
+app.use("/updates", updatesRouter);
 
 http.listen(PORT, function() {
   console.log('app listening on port:', PORT);
