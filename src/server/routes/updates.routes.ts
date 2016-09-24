@@ -2,7 +2,8 @@ import * as express from "express";
 
 let updatesRouter = express.Router();
 
-import * as db_facade from "../db-facade";
+import { InMemoryDbFacade } from "../db-facade";
+let db_facade = new InMemoryDbFacade();
 
 updatesRouter.use(function(req, res, next) {
   console.log("Updates request");

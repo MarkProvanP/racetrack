@@ -29,7 +29,8 @@ app.all('/*', function(req, res, next) {
   next();
 });
 
-import * as db_facade from './db-facade';
+import { InMemoryDbFacade } from './db-facade';
+let db_facade = new InMemoryDbFacade();
 
 app.post('/twiml', function(req, res) {
   if (twilio.validateExpressRequest(req, config.authToken, {url: config.twilioSMSWebHook})) {

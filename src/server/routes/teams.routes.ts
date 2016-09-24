@@ -2,7 +2,9 @@ import * as express from "express";
 
 let teamsRouter = express.Router();
 
-import * as db_facade from "../db-facade";
+import { InMemoryDbFacade } from "../db-facade";
+
+let db_facade = new InMemoryDbFacade();
 
 import { Team } from "../../common/team";
 

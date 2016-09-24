@@ -2,7 +2,8 @@ import * as express from "express";
 
 let textsRouter = express.Router();
 
-import * as db_facade from "../db-facade";
+import { InMemoryDbFacade } from "../db-facade";
+let db_facade = new InMemoryDbFacade;
 
 textsRouter.use(function(req, res, next) {
   console.log("Texts request");
