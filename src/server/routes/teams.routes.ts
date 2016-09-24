@@ -12,8 +12,16 @@ teamsRouter.use(function(req, res, next) {
 });
 
 teamsRouter.get('/', function(req, res) {
-  res.type('text/json');
+  res.type('application/json');
+  console.log(db_facade.getTeams());
   res.send(JSON.stringify(db_facade.getTeams()));
+})
+teamsRouter.get('/:id', (req, res) => {
+  console.log('get single team');
+  res.type('application/json');
+  let id = Number(req.params.id);
+  console.log(db_facade.getTeam(id));
+  res.send(JSON.stringify(db_facade.getTeam(id)));
 })
 teamsRouter.post('/', function(req, res) {
   let newTeamName = req.body.name;
@@ -23,6 +31,8 @@ teamsRouter.post('/', function(req, res) {
 });
 teamsRouter.put('/:id', function(req, res) {
   let newDetailsTeam = req.body as Team;
+  console.log("updating team");
+  console.log(newDetailsTeam)
   let changedTeam = db_facade.updateTeam(Number(req.params.id), newDetailsTeam);
   res.type('application.json');
   res.send(JSON.stringify(changedTeam));

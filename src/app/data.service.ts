@@ -15,6 +15,7 @@ export class DataService {
   private teamsUrl = this.baseUrl + 'teams';  // URL to web api
   private racersUrl = this.baseUrl + 'racers';
   private textsUrl = this.baseUrl + "texts";
+  private updatesUrl = this.baseUrl + "updates";
   private socket;
 
   private textReceivers: [] = Array();
@@ -47,8 +48,11 @@ export class DataService {
   }
 
   getTeam(id: number): Promise<Team> {
-    return this.getTeams()
-               .then(teams => teams.find(team => team.id === id));
+    let url = `${this.teamsUrl}/${id}`;
+    return this.http.get(url)
+      .toPromise()
+      .then(response => Team.fromJSON(response.json()))
+      .catch(this.handleError);
   }
 
   deleteTeam(id: number): Promise<void> {
@@ -119,6 +123,20 @@ export class DataService {
       .toPromise()
       .then(response => response.json())
       .catch(this.handleError);
+  }
+
+  createStatusUpdateForTeam(statusObj, team: Team): Promise<Team> {
+    console.log('createstatusUpdateForTeam');
+    console.log(statusObj);
+    return this.http.post(this.updatesUrl, JSON.stringify(statusObj), {headers: this.headers})
+      .toPromise()
+      .then(response => {
+        let statusUpdate = response.json();
+        console.log('got status update', statusUpdate);
+        team.statusUpdates.push(statusUpdate);
+        console.log('team now', team);
+        return this.updateTeam(team);
+      });
   }
 
   private handleError(error: any): Promise<any> {

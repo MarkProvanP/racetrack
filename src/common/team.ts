@@ -55,7 +55,12 @@ export class Team {
   racers: [Racer];
 
   static fromJSON(obj) {
-    return new Team(obj.id, obj.name, obj.racers, obj.statusUpdates);
+    let u = obj.statusUpdates;
+    let updates = [];
+    if (u.length > 0) {
+      updates = u.map(TeamUpdate.fromJSON);
+    }
+    return new Team(obj.id, obj.name, obj.racers, updates);
   }
 
   constructor(id: TeamId, name: string, racers?: [Racer], statusUpdates?: [TeamUpdate]) {

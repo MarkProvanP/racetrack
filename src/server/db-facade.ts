@@ -14,10 +14,10 @@ let nextRacerId = 206;
 let teams = {
   "21": new Team(21, 'H2G2', [
     racers["200"], racers["202"], racers["204"] 
-  ]),
+  ], []),
   "22": new Team(22, 'Prague or Bust', [
     racers["201"], racers["203"], racers["205"]
-  ])
+  ], [])
 };
 let nextTeamId = 23;
 
@@ -53,22 +53,44 @@ export function deleteRacer(id: number): void{
 //================================================================
 
 export function getTeams() : [Team] {
+  console.log('db-facade getTeams()');
   let teamsArray : [Team] = <[Team]> [];
   for (var id in teams) {
-    var team = teams[id];
-    let statusUpdateIds = team.statusUpdates;
-    let populatedStatusUpdates = statusUpdateIds.map(getStatusUpdate);
-    team.statusUpdates = populatedStatusUpdates;
-    teamsArray.push(team);
+    let team = teams[id];
+    let populated = populateTeamUpdates(team);
+    teamsArray.push(populated);
+    console.log('populated', populated)
   }
+  console.log('db-facade returning populated', teamsArray);
   return teamsArray;
 }
 
+function populateTeamUpdates(team: Team) : Team{
+  let statusUpdateIds = team.statusUpdates.map(su => {
+    if (su instanceof TeamUpdate) {
+      return su.id;
+    }
+    return su;
+  });
+  if (statusUpdateIds) {
+    let populatedStatusUpdates = statusUpdateIds.map(getStatusUpdate);
+    team.statusUpdates = populatedStatusUpdates;
+  }
+  return team;
+}
+
 export function getTeam(id: TeamId): Team {
-  return teams[String(id)];
+  console.log('db-facade get team', id);
+  let team = teams[String(id)];
+  let populatedTeam = populateTeamUpdates(team);
+  console.log('unpop', team);
+  console.log('pop', populatedTeam);
+  return populatedTeam;
 }
 
 export function updateTeam(id: TeamId, newTeam: Team) : Team {
+  let statusUpdateIds = newTeam.statusUpdates.map(obj => obj.id);
+  newTeam.statusUpdates = statusUpdateIds;
   teams[String(id)] = newTeam;
   return teams[String(id)];
 }
