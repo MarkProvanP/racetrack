@@ -4,6 +4,9 @@ export enum TeamStatus {
   ON_START_BUS, IN_UK, IN_EUROPE, IN_HOSTEL, DROPPED_OUT, ASLEEP, OVERDUE, MAYBE_LATE, IN_BUDAPEST, UNKNOWN
 }
 
+export type TeamId = number;
+export type TeamUpdateId = number;
+
 export class Location {
   latitude: string;
   longitude: string;
@@ -11,13 +14,13 @@ export class Location {
 }
 
 export class TeamUpdate {
-  id: number;
+  id: TeamUpdateId;
   notes: string;
   timestamp: Date;
   status: TeamStatus;
   location: Location;
 
-  constructor(id: number, newStatus: TeamStatus, location?: Location, notes?: string) {
+  constructor(id: TeamUpdateId, newStatus: TeamStatus, location?: Location, notes?: string) {
     this.id = id;
     this.status = newStatus;
     this.location = location;
@@ -27,12 +30,12 @@ export class TeamUpdate {
 }
 
 export class Team {
-  id: number;
+  id: TeamId;
   name: string;
-  statusUpdates: [TeamUpdate];
+  statusUpdates: [TeamUpdateId | TeamUpdate] = [];
   racers: [Racer];
 
-  constructor(id: number, name: string, racers?: [Racer]) {
+  constructor(id: TeamId, name: string, racers?: [Racer]) {
     this.id = id;
     this.name = name;
     this.racers = racers;
@@ -42,7 +45,13 @@ export class Team {
 
   getCurrentStatus(): TeamStatus {
     if (this.statusUpdates.length > 0) {
-      return this.statusUpdates[this.statusUpdates.length - 1].status;
+      let update = this.statusUpdates[this.statusUpdates.length - 1]
+      if (update instanceof TeamUpdate) {
+        return update.status;
+      } else {
+        console.log("team status updates not yet populated");
+        return TeamStatus.UNKNOWN;
+      }
     } else {
       return TeamStatus.UNKNOWN;
     }

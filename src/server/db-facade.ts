@@ -1,5 +1,5 @@
 import { Racer } from "../common/racer";
-import { Team, TeamStatus, TeamUpdate, Location } from "../common/team";
+import { Team, TeamId, TeamStatus, TeamUpdate, TeamUpdateId, Location } from "../common/team";
 
 let racers = {
   "200": {id: 200, name: 'Tom Smith', nationality: 'GB', phone: '+12134732'},
@@ -56,16 +56,19 @@ export function getTeams() : [Team] {
   let teamsArray : [Team] = <[Team]> [];
   for (var id in teams) {
     var team = teams[id];
+    let statusUpdateIds = team.statusUpdates;
+    let populatedStatusUpdates = statusUpdateIds.map(getStatusUpdate);
+    team.statusUpdates = populatedStatusUpdates;
     teamsArray.push(team);
   }
   return teamsArray;
 }
 
-export function getTeam(id: number): Team {
+export function getTeam(id: TeamId): Team {
   return teams[String(id)];
 }
 
-export function updateTeam(id: number, newTeam: Team) : Team {
+export function updateTeam(id: TeamId, newTeam: Team) : Team {
   teams[String(id)] = newTeam;
   return teams[String(id)];
 }
@@ -77,7 +80,7 @@ export function createTeam(name: string): Team {
   return newTeam;
 }
 
-export function deleteTeam(id: number): void {
+export function deleteTeam(id: TeamId): void {
   delete teams[String(id)];
 }
 
@@ -123,7 +126,7 @@ export function createStatusUpdate(properties): TeamUpdate {
 }
 
 export function getStatusUpdates(): [TeamUpdate] {
-  let updatesArray = [];
+  let updatesArray: [TeamUpdate] = <[TeamUpdate]>[];
   for (var id in teamUpdates) {
     var update = teamUpdates[id];
     updatesArray.push(update);
@@ -131,6 +134,6 @@ export function getStatusUpdates(): [TeamUpdate] {
   return updatesArray;
 }
 
-export function getStatusUpdate(id: number): TeamUpdate {
+export function getStatusUpdate(id: TeamUpdateId): TeamUpdate {
   return teamUpdates[String(id)];
 }

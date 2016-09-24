@@ -15,6 +15,7 @@
       <button (click)="gotoRacerDetail(racer)">View Details</button>
     </li>
   </ul>
+  <label>Updates {{ team.statusUpdates.length }}</label>
   <ul class='team-updates'>
     <li *ngFor='let update of team.statusUpdates'>
       <div><label>id: </label>{{update.id}}</div>

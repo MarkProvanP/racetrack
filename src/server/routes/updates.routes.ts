@@ -22,7 +22,7 @@ updatesRouter.get('/:id', (req, res) => {
 
 updatesRouter.post('/', (req, res) => {
   let newUpdateProperties = req.body;
-  let newUpdate = db_facade.createUpdate(newUpdateProperties);
+  let newUpdate = db_facade.createStatusUpdate(newUpdateProperties);
   res.type("application/json");
   res.send(JSON.stringify(newUpdate));
 });
