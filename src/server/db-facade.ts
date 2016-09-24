@@ -1,6 +1,8 @@
 import { Racer } from "../common/racer";
 import { Team, TeamId, TeamStatus, TeamUpdate, TeamUpdateId, Location } from "../common/team";
 
+var Promise = require("es6-promise").Promise;
+
 let racers = {
   "200": {id: 200, name: 'Tom Smith', nationality: 'GB', phone: '+12134732'},
   "201": {id: 201, name: 'Dick Stanley', nationality: 'GB', phone: '+1912912'},
@@ -21,33 +23,34 @@ let teams = {
 };
 let nextTeamId = 23;
 
-export function getRacers(): [Racer] {
+export function getRacers(): Promise<[Racer]> {
   let racersArray : [Racer] = <[Racer]> [];
   for (var id in racers) {
     var racer = racers[id];
     racersArray.push(racer);
   }
-  return racersArray;
+  return Promise.resolve(racersArray);
 }
 
-export function getRacer(id: number): Racer {
-  return racers[String(id)];
+export function getRacer(id: number): Promise<Racer> {
+  return Promise.resolve(racers[String(id)]);
 }
 
-export function updateRacer(id: number, newRacer: Racer): Racer {
+export function updateRacer(id: number, newRacer: Racer): Promise<Racer> {
   racers[String(id)] = newRacer;
-  return racers[String(id)];
+  return Promise.resolve(racers[String(id)]);
 }
 
-export function createRacer(name: string): Racer {
+export function createRacer(name: string): Promise<Racer> {
   let newRacer = new Racer(nextRacerId, name);
   racers[String(newRacer.id)] = newRacer;
   nextRacerId++;
-  return newRacer;
+  return Promise.resolve(newRacer);
 }
 
-export function deleteRacer(id: number): void{
+export function deleteRacer(id: number): Promise<any> {
   delete racers[String(id)];
+  return Promise.resolve();
 }
 
 //================================================================

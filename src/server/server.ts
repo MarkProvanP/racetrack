@@ -65,19 +65,21 @@ function handleTextMessage(text: any) {
   // Find which user, if any, the text came from
   db_facade.addText(text);
   let fromNumber = text.From;
-  let racers = db_facade.getRacers();
-  let filtered = racers.filter(racer => racer.phone === fromNumber)
-  if (filtered.length == 1) {
-    let foundRacer = filtered[0];
-    let msgObj = {
-      fromRacer: foundRacer,
-      text: text
-    }
-    sendToWebClients('receivedText', JSON.stringify(msgObj));
-  } else {
-    // Otherwise, send the message on anyway.
-    sendToWebClients('receivedUnknownText', JSON.stringify(text));
-  }
+  db_facade.getRacers()
+    .then(racers => {
+      let filtered = racers.filter(racer => racer.phone === fromNumber)
+      if (filtered.length == 1) {
+        let foundRacer = filtered[0];
+        let msgObj = {
+          fromRacer: foundRacer,
+          text: text
+        }
+        sendToWebClients('receivedText', JSON.stringify(msgObj));
+      } else {
+        // Otherwise, send the message on anyway.
+        sendToWebClients('receivedUnknownText', JSON.stringify(text));
+      }
+    });
 }
 
 function sendToWebClients(event, message) {
