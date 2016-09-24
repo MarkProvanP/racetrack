@@ -10,24 +10,32 @@ updatesRouter.use(function(req, res, next) {
 });
 
 updatesRouter.get('/', function(req, res) {
-  res.type("application/json");
-  res.send(JSON.stringify(db_facade.getStatusUpdates()));
+  db_facade.getStatusUpdates()
+    .then(updates => {
+      res.type("application/json");
+      res.send(JSON.stringify(updates));
+    });
 });
 
 updatesRouter.get('/:id', (req, res) => {
   let id = Number(req.params.id);
-  res.type('application/json');
-  res.send(JSON.stringify(db_facade.getStatusUpdate(id)));
+  db_facade.getStatusUpdate(id)
+    .then(update => {
+      res.type('application/json');
+      res.send(JSON.stringify(update));
+    });
 });
 
 updatesRouter.post('/', (req, res) => {
   console.log('creating status update');
   let newUpdateProperties = req.body;
   console.log(newUpdateProperties);
-  let newUpdate = db_facade.createStatusUpdate(newUpdateProperties);
-  console.log(newUpdate);
-  res.type("application/json");
-  res.send(JSON.stringify(newUpdate));
+  db_facade.createStatusUpdate(newUpdateProperties)
+    .then(update => {
+      console.log(update);
+      res.type("application/json");
+      res.send(JSON.stringify(update));
+    });
 });
 
 export default updatesRouter;

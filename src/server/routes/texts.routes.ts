@@ -10,14 +10,20 @@ textsRouter.use(function(req, res, next) {
 });
 
 textsRouter.get('/', function(req, res) {
-  res.type('application/json');
-  res.send(JSON.stringify(db_facade.getTexts()));
+  db_facade.getTexts()
+    .then(texts => {
+      res.type('application/json');
+      res.send(JSON.stringify(texts));
+    });
 })
 
 textsRouter.get('/byNumber/:number', function(req, res) {
   let number = req.params.number
-  res.type('application/json');
-  res.send(JSON.stringify(db_facade.getTextsByNumber(number)));
+  db_facade.getTextsByNumber(number)
+    .then(texts => {
+      res.type('application/json');
+      res.send(JSON.stringify(texts));
+    });
 });
 
 export default textsRouter;

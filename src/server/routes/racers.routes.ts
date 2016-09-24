@@ -15,7 +15,7 @@ racersRouter.get('/', function(req, res) {
   console.log('GET /racers'); 
   db_facade.getRacers()
     .then(racers => {
-      res.type('text/json');
+      res.type('application/json');
       res.send(JSON.stringify(racers));
     });
 })
@@ -54,7 +54,7 @@ racersRouter.delete('/:id', function(req, res) {
 
   db_facade.deleteRacer(deletedRacerId)
     .then(() => {
-      res.end('successfully deleted racer');
+      res.send('successfully deleted racer');
     });
 })
 

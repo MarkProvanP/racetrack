@@ -55,7 +55,7 @@ export function deleteRacer(id: number): Promise<any> {
 
 //================================================================
 
-export function getTeams() : [Team] {
+export function getTeams() : Promise<[Team]> {
   console.log('db-facade getTeams()');
   let teamsArray : [Team] = <[Team]> [];
   for (var id in teams) {
@@ -65,10 +65,10 @@ export function getTeams() : [Team] {
     console.log('populated', populated)
   }
   console.log('db-facade returning populated', teamsArray);
-  return teamsArray;
+  return Promise.resolve(teamsArray);
 }
 
-function populateTeamUpdates(team: Team) : Team{
+function populateTeamUpdates(team: Team): Team {
   let statusUpdateIds = team.statusUpdates.map(su => {
     if (su instanceof TeamUpdate) {
       return su.id;
@@ -82,51 +82,53 @@ function populateTeamUpdates(team: Team) : Team{
   return team;
 }
 
-export function getTeam(id: TeamId): Team {
+export function getTeam(id: TeamId): Promise<Team> {
   console.log('db-facade get team', id);
   let team = teams[String(id)];
   let populatedTeam = populateTeamUpdates(team);
   console.log('unpop', team);
   console.log('pop', populatedTeam);
-  return populatedTeam;
+  return Promise.resolve(populatedTeam);
 }
 
-export function updateTeam(id: TeamId, newTeam: Team) : Team {
+export function updateTeam(id: TeamId, newTeam: Team) : Promise<Team> {
   let statusUpdateIds = newTeam.statusUpdates.map(obj => obj.id);
   newTeam.statusUpdates = statusUpdateIds;
   teams[String(id)] = newTeam;
-  return teams[String(id)];
+  return Promise.resolve(teams[String(id)]);
 }
 
-export function createTeam(name: string): Team {
+export function createTeam(name: string): Promise<Team> {
   let newTeam = new Team(nextTeamId, name);
   teams[String(newTeam.id)] = newTeam;
   nextTeamId++;
-  return newTeam;
+  return Promise.resolve(newTeam);
 }
 
-export function deleteTeam(id: TeamId): void {
+export function deleteTeam(id: TeamId): Promise<any> {
   delete teams[String(id)];
+  return Promise.resolve();
 }
 
 //================================================================
 
 let texts = {};
 
-export function addText(text) {
+export function addText(text): Promise<any> {
   texts[text.SmsSid] = text;
+  return Promise.resolve();
 }
 
-export function getTexts() {
+export function getTexts(): Promise<any> {
   let textsArray = [];
   for (var smsSid in texts) {
     var text = texts[smsSid];
     textsArray.push(text);
   }
-  return textsArray;
+  return Promise.resolve(textsArray);
 }
 
-export function getTextsByNumber(number) {
+export function getTextsByNumber(number): Promise<any> {
   let textsArray = [];
   for (var smsSid in texts) {
     var text = texts[smsSid];
@@ -134,7 +136,7 @@ export function getTextsByNumber(number) {
       textsArray.push(text);
     }
   }
-  return textsArray;
+  return Promise.resolve(textsArray);
 }
 
 //================================================================
@@ -142,23 +144,23 @@ export function getTextsByNumber(number) {
 let teamUpdates = {};
 let nextTeamUpdateId = 0;
 
-export function createStatusUpdate(properties): TeamUpdate {
+export function createStatusUpdate(properties): Promise<TeamUpdate> {
   let newStatusUpdate = new TeamUpdate(
     nextTeamUpdateId, properties.status, properties.location, properties.notes);
   teamUpdates[String(newStatusUpdate.id)] = newStatusUpdate;
   nextTeamUpdateId++;
-  return newStatusUpdate;
+  return Promise.resolve(newStatusUpdate);
 }
 
-export function getStatusUpdates(): [TeamUpdate] {
+export function getStatusUpdates(): Promise<[TeamUpdate]> {
   let updatesArray: [TeamUpdate] = <[TeamUpdate]>[];
   for (var id in teamUpdates) {
     var update = teamUpdates[id];
     updatesArray.push(update);
   }
-  return updatesArray;
+  return Promise.resolve(updatesArray);
 }
 
-export function getStatusUpdate(id: TeamUpdateId): TeamUpdate {
-  return teamUpdates[String(id)];
+export function getStatusUpdate(id: TeamUpdateId): Promise<TeamUpdate> {
+  return Promise.resolve(teamUpdates[String(id)]);
 }
