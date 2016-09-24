@@ -7,19 +7,22 @@
     <label>name: </label>
     <input [(ngModel)]="team.name" placeholder="name" />
   </div>
+  <div>
+    <label>Status: </label> {{ team.getCurrentStatusString() }}
+  </div>
+  <label>Updates {{ team.statusUpdates.length }}</label>
+  <ul class='team-updates'>
+    <li *ngFor='let update of team.statusUpdates'>
+      <div><label>id: </label>{{update.id}}</div>
+      <div><label>Notes: </label>{{update.notes}}</div>
+    </li>
+  </ul>
   <label>Racers</label>
   <ul class='team-racers'>
     <li *ngFor='let racer of team.racers'>
       <div><label>id: </label>{{racer.id}}</div>
       <div><label>Name: </label>{{racer.name}}</div>
       <button (click)="gotoRacerDetail(racer)">View Details</button>
-    </li>
-  </ul>
-  <label>Updates {{ team.statusUpdates.length }}</label>
-  <ul class='team-updates'>
-    <li *ngFor='let update of team.statusUpdates'>
-      <div><label>id: </label>{{update.id}}</div>
-      <div><label>Notes: </label>{{update.notes}}</div>
     </li>
   </ul>
   <button (click)="goBack()">Back</button>

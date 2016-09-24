@@ -1,7 +1,22 @@
 import { Racer } from "./racer";
 
 export enum TeamStatus {
-  ON_START_BUS, IN_UK, IN_EUROPE, IN_HOSTEL, DROPPED_OUT, ASLEEP, OVERDUE, MAYBE_LATE, IN_BUDAPEST, UNKNOWN
+  ON_START_BUS, IN_UK, IN_EUROPE, IN_HOSTEL, DROPPED_OUT, ASLEEP, OVERDUE, MAYBE_LATE, IN_CITY, UNKNOWN
+}
+
+function prettyStatusName(status: TeamStatus) {
+  switch (status) {
+    case TeamStatus.ON_START_BUS: return "On start bus";
+    case TeamStatus.IN_UK: return "In UK";
+    case TeamStatus.IN_EUROPE: return "In Europe";
+    case TeamStatus.IN_HOSTEL: return "In hostel";
+    case TeamStatus.DROPPED_OUT: return "Dropped out";
+    case TeamStatus.ASLEEP: return "Asleep";
+    case TeamStatus.OVERDUE: return "Check-in overdue!";
+    case TeamStatus.MAYBE_LATE: return "May be late into city";
+    case TeamStatus.IN_CITY: return "In city";
+    case TeamStatus.UNKNOWN: return "Unknown!";
+  }
 }
 
 export type TeamId = number;
@@ -20,6 +35,10 @@ export class TeamUpdate {
   status: TeamStatus;
   location: Location;
 
+  static fromJSON(obj) {
+    return new TeamUpdate(obj.id, obj.status, obj.location, obj.notes)
+  }
+
   constructor(id: TeamUpdateId, newStatus: TeamStatus, location?: Location, notes?: string) {
     this.id = id;
     this.status = newStatus;
@@ -35,13 +54,16 @@ export class Team {
   statusUpdates: [TeamUpdateId | TeamUpdate] = [];
   racers: [Racer];
 
-  constructor(id: TeamId, name: string, racers?: [Racer]) {
+  static fromJSON(obj) {
+    return new Team(obj.id, obj.name, obj.racers, obj.statusUpdates);
+  }
+
+  constructor(id: TeamId, name: string, racers?: [Racer], statusUpdates?: [TeamUpdate]) {
     this.id = id;
     this.name = name;
     this.racers = racers;
+    this.statusUpdates = statusUpdates;
   }
-
-  // Try this;
 
   getCurrentStatus(): TeamStatus {
     if (this.statusUpdates.length > 0) {
@@ -55,6 +77,10 @@ export class Team {
     } else {
       return TeamStatus.UNKNOWN;
     }
+  }
+
+  getCurrentStatusString(): string {
+    return prettyStatusName(this.getCurrentStatus());
   }
 }
 

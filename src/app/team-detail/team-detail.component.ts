@@ -24,7 +24,7 @@ export class TeamDetailComponent implements OnInit {
       let id = +params['id'];
       this.dataService.getTeam(id)
         .then(team => {
-          this.team = team as Team;
+          this.team = team;
         });
     });
   }

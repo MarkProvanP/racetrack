@@ -42,7 +42,7 @@ export class DataService {
   getTeams(): Promise<Team[]> {
     return this.http.get(this.teamsUrl)
                .toPromise()
-               .then(response => response.json() as Team[])
+               .then(response => response.json().map(Team.fromJSON))
                .catch(this.handleError);
   }
 
