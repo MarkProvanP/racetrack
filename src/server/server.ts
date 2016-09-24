@@ -28,42 +28,49 @@ app.all('/*', function(req, res, next) {
   res.header("Access-Control-Allow-Methods", "DELETE,PUT,POST");
   next();
 });
+import teamsRouterWithDb from "./routes/teams.routes";
+import racersRouterWithDb from "./routes/racers.routes";
+import textsRouterWithDb from "./routes/texts.routes";
+import updatesRouterWithDb from "./routes/updates.routes";
 
 import { DbFacadeInterface } from './db/db-facade';
 import { InMemoryDbFacade } from './db/in-memory-db-facade';
-let db_facade : DbFacadeInterface = new InMemoryDbFacade();
+import { setup } from './db/mongo-db-facade';
+//let db_facade : DbFacadeInterface = new InMemoryDbFacade();
+setup(config.db_url)
+  .then(db_facade => {
+    console.log('db_facade available');
 
-app.post('/twiml', function(req, res) {
-  if (twilio.validateExpressRequest(req, config.authToken, {url: config.twilioSMSWebHook})) {
-    let text = req.body;
-    handleTextMessage(text);
-    res.send("ok");
-  } else {
-    res.status(403).send("Error, you're not twilio!");
-  }
-});
+    let teamsRouter = teamsRouterWithDb(db_facade);
+    app.use('/teams', teamsRouter);
 
-import teamsRouterWithDb from "./routes/teams.routes";
-let teamsRouter = teamsRouterWithDb(db_facade);
-app.use('/teams', teamsRouter);
+    let racersRouter = racersRouterWithDb(db_facade);
+    app.use("/racers", racersRouter);
 
-import racersRouterWithDb from "./routes/racers.routes";
-let racersRouter = racersRouterWithDb(db_facade);
-app.use("/racers", racersRouter);
+    let textsRouter = textsRouterWithDb(db_facade);
+    app.use("/texts", textsRouter);
 
-import textsRouterWithDb from "./routes/texts.routes";
-let textsRouter = textsRouterWithDb(db_facade);
-app.use("/texts", textsRouter);
+    let updatesRouter = updatesRouterWithDb(db_facade);
+    app.use("/updates", updatesRouter);
 
-import updatesRouterWithDb from "./routes/updates.routes";
-let updatesRouter = updatesRouterWithDb(db_facade);
-app.use("/updates", updatesRouter);
+    http.listen(PORT, function() {
+      console.log('app listening on port:', PORT);
+    });
 
-http.listen(PORT, function() {
-  console.log('app listening on port:', PORT);
-});
+    app.post('/twiml', function(req, res) {
+      if (twilio.validateExpressRequest(req, config.authToken, {url: config.twilioSMSWebHook})) {
+        let text = req.body;
+        handleTextMessage(db_facade, text);
+        res.send("ok");
+      } else {
+        res.status(403).send("Error, you're not twilio!");
+      }
+    });
 
-function handleTextMessage(text: any) {
+  });
+
+
+function handleTextMessage(db_facade, text: any) {
   // Find which user, if any, the text came from
   db_facade.addText(text);
   let fromNumber = text.From;

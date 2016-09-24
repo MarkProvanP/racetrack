@@ -18,7 +18,7 @@ let updatesRouter = express.Router();
   });
 
   updatesRouter.get('/:id', (req, res) => {
-    let id = Number(req.params.id);
+    let id = req.params.id;
     db_facade.getStatusUpdate(id)
       .then(update => {
         res.type('application/json');
