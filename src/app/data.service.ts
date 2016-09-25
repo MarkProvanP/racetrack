@@ -67,7 +67,7 @@ export class DataService {
     return this.http
       .post(this.teamsUrl, JSON.stringify(properties), {headers: this.headers})
       .toPromise()
-      .then(res => res.json())
+      .then(res => Team.fromJSON(res.json()))
       .catch(this.handleError);
   }
 
@@ -83,13 +83,16 @@ export class DataService {
   getRacers(): Promise<Racer[]> {
     return this.http.get(this.racersUrl)
                .toPromise()
-               .then(response => response.json() as Racer[])
+               .then(response => Racer.fromJSON(response.json()))
                .catch(this.handleError);
   }
 
   getRacer(id: RacerId): Promise<Racer> {
-    return this.getRacers()
-               .then(racers => racers.find(racer => racer.id === id));
+    let url = `${this.racersUrl}/${id}`;
+    return this.http.get(url)
+      .toPromise()
+      .then(response => Racer.fromJSON(response.json()))
+      .catch(this.handleError)
   }
 
   deleteRacer(id: RacerId): Promise<void> {
@@ -105,7 +108,7 @@ export class DataService {
     return this.http
       .post(this.racersUrl, JSON.stringify(properties), {headers: this.headers})
       .toPromise()
-      .then(res => res.json())
+      .then(res => Racer.fromJSON(res.json()))
       .catch(this.handleError);
   }
 

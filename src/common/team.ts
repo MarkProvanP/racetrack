@@ -22,9 +22,12 @@ export class Team {
   racers: [Racer] = <[Racer]>[];
 
   static fromJSON(obj: PopulatedTeam) {
-    let u = obj.statusUpdates;
-    let updates = u.map(TeamUpdate.fromJSON);
-    return new Team(obj.id, obj);
+    let updates: [TeamUpdate] = obj.statusUpdates.map(TeamUpdate.fromJSON);
+    let racers: [Racer] = obj.racers.map(Racer.fromJSON);
+    let clone = JSON.parse(JSON.stringify(obj));
+    clone.statusUpdates = updates;
+    clone.racers = racers;
+    return new Team(clone.id, clone);
   }
 
   depopulate(): UnpopulatedTeam {
@@ -51,7 +54,7 @@ export class Team {
       if (update instanceof TeamUpdate) {
         return update.status;
       } else {
-        console.log("team status updates not yet populated");
+        console.error("team status updates not yet populated");
         return TeamStatus.UNKNOWN;
       }
     } else {
