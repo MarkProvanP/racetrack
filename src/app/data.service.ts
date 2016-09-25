@@ -5,6 +5,9 @@ import 'rxjs/add/operator/toPromise';
 
 import { Team, TeamId } from '../common/team';
 import { Racer, RacerId } from '../common/racer';
+import { TeamUpdate } from '../common/update';
+
+type textCallback = (any) => void;
 
 @Injectable()
 export class DataService {
@@ -18,7 +21,7 @@ export class DataService {
   private updatesUrl = this.baseUrl + "updates";
   private socket;
 
-  private textReceivers: [] = Array();
+  private textReceivers: [textCallback] = <[textCallback]>[];
 
   constructor(private http: Http) {
     this.socket = io(this.backendHost, {path: "/r2bcknd/socket.io"});
@@ -36,7 +39,7 @@ export class DataService {
     });
   }
 
-  onTextReceived(callback) {
+  onTextReceived(callback: textCallback) {
     this.textReceivers.push(callback);
   }
 
@@ -76,14 +79,17 @@ export class DataService {
     return this.http
       .put(url, JSON.stringify(team), {headers: this.headers})
       .toPromise()
-      .then(() => team)
+      .then(response => {
+        let t = Team.fromJSON(response.json())
+        return t;
+      })
       .catch(this.handleError);
   }
 
   getRacers(): Promise<Racer[]> {
     return this.http.get(this.racersUrl)
                .toPromise()
-               .then(response => Racer.fromJSON(response.json()))
+               .then(response => response.json().map(Racer.fromJSON))
                .catch(this.handleError);
   }
 
@@ -97,7 +103,6 @@ export class DataService {
 
   deleteRacer(id: RacerId): Promise<void> {
     let url = `${this.racersUrl}/${id}`;
-    console.log(url);
     return this.http.delete(url, {body: "", headers: this.headers})
       .toPromise()
       .then(() => null)
@@ -117,7 +122,10 @@ export class DataService {
     return this.http
       .put(url, JSON.stringify(racer), {headers: this.headers})
       .toPromise()
-      .then(() => racer)
+      .then(response => {
+        let r = Racer.fromJSON(response.json())
+        return r;
+      })
       .catch(this.handleError);
   }
 
@@ -129,15 +137,11 @@ export class DataService {
   }
 
   createStatusUpdateForTeam(statusObj, team: Team): Promise<Team> {
-    console.log('createstatusUpdateForTeam');
-    console.log(statusObj);
     return this.http.post(this.updatesUrl, JSON.stringify(statusObj), {headers: this.headers})
       .toPromise()
       .then(response => {
-        let statusUpdate = response.json();
-        console.log('got status update', statusUpdate);
+        let statusUpdate = TeamUpdate.fromJSON(response.json());
         team.statusUpdates.push(statusUpdate);
-        console.log('team now', team);
         return this.updateTeam(team);
       });
   }

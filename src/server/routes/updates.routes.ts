@@ -28,6 +28,7 @@ let updatesRouter = express.Router();
 
   updatesRouter.post('/', (req, res) => {
     console.log('creating status update');
+    console.log('req body', req.body);
     let newUpdateProperties = req.body;
     console.log(newUpdateProperties);
     db_facade.createStatusUpdate(newUpdateProperties)

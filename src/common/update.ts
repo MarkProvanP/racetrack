@@ -40,9 +40,13 @@ export class TeamUpdate {
     return JSON.stringify(this);
   }
 
+  prettyStatusName() {
+    return prettyStatusName(this.status);
+  }
+
   constructor(id: TeamUpdateId, properties) {
     this.id = id;
-    this.status = properties.newStatus;
+    this.status = Number(properties.status);
     this.location = properties.location;
     this.notes = properties.notes;
     this.timestamp = new Date();

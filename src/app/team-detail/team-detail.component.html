@@ -26,6 +26,7 @@
     <li *ngFor='let update of team.statusUpdates'>
       <div><label>id: </label>{{update.id}}</div>
       <div><label>Notes: </label>{{update.notes}}</div>
+      <div><label>Status: </label>{{update.prettyStatusName()}}</div>
     </li>
   </ul>
   <label>Racers</label>

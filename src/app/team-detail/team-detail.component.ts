@@ -1,4 +1,4 @@
-import { Component, OnInit, Pipe } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Router } from '@angular/router';
 
@@ -51,13 +51,13 @@ export class TeamDetailComponent implements OnInit {
     });
   }
 
-  inNewStatusMode: false;
+  inNewStatusMode = false;
   newStatusObj = {};
 
   createStatusUpdate(): void {
     this.inNewStatusMode = true; 
     this.newStatusObj = {
-      location: new Location;
+      location: new Location
     }
   }
 

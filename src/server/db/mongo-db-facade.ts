@@ -193,6 +193,8 @@ class MongoDbFacade implements DbFacadeInterface {
     let collection = this.db.collection('updates');
     let id = uuid.v4();
     let newStatusUpdate = new TeamUpdate(id, properties);
+    console.log('createStatusUpdate');
+    console.log(newStatusUpdate);
     return collection.insert(newStatusUpdate)
       .then(result => {
         return Promise.resolve(newStatusUpdate);
