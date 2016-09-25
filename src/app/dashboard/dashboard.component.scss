@@ -1,3 +1,67 @@
-h1 {
-  font-family: serif;
+.card-container{
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+
+    md-card {
+      margin: 5px;
+    }
+}
+.sample-content{
+    flex: 1;
+}
+
+.status-card-container {
+  display: flex;
+  flex-wrap: wrap;
+
+  md-card {
+    max-width: 300px;
+    min-width: 300px;
+    flex: 1;
+  }
+}
+
+.team-danger {
+  background-color: red;
+}
+
+.team-on-bus {
+  background-color: lightgrey;
+}
+
+.team-in-uk {
+  background-color: aliceblue;
+}
+
+.team-in-europe {
+  background-color: white;
+}
+
+.team-in-city {
+  background-color: gold;
+}
+
+.team-dropped-out {
+  background-color: lightblue;
+}
+
+.team-in-hostel {
+  background-color: limegreen;
+}
+
+.team-asleep {
+  background-color: #e2aae2;
+}
+
+.team-overdue {
+  background-color: orange;
+}
+
+.team-maybe-late {
+  background-color: cyan;
+}
+
+.team-error {
+  background-color: grey;
 }

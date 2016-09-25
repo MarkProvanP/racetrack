@@ -20,6 +20,7 @@ export class Team {
   name: string;
   statusUpdates: [TeamUpdate] = <[TeamUpdate]>[];
   racers: [Racer] = <[Racer]>[];
+  lastCheckin: Date;
 
   static fromJSON(obj: PopulatedTeam) {
     let updates: [TeamUpdate] = obj.statusUpdates.map(TeamUpdate.fromJSON);
@@ -46,6 +47,7 @@ export class Team {
     if (properties.statusUpdates) {
       this.statusUpdates = properties.statusUpdates;
     }
+    this.lastCheckin = properties.lastCheckin;
   }
 
   getCurrentStatus(): TeamStatus {
@@ -60,6 +62,10 @@ export class Team {
     } else {
       return TeamStatus.UNKNOWN;
     }
+  }
+
+  getLastUpdate(): TeamUpdate {
+    return this.statusUpdates[this.statusUpdates.length - 1]
   }
 
   getCurrentStatusString(): string {
