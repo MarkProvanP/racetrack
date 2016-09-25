@@ -29,8 +29,8 @@ export default function teamsRouterWithDb(db_facade: DbFacadeInterface) {
       });
   })
   teamsRouter.post('/', function(req, res) {
-    let newTeamName = req.body.name;
-    db_facade.createTeam(newTeamName)
+    let body = req.body;
+    db_facade.createTeam(body)
       .then(newTeam => {
         res.type('application/json');
         res.send(JSON.stringify(newTeam));

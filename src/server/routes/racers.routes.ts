@@ -22,10 +22,7 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
   racersRouter.post('/', function(req, res) {
     console.log('POST /racers')
     let body = req.body;
-    console.log(req);
-    console.log(body);
-    let newRacerName = body.name;
-    db_facade.createRacer(newRacerName)
+    db_facade.createRacer(body)
       .then(newRacer => {
         res.type('application/json');
         res.send(JSON.stringify(newRacer));
