@@ -42,8 +42,8 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     return Promise.resolve(this.racers[String(id)]);
   }
 
-  createRacer(name: string): Promise<Racer> {
-    let newRacer = new Racer(this.nextRacerId, name);
+  createRacer(properties): Promise<Racer> {
+    let newRacer = new Racer(this.nextRacerId, properties);
     this.racers[String(newRacer.id)] = newRacer;
     this.nextRacerId++;
     return Promise.resolve(newRacer);
@@ -95,8 +95,8 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     return Promise.resolve(this.teams[String(id)]);
   }
 
-  createTeam(name: string): Promise<Team> {
-    let newTeam = new Team(this.nextTeamId, name);
+  createTeam(properties): Promise<Team> {
+    let newTeam = new Team(this.nextTeamId, properties);
     this.teams[String(newTeam.id)] = newTeam;
     this.nextTeamId++;
     return Promise.resolve(newTeam);

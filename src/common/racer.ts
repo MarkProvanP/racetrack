@@ -6,8 +6,10 @@ export class Racer {
   nationality: string;
   phone: string;
 
-  constructor(id: RacerId, name: string) {
+  constructor(id: RacerId, properties) {
     this.id = id;
-    this.name = name;
+    this.name = properties.name;
+    this.nationality = properties.nationality;
+    this.phone = properties.phone;
   }
 }

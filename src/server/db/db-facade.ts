@@ -7,13 +7,13 @@ export interface DbFacadeInterface {
   getRacers(): Promise<[Racer]>;
   getRacer(id: RacerId): Promise<Racer>;
   updateRacer(id: RacerId, newRacer: Racer): Promise<Racer>;
-  createRacer(name: string): Promise<Racer>;
+  createRacer(properties): Promise<Racer>;
   deleteRacer(id: RacerId): Promise<any>;
 
   getTeams() : Promise<[Team]>;
   getTeam(id: TeamId): Promise<Team>;
   updateTeam(id: TeamId, newTeam: Team) : Promise<Team>;
-  createTeam(name: string): Promise<Team>;
+  createTeam(properties): Promise<Team>;
   deleteTeam(id: TeamId): Promise<any>;
 
   addText(text): Promise<any>;

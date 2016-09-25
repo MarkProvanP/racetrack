@@ -39,11 +39,11 @@ export class TeamUpdate {
     return new TeamUpdate(obj.id, obj.status, obj.location, obj.notes)
   }
 
-  constructor(id: TeamUpdateId, newStatus: TeamStatus, location?: Location, notes?: string) {
+  constructor(id: TeamUpdateId, properties) {
     this.id = id;
-    this.status = newStatus;
-    this.location = location;
-    this.notes = notes;
+    this.status = properties.newStatus;
+    this.location = properties.location;
+    this.notes = properties.notes;
     this.timestamp = new Date();
   }
 }
@@ -51,7 +51,7 @@ export class TeamUpdate {
 export class Team {
   id: TeamId;
   name: string;
-  statusUpdates: [TeamUpdateId | TeamUpdate] = [];
+  statusUpdates: [TeamUpdate] = [];
   racers: [Racer];
 
   static fromJSON(obj) {
@@ -63,11 +63,11 @@ export class Team {
     return new Team(obj.id, obj.name, obj.racers, updates);
   }
 
-  constructor(id: TeamId, name: string, racers?: [Racer], statusUpdates?: [TeamUpdate]) {
+  constructor(id: TeamId, properties) {
     this.id = id;
-    this.name = name;
-    this.racers = racers;
-    this.statusUpdates = statusUpdates;
+    this.name = properties.name;
+    this.racers = properties.racers;
+    this.statusUpdates = properties.statusUpdates;
   }
 
   getCurrentStatus(): TeamStatus {
