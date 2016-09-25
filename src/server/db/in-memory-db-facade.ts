@@ -76,15 +76,12 @@ export class InMemoryDbFacade implements DbFacadeInterface {
 
 
   getTeams() : Promise<[Team]> {
-    console.log('db-facade getTeams()');
     let teams : [UnpopulatedTeam] = <[UnpopulatedTeam]> [];
     for (var id in this.teams) {
       let teamString = this.teams[id];
       let team = JSON.parse(teamString);
       teams.push(team);
     }
-    console.log('unpopulated teams');
-    console.log(teams);
     let teamsPromises = teams.map(team => this.populateTeam(team));
     return Promise.all(teamsPromises)
       .then(teams => teams.map(team => Team.fromJSON(team)));
@@ -98,13 +95,9 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     let copy = JSON.parse(JSON.stringify(team));
     return Promise.all(updatePromises)
       .then((statuses: [TeamUpdate]) => {
-        console.log('populated statuses');
-        console.log(statuses);
         copy.statusUpdates = statuses;
         return Promise.all(racerPromises)
           .then((racers: [Racer]) => {
-            console.log('populated racers');
-            console.log(racers);
             copy.racers = racers;
             return Promise.resolve(copy);
           });
@@ -112,7 +105,6 @@ export class InMemoryDbFacade implements DbFacadeInterface {
   }
 
   getTeam(id: TeamId): Promise<Team> {
-    console.log('db-facade get team', id);
     let teamString = this.teams[String(id)];
     let unpopulatedTeam = JSON.parse(teamString);
     return this.populateTeam(unpopulatedTeam)
