@@ -19,7 +19,7 @@ export class InMemoryDbFacade implements DbFacadeInterface {
       {name: 'Prague or Bust', racers: []}
     ]
 
-    let racerCreatePromises = racerProperties.map(this.createRacer);
+    let racerCreatePromises = racerProperties.map(racer => this.createRacer(racer));
 
     Promise.all(racerCreatePromises)
       .then(createdRacers => {
@@ -27,7 +27,7 @@ export class InMemoryDbFacade implements DbFacadeInterface {
           let racerTeam = teamProperties[i % 2];
           racerTeam.racers.push(r);
         });
-        let teamCreatePromises = teamProperties.map(this.createTeam);
+        let teamCreatePromises = teamProperties.map(team => this.createTeam(team));
         Promise.all(teamCreatePromises)
           .then(teams => {
             console.log('Created default teams');
@@ -43,24 +43,27 @@ export class InMemoryDbFacade implements DbFacadeInterface {
   getRacers(): Promise<[Racer]> {
     let racersArray : [Racer] = <[Racer]> [];
     for (var id in this.racers) {
-      var racer = this.racers[id];
+      let racerString = this.racers[id];
+      let racer = Racer.fromJSON(JSON.parse(racerString));
       racersArray.push(racer);
     }
     return Promise.resolve(racersArray);
   }
 
   getRacer(id: number): Promise<Racer> {
-    return Promise.resolve(this.racers[String(id)]);
+    let racerString = this.racers[String(id)];
+    let racer = Racer.fromJSON(JSON.parse(racerString));
+    return Promise.resolve(racer);
   }
 
   updateRacer(id: number, newRacer: Racer): Promise<Racer> {
-    this.racers[String(id)] = newRacer;
-    return Promise.resolve(this.racers[String(id)]);
+    this.racers[String(id)] = JSON.stringify(newRacer);
+    return Promise.resolve(newRacer);
   }
 
   createRacer(properties): Promise<Racer> {
     let newRacer = new Racer(this.nextRacerId, properties);
-    this.racers[String(newRacer.id)] = newRacer;
+    this.racers[String(newRacer.id)] = JSON.stringify(newRacer);
     this.nextRacerId++;
     return Promise.resolve(newRacer);
   }

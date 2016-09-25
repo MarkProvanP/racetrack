@@ -52,7 +52,7 @@ export class Team {
   id: TeamId;
   name: string;
   statusUpdates: [TeamUpdate] = [];
-  racers: [Racer];
+  racers: [Racer] = [];
 
   static fromJSON(obj) {
     let u = obj.statusUpdates;
@@ -66,8 +66,12 @@ export class Team {
   constructor(id: TeamId, properties) {
     this.id = id;
     this.name = properties.name;
-    this.racers = properties.racers;
-    this.statusUpdates = properties.statusUpdates;
+    if (properties.racers) {
+      this.racers = properties.racers;
+    }
+    if (properties.statusUpdates) {
+      this.statusUpdates = properties.statusUpdates;
+    }
   }
 
   getCurrentStatus(): TeamStatus {

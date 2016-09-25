@@ -6,6 +6,10 @@ export class Racer {
   nationality: string;
   phone: string;
 
+  static fromJSON(obj) {
+    return new Racer(obj.id, obj);
+  }
+
   constructor(id: RacerId, properties) {
     this.id = id;
     this.name = properties.name;
