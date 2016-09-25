@@ -18,3 +18,26 @@
   width: 300px;  
   flex: 1;
 }
+
+.texts-by-team {
+  display: flex;
+
+  .teams-list {
+    width: 300px;
+  }
+
+  .texts-by-team-list {
+    flex: 1;
+  }
+}
+.texts-by-racer {
+  display: flex;
+
+  .racers-list {
+    width: 300px;
+  }
+
+  .texts-by-racer-list {
+    flex: 1;
+  }
+}

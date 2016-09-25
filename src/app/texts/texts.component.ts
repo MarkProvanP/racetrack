@@ -11,6 +11,14 @@ import { DataService }         from '../data.service';
 })
 export class TextsComponent implements OnInit {
   texts: [Text] = <Text>[];
+  organiseTexts = 'all';
+  racers: [Racer] = <Racer>[];
+  teams: [Team] = <Team>[];
+
+  selectedTeam: Team;
+  selectedTeamTexts: [Text];
+  selectedRacer: Racer;
+  selectedRacerTexts: [Text];
 
   constructor(
     private dataService: DataService,
@@ -24,6 +32,20 @@ export class TextsComponent implements OnInit {
       });
   }
 
+  getTeams(): void {
+    this.dataService.getTeams()
+      .then(teams => {
+        this.teams = teams;
+      });
+  }
+
+  getRacers(): void {
+    this.dataService.getRacers()
+      .then(racers => {
+        this.racers = racers;
+      });
+  }
+
   addRacerToText(text) {
     this.dataService.getRacerForPhoneNumber(text.from)
       .then(racer => {
@@ -33,6 +55,16 @@ export class TextsComponent implements OnInit {
       });
   }
 
+  selectTextsByTeam(team: Team) {
+    this.selectedTeam = team;
+    this.selectedTeamTexts = this.texts.filter(text => text.team.id === team.id);
+  }
+
+  selectTextsByRacer(racer: Racer) {
+    this.selectedRacer = racer;
+    this.selectedRacerTexts = this.texts.filter(text => text.racer.id === racer.id);
+  }
+
   onTextReceived(text) {
     this.texts.push(text);
     this.addRacerToText(text)
@@ -40,6 +72,8 @@ export class TextsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTexts();
+    this.getTeams();
+    this.getRacers();
     this.dataService.onTextReceived(text => this.onTextReceived(text));
   }
 }
