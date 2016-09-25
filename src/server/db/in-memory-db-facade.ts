@@ -1,5 +1,6 @@
 import { Racer } from "../../common/racer";
-import { Team, UnpopulatedTeam, PopulatedTeam, TeamId, TeamStatus, TeamUpdate, TeamUpdateId, Location } from "../../common/team";
+import { Team, UnpopulatedTeam, PopulatedTeam, TeamId } from "../../common/team";
+import { TeamUpdate, TeamUpdateId, TeamStatus, Location } from "../../common/update";
 import { DbFacadeInterface } from "./db-facade";
 import { Promise } from "es6-promise";
 

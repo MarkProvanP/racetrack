@@ -1,5 +1,6 @@
 import { Racer, RacerId } from "../../common/racer";
-import { Team, TeamId, TeamUpdate, TeamUpdateId } from "../../common/team";
+import { Team, TeamId } from "../../common/team";
+import { TeamUpdate, TeamUpdateId } from "../../common/update";
 
 var Promise = require("es6-promise").Promise;
 
