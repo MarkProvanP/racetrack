@@ -1,4 +1,4 @@
-export type RacerId = number;
+export type RacerId = string;
 
 export class Racer {
   id: RacerId;

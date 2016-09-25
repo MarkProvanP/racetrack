@@ -38,7 +38,7 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
     console.log(body);
     let newDetailsRacer = body as Racer;
 
-    db_facade.updateRacer(Number(req.params.id), newDetailsRacer)
+    db_facade.updateRacer(req.params.id, newDetailsRacer)
       .then(changedRacer => {
         res.type('application/json');
         res.send(JSON.stringify(changedRacer));
@@ -49,7 +49,7 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
     console.log('DELETE /racers');
     let body = req.body;
     console.log(body);
-    let deletedRacerId = Number(req.params.id);
+    let deletedRacerId = req.params.id;
 
     db_facade.deleteRacer(deletedRacerId)
       .then(() => {

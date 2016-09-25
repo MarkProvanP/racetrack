@@ -21,7 +21,7 @@ export default function teamsRouterWithDb(db_facade: DbFacadeInterface) {
   })
   teamsRouter.get('/:id', (req, res) => {
     console.log('get single team');
-    let id = Number(req.params.id);
+    let id = req.params.id;
     db_facade.getTeam(id)
       .then(team => {
         res.type('application/json');
@@ -40,14 +40,14 @@ export default function teamsRouterWithDb(db_facade: DbFacadeInterface) {
     let newDetailsTeam = req.body as Team;
     console.log("updating team");
     console.log(newDetailsTeam)
-    db_facade.updateTeam(Number(req.params.id), newDetailsTeam)
+    db_facade.updateTeam(req.params.id, newDetailsTeam)
       .then(changedTeam => {
         res.type('application.json');
         res.send(JSON.stringify(changedTeam));
       });
   })
   teamsRouter.delete('/:id', function(req, res) {
-    let deletedTeamId = Number(req.params.id);
+    let deletedTeamId = req.params.id;
     db_facade.deleteTeam(deletedTeamId)
       .then(() => {
         res.send('successfully deleted team');

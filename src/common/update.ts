@@ -17,7 +17,7 @@ export function prettyStatusName(status: TeamStatus) {
   }
 }
 
-export type TeamUpdateId = number;
+export type TeamUpdateId = string;
 
 export class Location {
   latitude: string;

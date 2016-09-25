@@ -19,7 +19,7 @@ export class RacerDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.forEach((params: Params) => {
-      let id = +params['id'];
+      let id = params['id'];
       this.dataService.getRacer(id)
         .then(racer => this.racer = racer);
     });

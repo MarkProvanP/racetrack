@@ -3,8 +3,8 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { Team } from '../common/team';
-import { Racer } from '../common/racer';
+import { Team, TeamId } from '../common/team';
+import { Racer, RacerId } from '../common/racer';
 
 @Injectable()
 export class DataService {
@@ -47,7 +47,7 @@ export class DataService {
                .catch(this.handleError);
   }
 
-  getTeam(id: number): Promise<Team> {
+  getTeam(id: TeamId): Promise<Team> {
     let url = `${this.teamsUrl}/${id}`;
     return this.http.get(url)
       .toPromise()
@@ -55,7 +55,7 @@ export class DataService {
       .catch(this.handleError);
   }
 
-  deleteTeam(id: number): Promise<void> {
+  deleteTeam(id: TeamId): Promise<void> {
     let url = `${this.teamsUrl}/${id}`;
     return this.http.delete(url, {body: "", headers: this.headers})
       .toPromise()
@@ -87,12 +87,12 @@ export class DataService {
                .catch(this.handleError);
   }
 
-  getRacer(id: number): Promise<Racer> {
+  getRacer(id: RacerId): Promise<Racer> {
     return this.getRacers()
                .then(racers => racers.find(racer => racer.id === id));
   }
 
-  deleteRacer(id: number): Promise<void> {
+  deleteRacer(id: RacerId): Promise<void> {
     let url = `${this.racersUrl}/${id}`;
     console.log(url);
     return this.http.delete(url, {body: "", headers: this.headers})

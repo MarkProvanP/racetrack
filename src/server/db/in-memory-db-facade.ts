@@ -3,6 +3,7 @@ import { Team, UnpopulatedTeam, PopulatedTeam, TeamId } from "../../common/team"
 import { TeamUpdate, TeamUpdateId, TeamStatus, Location } from "../../common/update";
 import { DbFacadeInterface } from "./db-facade";
 import { Promise } from "es6-promise";
+import * as uuid from "node-uuid";
 
 export class InMemoryDbFacade implements DbFacadeInterface {
   constructor() {
@@ -37,9 +38,9 @@ export class InMemoryDbFacade implements DbFacadeInterface {
       });
   }
   private racers = {};
-  private nextRacerId = 200;
   private teams = {};
-  private nextTeamId = 20;
+  private teamUpdates = {};
+  private texts = {};
 
   getRacers(): Promise<[Racer]> {
     let racersArray : [Racer] = <[Racer]> [];
@@ -63,9 +64,9 @@ export class InMemoryDbFacade implements DbFacadeInterface {
   }
 
   createRacer(properties): Promise<Racer> {
-    let newRacer = new Racer(this.nextRacerId, properties);
+    let id = uuid.v4();
+    let newRacer = new Racer(id, properties);
     this.racers[String(newRacer.id)] = JSON.stringify(newRacer);
-    this.nextRacerId++;
     return Promise.resolve(newRacer);
   }
 
@@ -74,6 +75,7 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     return Promise.resolve();
   }
 
+//================================================================
 
   getTeams() : Promise<[Team]> {
     let teams : [UnpopulatedTeam] = <[UnpopulatedTeam]> [];
@@ -122,7 +124,8 @@ export class InMemoryDbFacade implements DbFacadeInterface {
   }
 
   createTeam(properties): Promise<Team> {
-    let newTeam = new Team(this.nextTeamId++, properties);
+    let id = uuid.v4();
+    let newTeam = new Team(id, properties);
     return this.writeTeam(newTeam.id, newTeam);
   }
 
@@ -131,7 +134,7 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     return Promise.resolve();
   }
 
-  private texts = {};
+//================================================================
 
   addText(text): Promise<any> {
     this.texts[text.SmsSid] = JSON.stringify(text);
@@ -158,11 +161,11 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     return Promise.resolve(textsArray);
   }
 
-  private teamUpdates = {};
-  private nextTeamUpdateId = 0;
+//================================================================
 
   createStatusUpdate(properties): Promise<TeamUpdate> {
-    let newStatusUpdate = new TeamUpdate(this.nextTeamUpdateId++, properties);
+    let id = uuid.v4();
+    let newStatusUpdate = new TeamUpdate(id, properties);
     this.teamUpdates[String(newStatusUpdate.id)] = newStatusUpdate.toIdJSON();
     return Promise.resolve(newStatusUpdate);
   }
@@ -183,15 +186,4 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     return Promise.resolve(update);
   }
 }
-
-
-
-//================================================================
-
-
-
-//================================================================
-
-
-//================================================================
 

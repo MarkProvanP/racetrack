@@ -1,7 +1,7 @@
 import { Racer, RacerId } from "./racer";
 import { TeamUpdate, TeamUpdateId, TeamStatus, Location, prettyStatusName } from "./update";
 
-export type TeamId = number;
+export type TeamId = string;
 export interface UnpopulatedTeam {
   id: TeamId;
   name: string;
