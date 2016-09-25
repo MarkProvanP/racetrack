@@ -1,4 +1,4 @@
-import { Racer } from "../../common/racer";
+import { Racer, RacerId } from "../../common/racer";
 import { Team, UnpopulatedTeam, PopulatedTeam, TeamId } from "../../common/team";
 import { TeamUpdate, TeamUpdateId, TeamStatus, Location } from "../../common/update";
 import { DbFacadeInterface } from "./db-facade";
@@ -51,13 +51,13 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     return Promise.resolve(racersArray);
   }
 
-  getRacer(id: number): Promise<Racer> {
+  getRacer(id: RacerId): Promise<Racer> {
     let racerString = this.racers[String(id)];
     let racer = Racer.fromJSON(JSON.parse(racerString));
     return Promise.resolve(racer);
   }
 
-  updateRacer(id: number, newRacer: Racer): Promise<Racer> {
+  updateRacer(id: RacerId, newRacer: Racer): Promise<Racer> {
     this.racers[String(id)] = JSON.stringify(newRacer);
     return Promise.resolve(newRacer);
   }
@@ -69,7 +69,7 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     return Promise.resolve(newRacer);
   }
 
-  deleteRacer(id: number): Promise<any> {
+  deleteRacer(id: RacerId): Promise<any> {
     delete this.racers[String(id)];
     return Promise.resolve();
   }
@@ -83,19 +83,31 @@ export class InMemoryDbFacade implements DbFacadeInterface {
       let team = JSON.parse(teamString);
       teams.push(team);
     }
-    let teamsPromises = teams.map(this.populateTeamUpdates);
+    console.log('unpopulated teams');
+    console.log(teams);
+    let teamsPromises = teams.map(team => this.populateTeam(team));
     return Promise.all(teamsPromises)
       .then(teams => teams.map(team => Team.fromJSON(team)));
   }
 
-  private populateTeamUpdates(team: UnpopulatedTeam): Promise<PopulatedTeam> {
+  private populateTeam(team: UnpopulatedTeam): Promise<PopulatedTeam> {
     let updatePromises = team.statusUpdates
       .map(update => this.getStatusUpdate(update));
+    let racerPromises = team.racers
+      .map(racer => this.getRacer(racer));
+    let copy = JSON.parse(JSON.stringify(team));
     return Promise.all(updatePromises)
       .then((statuses: [TeamUpdate]) => {
-        let copy = JSON.parse(JSON.stringify(team));
+        console.log('populated statuses');
+        console.log(statuses);
         copy.statusUpdates = statuses;
-        return Promise.resolve(copy);
+        return Promise.all(racerPromises)
+          .then((racers: [Racer]) => {
+            console.log('populated racers');
+            console.log(racers);
+            copy.racers = racers;
+            return Promise.resolve(copy);
+          });
       });
   }
 
@@ -103,7 +115,7 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     console.log('db-facade get team', id);
     let teamString = this.teams[String(id)];
     let unpopulatedTeam = JSON.parse(teamString);
-    return this.populateTeamUpdates(unpopulatedTeam)
+    return this.populateTeam(unpopulatedTeam)
       .then(team => Promise.resolve(Team.fromJSON(team)));
   }
 

@@ -13,8 +13,9 @@ export default function teamsRouterWithDb(db_facade: DbFacadeInterface) {
   teamsRouter.get('/', function(req, res) {
     db_facade.getTeams()
       .then(teams => {
+        console.log('teamsRouter getTeams()')
+        console.log(teams);
         res.type('application/json');
-        console.log(db_facade.getTeams());
         res.send(JSON.stringify(teams));
       });
   })
