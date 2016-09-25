@@ -33,7 +33,7 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
     console.log('PUT /racers')
     let body = req.body;
     console.log(body);
-    let newDetailsRacer = body as Racer;
+    let newDetailsRacer = Racer.fromJSON(body);
 
     db_facade.updateRacer(req.params.id, newDetailsRacer)
       .then(changedRacer => {

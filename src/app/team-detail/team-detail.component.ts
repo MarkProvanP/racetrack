@@ -2,7 +2,8 @@ import { Component, OnInit, Pipe } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Router } from '@angular/router';
 
-import { Team, Location, TeamUpdate, TeamStatus } from '../../common/team';
+import { Team } from '../../common/team';
+import { Location, TeamUpdate, TeamStatus } from '../../common/update';
 import { Racer } from '../../common/racer';
 import { DataService } from '../data.service';
 

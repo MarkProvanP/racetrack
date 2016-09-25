@@ -37,7 +37,7 @@ export default function teamsRouterWithDb(db_facade: DbFacadeInterface) {
       });
   });
   teamsRouter.put('/:id', function(req, res) {
-    let newDetailsTeam = req.body as Team;
+    let newDetailsTeam = Team.fromJSON(req.body);
     console.log("updating team");
     console.log(newDetailsTeam)
     db_facade.updateTeam(req.params.id, newDetailsTeam)

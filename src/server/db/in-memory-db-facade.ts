@@ -54,8 +54,12 @@ export class InMemoryDbFacade implements DbFacadeInterface {
 
   getRacer(id: RacerId): Promise<Racer> {
     let racerString = this.racers[String(id)];
-    let racer = Racer.fromJSON(JSON.parse(racerString));
-    return Promise.resolve(racer);
+    if (racerString) {
+      let racer = Racer.fromJSON(JSON.parse(racerString));
+      return Promise.resolve(racer);
+    } else {
+      return Promise.reject(`Racer Id ${id} not found`);
+    }
   }
 
   updateRacer(id: RacerId, newRacer: Racer): Promise<Racer> {
