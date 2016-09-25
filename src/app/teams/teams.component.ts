@@ -26,7 +26,8 @@ export class TeamsComponent implements OnInit {
   add(name: string): void {
     name = name.trim();
     if (!name) { return; }
-    this.dataService.createTeam(name)
+    let properties = {name: name};
+    this.dataService.createTeam(properties)
       .then(team => {
         this.teams.push(team);
         this.selectedTeam = null;

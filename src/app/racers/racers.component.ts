@@ -26,7 +26,8 @@ export class RacersComponent implements OnInit {
   add(name: string): void {
     name = name.trim();
     if (!name) { return; }
-    this.dataService.createRacer(name)
+    let properties = {name: name};
+    this.dataService.createRacer(properties)
       .then(racer => {
         this.racers.push(racer);
         this.selectedRacer = null;

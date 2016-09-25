@@ -63,9 +63,9 @@ export class DataService {
       .catch(this.handleError);
   }
 
-  createTeam(name: string): Promise<Team> {
+  createTeam(properties): Promise<Team> {
     return this.http
-      .post(this.teamsUrl, JSON.stringify({name: name}), {headers: this.headers})
+      .post(this.teamsUrl, JSON.stringify(properties), {headers: this.headers})
       .toPromise()
       .then(res => res.json())
       .catch(this.handleError);
@@ -101,9 +101,9 @@ export class DataService {
       .catch(this.handleError);
   }
 
-  createRacer(name: string): Promise<Racer> {
+  createRacer(properties): Promise<Racer> {
     return this.http
-      .post(this.racersUrl, JSON.stringify({name: name}), {headers: this.headers})
+      .post(this.racersUrl, JSON.stringify(properties), {headers: this.headers})
       .toPromise()
       .then(res => res.json())
       .catch(this.handleError);
