@@ -10,6 +10,10 @@ export class Racer {
     return new Racer(obj.id, obj);
   }
 
+  toIdJSON() {
+    return JSON.stringify(this);
+  }
+
   constructor(id: RacerId, properties) {
     this.id = id;
     this.name = properties.name;

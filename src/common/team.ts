@@ -1,4 +1,4 @@
-import { Racer } from "./racer";
+import { Racer, RacerId } from "./racer";
 
 export enum TeamStatus {
   ON_START_BUS, IN_UK, IN_EUROPE, IN_HOSTEL, DROPPED_OUT, ASLEEP, OVERDUE, MAYBE_LATE, IN_CITY, UNKNOWN
@@ -36,7 +36,11 @@ export class TeamUpdate {
   location: Location;
 
   static fromJSON(obj) {
-    return new TeamUpdate(obj.id, obj.status, obj.location, obj.notes)
+    return new TeamUpdate(obj.id, obj)
+  }
+
+  toIdJSON() {
+    return JSON.stringify(this);
   }
 
   constructor(id: TeamUpdateId, properties) {
@@ -48,19 +52,36 @@ export class TeamUpdate {
   }
 }
 
+export interface UnpopulatedTeam {
+  id: TeamId;
+  name: string;
+  statusUpdates: [TeamUpdateId];
+  racers: [RacerId];
+}
+export interface PopulatedTeam {
+  id: TeamId;
+  name: string;
+  statusUpdates: [TeamUpdate];
+  racers: [Racer];
+}
+
 export class Team {
   id: TeamId;
   name: string;
-  statusUpdates: [TeamUpdate] = [];
-  racers: [Racer] = [];
+  statusUpdates: [TeamUpdate] = <[TeamUpdate]>[];
+  racers: [Racer] = <[Racer]>[];
 
-  static fromJSON(obj) {
+  static fromJSON(obj: PopulatedTeam) {
     let u = obj.statusUpdates;
-    let updates = [];
-    if (u.length > 0) {
-      updates = u.map(TeamUpdate.fromJSON);
-    }
-    return new Team(obj.id, obj.name, obj.racers, updates);
+    let updates = u.map(TeamUpdate.fromJSON);
+    return new Team(obj.id, obj);
+  }
+
+  depopulate(): UnpopulatedTeam {
+    let copy = JSON.parse(JSON.stringify(this));
+    copy.statusUpdates = this.statusUpdates.map(update => update.id);
+    copy.racers = this.racers.map(racer => racer.id);
+    return copy;
   }
 
   constructor(id: TeamId, properties) {
