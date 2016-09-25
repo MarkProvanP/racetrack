@@ -57,37 +57,35 @@ export class InMemoryDbFacade implements DbFacadeInterface {
 
   getTeams() : Promise<[Team]> {
     console.log('db-facade getTeams()');
-    let teamsArray : [Team] = <[Team]> [];
+    let teams : [Team] = <[Team]> [];
     for (var id in this.teams) {
       let team = this.teams[id];
-      let populated = this.populateTeamUpdates(team);
-      teamsArray.push(populated);
-      console.log('populated', populated)
+      teams.push(team);
     }
-    console.log('db-facade returning populated', teamsArray);
-    return Promise.resolve(teamsArray);
+    let teamsPromises = teams.map(this.populateTeamUpdates);
+    return Promise.all(teamsPromises);
   }
-  private populateTeamUpdates(team: Team): Team {
+
+  private populateTeamUpdates(team: Team): Promise<Team> {
     let statusUpdateIds = team.statusUpdates.map(su => {
       if (su instanceof TeamUpdate) {
         return su.id;
       }
       return su;
     });
-    if (statusUpdateIds) {
-      let populatedStatusUpdates = statusUpdateIds.map(this.getStatusUpdate);
-      team.statusUpdates = populatedStatusUpdates;
-    }
-    return team;
+    let updatePromises = team.statusUpdates
+      .map(update => this.getStatusUpdate(update));
+    return Promise.all(updatePromises)
+      .then((statuses) => {
+        team.statusUpdates = statuses;
+        return Promise.resolve(team);
+      });
   }
 
   getTeam(id: TeamId): Promise<Team> {
     console.log('db-facade get team', id);
     let team = this.teams[String(id)];
-    let populatedTeam = this.populateTeamUpdates(team);
-    console.log('unpop', team);
-    console.log('pop', populatedTeam);
-    return Promise.resolve(populatedTeam);
+    return this.populateTeamUpdates(team);
   }
 
   updateTeam(id: TeamId, newTeam: Team) : Promise<Team> {

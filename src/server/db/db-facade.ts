@@ -1,14 +1,14 @@
-import { Racer } from "../../common/racer";
+import { Racer, RacerId } from "../../common/racer";
 import { Team, TeamId, TeamUpdate, TeamUpdateId } from "../../common/team";
 
 var Promise = require("es6-promise").Promise;
 
 export interface DbFacadeInterface {
   getRacers(): Promise<[Racer]>;
-  getRacer(id: number): Promise<Racer>;
-  updateRacer(id: number, newRacer: Racer): Promise<Racer>;
+  getRacer(id: RacerId): Promise<Racer>;
+  updateRacer(id: RacerId, newRacer: Racer): Promise<Racer>;
   createRacer(name: string): Promise<Racer>;
-  deleteRacer(id: number): Promise<any>;
+  deleteRacer(id: RacerId): Promise<any>;
 
   getTeams() : Promise<[Team]>;
   getTeam(id: TeamId): Promise<Team>;
