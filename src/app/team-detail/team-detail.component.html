@@ -30,6 +30,19 @@
     </li>
   </ul>
   <label>Racers</label>
+  <button (click)="addRacer()">Add Racer</button>
+  <div *ngIf="inAddRacerMode">
+    <label>Add Racer</label>
+    <ul>
+      <li *ngFor='let racer of unteamedRacers'>
+        <div>
+          <label>Name:</label>{{racer.name}}
+          <button class="delete"
+            (click)="addRacerToTeam(racer); $event.stopPropagation()">Add</button>
+        </div>
+      </li>
+    </ul>
+  </div>
   <ul class='team-racers'>
     <li *ngFor='let racer of team.racers'>
       <div><label>id: </label>{{racer.id}}</div>

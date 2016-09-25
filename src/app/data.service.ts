@@ -1,6 +1,6 @@
 import { Injectable }    from '@angular/core';
 import { Headers, Http } from '@angular/http';
-
+import * as _ from "lodash";
 import 'rxjs/add/operator/toPromise';
 
 import { Team, TeamId } from '../common/team';
@@ -143,6 +143,21 @@ export class DataService {
         let statusUpdate = TeamUpdate.fromJSON(response.json());
         team.statusUpdates.push(statusUpdate);
         return this.updateTeam(team);
+      });
+  }
+
+  getRacersWithoutTeams(): Promise<[Racer]> {
+    return this.getRacers()
+      .then(racers => {
+        return this.getTeams()
+          .then(teams => {
+            let racersInTeams = teams
+              .map(team => team.racers)
+              .reduce((a, b) => a.concat(b));
+            let comp = (r1, r2) => r1.id === r2.id;
+            let remaining = _.differenceWith(racers, racersInTeams, comp);
+            return Promise.resolve(remaining);
+          });
       });
   }
 

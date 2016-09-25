@@ -51,6 +51,25 @@ export class TeamDetailComponent implements OnInit {
     });
   }
 
+  inAddRacerMode = false;
+  unteamedRacers = [];
+
+  addRacer() {
+    this.inAddRacerMode = true;
+    this.getUnteamedRacers();
+  }
+
+  getUnteamedRacers() {
+    this.dataService.getRacersWithoutTeams()
+      .then(racers => this.unteamedRacers = racers);
+  }
+
+  addRacerToTeam(racer: Racer) {
+    this.team.racers.push(racer);
+    this.dataService.updateTeam(this.team)
+      .then(team => this.team = team);
+  }
+
   inNewStatusMode = false;
   newStatusObj = {};
 
