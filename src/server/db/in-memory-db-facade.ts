@@ -130,10 +130,11 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     delete this.teams[String(id)];
     return Promise.resolve();
   }
+
   private texts = {};
 
   addText(text): Promise<any> {
-    this.texts[text.SmsSid] = text;
+    this.texts[text.SmsSid] = JSON.stringify(text);
     return Promise.resolve();
   }
 
@@ -141,7 +142,7 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     let textsArray = [];
     for (var smsSid in this.texts) {
       var text = this.texts[smsSid];
-      textsArray.push(text);
+      textsArray.push(JSON.parse(text));
     }
     return Promise.resolve(textsArray);
   }
@@ -149,7 +150,7 @@ export class InMemoryDbFacade implements DbFacadeInterface {
   getTextsByNumber(number): Promise<any> {
     let textsArray = [];
     for (var smsSid in this.texts) {
-      var text = this.texts[smsSid];
+      var text = JSON.parse(this.texts[smsSid]);
       if (text.From === number) {
         textsArray.push(text);
       }
@@ -162,21 +163,24 @@ export class InMemoryDbFacade implements DbFacadeInterface {
 
   createStatusUpdate(properties): Promise<TeamUpdate> {
     let newStatusUpdate = new TeamUpdate(this.nextTeamUpdateId++, properties);
-    this.teamUpdates[String(newStatusUpdate.id)] = newStatusUpdate;
+    this.teamUpdates[String(newStatusUpdate.id)] = newStatusUpdate.toIdJSON();
     return Promise.resolve(newStatusUpdate);
   }
 
   getStatusUpdates(): Promise<[TeamUpdate]> {
     let updatesArray: [TeamUpdate] = <[TeamUpdate]>[];
     for (var id in this.teamUpdates) {
-      var update = this.teamUpdates[id];
+      let updateString = this.teamUpdates[String(id)];
+      let update = TeamUpdate.fromJSON(JSON.parse(updateString));
       updatesArray.push(update);
     }
     return Promise.resolve(updatesArray);
   }
 
   getStatusUpdate(id: TeamUpdateId): Promise<TeamUpdate> {
-    return Promise.resolve(this.teamUpdates[String(id)]);
+    let updateString = this.teamUpdates[String(id)];
+    let update = TeamUpdate.fromJSON(JSON.parse(updateString));
+    return Promise.resolve(update);
   }
 }
 
