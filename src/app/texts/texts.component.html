@@ -1,7 +1,24 @@
-<h2>Texts</h2>
-<ul class="texts">
-  <li *ngFor="let text of texts">
-    <span class="badge">{{text.From}}</span>
-    <span>{{text.Body}}</span>
-  </li>
-</ul>
+<div class='card-container'>
+  <h2>Texts</h2>
+  <div class="texts-list">
+    <div class='text-card' *ngFor="let text of texts">
+      <md-card>
+        <md-card-header>
+          <md-card-title>
+            <div>From: {{text.From}}</div>
+            <div *ngIf="text.racer">Racer: {{text.racer.name}}</div>
+          </md-card-title>
+        </md-card-header>
+        <md-card-content>
+          {{text.Body}}
+        </md-card-content>
+        <md-card-actions>
+          <button md-button>RESPOND</button>
+          <md-checkbox>
+            Read
+          </md-checkbox>
+        </md-card-actions>
+      </md-card>
+    </div>
+  </div>
+</div>

@@ -161,6 +161,11 @@ export class DataService {
       });
   }
 
+  getRacerForPhoneNumber(phone: string): Promise<Racer>{
+    return this.getRacers()
+      .then(racers => racers.filter(racer => racer.phone === phone)[0]);
+  }
+
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);

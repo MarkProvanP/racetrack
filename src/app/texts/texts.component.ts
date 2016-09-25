@@ -17,11 +17,20 @@ export class TextsComponent implements OnInit {
 
   getTexts(): void {
     this.dataService.getTexts()
-      .then(texts => this.texts = texts);
+      .then(texts => {
+        this.texts = texts
+        this.texts.forEach(text => this.addRacerToText(text));
+      });
+  }
+
+  addRacerToText(text) {
+    this.dataService.getRacerForPhoneNumber(text.From)
+      .then(racer => text.racer = racer);
   }
 
   onTextReceived(text) {
     this.texts.push(text);
+    this.addRacerToText(text)
   }
 
   ngOnInit(): void {
