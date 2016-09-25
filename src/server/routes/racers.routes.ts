@@ -19,6 +19,15 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
       });
   })
 
+  racersRouter.get('/:id', (req, res) => {
+    let id = req.params.id;
+    db_facade.getRacer(id)
+      .then(racer => {
+        res.type('application/json');
+        res.send(JSON.stringify(racer));
+      });
+  });
+
   racersRouter.post('/', function(req, res) {
     console.log('POST /racers')
     let body = req.body;
