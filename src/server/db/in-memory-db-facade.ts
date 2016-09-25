@@ -4,25 +4,41 @@ import { DbFacadeInterface } from "./db-facade";
 import { Promise } from "es6-promise";
 
 export class InMemoryDbFacade implements DbFacadeInterface {
-  private racers = {
-    "200": {id: 200, name: 'Tom Smith', nationality: 'GB', phone: '+12134732'},
-    "201": {id: 201, name: 'Dick Stanley', nationality: 'GB', phone: '+1912912'},
-    "202": {id: 202, name: 'Harry Monaghan', nationality: 'US', phone: '+121240342'},
-    "203": {id: 203, name: 'Sally Garrard', nationality: 'CA', phone: '+12554654'},
-    "204": {id: 204, name: 'Jess Swanwick', nationality: 'FR', phone: '+121239123'},
-    "205": {id: 205, name: 'Veronica Thomson', nationality: 'DE', phone: '+1289238942'}
-  };
-  private nextRacerId = 206;
+  constructor() {
+    let racerProperties = [
+      {name: 'Tom Smith', nationality: 'GB', phone: '+12134732'},
+      {name: 'Dick Stanley', nationality: 'GB', phone: '+1912912'},
+      {name: 'Harry Monaghan', nationality: 'US', phone: '+121240342'},
+      {name: 'Sally Garrard', nationality: 'CA', phone: '+12554654'},
+      {name: 'Jess Swanwick', nationality: 'FR', phone: '+121239123'},
+      {name: 'Veronica Thomson', nationality: 'DE', phone: '+1289238942'}
+    ];
 
-  private teams = {
-    "21": new Team(21, 'H2G2', [
-      this.racers["200"], this.racers["202"], this.racers["204"] 
-    ], []),
-    "22": new Team(22, 'Prague or Bust', [
-      this.racers["201"], this.racers["203"], this.racers["205"]
-    ], [])
-  };
-  private nextTeamId = 23;
+    let teamProperties = [
+      {name: 'H2G2', racers: []},
+      {name: 'Prague or Bust', racers: []}
+    ]
+
+    let racerCreatePromises = racerProperties.map(this.createRacer);
+
+    Promise.all(racerCreatePromises)
+      .then(createdRacers => {
+        createdRacers.forEach((r, i) => {
+          let racerTeam = teamProperties[i % 2];
+          racerTeam.racers.push(r);
+        });
+        let teamCreatePromises = teamProperties.map(this.createTeam);
+        Promise.all(teamCreatePromises)
+          .then(teams => {
+            console.log('Created default teams');
+            console.log(teams);
+          });
+      });
+  }
+  private racers = {};
+  private nextRacerId = 200;
+  private teams = {};
+  private nextTeamId = 20;
 
   getRacers(): Promise<[Racer]> {
     let racersArray : [Racer] = <[Racer]> [];
