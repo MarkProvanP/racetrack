@@ -6,6 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import { Team, TeamId } from '../common/team';
 import { Racer, RacerId } from '../common/racer';
 import { TeamUpdate } from '../common/update';
+import { Text, PhoneNumber } from '../common/text';
 
 type textCallback = (any) => void;
 
@@ -129,10 +130,11 @@ export class DataService {
       .catch(this.handleError);
   }
 
-  getTexts(): Promise<[any]> {
+  getTexts(): Promise<[Text]> {
     return this.http.get(this.textsUrl)
       .toPromise()
-      .then(response => response.json())
+      .then(response => response.json()
+            .map(twilio => Text.fromTwilio(twilio)))
       .catch(this.handleError);
   }
 
@@ -161,9 +163,14 @@ export class DataService {
       });
   }
 
-  getRacerForPhoneNumber(phone: string): Promise<Racer>{
+  getRacerForPhoneNumber(phone: PhoneNumber): Promise<Racer>{
     return this.getRacers()
       .then(racers => racers.filter(racer => racer.phone === phone)[0]);
+  }
+
+  getTeamForRacer(racer: Racer): Promise<Team> {
+    return this.getTeams()
+      .then(teams => teams.filter(team => team.hasRacer(racer))[0]);
   }
 
   private handleError(error: any): Promise<any> {

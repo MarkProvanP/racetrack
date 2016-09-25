@@ -1,10 +1,12 @@
+import { PhoneNumber } from './text';
+
 export type RacerId = string;
 
 export class Racer {
   id: RacerId;
   name: string;
   nationality: string;
-  phone: string;
+  phone: PhoneNumber;
 
   static fromJSON(obj) {
     return new Racer(obj.id, obj);

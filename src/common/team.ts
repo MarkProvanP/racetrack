@@ -71,6 +71,10 @@ export class Team {
   getCurrentStatusString(): string {
     return prettyStatusName(this.getCurrentStatus());
   }
+
+  hasRacer(racer: Racer): boolean {
+    return this.racers.filter(r => racer.id === r.id).length > 0;
+  }
 }
 
 

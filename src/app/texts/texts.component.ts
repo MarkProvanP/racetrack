@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { Text } from '../../common/text';
 import { DataService }         from '../data.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { DataService }         from '../data.service';
   styleUrls: ["./texts.component.scss"]
 })
 export class TextsComponent implements OnInit {
-  texts: [any] = [];
+  texts: [Text] = <Text>[];
 
   constructor(
     private dataService: DataService,
@@ -24,8 +25,12 @@ export class TextsComponent implements OnInit {
   }
 
   addRacerToText(text) {
-    this.dataService.getRacerForPhoneNumber(text.From)
-      .then(racer => text.racer = racer);
+    this.dataService.getRacerForPhoneNumber(text.from)
+      .then(racer => {
+        text.racer = racer
+        this.dataService.getTeamForRacer(racer)
+          .then(team => text.team = team);
+      });
   }
 
   onTextReceived(text) {
