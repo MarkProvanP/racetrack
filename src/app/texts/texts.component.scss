@@ -8,6 +8,25 @@
     }
 }
 
+md-tab-group {
+  flex: 1;
+  .md-tab-body-wrapper {
+    //flex: 1;
+  }
+}
+
+/deep/ .md-tab-body.md-active {
+  display:flex !important;
+}
+
+.all-texts {
+  margin: 20px;
+  
+  .text-card {
+    width: 300px;
+  }
+}
+
 .texts-list {
   display: flex;
   flex-direction: column;
@@ -15,19 +34,34 @@
 }
 
 .text-card {
-  width: 300px;  
   flex: 1;
 }
 
+/deep/ .md-list-item:hover {
+  background-color: lightgrey;
+}
+
+/deep/ .md-list-item.selected {
+  background-color: #EEEEEE;
+}
+
 .texts-by-team {
+  flex: 1;
   display: flex;
 
   .teams-list {
     width: 300px;
+    background-color: white;
+    overflow-y: scroll;
   }
 
   .texts-by-team-list {
     flex: 1;
+    margin: 20px;
+
+    .text-card {
+      
+    }
   }
 }
 .texts-by-racer {
