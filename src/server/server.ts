@@ -16,6 +16,8 @@ var PORT = config.SERVER_PORT;
 
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
+import { Text, TwilioText } from "../common/text";
+import { TextReceivedMessage } from "../common/message";
 
 var path = require('path');
 
@@ -60,6 +62,7 @@ setup(config.db_url)
     app.post('/twiml', function(req, res) {
       if (twilio.validateExpressRequest(req, config.authToken, {url: config.twilioSMSWebHook})) {
         let text = req.body;
+        console.log('received text from twilio', text);
         handleTextMessage(db_facade, text);
         res.send("ok");
       } else {
@@ -70,29 +73,18 @@ setup(config.db_url)
   });
 
 
-function handleTextMessage(db_facade, text: any) {
-  // Find which user, if any, the text came from
-  db_facade.addText(text);
-  let fromNumber = text.From;
-  db_facade.getRacers()
-    .then(racers => {
-      let filtered = racers.filter(racer => racer.phone === fromNumber)
-      if (filtered.length == 1) {
-        let foundRacer = filtered[0];
-        let msgObj = {
-          fromRacer: foundRacer,
-          text: text
-        }
-        sendToWebClients('receivedText', JSON.stringify(msgObj));
-      } else {
-        // Otherwise, send the message on anyway.
-        sendToWebClients('receivedUnknownText', JSON.stringify(text));
-      }
+function handleTextMessage(db_facade, twilioText: TwilioText) {
+  db_facade.addText(twilioText)
+    .then(text => {
+      let newMessage = new TextReceivedMessage(text)
+      sendMessageToWebClients(newMessage);
     });
 }
 
-function sendToWebClients(event, message) {
-  webClients.forEach(socket => socket.emit(event, message));
+function sendMessageToWebClients(message: TextReceivedMessage) {
+  let event = message.getEvent();
+  let body = JSON.stringify(message);
+  webClients.forEach(socket => socket.emit(event, body));
 }
 
 let webClients = [];

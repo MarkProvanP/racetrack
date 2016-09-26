@@ -7,8 +7,9 @@ import { Team, TeamId } from '../common/team';
 import { Racer, RacerId } from '../common/racer';
 import { TeamUpdate } from '../common/update';
 import { Text, PhoneNumber } from '../common/text';
+import { TextReceivedMessage } from "../common/message";
 
-type textCallback = (any) => void;
+type textCallback = (Text) => void;
 
 @Injectable()
 export class DataService {
@@ -26,17 +27,12 @@ export class DataService {
 
   constructor(private http: Http) {
     this.socket = io(this.backendHost, {path: "/r2bcknd/socket.io"});
-    this.socket.on('receivedText', (msgObj) => {
-      let parsed = JSON.parse(msgObj);
-      let racer = parsed.fromRacer;
-      let text = parsed.text;
-      console.log(`Received text from ${racer.name}: ${text.Body}`);
-      this.textReceivers.forEach(receiver => receiver(text))
-    });
-    this.socket.on('receivedUnknownText', (text) => {
-      let parsed = JSON.parse(text);
-      console.log(`Received text from unknown person (${parsed.From}): ${parsed.Body}`)
-      this.textReceivers.forEach(receiver => receiver(parsed))
+    this.socket.on(TextReceivedMessage.event, (messageString) => {
+      let parsed = JSON.parse(messageString);
+      let message = TextReceivedMessage.fromJSON(parsed);
+      console.log('Received message', message);
+      let text = message.text;
+      this.textReceivers.forEach(receiver => receiver(text));
     });
   }
 
