@@ -64,7 +64,9 @@ setup(config.db_url)
         let text = req.body;
         console.log('received text from twilio', text);
         handleTextMessage(db_facade, text);
-        res.send("ok");
+        let response = new twilio.TwimlResponse();
+        response.message("Working");
+        res.send(response.toString());
       } else {
         res.status(403).send("Error, you're not twilio!");
       }
