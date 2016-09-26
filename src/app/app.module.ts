@@ -33,6 +33,7 @@ import { TeamCardComponent } from './teams/team-card';
 import { DashboardComponent } from './dashboard';
 
 import { DataService } from './data.service';
+import { OrderBy } from './orderBy.pipe';
 
 // Import diretives
 import { XLarge } from './home/x-large';
@@ -64,7 +65,8 @@ const APP_PROVIDERS = [
     TeamsComponent,
     TeamDetailComponent,
     TeamCardComponent,
-    DashboardComponent
+    DashboardComponent,
+    OrderBy,
   ],
   imports: [ // import Angular's modules
     BrowserModule,
