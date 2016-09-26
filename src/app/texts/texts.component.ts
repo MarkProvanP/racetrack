@@ -1,8 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { Racer } from "../../common/racer";
+import { Team } from "../../common/team";
 import { Text } from '../../common/text';
 import { DataService }         from '../data.service';
+
+import * as moment from "moment";
 
 @Component({
   selector: "texts",
@@ -10,10 +14,9 @@ import { DataService }         from '../data.service';
   styleUrls: ["./texts.component.scss"]
 })
 export class TextsComponent implements OnInit {
-  texts: [Text] = <Text>[];
-  organiseTexts = 'all';
-  racers: [Racer] = <Racer>[];
-  teams: [Team] = <Team>[];
+  texts: [Text] = <[Text]>[];
+  racers: [Racer] = <[Racer]>[];
+  teams: [Team] = <[Team]>[];
 
   selectedTeam: Team;
   selectedTeamTexts: [Text];
@@ -27,7 +30,7 @@ export class TextsComponent implements OnInit {
   getTexts(): void {
     this.dataService.getTexts()
       .then(texts => {
-        this.texts = texts
+        this.texts = texts.reverse();
         this.texts.forEach(text => this.addRacerToText(text));
       });
   }
@@ -37,6 +40,10 @@ export class TextsComponent implements OnInit {
       .then(teams => {
         this.teams = teams;
       });
+  }
+
+  prettyTextTimestamp(text: Text): string {
+    return moment(text.timestamp).format('HH:mm ddd, Do MMM');
   }
 
   getRacers(): void {
@@ -66,7 +73,7 @@ export class TextsComponent implements OnInit {
   }
 
   onTextReceived(text) {
-    this.texts.push(text);
+    this.texts.unshift(text);
     this.addRacerToText(text)
   }
 

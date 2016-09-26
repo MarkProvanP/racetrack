@@ -35,6 +35,7 @@ md-tab-group {
 
 .text-card {
   flex: 1;
+  margin: 5px;
 }
 
 /deep/ .md-list-item:hover {
@@ -57,7 +58,8 @@ md-tab-group {
 
   .texts-by-team-list {
     flex: 1;
-    margin: 20px;
+    padding: 20px;
+    overflow-y: scroll;
 
     .text-card {
       

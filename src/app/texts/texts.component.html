@@ -11,6 +11,7 @@
                   <div>From: {{text.from}}</div>
                   <div *ngIf="text.racer">Racer: {{text.racer.name}}</div>
                   <div *ngIf="text.team">Team: {{text.team.name}}</div>
+                  <div>Time: {{prettyTextTimestamp(text)}}</div>
                 </md-card-title>
               </md-card-header>
               <md-card-content>
@@ -46,6 +47,7 @@
               <md-card-header>
                 <md-card-title>
                   <div *ngIf="text.racer">{{text.racer.name}} ({{text.from}})</div>
+                  <div>Time: {{prettyTextTimestamp(text)}}</div>
                 </md-card-title>
               </md-card-header>
               <md-card-content>
@@ -81,8 +83,7 @@
               <md-card-header>
                 <md-card-title>
                   <div>From: {{text.from}}</div>
-                  <div *ngIf="text.racer">Racer: {{text.racer.name}}</div>
-                  <div *ngIf="text.team">Team: {{text.team.name}}</div>
+                  <div>Time: {{prettyTextTimestamp(text)}}</div>
                 </md-card-title>
               </md-card-header>
               <md-card-content>

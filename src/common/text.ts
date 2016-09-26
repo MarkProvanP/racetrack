@@ -12,6 +12,7 @@ export class Text {
   racer: Racer;
   team: Team;
   twilio: TwilioText;
+  timestamp: Date;
 
   static fromJSON(obj) {
     return new Text(obj.id, obj);
@@ -23,6 +24,7 @@ export class Text {
     p['to'] = twilio.To;
     p['from'] = twilio.From;
     p['twilio'] = twilio;
+    p['timestamp'] = new Date();
     return new Text(id, p);
   }
 
@@ -32,6 +34,7 @@ export class Text {
     this.to = properties.to;
     this.from = properties.from;
     this.twilio = properties.twilio;
+    this.timestamp = properties.timestamp;
   }
 }
 
