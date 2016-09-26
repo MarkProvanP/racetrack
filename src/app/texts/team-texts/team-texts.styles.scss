@@ -1,0 +1,28 @@
+.texts-by-team {
+  flex: 1;
+  display: flex;
+
+  .teams-list {
+    width: 300px;
+    background-color: white;
+    overflow-y: scroll;
+  }
+
+  .texts-by-team-list {
+    flex: 1;
+    padding: 20px;
+    overflow-y: scroll;
+
+    .text-card {
+      margin: 5px;
+    }
+  }
+}
+
+/deep/ .md-list-item:hover {
+  background-color: lightgrey;
+}
+
+/deep/ .md-list-item.selected {
+  background-color: #EEEEEE;
+}

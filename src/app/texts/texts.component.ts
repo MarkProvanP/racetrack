@@ -9,6 +9,7 @@ import { DataService }         from '../data.service';
 import * as moment from "moment";
 
 import { AllTextsComponent } from "./all-texts";
+import { RacerTextsComponent } from "./racer-texts";
 
 @Component({
   selector: "texts",
@@ -20,8 +21,6 @@ export class TextsComponent implements OnInit {
   racers: [Racer] = <[Racer]>[];
   teams: [Team] = <[Team]>[];
 
-  selectedTeam: Team;
-  selectedTeamTexts: [Text];
   selectedRacer: Racer;
   selectedRacerTexts: [Text];
 
@@ -62,11 +61,6 @@ export class TextsComponent implements OnInit {
         this.dataService.getTeamForRacer(racer)
           .then(team => text.team = team);
       });
-  }
-
-  selectTextsByTeam(team: Team) {
-    this.selectedTeam = team;
-    this.selectedTeamTexts = this.texts.filter(text => text.team.id === team.id);
   }
 
   selectTextsByRacer(racer: Racer) {

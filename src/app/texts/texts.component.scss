@@ -17,6 +17,7 @@ md-tab-group {
 
 /deep/ .md-tab-body.md-active {
   display:flex !important;
+  flex-direction: column;
 }
 
 .all-texts {
@@ -46,26 +47,11 @@ md-tab-group {
   background-color: #EEEEEE;
 }
 
-.texts-by-team {
-  flex: 1;
+team-texts {
   display: flex;
-
-  .teams-list {
-    width: 300px;
-    background-color: white;
-    overflow-y: scroll;
-  }
-
-  .texts-by-team-list {
-    flex: 1;
-    padding: 20px;
-    overflow-y: scroll;
-
-    .text-card {
-      
-    }
-  }
 }
+
+
 .texts-by-racer {
   display: flex;
 
