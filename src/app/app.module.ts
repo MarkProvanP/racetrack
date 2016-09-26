@@ -21,6 +21,7 @@ import { Home } from './home';
 import { About } from './about';
 import { NoContent } from './no-content';
 
+import { AllTextsComponent } from './texts/all-texts';
 import { TextsComponent } from './texts';
 import { RacersComponent } from './racers';
 import { RacerDetailComponent } from './racer-detail';
@@ -51,6 +52,7 @@ const APP_PROVIDERS = [
     Home,
     NoContent,
     XLarge,
+    AllTextsComponent,
     TextsComponent,
     RacersComponent,
     RacerDetailComponent,

@@ -1,0 +1,15 @@
+.all-texts {
+  margin: 20px;
+
+  .texts-list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+  
+  .text-card {
+    flex: 1;
+    width: 300px;
+    margin: 5px;
+  }
+}

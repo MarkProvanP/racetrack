@@ -2,31 +2,7 @@
   <md-tab>
     <template md-tab-label>All texts</template>
     <template md-tab-content>
-      <div class='all-texts'>
-        <div class="texts-list">
-          <div class='text-card' *ngFor="let text of texts">
-            <md-card>
-              <md-card-header>
-                <md-card-title>
-                  <div>From: {{text.from}}</div>
-                  <div *ngIf="text.racer">Racer: {{text.racer.name}}</div>
-                  <div *ngIf="text.team">Team: {{text.team.name}}</div>
-                  <div>Time: {{prettyTextTimestamp(text)}}</div>
-                </md-card-title>
-              </md-card-header>
-              <md-card-content>
-                {{text.body}}
-              </md-card-content>
-              <md-card-actions>
-                <button md-button>RESPOND</button>
-                <md-checkbox>
-                  Read
-                </md-checkbox>
-              </md-card-actions>
-            </md-card>
-          </div>
-        </div>
-      </div>
+      <all-texts [texts]="texts"></all-texts>
     </template>
   </md-tab>
   <md-tab>

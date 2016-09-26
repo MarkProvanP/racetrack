@@ -8,6 +8,8 @@ import { DataService }         from '../data.service';
 
 import * as moment from "moment";
 
+import { AllTextsComponent } from "./all-texts";
+
 @Component({
   selector: "texts",
   templateUrl: "./texts.component.html",
