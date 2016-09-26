@@ -1,6 +1,7 @@
 import { Racer, RacerId } from "../../common/racer";
 import { Team, TeamId, PopulatedTeam, UnpopulatedTeam } from "../../common/team";
 import { TeamStatus, TeamUpdate, TeamUpdateId, Location } from "../../common/update";
+import { Text, PhoneNumber, TwilioText } from "../../common/text";
 import { DbFacadeInterface } from "./db-facade";
 import { MongoClient } from "mongodb";
 import { Promise } from "es6-promise";
@@ -161,30 +162,31 @@ class MongoDbFacade implements DbFacadeInterface {
       });
   }
 
-  addText(text): Promise<any> {
+  addText(text: TwilioText): Promise<Text> {
     let collection = this.db.collection('texts');
     let id = uuid.v4();
-    text.id = id;
-    return collection.insert(text)
+    let createdText = Text.fromTwilio(id, text);
+    return collection.insert(createdText)
       .then(result => {
-        return Promise.resolve(text);
+        return Promise.resolve(createdText);
       });
   }
 
-  getTexts(): Promise<[any]>{
+  getTexts(): Promise<[Text]>{
     let collection = this.db.collection('texts');
     return collection.find({}).toArray()
       .then(docs => {
-        let texts = docs;
+        let texts = docs.map(text => Text.fromJSON(text));
         return Promise.resolve(texts);
       });
   }
 
-  getTextsByNumber(number): Promise<[any]>{
+  getTextsByNumber(number: PhoneNumber): Promise<[Text]>{
     let collection = this.db.collection('texts');
     return collection.find({}).toArray()
       .then(docs => {
-        let texts = docs.filter(text => text.from === Number);
+        let texts = docs.map(text => Text.fromJSON(text))
+          .filter(text => text.from === number);
         return Promise.resolve(texts);
       });
   }

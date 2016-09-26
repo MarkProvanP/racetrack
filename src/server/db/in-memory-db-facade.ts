@@ -1,6 +1,7 @@
 import { Racer, RacerId } from "../../common/racer";
 import { Team, UnpopulatedTeam, PopulatedTeam, TeamId } from "../../common/team";
 import { TeamUpdate, TeamUpdateId, TeamStatus, Location } from "../../common/update";
+import { Text, PhoneNumber, TwilioText } from "../../common/text";
 import { DbFacadeInterface } from "./db-facade";
 import { Promise } from "es6-promise";
 import * as uuid from "node-uuid";
@@ -140,29 +141,28 @@ export class InMemoryDbFacade implements DbFacadeInterface {
 
 //================================================================
 
-  addText(text): Promise<any> {
-    this.texts[text.SmsSid] = JSON.stringify(text);
-    return Promise.resolve();
+  addText(text: TwilioText): Promise<Text> {
+    let id = uuid.v4();
+    let createdText = Text.fromTwilio(id, text);
+    this.texts[id] = JSON.stringify(createdText);
+    return Promise.resolve(createdText);
   }
 
-  getTexts(): Promise<any> {
+  getTexts(): Promise<[Text]> {
     let textsArray = [];
-    for (var smsSid in this.texts) {
-      var text = this.texts[smsSid];
-      textsArray.push(JSON.parse(text));
+    for (var id in this.texts) {
+      let textString = this.texts[id];
+      let parsed = JSON.parse(textString);
+      let createdText = Text.fromJSON(parsed);
+      textsArray.push(createdText);
     }
     return Promise.resolve(textsArray);
   }
 
-  getTextsByNumber(number): Promise<any> {
-    let textsArray = [];
-    for (var smsSid in this.texts) {
-      var text = JSON.parse(this.texts[smsSid]);
-      if (text.From === number) {
-        textsArray.push(text);
-      }
-    }
-    return Promise.resolve(textsArray);
+  getTextsByNumber(number: PhoneNumber): Promise<[Text]> {
+    return this.getTexts()
+      .then(texts => texts
+        .filter(text => text.from === number));
   }
 
 //================================================================

@@ -134,7 +134,7 @@ export class DataService {
     return this.http.get(this.textsUrl)
       .toPromise()
       .then(response => response.json()
-            .map(twilio => Text.fromTwilio(twilio)))
+            .map(text => Text.fromJSON(text)))
       .catch(this.handleError);
   }
 
@@ -163,7 +163,7 @@ export class DataService {
       });
   }
 
-  getRacerForPhoneNumber(phone: PhoneNumber): Promise<Racer>{
+  getRacerForPhoneNumber(phone: PhoneNumber): Promise<Racer> {
     return this.getRacers()
       .then(racers => racers.filter(racer => racer.phone === phone)[0]);
   }

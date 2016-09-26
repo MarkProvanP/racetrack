@@ -23,8 +23,10 @@ export class Team {
   lastCheckin: Date;
 
   static fromJSON(obj: PopulatedTeam) {
-    let updates: [TeamUpdate] = obj.statusUpdates.map(TeamUpdate.fromJSON);
-    let racers: [Racer] = obj.racers.map(Racer.fromJSON);
+    let updates = obj.statusUpdates
+      .map(team => TeamUpdate.fromJSON(team));
+    let racers = obj.racers
+      .map(racer => Racer.fromJSON(racer));
     let clone = JSON.parse(JSON.stringify(obj));
     clone.statusUpdates = updates;
     clone.racers = racers;

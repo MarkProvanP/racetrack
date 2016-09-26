@@ -11,17 +11,49 @@ export class Text {
   from: PhoneNumber;
   racer: Racer;
   team: Team;
-  twilio: {};
+  twilio: TwilioText;
 
-  static fromTwilio(twilio: {}) {
-    return new Text(twilio);
+  static fromJSON(obj) {
+    return new Text(obj.id, obj);
   }
 
-  constructor(twilio: {}) {
-    this.twilio = twilio;
-    this.id = twilio.SmsSid;
-    this.body = twilio.Body;
-    this.to = twilio.To;
-    this.from = twilio.From;
+  static fromTwilio(id: TextId, twilio: TwilioText) {
+    let p = {};
+    p['body'] = twilio.Body;
+    p['to'] = twilio.To;
+    p['from'] = twilio.From;
+    p['twilio'] = twilio;
+    return new Text(id, p);
   }
+
+  constructor(id: TextId, properties) {
+    this.id = id;
+    this.body = properties.body;
+    this.to = properties.to;
+    this.from = properties.from;
+    this.twilio = properties.twilio;
+  }
+}
+
+export interface TwilioText {
+  AccountSid;
+  ApiVersion;
+  Body;
+  From;
+  FromCity;
+  FromCountry;
+  FromState;
+  FromZip;
+  id;
+  MessageSid;
+  NumMedia;
+  NumSegments;
+  SmsMessageSid;
+  SmsSid;
+  SmsStatus;
+  To;
+  ToCity;
+  ToCountry;
+  ToState;
+  ToZip;
 }
