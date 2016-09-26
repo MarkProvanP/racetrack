@@ -1,15 +1,17 @@
 .all-texts {
   margin: 20px;
+  flex: 1;
 
   .texts-list {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    align-items: center;
   }
   
   .text-card {
     flex: 1;
-    width: 300px;
+    width: 500px;
     margin: 5px;
   }
 }

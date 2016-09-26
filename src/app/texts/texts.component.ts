@@ -19,8 +19,6 @@ import { TeamTextsComponent } from "./team-texts";
 })
 export class TextsComponent implements OnInit {
   texts: [Text] = <[Text]>[];
-  racers: [Racer] = <[Racer]>[];
-  teams: [Team] = <[Team]>[];
 
   constructor(
     private dataService: DataService,
@@ -32,10 +30,6 @@ export class TextsComponent implements OnInit {
         this.texts = texts.reverse();
         this.texts.forEach(text => this.addRacerToText(text));
       });
-  }
-
-  prettyTextTimestamp(text: Text): string {
-    return moment(text.timestamp).format('HH:mm ddd, Do MMM');
   }
 
   addRacerToText(text) {

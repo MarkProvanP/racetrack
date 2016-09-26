@@ -4,10 +4,14 @@
       <md-card>
         <md-card-header>
           <md-card-title>
-            <div>From: {{text.from}}</div>
-            <div *ngIf="text.racer">Racer: {{text.racer.name}}</div>
-            <div *ngIf="text.team">Team: {{text.team.name}}</div>
-            <div>Time: {{prettyTextTimestamp(text)}}</div>
+            <div>
+              <span>({{text.from}})</span>
+              -
+              <span *ngIf="text.racer">{{text.racer.name}}</span>
+              -
+              <span *ngIf="text.team">{{text.team.name}}</span>
+            </div>
+            <div>{{text.getPrettyTimestamp()}}</div>
           </md-card-title>
         </md-card-header>
         <md-card-content>

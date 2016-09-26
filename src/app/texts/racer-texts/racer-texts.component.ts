@@ -15,14 +15,11 @@ import * as moment from "moment";
 })
 export class RacerTextsComponent implements OnInit {
   @Input() texts: [Text];
+  racers: [Racer];
   selectedRacer: Racer;
   selectedRacerTexts: [Text];
 
   constructor(private dataService: DataService) {};
-
-  prettyTextTimestamp(text: Text): string {
-    return moment(text.timestamp).format('HH:mm ddd, Do MMM');
-  }
 
   getRacers(): void {
     this.dataService.getRacers()

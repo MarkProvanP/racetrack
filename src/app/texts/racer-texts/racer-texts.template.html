@@ -1,5 +1,5 @@
-<div class='texts-by-racer'>
-  <div class='racers-list'>
+<div class='texts-by-racer master-detail'>
+  <div class='racers-list master'>
     <md-list>
       <md-list-item *ngFor="let racer of racers" (click)='selectTextsByRacer(racer)'>
         <img md-list-avatar src="http://blogs-images.forbes.com/kristintablang/files/2016/02/Uber-Puppies.jpg">
@@ -7,13 +7,13 @@
       </md-list-item>
     </md-list>
   </div>
-  <div class='texts-by-racer-list' *ngIf="selectedRacerTexts">
+  <div class='texts-by-racer-list detail' *ngIf="selectedRacerTexts">
     <div class='text-card' *ngFor="let text of selectedRacerTexts">
       <md-card>
         <md-card-header>
           <md-card-title>
-            <div>From: {{text.from}}</div>
-            <div>Time: {{prettyTextTimestamp(text)}}</div>
+            <div>{{text.from}}</div>
+            <div>{{text.getPrettyTimestamp()}}</div>
           </md-card-title>
         </md-card-header>
         <md-card-content>

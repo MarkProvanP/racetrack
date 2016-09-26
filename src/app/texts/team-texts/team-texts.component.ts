@@ -15,14 +15,11 @@ import * as moment from "moment";
 })
 export class TeamTextsComponent implements OnInit {
   @Input() texts: [Text];
+  teams: [Team];
   selectedTeam: Team;
   selectedTeamTexts: [Text];
 
   constructor(private dataService: DataService) {};
-
-  prettyTextTimestamp(text: Text): string {
-    return moment(text.timestamp).format('HH:mm ddd, Do MMM');
-  }
 
   selectTextsByTeam(team: Team) {
     this.selectedTeam = team;

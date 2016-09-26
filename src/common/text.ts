@@ -4,6 +4,8 @@ export type TextId = string;
 import { Racer } from './racer';
 import { Team } from './team';
 
+import * as moment from "moment";
+
 export class Text {
   id: TextId;
   body: string;
@@ -26,6 +28,10 @@ export class Text {
     p['twilio'] = twilio;
     p['timestamp'] = new Date();
     return new Text(id, p);
+  }
+
+  getPrettyTimestamp(): string {
+    return moment(this.timestamp).format('HH:mm ddd, Do MMM');
   }
 
   constructor(id: TextId, properties) {

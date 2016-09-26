@@ -66,6 +66,11 @@ export class Team {
     }
   }
 
+  getPrettyRacersList(): string {
+    let racerNames = this.racers.map(racer => racer.name);
+    return racerNames.join(", ");
+  }
+
   getLastUpdate(): TeamUpdate {
     return this.statusUpdates[this.statusUpdates.length - 1]
   }

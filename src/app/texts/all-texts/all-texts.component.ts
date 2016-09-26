@@ -15,7 +15,4 @@ import * as moment from "moment";
 })
 export class AllTextsComponent {
   @Input() texts: [Text];
-  prettyTextTimestamp(text: Text): string {
-    return moment(text.timestamp).format('HH:mm ddd, Do MMM');
-  }
 }
