@@ -1,26 +1,21 @@
-<h2>My Teams</h2>
-<div>
-  <label>Team name:</label> <input #teamName />
-  <button (click)="add(teamName.value); teamName.value=''">
-    Add
-  </button>
+<h1>My Teams</h1>
+<div class='teams master-detail'>
+  <div class='master'>
+    <md-list>
+      <md-list-item *ngFor='let team of teams' (click)='onSelect(team)'>
+        <h3 md-line>{{team.name}}</h3>
+      </md-list-item>
+    </md-list>
+  </div>
+  <div class='detail'>
+    <div *ngIf="selectedTeam">
+      <h2>
+        {{selectedTeam.name | uppercase}} is my team
+      </h2>
+      <button (click)="gotoDetail()">View Details</button>
+    </div>
+  </div>
 </div>
-<ul class="teams">
-  <li *ngFor="let team of teams" (click)="onSelect(team)"
-      [class.selected]="team === selectedTeam">
-    <span class="badge">{{team.id}}</span>
-    <span>{{team.name}}</span>
-    <button class="delete"
-      (click)="delete(team); $event.stopPropagation()">x</button>
-  </li>
-</ul>
-<div *ngIf="selectedTeam">
-  <h2>
-    {{selectedTeam.name | uppercase}} is my team
-  </h2>
-  <button (click)="gotoDetail()">View Details</button>
-</div>
-
 
 <!-- 
 Copyright 2016 Google Inc. All Rights Reserved.

@@ -3,7 +3,7 @@
   color: white;
 }
 .teams {
-  margin: 0 0 2em 0;
+  //margin: 0 0 2em 0;
   list-style-type: none;
   padding: 0;
 }
@@ -62,6 +62,32 @@ button.delete {
   margin-right: .8em;
   background-color: gray !important;
   color:white;
+}
+
+.master-detail.teams {
+  flex: 1;
+}
+
+.master-detail {
+  display: flex;
+  .master {
+    width: 300px;
+    overflow-y: scroll;
+    background-color: white;
+  }
+
+  .detail {
+    flex: 1;
+    overflow-y: scroll;
+  }
+}
+
+/deep/ .md-list-item:hover {
+  background-color: lightgrey;
+}
+
+/deep/ .md-list-item.selected {
+  background-color: #EEEEEE;
 }
 
 
