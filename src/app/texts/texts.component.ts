@@ -10,6 +10,7 @@ import * as moment from "moment";
 
 import { AllTextsComponent } from "./all-texts";
 import { RacerTextsComponent } from "./racer-texts";
+import { TeamTextsComponent } from "./team-texts";
 
 @Component({
   selector: "texts",
@@ -20,9 +21,6 @@ export class TextsComponent implements OnInit {
   texts: [Text] = <[Text]>[];
   racers: [Racer] = <[Racer]>[];
   teams: [Team] = <[Team]>[];
-
-  selectedRacer: Racer;
-  selectedRacerTexts: [Text];
 
   constructor(
     private dataService: DataService,
@@ -36,22 +34,8 @@ export class TextsComponent implements OnInit {
       });
   }
 
-  getTeams(): void {
-    this.dataService.getTeams()
-      .then(teams => {
-        this.teams = teams;
-      });
-  }
-
   prettyTextTimestamp(text: Text): string {
     return moment(text.timestamp).format('HH:mm ddd, Do MMM');
-  }
-
-  getRacers(): void {
-    this.dataService.getRacers()
-      .then(racers => {
-        this.racers = racers;
-      });
   }
 
   addRacerToText(text) {
@@ -63,11 +47,6 @@ export class TextsComponent implements OnInit {
       });
   }
 
-  selectTextsByRacer(racer: Racer) {
-    this.selectedRacer = racer;
-    this.selectedRacerTexts = this.texts.filter(text => text.racer.id === racer.id);
-  }
-
   onTextReceived(text) {
     this.texts.unshift(text);
     this.addRacerToText(text)
@@ -75,8 +54,6 @@ export class TextsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTexts();
-    this.getTeams();
-    this.getRacers();
     this.dataService.onTextReceived(text => this.onTextReceived(text));
   }
 }

@@ -1,0 +1,31 @@
+<div class='texts-by-racer'>
+  <div class='racers-list'>
+    <md-list>
+      <md-list-item *ngFor="let racer of racers" (click)='selectTextsByRacer(racer)'>
+        <img md-list-avatar src="http://blogs-images.forbes.com/kristintablang/files/2016/02/Uber-Puppies.jpg">
+        <h3 md-line> {{racer.name}}</h3>
+      </md-list-item>
+    </md-list>
+  </div>
+  <div class='texts-by-racer-list' *ngIf="selectedRacerTexts">
+    <div class='text-card' *ngFor="let text of selectedRacerTexts">
+      <md-card>
+        <md-card-header>
+          <md-card-title>
+            <div>From: {{text.from}}</div>
+            <div>Time: {{prettyTextTimestamp(text)}}</div>
+          </md-card-title>
+        </md-card-header>
+        <md-card-content>
+          {{text.body}}
+        </md-card-content>
+        <md-card-actions>
+          <button md-button>RESPOND</button>
+          <md-checkbox>
+            Read
+          </md-checkbox>
+        </md-card-actions>
+      </md-card>
+    </div>
+  </div>
+</div>

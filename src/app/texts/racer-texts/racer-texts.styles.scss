@@ -1,0 +1,28 @@
+.texts-by-racer {
+  flex: 1;
+  display: flex;
+
+  .racers-list {
+    width: 300px;
+    background-color: white;
+    overflow-y: scroll;
+  }
+
+  .texts-by-racer-list {
+    flex: 1;
+    padding: 20px;
+    overflow-y: scroll;
+
+    .text-card {
+      margin: 5px;
+    }
+  }
+}
+
+/deep/ .md-list-item:hover {
+  background-color: lightgrey;
+}
+
+/deep/ .md-list-item.selected {
+  background-color: #EEEEEE;
+}

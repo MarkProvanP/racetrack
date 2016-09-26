@@ -23,6 +23,7 @@ import { NoContent } from './no-content';
 
 import { AllTextsComponent } from './texts/all-texts';
 import { TeamTextsComponent } from './texts/team-texts';
+import { RacerTextsComponent } from './texts/racer-texts';
 import { TextsComponent } from './texts';
 import { RacersComponent } from './racers';
 import { RacerDetailComponent } from './racer-detail';
@@ -55,6 +56,7 @@ const APP_PROVIDERS = [
     XLarge,
     AllTextsComponent,
     TeamTextsComponent,
+    RacerTextsComponent,
     TextsComponent,
     RacersComponent,
     RacerDetailComponent,

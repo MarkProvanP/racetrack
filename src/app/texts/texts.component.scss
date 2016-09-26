@@ -20,25 +20,6 @@ md-tab-group {
   flex-direction: column;
 }
 
-.all-texts {
-  margin: 20px;
-  
-  .text-card {
-    width: 300px;
-  }
-}
-
-.texts-list {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-}
-
-.text-card {
-  flex: 1;
-  margin: 5px;
-}
-
 /deep/ .md-list-item:hover {
   background-color: lightgrey;
 }
@@ -47,19 +28,17 @@ md-tab-group {
   background-color: #EEEEEE;
 }
 
-team-texts {
+all-texts {
   display: flex;
+  flex: 1;
 }
 
-
-.texts-by-racer {
+team-texts {
   display: flex;
+  flex: 1;
+}
 
-  .racers-list {
-    width: 300px;
-  }
-
-  .texts-by-racer-list {
-    flex: 1;
-  }
+racer-texts {
+  display: flex;
+  flex: 1;
 }
