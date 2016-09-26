@@ -29,6 +29,7 @@ import { RacersComponent } from './racers';
 import { RacerDetailComponent } from './racer-detail';
 import { TeamsComponent } from './teams';
 import { TeamDetailComponent } from './team-detail';
+import { TeamCardComponent } from './teams/team-card';
 import { DashboardComponent } from './dashboard';
 
 import { DataService } from './data.service';
@@ -62,6 +63,7 @@ const APP_PROVIDERS = [
     RacerDetailComponent,
     TeamsComponent,
     TeamDetailComponent,
+    TeamCardComponent,
     DashboardComponent
   ],
   imports: [ // import Angular's modules

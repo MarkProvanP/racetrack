@@ -1,18 +1,19 @@
-<h1>My Teams</h1>
 <div class='teams master-detail'>
   <div class='master'>
     <md-list>
       <md-list-item *ngFor='let team of teams' (click)='onSelect(team)'>
         <h3 md-line>{{team.name}}</h3>
+        <p>
+          <button (click)="gotoDetail()">
+            View Details
+          </button>
+        </p>
       </md-list-item>
     </md-list>
   </div>
   <div class='detail'>
     <div *ngIf="selectedTeam">
-      <h2>
-        {{selectedTeam.name | uppercase}} is my team
-      </h2>
-      <button (click)="gotoDetail()">View Details</button>
+      <team-card [team]="selectedTeam"></team-card>
     </div>
   </div>
 </div>

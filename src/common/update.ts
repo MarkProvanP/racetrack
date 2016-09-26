@@ -1,3 +1,5 @@
+import * as moment from "moment";
+
 export enum TeamStatus {
   ON_START_BUS, IN_UK, IN_EUROPE, IN_HOSTEL, DROPPED_OUT, ASLEEP, OVERDUE, MAYBE_LATE, IN_CITY, UNKNOWN
 }
@@ -44,11 +46,19 @@ export class TeamUpdate {
     return prettyStatusName(this.status);
   }
 
+  getPrettyTimestamp(): string {
+    return moment(this.timestamp).format('HH:mm ddd, Do MMM');
+  }
+
   constructor(id: TeamUpdateId, properties) {
     this.id = id;
     this.status = Number(properties.status);
     this.location = properties.location;
     this.notes = properties.notes;
-    this.timestamp = new Date();
+    if (properties.timestamp) {
+      this.timestamp = properties.timestamp;
+    } else {
+      this.timestamp = new Date();
+    }
   }
 }
