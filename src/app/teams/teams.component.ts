@@ -6,8 +6,8 @@ import { DataService }         from '../data.service';
 
 @Component({
   selector: 'my-teams',
-  templateUrl: './teams.component.html',
-  styleUrls:  ['./teams.component.scss']
+  templateUrl: './teams.template.html',
+  styleUrls:  ['./teams.styles.scss']
 })
 export class TeamsComponent implements OnInit {
   teams: Team[];

@@ -6,8 +6,8 @@ import { TeamStatus } from '../../common/update';
 
 @Component({
   selector: 'dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  templateUrl: './dashboard.template.html',
+  styleUrls: ['./dashboard.styles.scss']
 })
 export class DashboardComponent implements OnInit {
   teams: [Team] = [];

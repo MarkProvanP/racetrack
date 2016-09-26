@@ -14,8 +14,8 @@ import { TeamTextsComponent } from "./team-texts";
 
 @Component({
   selector: "texts",
-  templateUrl: "./texts.component.html",
-  styleUrls: ["./texts.component.scss"]
+  templateUrl: "./texts.template.html",
+  styleUrls: ["./texts.styles.scss"]
 })
 export class TextsComponent implements OnInit {
   texts: [Text] = <[Text]>[];

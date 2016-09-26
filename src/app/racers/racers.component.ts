@@ -6,8 +6,8 @@ import { DataService }         from '../data.service';
 
 @Component({
   selector: 'my-racers',
-  templateUrl: './racers.component.html',
-  styleUrls:  ['./racers.component.scss']
+  templateUrl: './racers.template.html',
+  styleUrls:  ['./racers.styles.scss']
 })
 export class RacersComponent implements OnInit {
   racers: Racer[];
