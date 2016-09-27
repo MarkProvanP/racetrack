@@ -165,6 +165,12 @@ export class InMemoryDbFacade implements DbFacadeInterface {
         .filter(text => text.from === number));
   }
 
+  updateText(text: Text): Promise<Text> {
+    let textInDbForm = text.toDbForm();
+    this.texts[String(text.id)] = JSON.stringify(textInDbForm);
+    return Promise.resolve(text);
+  }
+
 //================================================================
 
   createStatusUpdate(properties): Promise<TeamUpdate> {

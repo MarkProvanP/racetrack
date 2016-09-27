@@ -134,6 +134,18 @@ export class DataService {
       .catch(this.handleError);
   }
 
+  updateText(text: Text): Promise<Text> {
+    const url = `${this.textsUrl}/${text.id}`;
+    return this.http
+      .put(url, JSON.stringify(text), {headers: this.headers})
+      .toPromise()
+      .then(response => {
+        let t = Text.fromJSON(response.json());
+        return t;
+      })
+      .catch(this.handleError);
+  }
+
   createStatusUpdateForTeam(statusObj, team: Team): Promise<Team> {
     return this.http.post(this.updatesUrl, JSON.stringify(statusObj), {headers: this.headers})
       .toPromise()

@@ -21,6 +21,7 @@ export interface DbFacadeInterface {
   addText(text: TwilioText): Promise<Text>;
   getTexts(): Promise<[Text]>;
   getTextsByNumber(phone: PhoneNumber): Promise<[Text]>;
+  updateText(text: Text): Promise<Text>;
 
   createStatusUpdate(properties): Promise<TeamUpdate>;
   getStatusUpdates(): Promise<[TeamUpdate]>;

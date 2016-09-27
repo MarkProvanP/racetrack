@@ -42,7 +42,7 @@ export default function teamsRouterWithDb(db_facade: DbFacadeInterface) {
     console.log(newDetailsTeam)
     db_facade.updateTeam(req.params.id, newDetailsTeam)
       .then(changedTeam => {
-        res.type('application.json');
+        res.type('application/json');
         res.send(JSON.stringify(changedTeam));
       });
   })

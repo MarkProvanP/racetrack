@@ -42,6 +42,11 @@ export class AllTextsComponent {
     this.addRacerToText(text)
   }
 
+  markTextAsRead(text) {
+    console.log('marking', text, 'as read');
+    this.dataService.updateText(text)
+  }
+
   ngOnInit(): void {
     this.getTexts();
     this.dataService.onTextReceived(text => this.onTextReceived(text));

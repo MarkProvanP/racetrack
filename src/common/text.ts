@@ -15,6 +15,7 @@ export class Text {
   team: Team;
   twilio: TwilioText;
   timestamp: Date;
+  read: boolean;
 
   static fromJSON(obj) {
     return new Text(obj.id, obj);
@@ -34,6 +35,13 @@ export class Text {
     return moment(this.timestamp).format('HH:mm ddd, Do MMM');
   }
 
+  toDbForm() {
+    let copy = JSON.parse(JSON.stringify(this));
+    if (this.racer) copy.racer = this.racer.id;
+    if (this.team) copy.team = this.team.id;
+    return copy;
+  }
+
   constructor(id: TextId, properties) {
     this.id = id;
     this.body = properties.body;
@@ -41,6 +49,7 @@ export class Text {
     this.from = properties.from;
     this.twilio = properties.twilio;
     this.timestamp = properties.timestamp;
+    this.read = !!properties.read;
   }
 }
 

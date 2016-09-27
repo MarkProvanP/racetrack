@@ -22,7 +22,7 @@
         </md-card-content>
         <md-card-actions>
           <button md-button>RESPOND</button>
-          <md-checkbox>
+          <md-checkbox [(ngModel)]='text.read' (change)='markTextAsRead(text)'>
             Read
           </md-checkbox>
         </md-card-actions>

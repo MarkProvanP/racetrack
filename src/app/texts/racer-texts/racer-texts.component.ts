@@ -49,8 +49,18 @@ export class RacerTextsComponent implements OnInit {
     this.selectedRacerTexts = this.texts.filter(text => text.racer.id === racer.id);
   }
 
+  markTextAsRead(text) {
+    console.log('marking', text, 'as read');
+    this.dataService.updateText(text)
+  }
+  onTextReceived(text) {
+    this.texts.unshift(text);
+    this.addRacerToText(text)
+  }
+
   ngOnInit(): void {
     this.getRacers();
     this.getTexts();
+    this.dataService.onTextReceived(text => this.onTextReceived(text));
   }
 }

@@ -50,8 +50,19 @@ export class TeamTextsComponent implements OnInit {
       });
   }
 
+  markTextAsRead(text) {
+    console.log('marking', text, 'as read');
+    this.dataService.updateText(text)
+  }
+
+  onTextReceived(text) {
+    this.texts.unshift(text);
+    this.addRacerToText(text)
+  }
+
   ngOnInit(): void {
     this.getTeams();
     this.getTexts();
+    this.dataService.onTextReceived(text => this.onTextReceived(text));
   }
 }

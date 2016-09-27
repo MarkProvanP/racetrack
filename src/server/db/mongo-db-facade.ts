@@ -191,6 +191,16 @@ class MongoDbFacade implements DbFacadeInterface {
       });
   }
 
+  updateText(text: Text): Promise<Text> {
+    let collection = this.db.collection('texts');
+    let textInDbForm = text.toDbForm();
+    return collection.updateOne({id: text.id}, { $set: textInDbForm})
+      .then(result => {
+        console.log('text updated');
+        return Promise.resolve(text);
+      });
+  }
+
   createStatusUpdate(properties): Promise<TeamUpdate> {
     let collection = this.db.collection('updates');
     let id = uuid.v4();

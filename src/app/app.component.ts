@@ -5,6 +5,8 @@ import { Component, ViewEncapsulation } from '@angular/core';
 
 import { AppState } from './app.service';
 
+import { DataService } from './data.service';
+
 /*
  * App Component
  * Top Level Component
@@ -23,15 +25,29 @@ export class App {
   name = 'Race 2 Prague';
   url = 'https://twitter.com/AngularClass';
 
+  numberUnreadTexts: number;
+
   constructor(
-    public appState: AppState) {
+    public appState: AppState,
+    private dataService: DataService
+  ) {
 
   }
 
   ngOnInit() {
     console.log('Initial App State', this.appState.state);
+    this.getNumberUnreadTexts();
+    this.dataService.onTextReceived(text => this.onTextReceived(text));
   }
 
+  onTextReceived(text: Text) {
+    this.getNumberUnreadTexts();
+  }
+
+  getNumberUnreadTexts() {
+    this.dataService.getTexts()
+      .then(texts => this.numberUnreadTexts = texts.filter(text => !text.read).length)
+  }
 }
 
 /*
