@@ -4,7 +4,7 @@
       <md-list-item *ngFor='let team of teams' (click)='onSelect(team)'>
         <h3 md-line>{{team.name}}</h3>
         <p>
-          <button (click)="gotoDetail()">
+          <button (click)="gotoDetail(team)">
             View Details
           </button>
         </p>
@@ -12,9 +12,7 @@
     </md-list>
   </div>
   <div class='detail'>
-    <div *ngIf="selectedTeam">
-      <team-card [team]="selectedTeam"></team-card>
-    </div>
+    <router-outlet></router-outlet>
   </div>
 </div>
 

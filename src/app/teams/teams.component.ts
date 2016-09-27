@@ -11,11 +11,14 @@ import { DataService }         from '../data.service';
 })
 export class TeamsComponent implements OnInit {
   teams: Team[];
-  selectedTeam: Team;
 
   constructor(
     private dataService: DataService,
     private router: Router) { }
+
+  onSelect(team: Team) {
+    this.router.navigate(['/teams', team.id]);
+  }
 
   getTeams(): void {
     this.dataService
@@ -47,12 +50,8 @@ export class TeamsComponent implements OnInit {
     this.getTeams();
   }
 
-  onSelect(team: Team): void {
-    this.selectedTeam = team;
-  }
-
-  gotoDetail(): void {
-    this.router.navigate(['/team', this.selectedTeam.id]);
+  gotoDetail(team): void {
+    this.router.navigate(['/team', team.id]);
   }
 }
 

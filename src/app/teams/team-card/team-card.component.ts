@@ -1,4 +1,5 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 
 import { Team } from '../../../common/team';
 import { Location, TeamUpdate, TeamStatus } from '../../../common/update';
@@ -13,10 +14,24 @@ import { OrderBy } from '../../orderBy.pipe.ts';
   styleUrls: ['./team-card.styles.scss'],
   pipes: [OrderBy]
 })
-export class TeamCardComponent {
-  @Input() team: Team;
+export class TeamCardComponent implements OnInit, OnDestroy {
+  team: Team;
+  paramsSub: any;
 
   constructor(
-    private dataService: DataService
+    private dataService: DataService,
+    private activatedRoute: ActivatedRoute
   ) {}
+
+  ngOnInit() {
+    this.paramsSub = this.activatedRoute.params.subscribe(params => {
+      this.id = params['id'];
+      this.dataService.getTeam(params['id'])
+        .then(team => this.team = team)
+    }, 10);
+  }
+
+  ngOnDestroy() {
+    this.paramsSub.unsubscribe();
+  }
 }
