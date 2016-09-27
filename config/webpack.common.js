@@ -19,7 +19,7 @@ const HtmlElementsPlugin = require('./html-elements-plugin');
  */
 const METADATA = {
   title: 'Angular2 Webpack Starter by @gdi2290 from @AngularClass',
-  baseUrl: '/race2/',
+  baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer()
 };
 
