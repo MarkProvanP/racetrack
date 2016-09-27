@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 
 import { Racer } from "../../common/racer";
 import { Team } from "../../common/team";
@@ -18,36 +18,23 @@ import { TeamTextsComponent } from "./team-texts";
   styleUrls: ["./texts.styles.scss"]
 })
 export class TextsComponent implements OnInit {
-  texts: [Text] = <[Text]>[];
+  tabs = ['all', 'by-team', 'by-racer'];
+  forceTabIndex: number = 0;
 
   constructor(
-    private dataService: DataService,
-    private router: Router) {}
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
-  getTexts(): void {
-    this.dataService.getTexts()
-      .then(texts => {
-        this.texts = texts.reverse();
-        this.texts.forEach(text => this.addRacerToText(text));
-      });
+
+  ngOnInit() {
+    let split = this.router.url.split("/");
+    let tab = split[2];
+    this.forceTabIndex = tab;
   }
 
-  addRacerToText(text) {
-    this.dataService.getRacerForPhoneNumber(text.from)
-      .then(racer => {
-        text.racer = racer
-        this.dataService.getTeamForRacer(racer)
-          .then(team => text.team = team);
-      });
-  }
-
-  onTextReceived(text) {
-    this.texts.unshift(text);
-    this.addRacerToText(text)
-  }
-
-  ngOnInit(): void {
-    this.getTexts();
-    this.dataService.onTextReceived(text => this.onTextReceived(text));
+  onSelectChange(event: MdTabChangeEvent) {
+    let selection = this.tabs[event.index];
+    this.router.navigate(['/texts', selection]);
   }
 }

@@ -1,20 +1,12 @@
-<md-tab-group>
+<md-tab-group [selectedIndex]="forceTabIndex" (selectChange)='onSelectChange($event)'>
   <md-tab>
     <template md-tab-label>All texts</template>
-    <template md-tab-content>
-      <all-texts [texts]="texts"></all-texts>
-    </template>
   </md-tab>
   <md-tab>
     <template md-tab-label>Texts by team</template>
-    <template md-tab-content>
-      <team-texts [texts]="texts"></team-texts>
-    </template>
   </md-tab>
   <md-tab>
     <template md-tab-label>Texts by racer</template>
-    <template md-tab-content>
-      <racer-texts [texts]="texts"></racer-texts>
-    </template>
   </md-tab>
 </md-tab-group>
+<router-outlet></router-outlet>

@@ -26,6 +26,23 @@ export class TeamTextsComponent implements OnInit {
     this.selectedTeamTexts = this.texts.filter(text => text.team.id === team.id);
   }
 
+  getTexts(): void {
+    this.dataService.getTexts()
+      .then(texts => {
+        this.texts = texts.reverse();
+        this.texts.forEach(text => this.addRacerToText(text));
+      });
+  }
+
+  addRacerToText(text) {
+    this.dataService.getRacerForPhoneNumber(text.from)
+      .then(racer => {
+        text.racer = racer
+        this.dataService.getTeamForRacer(racer)
+          .then(team => text.team = team);
+      });
+  }
+
   getTeams(): void {
     this.dataService.getTeams()
       .then(teams => {
@@ -35,5 +52,6 @@ export class TeamTextsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTeams();
+    this.getTexts();
   }
 }

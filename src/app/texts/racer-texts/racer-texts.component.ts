@@ -20,6 +20,22 @@ export class RacerTextsComponent implements OnInit {
   selectedRacerTexts: [Text];
 
   constructor(private dataService: DataService) {};
+  getTexts(): void {
+    this.dataService.getTexts()
+      .then(texts => {
+        this.texts = texts.reverse();
+        this.texts.forEach(text => this.addRacerToText(text));
+      });
+  }
+
+  addRacerToText(text) {
+    this.dataService.getRacerForPhoneNumber(text.from)
+      .then(racer => {
+        text.racer = racer
+        this.dataService.getTeamForRacer(racer)
+          .then(team => text.team = team);
+      });
+  }
 
   getRacers(): void {
     this.dataService.getRacers()
@@ -35,5 +51,6 @@ export class RacerTextsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRacers();
+    this.getTexts();
   }
 }

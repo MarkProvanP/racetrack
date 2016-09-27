@@ -9,10 +9,7 @@
 }
 
 md-tab-group {
-  flex: 1;
-  .md-tab-body-wrapper {
-    //flex: 1;
-  }
+  flex-shrink: 0;
 }
 
 /deep/ .md-tab-body.md-active {
@@ -33,12 +30,12 @@ all-texts {
   flex: 1;
 }
 
-team-texts {
+/deep/ team-texts {
   display: flex;
   flex: 1;
 }
 
-racer-texts {
+/deep/ racer-texts {
   display: flex;
   flex: 1;
 }

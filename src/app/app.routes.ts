@@ -4,6 +4,10 @@ import { About } from './about';
 import { NoContent } from './no-content';
 
 import { TextsComponent } from './texts';
+import { AllTextsComponent } from './texts/all-texts';
+import { RacerTextsComponent } from './texts/racer-texts';
+import { TeamTextsComponent } from './texts/team-texts';
+
 import { RacersComponent } from './racers';
 import { TeamsComponent } from './teams';
 import { DashboardComponent } from './dashboard';
@@ -18,7 +22,16 @@ export const ROUTES: Routes = [
   { path: '',      component: DashboardComponent },
   { path: 'home',  component: Home },
   { path: 'about', component: About },
-  { path: 'texts', component: TextsComponent },
+  {
+    path: 'texts',
+    component: TextsComponent,
+    children: [
+      { path: '', redirectTo: 'all', pathMatch: 'full'},
+      { path: 'all', component: AllTextsComponent },
+      { path: 'by-racer', component: RacerTextsComponent },
+      { path: 'by-team', component: TeamTextsComponent }
+    ]
+  },
   { path: 'racers', component: RacersComponent },
   {
     path: 'teams',
