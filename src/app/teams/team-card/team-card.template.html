@@ -4,13 +4,18 @@
       <h3>{{team.name}}</h3>
     </md-card-title>
     <md-card-content>
-      <i>{{team.id}}</i>
-      <p>{{team.getCurrentStatusString()}}</p>
+      <label>Status updates</label>
       <md-list>
         <md-list-item *ngFor="let update of team.statusUpdates | orderBy: '-timestamp' ">
           <div md-line>{{update.getPrettyTimestamp()}}</div>
           <div md-line>{{update.prettyStatusName()}}</div>
           <div md-line>{{update.location.place}}</div>
+        </md-list-item>
+      </md-list>
+      <label>Racers</label>
+      <md-list>
+        <md-list-item *ngFor="let racer of team.racers | orderBy: '+name' ">
+          <div md-line>{{racer.name}}</div>
         </md-list-item>
       </md-list>
     </md-card-content>
