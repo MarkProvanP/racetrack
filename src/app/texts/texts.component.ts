@@ -30,10 +30,10 @@ export class TextsComponent implements OnInit {
   ngOnInit() {
     let split = this.router.url.split("/");
     let tab = split[2];
-    this.forceTabIndex = tab;
+    this.forceTabIndex = Number(tab);
   }
 
-  onSelectChange(event: MdTabChangeEvent) {
+  onSelectChange(event) {
     let selection = this.tabs[event.index];
     this.router.navigate(['/texts', selection]);
   }

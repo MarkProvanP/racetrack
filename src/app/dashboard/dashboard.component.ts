@@ -10,7 +10,7 @@ import { TeamStatus } from '../../common/update';
   styleUrls: ['./dashboard.styles.scss']
 })
 export class DashboardComponent implements OnInit {
-  teams: [Team] = [];
+  teams: [Team] = <[Team]>[];
   constructor(private dataService: DataService) {
   }
 

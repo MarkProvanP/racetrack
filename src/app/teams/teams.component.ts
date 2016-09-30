@@ -33,7 +33,7 @@ export class TeamsComponent implements OnInit {
     this.dataService.createTeam(properties)
       .then(team => {
         this.teams.push(team);
-        this.selectedTeam = null;
+        this.router.navigate(['/team']);
       });
   }
 
@@ -42,7 +42,7 @@ export class TeamsComponent implements OnInit {
         .deleteTeam(team.id)
         .then(() => {
           this.teams = this.teams.filter(h => h !== team);
-          if (this.selectedTeam === team) { this.selectedTeam = null; }
+          if (this.router.url.split("/").pop() == team.id) { this.router.navigate(['/team']) }
         });
   }
 

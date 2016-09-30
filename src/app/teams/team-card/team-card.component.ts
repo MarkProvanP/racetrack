@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { Team } from '../../../common/team';
@@ -25,7 +25,6 @@ export class TeamCardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.paramsSub = this.activatedRoute.params.subscribe(params => {
-      this.id = params['id'];
       this.dataService.getTeam(params['id'])
         .then(team => this.team = team)
     }, 10);
