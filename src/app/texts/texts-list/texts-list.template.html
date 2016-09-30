@@ -25,6 +25,7 @@
         <md-checkbox [(ngModel)]='text.read' (change)='markTextAsRead(text)'>
           Read
         </md-checkbox>
+        <button md-button (click)="checkInTeamFromText(text)">Add Check In</button>
       </md-card-actions>
     </md-card>
   </div>

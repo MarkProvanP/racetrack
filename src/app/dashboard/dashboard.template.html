@@ -14,7 +14,8 @@
         </md-card-title>
         <md-card-subtitle>
           <div>
-            <i>Last check-in 2 hours, 5 minutes ago</i>
+            <i *ngIf="team.lastCheckin">Last checked in {{team.getPrettyTimeSinceCheckin()}}</i>
+            <b *ngIf="!team.lastCheckin">Team has not checked in!</b>
           </div>
         </md-card-subtitle>
       </md-card-header>

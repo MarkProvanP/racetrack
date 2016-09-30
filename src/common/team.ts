@@ -1,6 +1,8 @@
 import { Racer, RacerId } from "./racer";
 import { TeamUpdate, TeamUpdateId, TeamStatus, Location, prettyStatusName } from "./update";
 
+import * as moment from "moment";
+
 export type TeamId = string;
 export interface UnpopulatedTeam {
   id: TeamId;
@@ -83,6 +85,12 @@ export class Team {
 
   hasRacer(racer: Racer): boolean {
     return this.racers.filter(r => racer.id === r.id).length > 0;
+  }
+
+  getPrettyTimeSinceCheckin() {
+    let now = moment();
+    let diff = moment(this.lastCheckin).diff(now);
+    return moment.duration(diff).humanize(true);
   }
 }
 

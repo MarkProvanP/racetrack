@@ -21,4 +21,10 @@ export class TextsListComponent {
   markTextAsRead(text: Text) {
     this.dataService.updateText(text)
   }
+
+  checkInTeamFromText(text: Text) {
+    let team = text.team;
+    team.lastCheckin = text.timestamp;
+    this.dataService.updateTeam(team);
+  }
 }
