@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { Racer } from "../../common/racer";
@@ -17,20 +17,18 @@ import { TeamTextsComponent } from "./team-texts";
   templateUrl: "./texts.template.html",
   styleUrls: ["./texts.styles.scss"]
 })
-export class TextsComponent implements OnInit {
+export class TextsComponent {
   tabs = ['all', 'by-team', 'by-racer'];
-  forceTabIndex: number = 0;
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
 
-
-  ngOnInit() {
+  goToTabIndex() {
     let split = this.router.url.split("/");
     let tab = split[2];
-    this.forceTabIndex = Number(tab);
+    return this.tabs.indexOf(tab);
   }
 
   onSelectChange(event) {
