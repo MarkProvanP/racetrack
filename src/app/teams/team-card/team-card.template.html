@@ -1,7 +1,8 @@
 <div class='team-card' *ngIf="team">
   <md-card>
     <md-card-title>
-      <h3>{{team.name}}</h3>
+      <h3 *ngIf="!inEditMode">{{team.name}}</h3>
+      <md-input *ngIf="inEditMode" placeholder="Team name" [(ngModel)]="team.name"></md-input>
     </md-card-title>
     <md-card-content>
       <md-slide-toggle [(ngModel)]="team.inEurope" (change)='updateTeam()'>In Europe?</md-slide-toggle>
@@ -19,6 +20,9 @@
           <div md-line>{{racer.name}}</div>
         </md-list-item>
       </md-list>
+      <button md-raised-button color="primary" (click)="editTeam()" *ngIf="!inEditMode">Edit</button>
+      <button md-raised-button color="primary" (click)="saveTeam()" *ngIf="inEditMode">Save</button>
+      <button md-raised-button color="warn" (click)="deleteTeam()">Delete</button>
     </md-card-content>
   </md-card>
 </div>

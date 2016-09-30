@@ -38,7 +38,8 @@ export const ROUTES: Routes = [
     component: TeamsComponent,
     children: [
       { path: '' },
-      { path: ':id', component: TeamCardComponent }
+      { path: ':id', component: TeamCardComponent },
+      { path: ':id/edit', component: TeamCardComponent }
     ]
   },
   { path: 'racer/:id', component: RacerDetailComponent },

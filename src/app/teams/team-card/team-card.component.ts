@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnDestroy } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 
 import { Team } from '../../../common/team';
 import { Location, TeamUpdate, TeamStatus } from '../../../common/update';
@@ -17,10 +17,13 @@ import { OrderBy } from '../../orderBy.pipe.ts';
 export class TeamCardComponent implements OnInit, OnDestroy {
   team: Team;
   paramsSub: any;
+  routeSub: any;
+  inEditMode: boolean = false;
 
   constructor(
     private dataService: DataService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -28,13 +31,31 @@ export class TeamCardComponent implements OnInit, OnDestroy {
       this.dataService.getTeam(params['id'])
         .then(team => this.team = team)
     }, 10);
+    this.routeSub = this.activatedRoute.url.subscribe(urlSegments => {
+      this.inEditMode = (urlSegments[urlSegments.length - 1].path == 'edit');
+    });
   }
 
   ngOnDestroy() {
     this.paramsSub.unsubscribe();
   }
 
+  editTeam() {
+    this.router.navigate(['/teams', this.team.id, 'edit']);
+  }
+
+  saveTeam() {
+    this.dataService.updateTeam(this.team)
+      .then(team =>  {
+        this.router.navigate(['/teams', team.id]);
+      });
+  }
+
   updateTeam() {
     this.dataService.updateTeam(this.team);
+  }
+
+  deleteTeam() {
+    this.dataService.deleteTeam(this.team.id);
   }
 }
