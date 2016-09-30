@@ -19,6 +19,10 @@ export class TeamCardComponent implements OnInit, OnDestroy {
   paramsSub: any;
   routeSub: any;
   inEditMode: boolean = false;
+  inAddingRacerMode: boolean = false;
+  unteamedRacers: Racer[] = [];
+  unteamedMatchingRacers: Racer[] = [];
+  addRacerFilterName: string;
 
   constructor(
     private dataService: DataService,
@@ -33,7 +37,17 @@ export class TeamCardComponent implements OnInit, OnDestroy {
     }, 10);
     this.routeSub = this.activatedRoute.url.subscribe(urlSegments => {
       this.inEditMode = (urlSegments[urlSegments.length - 1].path == 'edit');
+      if (this.inEditMode) {
+        this.updateUnteamedRacers();
+      }
     });
+  }
+
+  updateUnteamedRacers() {
+    this.dataService.getRacersWithoutTeams()
+      .then(racers => {
+        this.unteamedRacers = racers;
+      });
   }
 
   ngOnDestroy() {
@@ -57,5 +71,36 @@ export class TeamCardComponent implements OnInit, OnDestroy {
 
   deleteTeam() {
     this.dataService.deleteTeam(this.team.id);
+  }
+
+  addRacer() {
+    this.inAddingRacerMode = true;
+    this.updateUnteamedRacers();
+  }
+
+  addSpecificRacer(racer: Racer) {
+    this.team.racers.push(racer);
+    this.inAddingRacerMode = false;
+    this.updateTeam()
+    this.updateUnteamedRacers();
+  }
+
+  filterAddRacers() {
+    let name = this.addRacerFilterName;
+    this.unteamedMatchingRacers = this.unteamedRacers
+      .filter(racer => racer.name.indexOf(name) != -1);
+  }
+
+  removeRacer(racer: Racer) {
+    let index = this.team.racers.indexOf(racer);
+    if (index > -1) {
+      this.team.racers.splice(index, 1);
+    }
+    this.updateTeam();
+    this.updateUnteamedRacers();
+  }
+
+  noUnteamedRacers() {
+    return this.unteamedRacers.length == 0;
   }
 }
