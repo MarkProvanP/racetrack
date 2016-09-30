@@ -7,6 +7,10 @@
         <img md-card-avatar src="http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg">
         <md-card-title>
           <b>{{team.name}}</b>
+          <div class='safety-team-flag'>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg" *ngIf="team.inEurope">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/1280px-Flag_of_the_United_Kingdom.svg.png" *ngIf="!team.inEurope">
+          </div>
         </md-card-title>
         <md-card-subtitle>
           <div>
