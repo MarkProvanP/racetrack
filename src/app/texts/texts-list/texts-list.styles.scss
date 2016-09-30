@@ -1,0 +1,13 @@
+.texts-list {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 20px;
+}
+
+.text-card {
+  flex: 1;
+  width: 500px;
+  margin: 5px;
+}

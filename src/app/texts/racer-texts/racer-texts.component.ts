@@ -18,6 +18,11 @@ export class RacerTextsComponent implements OnInit {
   racers: [Racer];
   selectedRacer: Racer;
   selectedRacerTexts: [Text];
+  displayOptions = {
+    oneline: false,
+    team: true,
+    timestamp: true
+  }
 
   constructor(private dataService: DataService) {};
   getTexts(): void {

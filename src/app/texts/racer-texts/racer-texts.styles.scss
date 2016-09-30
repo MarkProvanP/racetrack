@@ -1,19 +1,10 @@
-.texts-by-racer {
+texts-list {
   flex: 1;
-
-  .racers-list {
-  }
-
-  .texts-by-racer-list {
-    padding: 20px;
-
-    .text-card {
-      margin: 5px;
-    }
-  }
+  overflow-y: scroll;
 }
 
 .master-detail {
+  flex: 1;
   display: flex;
   .master {
     width: 300px;

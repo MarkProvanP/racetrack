@@ -15,6 +15,12 @@ import * as moment from "moment";
 })
 export class AllTextsComponent {
   texts: [Text];
+  displayOptions = {
+    name: true,
+    number: true,
+    team: true,
+    oneline: true;
+  }
 
   constructor(
     private dataService: DataService,
@@ -40,11 +46,6 @@ export class AllTextsComponent {
   onTextReceived(text) {
     this.texts.unshift(text);
     this.addRacerToText(text)
-  }
-
-  markTextAsRead(text) {
-    console.log('marking', text, 'as read');
-    this.dataService.updateText(text)
   }
 
   ngOnInit(): void {

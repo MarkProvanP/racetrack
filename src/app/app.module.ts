@@ -24,6 +24,7 @@ import { NoContent } from './no-content';
 import { AllTextsComponent } from './texts/all-texts';
 import { TeamTextsComponent } from './texts/team-texts';
 import { RacerTextsComponent } from './texts/racer-texts';
+import { TextsListComponent } from './texts/texts-list';
 import { TextsComponent } from './texts';
 import { RacersComponent } from './racers';
 import { RacerDetailComponent } from './racer-detail';
@@ -59,6 +60,7 @@ const APP_PROVIDERS = [
     AllTextsComponent,
     TeamTextsComponent,
     RacerTextsComponent,
+    TextsListComponent,
     TextsComponent,
     RacersComponent,
     RacerDetailComponent,

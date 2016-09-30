@@ -1,29 +1,3 @@
 <div class='all-texts'>
-  <div class="texts-list">
-    <div class='text-card' *ngFor="let text of texts">
-      <md-card>
-        <md-card-header>
-          <md-card-title>
-            <div>
-              <span>({{text.from}})</span>
-              -
-              <span *ngIf="text.racer">{{text.racer.name}}</span>
-              -
-              <span *ngIf="text.team">{{text.team.name}}</span>
-            </div>
-            <div>{{text.getPrettyTimestamp()}}</div>
-          </md-card-title>
-        </md-card-header>
-        <md-card-content>
-          {{text.body}}
-        </md-card-content>
-        <md-card-actions>
-          <button md-button>RESPOND</button>
-          <md-checkbox [(ngModel)]='text.read' (change)='markTextAsRead(text)'>
-            Read
-          </md-checkbox>
-        </md-card-actions>
-      </md-card>
-    </div>
-  </div>
+  <texts-list [texts]="texts" [display]="displayOptions"></texts-list>
 </div>

@@ -25,7 +25,7 @@ md-tab-group {
   background-color: #EEEEEE;
 }
 
-all-texts {
+/deep/ all-texts {
   display: flex;
   flex: 1;
 }

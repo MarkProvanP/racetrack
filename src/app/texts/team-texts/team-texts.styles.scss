@@ -1,20 +1,6 @@
-.texts-by-team {
-  flex: 1;
-
-  .teams-list {
-  }
-
-  .texts-by-team-list {
-    padding: 20px;
-
-    .text-card {
-      margin: 5px;
-    }
-  }
-}
-
 .master-detail {
   display: flex;
+  flex: 1;
   .master {
     width: 300px;
     overflow-y: scroll;
@@ -25,6 +11,11 @@
     flex: 1;
     overflow-y: scroll;
   }
+}
+
+texts-list {
+  flex: 1;
+  overflow-y: scroll;
 }
 
 /deep/ .md-list-item:hover {

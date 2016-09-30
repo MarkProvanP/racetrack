@@ -1,0 +1,31 @@
+<div class="texts-list">
+  <div class='text-card' *ngFor="let text of texts">
+    <md-card>
+      <md-card-header>
+        <md-card-title>
+          <div class='inline-text-title' *ngIf="display.oneline">
+            <span>({{text.from}})</span>
+            -
+            <span *ngIf="text.racer">{{text.racer.name}}</span>
+            -
+            <span *ngIf="text.team">{{text.team.name}}</span>
+          </div>
+          <div>{{text.getPrettyTimestamp()}}</div>
+          <div class='text-title' *ngIf='!display.oneline'>
+            <div *ngIf="display.number">{{text.from}}</div>
+            <div *ngIf="display.time">{{text.getPrettyTimestamp()}}</div>
+          </div>
+        </md-card-title>
+      </md-card-header>
+      <md-card-content>
+        {{text.body}}
+      </md-card-content>
+      <md-card-actions>
+        <button md-button>RESPOND</button>
+        <md-checkbox [(ngModel)]='text.read' (change)='markTextAsRead(text)'>
+          Read
+        </md-checkbox>
+      </md-card-actions>
+    </md-card>
+  </div>
+</div>
