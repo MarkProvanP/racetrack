@@ -4,10 +4,14 @@ import { Router }            from '@angular/router';
 import { Team }                from '../../common/team';
 import { DataService }         from '../data.service';
 
+import { MdIcon, MdIconRegistry } from "@angular2-material/icon";
+
 @Component({
   selector: 'my-teams',
   templateUrl: './teams.template.html',
-  styleUrls:  ['./teams.styles.scss']
+  styleUrls:  ['./teams.styles.scss'],
+  directives: [MdIcon],
+  viewProviders: [MdIconRegistry]
 })
 export class TeamsComponent implements OnInit {
   teams: Team[];
