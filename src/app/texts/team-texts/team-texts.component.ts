@@ -23,7 +23,11 @@ export class TeamTextsComponent implements OnInit {
 
   selectTextsByTeam(team: Team) {
     this.selectedTeam = team;
-    this.selectedTeamTexts = this.texts.filter(text => text.team.id === team.id);
+    this.selectedTeamTexts = this.texts.filter(text => {
+      if (text.team) {
+        return text.team.id === team.id;
+      }
+    });
   }
 
   getTexts(): void {
