@@ -33,4 +33,8 @@ export class TeamCardComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.paramsSub.unsubscribe();
   }
+
+  updateTeam() {
+    this.dataService.updateTeam(this.team);
+  }
 }

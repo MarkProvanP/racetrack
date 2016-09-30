@@ -21,6 +21,7 @@ export class Team {
   statusUpdates: [TeamUpdate] = <[TeamUpdate]>[];
   racers: [Racer] = <[Racer]>[];
   lastCheckin: Date;
+  inEurope: boolean = false;
 
   static fromJSON(obj: PopulatedTeam) {
     let updates = obj.statusUpdates
@@ -50,6 +51,7 @@ export class Team {
       this.statusUpdates = properties.statusUpdates;
     }
     this.lastCheckin = properties.lastCheckin;
+    this.inEurope = Boolean(properties.inEurope);
   }
 
   getCurrentStatus(): TeamStatus {

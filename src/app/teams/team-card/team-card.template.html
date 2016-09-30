@@ -4,6 +4,7 @@
       <h3>{{team.name}}</h3>
     </md-card-title>
     <md-card-content>
+      <md-slide-toggle [(ngModel)]="team.inEurope" (change)='updateTeam()'>In Europe?</md-slide-toggle>
       <label>Status updates</label>
       <md-list>
         <md-list-item *ngFor="let update of team.statusUpdates | orderBy: '-timestamp' ">
