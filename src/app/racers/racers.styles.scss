@@ -3,7 +3,7 @@
   color: white;
 }
 .racers {
-  margin: 0 0 2em 0;
+  //margin: 0 0 2em 0;
   list-style-type: none;
   padding: 0;
 }
@@ -44,7 +44,7 @@
   margin-right: .8em;
   border-radius: 4px 0 0 4px;
 }
-button {
+button.goto-detail {
   font-family: Arial;
   background-color: #eee;
   border: none;
@@ -53,7 +53,7 @@ button {
   cursor: pointer;
   cursor: hand;
 }
-button:hover {
+button.goto-detail:hover {
   background-color: #cfd8dc;
 }
 button.delete {
@@ -64,6 +64,31 @@ button.delete {
   color:white;
 }
 
+.master-detail.racers {
+  flex: 1;
+}
+
+.master-detail {
+  display: flex;
+  .master {
+    width: 300px;
+    overflow-y: scroll;
+    background-color: white;
+  }
+
+  .detail {
+    flex: 1;
+    overflow-y: scroll;
+  }
+}
+
+/deep/ .md-list-item:hover {
+  background-color: lightgrey;
+}
+
+/deep/ .md-list-item.selected {
+  background-color: #EEEEEE;
+}
 
 /*
 Copyright 2016 Google Inc. All Rights Reserved.

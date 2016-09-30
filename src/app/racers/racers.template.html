@@ -1,26 +1,23 @@
-<h2>My Racers</h2>
-<div>
-  <label>Racer name:</label> <input #racerName />
-  <button (click)="add(racerName.value); racerName.value=''">
-    Add
-  </button>
+<div class='racers master-detail'>
+  <div class='master'>
+    <md-list>
+      <md-list-item *ngFor='let racer of racers' (click)='onSelect(racer)'>
+        <h3 md-line>{{racer.name}}</h3>
+        <p>
+          <button class='goto-detail'(click)="gotoDetail(racer)">
+            View Details
+          </button>
+        </p>
+      </md-list-item>
+    </md-list>
+    <button md-fab (click)="createRacer()">
+      <md-icon class="md-24">add</md-icon>
+    </button>
+  </div>
+  <div class='detail'>
+    <router-outlet></router-outlet>
+  </div>
 </div>
-<ul class="racers">
-  <li *ngFor="let racer of racers" (click)="onSelect(racer)"
-      [class.selected]="racer === selectedRacer">
-    <span class="badge">{{racer.id}}</span>
-    <span>{{racer.name}}</span>
-    <button class="delete"
-      (click)="delete(racer); $event.stopPropagation()">x</button>
-  </li>
-</ul>
-<div *ngIf="selectedRacer">
-  <h2>
-    {{selectedRacer.name}} is my racer
-  </h2>
-  <button (click)="gotoRacerDetail()">View Details</button>
-</div>
-
 
 <!-- 
 Copyright 2016 Google Inc. All Rights Reserved.

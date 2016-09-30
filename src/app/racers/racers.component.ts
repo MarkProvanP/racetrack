@@ -4,14 +4,17 @@ import { Router }            from '@angular/router';
 import { Racer }                from '../../common/racer';
 import { DataService }         from '../data.service';
 
+import { MdIcon, MdIconRegistry } from "@angular2-material/icon";
+
 @Component({
   selector: 'my-racers',
   templateUrl: './racers.template.html',
-  styleUrls:  ['./racers.styles.scss']
+  styleUrls:  ['./racers.styles.scss'],
+  directives: [MdIcon],
+  viewProviders: [MdIconRegistry]
 })
 export class RacersComponent implements OnInit {
   racers: Racer[];
-  selectedRacer: Racer;
 
   constructor(
     private dataService: DataService,
@@ -23,37 +26,24 @@ export class RacersComponent implements OnInit {
         .then(racers => this.racers = racers);
   }
 
-  add(name: string): void {
-    name = name.trim();
-    if (!name) { return; }
-    let properties = {name: name};
-    this.dataService.createRacer(properties)
-      .then(racer => {
-        this.racers.push(racer);
-        this.selectedRacer = null;
-      });
-  }
-
-  delete(racer: Racer): void {
-    console.log('deleting racer', racer);
-    this.dataService
-        .deleteRacer(racer.id)
-        .then(() => {
-          this.racers = this.racers.filter(h => h !== racer);
-          if (this.selectedRacer === racer) { this.selectedRacer = null; }
-        });
-  }
-
   ngOnInit(): void {
     this.getRacers();
   }
 
   onSelect(racer: Racer): void {
-    this.selectedRacer = racer;
+    this.router.navigate(['/racers', racer.id]);
   }
 
-  gotoRacerDetail(): void {
-    this.router.navigate(['/racer', this.selectedRacer.id]);
+  gotoDetail(racer: Racer): void {
+    this.router.navigate(['/racer', racer.id]);
+  }
+
+  createRacer() {
+    this.dataService.createRacer({})
+      .then(racer => {
+        this.getRacers();
+        this.router.navigate(['/racers', racer.id, 'edit']);
+      });
   }
 }
 

@@ -1,0 +1,29 @@
+<div class='racer-card' *ngIf="racer">
+  <md-card>
+    <md-card-title>
+      <h3 *ngIf='!inEditMode'>{{racer.name}}</h3>
+      <md-input *ngIf='inEditMode' placeholder='Racer name' [(ngModel)]='racer.name'></md-input>
+    </md-card-title>
+    <md-card-content>
+      <table>
+        <tr>
+          <th>Nationality:</th>
+          <td>
+            <p *ngIf='!inEditMode'>{{racer.nationality}}</p>
+            <md-input *ngIf='inEditMode' placeholder='Nationality' [(ngModel)]='racer.nationality'></md-input>
+          </td>
+        </tr>
+        <tr>
+          <th>Phone:</th>
+          <td>
+            <p *ngIf='!inEditMode'>{{racer.phone}}</p>
+            <md-input *ngIf='inEditMode' placeholder='Phone number' [(ngModel)]='racer.phone'></md-input>
+          </td>
+        </tr>
+      </table>
+      <button md-raised-button color="primary" (click)="enterEditMode()" *ngIf="!inEditMode">Edit</button>
+      <button md-raised-button color="primary" (click)="exitEditMode()" *ngIf="inEditMode">Finish</button>
+      <button md-raised-button color="warn" (click)="deleteRacer()">Delete</button>
+    </md-card-content>
+  </md-card>
+</div>

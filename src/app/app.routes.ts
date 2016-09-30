@@ -12,6 +12,7 @@ import { RacersComponent } from './racers';
 import { TeamsComponent } from './teams';
 import { DashboardComponent } from './dashboard';
 import { RacerDetailComponent } from './racer-detail';
+import { RacerCardComponent } from './racers/racer-card';
 import { TeamDetailComponent } from './team-detail';
 import { TeamCardComponent } from './teams/team-card';
 
@@ -32,7 +33,15 @@ export const ROUTES: Routes = [
       { path: 'by-team', component: TeamTextsComponent }
     ]
   },
-  { path: 'racers', component: RacersComponent },
+  {
+    path: 'racers',
+    component: RacersComponent,
+    children: [
+      { path: '' },
+      { path: ':id', component: RacerCardComponent },
+      { path: ':id/edit', component: RacerCardComponent }
+    ]
+  },
   {
     path: 'teams',
     component: TeamsComponent,

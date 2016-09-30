@@ -28,6 +28,7 @@ import { TextsListComponent } from './texts/texts-list';
 import { TextsComponent } from './texts';
 import { RacersComponent } from './racers';
 import { RacerDetailComponent } from './racer-detail';
+import { RacerCardComponent } from './racers/racer-card';
 import { TeamsComponent } from './teams';
 import { TeamDetailComponent } from './team-detail';
 import { TeamCardComponent } from './teams/team-card';
@@ -64,6 +65,7 @@ const APP_PROVIDERS = [
     TextsComponent,
     RacersComponent,
     RacerDetailComponent,
+    RacerCardComponent,
     TeamsComponent,
     TeamDetailComponent,
     TeamCardComponent,
