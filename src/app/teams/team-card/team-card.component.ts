@@ -43,6 +43,10 @@ export class TeamCardComponent implements OnInit, OnDestroy {
     });
   }
 
+  createNewUpdate() {
+    
+  }
+
   updateUnteamedRacers() {
     this.dataService.getRacersWithoutTeams()
       .then(racers => {

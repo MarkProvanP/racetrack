@@ -7,13 +7,22 @@
     <md-card-content>
       <md-slide-toggle [(ngModel)]="team.inEurope" (change)='updateTeam()'>In Europe?</md-slide-toggle>
       <label>Status updates</label>
-      <md-list>
-        <md-list-item *ngFor="let update of team.statusUpdates | orderBy: '-timestamp' ">
-          <div md-line>{{update.getPrettyTimestamp()}}</div>
-          <div md-line>{{update.prettyStatusName()}}</div>
-          <div md-line>{{update.location.place}}</div>
-        </md-list-item>
-      </md-list>
+      <button md-mini-fab color='accent' (click)='createNewUpdate()'>
+        <md-icon class='md-24'>add</md-icon>
+      </button>
+      <div class='status-update-list-wrapper'>
+        <md-list>
+          <md-list-item *ngFor="let update of team.statusUpdates | orderBy: '-timestamp' ">
+            <div md-line>{{update.getPrettyTimestamp()}}</div>
+            <div md-line>
+              <span><i>Status:</i> {{update.prettyStatusName()}}</span>
+              <span><i>Place:</i> {{update.location.place}}</span>
+              <span *ngIf="update.location.latitude"><i>Co-ords</i> {{update.location.latitude}}, {{update.location.longitude}}</span>
+            </div>
+            <div md-line><i>Notes:</i> {{update.notes}}</div>
+          </md-list-item>
+        </md-list>
+      </div>
       <label>Racers</label>
       <div class='team-racers-list'>
         <md-card *ngFor="let racer of team.racers | orderBy: '+name' ">
