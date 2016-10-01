@@ -82,3 +82,7 @@ md-card-title {
   }
 }
 
+
+/deep/ .md-card-header-text {
+  flex: 1;
+}

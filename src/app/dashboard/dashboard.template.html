@@ -1,6 +1,5 @@
 <div class='card-container'>
   <h1 x-large class='sample-content'>Race2 Dashboard</h1>
-
   <div class='status-card-container'>
     <md-card *ngFor="let team of teams" [ngClass]='getCardClass(team)'>
       <md-card-header>
@@ -44,8 +43,7 @@
         </div>
       </md-card-content>
       <md-card-actions>
-        <button md-button>CONTACT</button>
-        <button md-button>MESSAGE HISTORY</button>
+        <button md-button>TEXTS</button>
         <button md-button>UPDATE STATUS</button>
       </md-card-actions>
     </md-card>
