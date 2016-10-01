@@ -15,6 +15,8 @@ import * as moment from "moment";
 export class TextsListComponent {
   @Input() texts: Text[];
   @Input() display;
+  inCreateUpdateMode = false;
+  selectedText;
 
   constructor(private dataService: DataService) {}
 
@@ -26,5 +28,15 @@ export class TextsListComponent {
     let team = text.team;
     team.lastCheckin = text.timestamp;
     this.dataService.updateTeam(team);
+  }
+
+  createUpdateFromText(text: Text) {
+    this.inCreateUpdateMode = true;
+    this.selectedText = text;
+  }
+
+  onStatusCreated() {
+    this.inCreateUpdateMode = false;
+    this.selectedText = undefined;
   }
 }

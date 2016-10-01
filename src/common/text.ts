@@ -43,7 +43,12 @@ export class Text {
   read: boolean;
 
   static fromJSON(obj: FullFormText) {
-    return new Text(obj.id, obj);
+    let racer = Racer.fromJSON(obj.racer);
+    let team = Team.fromJSON(obj.team);
+    let clone = JSON.parse(JSON.stringify(obj));
+    clone.racer = racer;
+    clone.team = team;
+    return new Text(clone.id, clone);
   }
 
   static fromTwilio(id: TextId, twilio: TwilioText) {
