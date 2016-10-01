@@ -7,6 +7,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 
+import { AgmCoreModule } from "angular2-google-maps/core";
 /*
  * Platform and Environment providers/directives/pipes
  */
@@ -33,6 +34,7 @@ import { TeamsComponent } from './teams';
 import { TeamDetailComponent } from './team-detail';
 import { TeamCardComponent } from './teams/team-card';
 import { DashboardComponent } from './dashboard';
+import { MapComponent } from './map';
 
 import { DataService } from './data.service';
 import { OrderBy } from './orderBy.pipe';
@@ -70,6 +72,7 @@ const APP_PROVIDERS = [
     TeamDetailComponent,
     TeamCardComponent,
     DashboardComponent,
+    MapComponent,
     OrderBy,
   ],
   imports: [ // import Angular's modules
@@ -77,7 +80,10 @@ const APP_PROVIDERS = [
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES, { useHash: true }),
-    MdModule.forRoot()
+    MdModule.forRoot(),
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAffhQUtmEnMCrrFtdkXfW1eW8zU8MBonw'
+    })
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

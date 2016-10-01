@@ -58,6 +58,11 @@ footer{
   background: #fff;
 }
 
+map {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 /** remove when fixed in angular2-material **/
 /** The overlay-container is an invisible element which contains all individual overlays. */

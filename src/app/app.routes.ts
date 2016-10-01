@@ -15,7 +15,7 @@ import { RacerDetailComponent } from './racer-detail';
 import { RacerCardComponent } from './racers/racer-card';
 import { TeamDetailComponent } from './team-detail';
 import { TeamCardComponent } from './teams/team-card';
-
+import { MapComponent } from './map';
 import { DataResolver } from './app.resolver';
 
 
@@ -69,5 +69,6 @@ export const ROUTES: Routes = [
     path: 'detail', loadChildren: () => System.import('./+detail')
   },
   { path: 'dashboard', component: DashboardComponent },
-  { path: '**',    component: NoContent },
+  { path: 'map', component: MapComponent },
+  { path: '**',    component: NoContent }
 ];
