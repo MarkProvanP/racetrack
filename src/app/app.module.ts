@@ -35,6 +35,7 @@ import { TeamDetailComponent } from './team-detail';
 import { TeamCardComponent } from './teams/team-card';
 import { DashboardComponent } from './dashboard';
 import { MapComponent } from './map';
+import { NewUpdateComponent } from './updates/new-update';
 
 import { DataService } from './data.service';
 import { OrderBy } from './orderBy.pipe';
@@ -73,6 +74,7 @@ const APP_PROVIDERS = [
     TeamCardComponent,
     DashboardComponent,
     MapComponent,
+    NewUpdateComponent,
     OrderBy,
   ],
   imports: [ // import Angular's modules

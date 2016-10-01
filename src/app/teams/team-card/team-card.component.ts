@@ -43,8 +43,6 @@ export class TeamCardComponent implements OnInit, OnDestroy {
   addRacerFilterName: string;
 
   inNewUpdateMode: boolean = false;
-  statusEnum = TeamStatus;
-  newStatusObj = {};
 
   constructor(
     private dataService: DataService,
@@ -137,9 +135,7 @@ export class TeamCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  saveNewUpdate() {
-    this.dataService.createStatusUpdateForTeam(this.newStatusObj, this.team)
-      .then(team => this.team = team);
+  onStatusCreated() {
     this.inNewUpdateMode = false;
   }
 

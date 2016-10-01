@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 
 import { DataService } from '../data.service';
 
@@ -7,7 +7,8 @@ import { DataService } from '../data.service';
   templateUrl: './map.template.html',
   styleUrls: ['./map.styles.scss']
 })
-export class MapComponent {
+export class MapComponent implements OnInit {
+  teams: Team[] = [];
   default = {
     lat: 53.612805,
     lng: 5.301865,
@@ -24,5 +25,10 @@ export class MapComponent {
 
   constructor(private dataService: DataService) {
 
+  }
+
+  ngOnInit() {
+    this.dataService.getTeams()
+      .then(teams => this.teams = teams);
   }
 }

@@ -1,0 +1,53 @@
+<md-card>
+  <h3>New status update</h3>
+  <div class='new-status-update'>
+    <table class='info-table'>
+      <tr>
+        <th>Status:</th>
+        <td>
+          <select [(ngModel)]="newStatusObj.status">
+            <option *ngFor="let item of statusEnum | keys" [value]="item.key">{{item.value}}</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <th>Place:</th>
+        <td>
+          <md-input [(ngModel)]='newStatusObj.location.place'></md-input>
+        </td>
+      </tr>
+      <tr>
+        <th>Latitude:</th>
+        <td>
+          <md-input [(ngModel)]='newStatusObj.location.latitude'></md-input>
+        </td>
+      </tr>
+      <tr>
+        <th>Longitude</th>
+        <td>
+          <md-input [(ngModel)]='newStatusObj.location.longitude'></md-input>
+        </td>
+      </tr>
+      <tr>
+        <th>Notes:</th>
+        <td>
+          <md-input [(ngModel)]='newStatusObj.notes'></md-input>
+        </td>
+      </tr>
+    </table>
+    <div class='location-map'>
+      <sebm-google-map
+        [latitude]='default.lat'
+        [longitude]='default.lng'
+        [zoom]='default.zoom'>
+        <sebm-google-map-marker
+          [latitude]="default.lat"
+          [longitude]="default.lng"
+          [markerDraggable]='true'
+          (dragEnd)='onMarkerDragEnd($event)'>
+        </sebm-google-map-marker>
+      </sebm-google-map>
+    </div>
+  </div>
+  <button md-raised-button color='accent' (click)='saveNewUpdate()'>Save update</button>
+</md-card>

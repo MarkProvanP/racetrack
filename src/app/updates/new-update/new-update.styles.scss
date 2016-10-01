@@ -1,0 +1,15 @@
+.new-status-update {
+  display: flex;
+}
+
+.info-table {
+  flex: 1;
+}
+
+.location-map {
+  flex: 1;
+
+  .sebm-google-map-container {
+    height: 100%;
+  }
+}
