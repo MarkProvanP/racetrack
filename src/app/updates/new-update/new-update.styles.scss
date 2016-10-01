@@ -4,6 +4,7 @@
 
 .info-table {
   flex: 1;
+  padding: 24px;
 }
 
 .location-map {
@@ -12,4 +13,27 @@
   .sebm-google-map-container {
     height: 100%;
   }
+}
+
+.status-select-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.place-input {
+  width: 100%;
+}
+
+.notes-input {
+  width: 100%;
+}
+
+.new-update-card {
+  background-color: #EEEEEE;
+  padding: 0px;
 }

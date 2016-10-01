@@ -39,6 +39,7 @@ import { NewUpdateComponent } from './updates/new-update';
 
 import { DataService } from './data.service';
 import { OrderBy } from './orderBy.pipe';
+import { KeysPipe } from './keys.pipe';
 
 // Import diretives
 import { XLarge } from './home/x-large';
@@ -76,6 +77,7 @@ const APP_PROVIDERS = [
     MapComponent,
     NewUpdateComponent,
     OrderBy,
+    KeysPipe
   ],
   imports: [ // import Angular's modules
     BrowserModule,

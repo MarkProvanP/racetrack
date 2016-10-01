@@ -1,7 +1,7 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 
 import { Team } from "../../../common/team";
-import { TeamStatus, Location } from "../../../common/update";
+import { TeamStatus, Location, prettyStatusName } from "../../../common/update";
 
 import { DataService } from '../../data.service';
 
@@ -10,11 +10,10 @@ import { DataService } from '../../data.service';
   templateUrl: './new-update.template.html',
   styleUrls: ['./new-update.styles.scss']
 })
-export class NewUpdateComponent {
+export class NewUpdateComponent implements OnInit {
   @Input() team: Team;
   @Output() onStatusCreated = new EventEmitter();
   newStatusObj = {
-    location: new Location()
   }
   statusEnum = TeamStatus;
   default = {
@@ -26,6 +25,17 @@ export class NewUpdateComponent {
 
   constructor(private dataService: DataService) {
 
+  }
+
+  ngOnInit() {
+    let lastUpdate = this.team.getLastUpdate();
+    this.newStatusObj.status = lastUpdate.status;
+    this.newStatusObj.location = lastUpdate.location;
+  }
+
+  getPrettyStatusName(item) {
+    let enumVal = TeamStatus[item.value];
+    return prettyStatusName(enumVal);
   }
 
   saveNewUpdate() {
