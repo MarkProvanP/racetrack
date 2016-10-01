@@ -20,7 +20,28 @@
         </md-card-subtitle>
       </md-card-header>
       <md-card-content>
-        Near Dusseldorf
+        <div class='last-update' *ngIf="team.getLastUpdate()">
+          <div>
+            {{team.getLastUpdate().getPrettyTimestamp()}}
+          </div>
+          <div>
+            <span>
+              <i>Status:</i> {{team.getLastUpdate().prettyStatusName()}}
+            </span>
+            <span>
+              <i>Place:</i> {{team.getLastUpdate().location.place}}
+            </span>
+            <span *ngIf="team.getLastUpdate().location.latitude">
+              <i>Co-ords</i> {{team.getLastUpdate().location.latitude}}, {{team.getLastUpdate().location.longitude}}
+            </span>
+          </div>
+          <div>
+            <i>Notes:</i> {{team.getLastUpdate().notes}}
+          </div>
+        </div>
+        <div *ngIf="!team.getLastUpdate()">
+          <b>Team has no updates</b>
+        </div>
       </md-card-content>
       <md-card-actions>
         <button md-button>CONTACT</button>
