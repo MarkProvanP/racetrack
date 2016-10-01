@@ -35,21 +35,11 @@ export class RacerTextsComponent implements OnInit {
     return this.dataService.getTexts()
       .then(texts => {
         this.texts = texts.reverse();
-        this.texts.forEach(text => this.addRacerToText(text));
       });
   }
 
   routeToRacer(racer: Racer) {
     this.router.navigate(['/texts', 'by-racer', racer.id]);
-  }
-
-  addRacerToText(text) {
-    this.dataService.getRacerForPhoneNumber(text.from)
-      .then(racer => {
-        text.racer = racer
-        this.dataService.getTeamForRacer(racer)
-          .then(team => text.team = team);
-      });
   }
 
   getRacers() {
@@ -73,7 +63,6 @@ export class RacerTextsComponent implements OnInit {
   }
   onTextReceived(text) {
     this.texts.unshift(text);
-    this.addRacerToText(text)
   }
 
   ngOnInit(): void {

@@ -1,7 +1,7 @@
 import { Racer, RacerId } from "../../common/racer";
 import { Team, UnpopulatedTeam, PopulatedTeam, TeamId } from "../../common/team";
 import { TeamUpdate, TeamUpdateId, TeamStatus, Location } from "../../common/update";
-import { Text, PhoneNumber, TwilioText } from "../../common/text";
+import { Text, PhoneNumber, TwilioText, FullFormText, DbFormText } from "../../common/text";
 import { DbFacadeInterface } from "./db-facade";
 import { Promise } from "es6-promise";
 import * as uuid from "node-uuid";
@@ -144,8 +144,20 @@ export class InMemoryDbFacade implements DbFacadeInterface {
   addText(text: TwilioText): Promise<Text> {
     let id = uuid.v4();
     let createdText = Text.fromTwilio(id, text);
-    this.texts[id] = JSON.stringify(createdText);
-    return Promise.resolve(createdText);
+    return this.writeText(createdText);
+  }
+
+  private populateText(text: DbFormText): Promise<FullFormText> {
+    let copy = JSON.parse(JSON.stringify(text));
+    return this.getRacer(text.racer)
+      .then(racer => {
+        copy.racer = racer;
+        return this.getTeam(text.team)
+          .then(team => {
+            copy.team = team;
+            return Promise.resolve(copy);
+          });
+      });
   }
 
   getTexts(): Promise<[Text]> {
@@ -153,10 +165,11 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     for (var id in this.texts) {
       let textString = this.texts[id];
       let parsed = JSON.parse(textString);
-      let createdText = Text.fromJSON(parsed);
-      textsArray.push(createdText);
+      textsArray.push(parsed);
     }
-    return Promise.resolve(textsArray);
+    let textsPromises = textsArray.map(this.populateText)
+    return Promise.all(textsPromises)
+      .then(texts => texts.map(text => Text.fromJSON(text)));
   }
 
   getTextsByNumber(number: PhoneNumber): Promise<[Text]> {
@@ -165,10 +178,14 @@ export class InMemoryDbFacade implements DbFacadeInterface {
         .filter(text => text.from === number));
   }
 
-  updateText(text: Text): Promise<Text> {
+  private writeText(text: Text): Promise<Text> {
     let textInDbForm = text.toDbForm();
     this.texts[String(text.id)] = JSON.stringify(textInDbForm);
     return Promise.resolve(text);
+  }
+
+  updateText(text: Text): Promise<Text> {
+    return this.writeText(text);
   }
 
 //================================================================

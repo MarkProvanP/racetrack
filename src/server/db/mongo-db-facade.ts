@@ -1,7 +1,7 @@
 import { Racer, RacerId } from "../../common/racer";
 import { Team, TeamId, PopulatedTeam, UnpopulatedTeam } from "../../common/team";
 import { TeamStatus, TeamUpdate, TeamUpdateId, Location } from "../../common/update";
-import { Text, PhoneNumber, TwilioText } from "../../common/text";
+import { Text, PhoneNumber, TwilioText, FullFormText, DbFormText } from "../../common/text";
 import { DbFacadeInterface } from "./db-facade";
 import { MongoClient } from "mongodb";
 import { Promise } from "es6-promise";
@@ -50,8 +50,12 @@ class MongoDbFacade implements DbFacadeInterface {
     let collection = this.db.collection('racers');
     return collection.find({id: id}).toArray()
       .then(docs => {
-        let racer = Racer.fromJSON(docs[0]);
-        return Promise.resolve(racer);
+        if (docs.length > 0) {
+          let racer = Racer.fromJSON(docs[0]);
+          return Promise.resolve(racer);
+        } else {
+          return Promise.resolve(undefined);
+        }
     });
   }
 
@@ -59,7 +63,6 @@ class MongoDbFacade implements DbFacadeInterface {
     let collection = this.db.collection('racers');
     return collection.updateOne({id: id}, { $set: newRacer})
       .then(result => {
-        console.log('racer updated');
         return Promise.resolve(newRacer);
     });
   }
@@ -70,7 +73,6 @@ class MongoDbFacade implements DbFacadeInterface {
     let collection = this.db.collection('racers');
     return collection.insert(newRacer)
       .then(result => {
-      console.log('racer created');
       return Promise.resolve(newRacer);
     });
   }
@@ -79,7 +81,6 @@ class MongoDbFacade implements DbFacadeInterface {
     let collection = this.db.collection('racers');
     return collection.deleteOne({id: id})
       .then(result => {
-        console.log('racer created');
         return Promise.resolve();
       })
   }
@@ -88,13 +89,10 @@ class MongoDbFacade implements DbFacadeInterface {
 
   getTeams(): Promise<[Team]> {
     let collection = this.db.collection('teams');
-    console.log('mongo-db-facade getTeams()');
     return collection.find({}).toArray()
       .then(docs => {
-        console.log('got docs', docs);
         let teams = docs as [UnpopulatedTeam];
         let teamPromises = teams.map(team => this.populateTeam(team));
-        console.log('teamPromises', teamPromises);
         return Promise.all(teamPromises)
           .then(teams => teams.map(team => Team.fromJSON(team)));
       });
@@ -106,17 +104,11 @@ class MongoDbFacade implements DbFacadeInterface {
     let racerPromises = team.racers
       .map(racer => this.getRacer(racer));
     let copy = JSON.parse(JSON.stringify(team));
-    console.log('mongo-db-facade populateTeam(', team);
-    console.log('updatePromises', updatePromises);
-    console.log('racerPromises', racerPromises);
-    console.log('copy', copy);
     return Promise.all(updatePromises)
       .then((statuses: [TeamUpdate]) => {
-        console.log('got populated statuses', statuses);
         copy.statusUpdates = statuses;
         return Promise.all(racerPromises)
           .then((racers: [Racer]) => {
-            console.log('got populated racers', racers);
             copy.racers = racers;
             return Promise.resolve(copy);
           });
@@ -127,9 +119,13 @@ class MongoDbFacade implements DbFacadeInterface {
     let collection = this.db.collection('teams');
     return collection.find({id: id}).toArray()
       .then(docs => {
-        let unpopulatedTeam = docs[0];
-        return this.populateTeam(unpopulatedTeam)
-          .then(team => Promise.resolve(Team.fromJSON(team)));
+        if (docs.length > 0) {
+          let unpopulatedTeam = docs[0];
+          return this.populateTeam(unpopulatedTeam)
+            .then(team => Promise.resolve(Team.fromJSON(team)));
+        } else {
+          return Promise.resolve(undefined);
+        }
     });
   }
 
@@ -138,7 +134,6 @@ class MongoDbFacade implements DbFacadeInterface {
     let depopulatedTeam = newTeam.depopulate();
     return collection.updateOne({id: id}, { $set: depopulatedTeam})
       .then(result => {
-        console.log('team updated');
         return Promise.resolve(newTeam);
     });
   }
@@ -149,7 +144,6 @@ class MongoDbFacade implements DbFacadeInterface {
     let newTeam = new Team(id, name);
     return collection.insert(newTeam)
       .then(result => {
-        console.log('team created');
         return Promise.resolve(newTeam);
       });
   }
@@ -166,9 +160,36 @@ class MongoDbFacade implements DbFacadeInterface {
     let collection = this.db.collection('texts');
     let id = uuid.v4();
     let createdText = Text.fromTwilio(id, text);
-    return collection.insert(createdText)
+    let fromNumber = createdText.from;
+    return this.getRacers()
+      .then(racers => {
+        createdText.racer = racers.filter(
+          racer => racer.phone == fromNumber)[0];
+        return this.getTeams()
+      })
+      .then(teams => {
+        createdText.team = teams
+          .filter(team =>
+            team.racers.filter(racer => racer.id == createdText.racer.id).length > 0)[0];
+      })
       .then(result => {
-        return Promise.resolve(createdText);
+        return collection.insert(createdText.toDbForm());
+      })
+      .then(result => {
+        return Promise.resolve(createdText)
+      });
+  }
+
+  private populateText(text: DbFormText): Promise<FullFormText> {
+    let copy = JSON.parse(JSON.stringify(text));
+    return this.getRacer(text.racer)
+      .then(racer => {
+        copy.racer = racer;
+        return this.getTeam(text.team)
+          .then(team => {
+            copy.team = team;
+            return Promise.resolve(copy);
+          });
       });
   }
 
@@ -176,18 +197,19 @@ class MongoDbFacade implements DbFacadeInterface {
     let collection = this.db.collection('texts');
     return collection.find({}).toArray()
       .then(docs => {
-        let texts = docs.map(text => Text.fromJSON(text));
-        return Promise.resolve(texts);
+        let textPromises = docs.map(text => this.populateText(text))
+        return Promise.all(textPromises)
+          .then(texts => texts.map(text => Text.fromJSON(text)));
       });
   }
 
   getTextsByNumber(number: PhoneNumber): Promise<[Text]>{
     let collection = this.db.collection('texts');
-    return collection.find({}).toArray()
+    return collection.find({from: number}).toArray()
       .then(docs => {
-        let texts = docs.map(text => Text.fromJSON(text))
-          .filter(text => text.from === number);
-        return Promise.resolve(texts);
+        let textPromises = docs.map(text => this.populateText(text))
+        return Promise.all(textPromises)
+          .then(texts => texts.map(text => Text.fromJSON(text)));
       });
   }
 
@@ -196,7 +218,6 @@ class MongoDbFacade implements DbFacadeInterface {
     let textInDbForm = text.toDbForm();
     return collection.updateOne({id: text.id}, { $set: textInDbForm})
       .then(result => {
-        console.log('text updated');
         return Promise.resolve(text);
       });
   }
@@ -205,8 +226,6 @@ class MongoDbFacade implements DbFacadeInterface {
     let collection = this.db.collection('updates');
     let id = uuid.v4();
     let newStatusUpdate = new TeamUpdate(id, properties);
-    console.log('createStatusUpdate');
-    console.log(newStatusUpdate);
     return collection.insert(newStatusUpdate)
       .then(result => {
         return Promise.resolve(newStatusUpdate);

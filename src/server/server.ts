@@ -78,6 +78,7 @@ setup(config.db_url)
 function handleTextMessage(db_facade, twilioText: TwilioText) {
   db_facade.addText(twilioText)
     .then(text => {
+      console.log('successfully added', text, 'to db');
       let newMessage = new TextReceivedMessage(text)
       sendMessageToWebClients(newMessage);
     });

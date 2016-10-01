@@ -1,10 +1,35 @@
 export type PhoneNumber = string;
 export type TextId = string;
 
-import { Racer } from './racer';
-import { Team } from './team';
+import { Racer, RacerId } from './racer';
+import { Team, TeamId } from './team';
 
 import * as moment from "moment";
+
+export interface DbFormText {
+  id: TextId;
+  body: string;
+  to: PhoneNumber;
+  from: PhoneNumber;
+  racer: RacerId;
+  team: TeamId;
+  twilio: TwilioText;
+  timestamp: Date;
+  read: boolean;
+}
+
+export interface FullFormText {
+  id: TextId;
+  body: string;
+  to: PhoneNumber;
+  from: PhoneNumber;
+  racer: Racer;
+  team: Team;
+  twilio: TwilioText;
+  timestamp: Date;
+  read: boolean;
+
+}
 
 export class Text {
   id: TextId;
@@ -17,7 +42,7 @@ export class Text {
   timestamp: Date;
   read: boolean;
 
-  static fromJSON(obj) {
+  static fromJSON(obj: FullFormText) {
     return new Text(obj.id, obj);
   }
 
@@ -35,7 +60,7 @@ export class Text {
     return moment(this.timestamp).format('HH:mm ddd, Do MMM');
   }
 
-  toDbForm() {
+  toDbForm(): DbFormText {
     let copy = JSON.parse(JSON.stringify(this));
     if (this.racer) copy.racer = this.racer.id;
     if (this.team) copy.team = this.team.id;
@@ -50,6 +75,8 @@ export class Text {
     this.twilio = properties.twilio;
     this.timestamp = properties.timestamp;
     this.read = !!properties.read;
+    this.racer = properties.racer;
+    this.team = properties.team;
   }
 }
 

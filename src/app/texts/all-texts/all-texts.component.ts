@@ -30,22 +30,11 @@ export class AllTextsComponent {
     this.dataService.getTexts()
       .then(texts => {
         this.texts = texts.reverse();
-        this.texts.forEach(text => this.addRacerToText(text));
-      });
-  }
-
-  addRacerToText(text) {
-    this.dataService.getRacerForPhoneNumber(text.from)
-      .then(racer => {
-        text.racer = racer
-        this.dataService.getTeamForRacer(racer)
-          .then(team => text.team = team);
       });
   }
 
   onTextReceived(text) {
     this.texts.unshift(text);
-    this.addRacerToText(text)
   }
 
   ngOnInit(): void {
