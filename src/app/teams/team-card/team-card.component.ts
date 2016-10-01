@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from "@angular/core";
+import { Component, Input, OnInit, OnDestroy, Pipe, PipeTransform } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { Team } from '../../../common/team';
@@ -8,11 +8,29 @@ import { DataService } from '../../data.service';
 
 import { OrderBy } from '../../orderBy.pipe.ts';
 
+// From stackoverflow
+// http://stackoverflow.com/a/35750252
+@Pipe({name: 'keys'})
+export class KeysPipe implements PipeTransform {
+  transform(value, args:string[]) : any {
+    let keys = [];
+    for (var enumMember in value) {
+      var isValueProperty = parseInt(enumMember, 10) >= 0
+      if (isValueProperty) {
+        keys.push({key: enumMember, value: value[enumMember]});
+        // Uncomment if you want log
+        // console.log("enum member: ", value[enumMember]);
+      } 
+    }
+    return keys;
+  }
+}
+
 @Component({
   selector: 'team-card',
   templateUrl: './team-card.template.html',
   styleUrls: ['./team-card.styles.scss'],
-  pipes: [OrderBy]
+  pipes: [OrderBy, KeysPipe]
 })
 export class TeamCardComponent implements OnInit, OnDestroy {
   team: Team;
@@ -23,6 +41,10 @@ export class TeamCardComponent implements OnInit, OnDestroy {
   unteamedRacers: Racer[] = [];
   unteamedMatchingRacers: Racer[] = [];
   addRacerFilterName: string;
+
+  inNewUpdateMode: boolean = false;
+  statusEnum = TeamStatus;
+  newStatusObj = {};
 
   constructor(
     private dataService: DataService,
@@ -106,5 +128,18 @@ export class TeamCardComponent implements OnInit, OnDestroy {
 
   noUnteamedRacers() {
     return this.unteamedRacers.length == 0;
+  }
+
+  createNewUpdate() {
+    this.inNewUpdateMode = true;
+    this.newStatusObj = {
+      location: new Location();
+    }
+  }
+
+  saveNewUpdate() {
+    this.dataService.createStatusUpdateForTeam(this.newStatusObj, this.team)
+      .then(team => this.team = team);
+    this.inNewUpdateMode = false;
   }
 }

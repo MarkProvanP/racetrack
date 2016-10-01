@@ -6,10 +6,45 @@
     </md-card-title>
     <md-card-content>
       <md-slide-toggle [(ngModel)]="team.inEurope" (change)='updateTeam()'>In Europe?</md-slide-toggle>
+
       <label>Status updates</label>
-      <button md-mini-fab color='accent' (click)='createNewUpdate()'>
+      <button md-mini-fab color='accent' (click)='createNewUpdate()' *ngIf="!inNewUpdateMode">
         <md-icon class='md-24'>add</md-icon>
       </button>
+      <div class='new-status-update' *ngIf="inNewUpdateMode">
+        <table>
+          <tr>
+            <th>Status:</th>
+            <td>
+              <select [(ngModel)]="newStatusObj.status">
+                <option *ngFor="let item of statusEnum | keys" [value]="item.key">{{item.value}}</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>Place:</th>
+            <td>
+              <md-input [(ngModel)]='newStatusObj.location.place'></md-input>
+            </td>
+          </tr>
+          <tr>
+            <th>Coords:</th>
+            <td>
+              <md-input [(ngModel)]='newStatusObj.location.latitude'></md-input>
+            </td>
+            <td>
+              <md-input [(ngModel)]='newStatusObj.location.longitude'></md-input>
+            </td>
+          </tr>
+          <tr>
+            <th>Notes:</th>
+            <td>
+              <md-input [(ngModel)]='newStatusObj.notes'></md-input>
+            </td>
+          </tr>
+        </table>
+        <button md-raised-button color='accent' (click)='saveNewUpdate()'>Save update</button>
+      </div>
       <div class='status-update-list-wrapper'>
         <md-list>
           <md-list-item *ngFor="let update of team.statusUpdates | orderBy: '-timestamp' ">
@@ -23,6 +58,7 @@
           </md-list-item>
         </md-list>
       </div>
+
       <label>Racers</label>
       <div class='team-racers-list'>
         <md-card *ngFor="let racer of team.racers | orderBy: '+name' ">
@@ -47,6 +83,7 @@
           <md-icon class='md-24'>add</md-icon>
         </button>
       </div>
+
       <button md-raised-button color="primary" (click)="editTeam()" *ngIf="!inEditMode">Edit</button>
       <button md-raised-button color="primary" (click)="saveTeam()" *ngIf="inEditMode">Finish</button>
       <button md-raised-button color="warn" (click)="deleteTeam()">Delete</button>
