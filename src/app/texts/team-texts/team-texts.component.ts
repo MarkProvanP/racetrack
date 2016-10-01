@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 
 import { Racer } from "../../../common/racer";
 import { Team } from "../../../common/team";
@@ -23,8 +23,9 @@ export class TeamTextsComponent implements OnInit {
     racer: true,
     timestamp: true
   }
+  paramsSub: any;
 
-  constructor(private dataService: DataService) {};
+  constructor(private dataService: DataService, private activatedRoute: ActivatedRoute, private router: Router) {};
 
   selectTextsByTeam(team: Team) {
     this.selectedTeam = team;
@@ -35,8 +36,12 @@ export class TeamTextsComponent implements OnInit {
     });
   }
 
-  getTexts(): void {
-    this.dataService.getTexts()
+  routeToTeam(team: Team) {
+    this.router.navigate(['/texts', 'by-team', team.id]);
+  }
+
+  getTexts(){
+    return this.dataService.getTexts()
       .then(texts => {
         this.texts = texts.reverse();
         this.texts.forEach(text => this.addRacerToText(text));
@@ -52,15 +57,14 @@ export class TeamTextsComponent implements OnInit {
       });
   }
 
-  getTeams(): void {
-    this.dataService.getTeams()
+  getTeams() {
+    return this.dataService.getTeams()
       .then(teams => {
         this.teams = teams;
       });
   }
 
   markTextAsRead(text) {
-    console.log('marking', text, 'as read');
     this.dataService.updateText(text)
   }
 
@@ -70,8 +74,14 @@ export class TeamTextsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getTeams();
-    this.getTexts();
+    this.getTexts()
+      .then(texts => this.getTeams())
+      .then(teams => {
+        this.paramsSub = this.activatedRoute.params.subscribe(params => {
+          let team = this.teams.filter(team => team.id == params['id'])[0]
+          this.selectTextsByTeam(team);
+        });
+      });
     this.dataService.onTextReceived(text => this.onTextReceived(text));
   }
 }
