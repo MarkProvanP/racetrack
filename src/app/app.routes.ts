@@ -29,7 +29,13 @@ export const ROUTES: Routes = [
     children: [
       { path: '', redirectTo: 'all', pathMatch: 'full'},
       { path: 'all', component: AllTextsComponent },
-      { path: 'by-racer', component: RacerTextsComponent },
+      {
+        path: 'by-racer',
+        children: [
+          { path: '', component: RacerTextsComponent },
+          { path: ':id', component: RacerTextsComponent }
+        ]
+      },
       { 
         path: 'by-team',
         children: [

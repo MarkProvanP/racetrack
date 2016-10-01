@@ -25,12 +25,16 @@ export class TeamTextsComponent implements OnInit {
   }
   paramsSub: any;
 
-  constructor(private dataService: DataService, private activatedRoute: ActivatedRoute, private router: Router) {};
+  constructor(
+    private dataService: DataService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {};
 
   selectTextsByTeam(team: Team) {
     this.selectedTeam = team;
     this.selectedTeamTexts = this.texts.filter(text => {
-      if (text.team) {
+      if (team && text.team) {
         return text.team.id === team.id;
       }
     });

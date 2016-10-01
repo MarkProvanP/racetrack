@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 
 import { Racer } from "../../../common/racer";
 import { Team } from "../../../common/team";
@@ -23,14 +23,24 @@ export class RacerTextsComponent implements OnInit {
     team: true,
     timestamp: true
   }
+  paramsSub: any;
 
-  constructor(private dataService: DataService) {};
-  getTexts(): void {
-    this.dataService.getTexts()
+  constructor(
+    private dataService: DataService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {};
+
+  getTexts() {
+    return this.dataService.getTexts()
       .then(texts => {
         this.texts = texts.reverse();
         this.texts.forEach(text => this.addRacerToText(text));
       });
+  }
+
+  routeToRacer(racer: Racer) {
+    this.router.navigate(['/texts', 'by-racer', racer.id]);
   }
 
   addRacerToText(text) {
@@ -42,8 +52,8 @@ export class RacerTextsComponent implements OnInit {
       });
   }
 
-  getRacers(): void {
-    this.dataService.getRacers()
+  getRacers() {
+    return this.dataService.getRacers()
       .then(racers => {
         this.racers = racers;
       });
@@ -51,11 +61,14 @@ export class RacerTextsComponent implements OnInit {
 
   selectTextsByRacer(racer: Racer) {
     this.selectedRacer = racer;
-    this.selectedRacerTexts = this.texts.filter(text => text.racer.id === racer.id);
+    this.selectedRacerTexts = this.texts.filter(text => {
+      if (racer && text.racer) {
+        return text.racer.id === racer.id
+      }
+    });
   }
 
   markTextAsRead(text) {
-    console.log('marking', text, 'as read');
     this.dataService.updateText(text)
   }
   onTextReceived(text) {
@@ -64,8 +77,14 @@ export class RacerTextsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getRacers();
-    this.getTexts();
+    this.getTexts()
+      .then(texts => this.getRacers())
+      .then(racers => {
+        this.paramsSub = this.activatedRoute.params.subscribe(params => {
+          let racer = this.racers.filter(racer => racer.id == params['id'])[0]
+          this.selectTextsByRacer(racer);
+        });
+      });
     this.dataService.onTextReceived(text => this.onTextReceived(text));
   }
 }
