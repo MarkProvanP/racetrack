@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
 
 import { DataService } from '../data.service';
 import { Team } from '../../common/team';
@@ -11,8 +12,10 @@ import { TeamStatus } from '../../common/update';
 })
 export class DashboardComponent implements OnInit {
   teams: [Team] = <[Team]>[];
-  constructor(private dataService: DataService) {
-  }
+  constructor(
+    private dataService: DataService,
+    private router: Router
+  ) {}
 
   getTeams(): void {
     this.dataService
@@ -37,5 +40,9 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTeams();
+  }
+
+  goToTeamTexts(team: Team) {
+    this.router.navigate(['/texts', 'by-team', team.id]);
   }
 }

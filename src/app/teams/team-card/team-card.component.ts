@@ -142,4 +142,8 @@ export class TeamCardComponent implements OnInit, OnDestroy {
       .then(team => this.team = team);
     this.inNewUpdateMode = false;
   }
+
+  goToTeamTexts(team: Team) {
+    this.router.navigate(['/texts', 'by-team', team.id]);
+  }
 }

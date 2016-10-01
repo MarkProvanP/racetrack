@@ -87,6 +87,7 @@
       <button md-raised-button color="primary" (click)="editTeam()" *ngIf="!inEditMode">Edit</button>
       <button md-raised-button color="primary" (click)="saveTeam()" *ngIf="inEditMode">Finish</button>
       <button md-raised-button color="warn" (click)="deleteTeam()">Delete</button>
+      <button md-raised-button color="primary" (click)="goToTeamTexts(team)">See Texts</button>
     </md-card-content>
   </md-card>
 </div>

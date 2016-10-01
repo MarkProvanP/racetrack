@@ -55,4 +55,8 @@ export class RacerCardComponent implements OnInit, OnDestroy {
     this.dataService.deleteRacer(this.racer.id);
     this.router.navigate(['/racers']);
   }
+
+  goToRacerTexts(racer: Racer) {
+    this.router.navigate(['/texts', 'by-racer', racer.id]);
+  }
 }
