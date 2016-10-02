@@ -2,6 +2,12 @@
   <md-toolbar color="primary">
       <span>{{ name }}</span>
       <span class="fill"></span>
+      <a md-button [routerLink]=" ['./texts'] ">
+        Texts ({{numberUnreadTexts}})
+      </a>
+      <a md-button [routerLink]=" ['./map'] ">
+        Map
+      </a>
       <a md-button [routerLink]=" ['./dashboard'] ">
         Dashboard
       </a>
@@ -10,12 +16,6 @@
       </a>
       <a md-button [routerLink]=" ['./teams'] ">
         Teams
-      </a>
-      <a md-button [routerLink]=" ['./texts'] ">
-        Texts ({{numberUnreadTexts}})
-      </a>
-      <a md-button [routerLink]=" ['./map'] ">
-        Map
       </a>
   </md-toolbar>
 

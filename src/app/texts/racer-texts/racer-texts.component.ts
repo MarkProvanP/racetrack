@@ -65,6 +65,12 @@ export class RacerTextsComponent implements OnInit {
     this.texts.unshift(text);
   }
 
+  numberUnreadMessagesForRacer(racer: Racer) {
+    return this.texts
+      .filter(text => text.racer.id == racer.id && !text.read)
+      .length
+  }
+
   ngOnInit(): void {
     this.getTexts()
       .then(texts => this.getRacers())

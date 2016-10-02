@@ -66,6 +66,12 @@ export class TeamTextsComponent implements OnInit {
     this.texts.unshift(text);
   }
 
+  numberUnreadMessagesForTeam(team: Team) {
+    return this.texts
+      .filter(text => text.team.id == team.id && !text.read)
+      .length
+  }
+
   ngOnInit(): void {
     this.getTexts()
       .then(texts => this.getTeams())

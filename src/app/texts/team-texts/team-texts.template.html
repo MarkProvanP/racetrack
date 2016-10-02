@@ -3,7 +3,7 @@
     <md-list>
       <md-list-item *ngFor="let team of teams" (click)='routeToTeam(team)' [ngClass]="'selected'">
         <img md-list-avatar src="http://blogs-images.forbes.com/kristintablang/files/2016/02/Uber-Puppies.jpg">
-        <h3 md-line>{{team.name}}</h3>
+        <h3 md-line>({{numberUnreadMessagesForTeam(team)}}) {{team.name}}</h3>
         <p md-line>{{team.getPrettyRacersList()}}</p>
       </md-list-item>
     </md-list>
