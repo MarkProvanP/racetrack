@@ -38,6 +38,10 @@ export class NewUpdateComponent implements OnInit {
     return prettyStatusName(enumVal);
   }
 
+  cancelNewUpdate() {
+    this.onStatusCreated.emit();
+  }
+
   saveNewUpdate() {
     this.dataService.createStatusUpdateForTeam(this.newStatusObj, this.team)
       .then(team => {
