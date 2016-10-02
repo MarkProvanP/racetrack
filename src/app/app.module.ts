@@ -17,10 +17,6 @@ import { ROUTES } from './app.routes';
 import { App } from './app.component';
 import { MdModule } from './md.module';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
-import { AppState } from './app.service';
-import { Home } from './home';
-import { About } from './about';
-import { NoContent } from './no-content';
 
 import { AllTextsComponent } from './texts/all-texts';
 import { TeamTextsComponent } from './texts/team-texts';
@@ -28,10 +24,8 @@ import { RacerTextsComponent } from './texts/racer-texts';
 import { TextsListComponent } from './texts/texts-list';
 import { TextsComponent } from './texts';
 import { RacersComponent } from './racers';
-import { RacerDetailComponent } from './racer-detail';
 import { RacerCardComponent } from './racers/racer-card';
 import { TeamsComponent } from './teams';
-import { TeamDetailComponent } from './team-detail';
 import { TeamCardComponent } from './teams/team-card';
 import { DashboardComponent } from './dashboard';
 import { MapComponent } from './map';
@@ -43,13 +37,9 @@ import { TextService } from './text.service';
 import { OrderBy } from './orderBy.pipe';
 import { KeysPipe } from './keys.pipe';
 
-// Import diretives
-import { XLarge } from './home/x-large';
-
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
-  AppState,
   DataService,
   TextService
 ];
@@ -61,20 +51,14 @@ const APP_PROVIDERS = [
   bootstrap: [ App ],
   declarations: [
     App,
-    About,
-    Home,
-    NoContent,
-    XLarge,
     AllTextsComponent,
     TeamTextsComponent,
     RacerTextsComponent,
     TextsListComponent,
     TextsComponent,
     RacersComponent,
-    RacerDetailComponent,
     RacerCardComponent,
     TeamsComponent,
-    TeamDetailComponent,
     TeamCardComponent,
     DashboardComponent,
     MapComponent,
@@ -99,7 +83,7 @@ const APP_PROVIDERS = [
   ]
 })
 export class AppModule {
-  constructor(public appRef: ApplicationRef, public appState: AppState) {}
+  constructor(public appRef: ApplicationRef) {}
   hmrOnInit(store) {
     if (!store || !store.state) return;
     console.log('HMR store', store);

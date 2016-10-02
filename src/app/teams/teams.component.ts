@@ -54,10 +54,6 @@ export class TeamsComponent implements OnInit {
     this.getTeams();
   }
 
-  gotoDetail(team): void {
-    this.router.navigate(['/team', team.id]);
-  }
-
   createTeam() {
     this.dataService.createTeam({})
       .then(team => {

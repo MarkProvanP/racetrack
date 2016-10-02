@@ -3,11 +3,6 @@
     <md-list>
       <md-list-item *ngFor='let racer of racers' (click)='onSelect(racer)'>
         <h3 md-line>{{racer.name}}</h3>
-        <p>
-          <button class='goto-detail'(click)="gotoDetail(racer)">
-            View Details
-          </button>
-        </p>
       </md-list-item>
     </md-list>
     <button md-fab (click)="createRacer()">

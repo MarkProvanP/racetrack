@@ -34,10 +34,6 @@ export class RacersComponent implements OnInit {
     this.router.navigate(['/racers', racer.id]);
   }
 
-  gotoDetail(racer: Racer): void {
-    this.router.navigate(['/racer', racer.id]);
-  }
-
   createRacer() {
     this.dataService.createRacer({})
       .then(racer => {
