@@ -20,6 +20,7 @@ export class TextsListComponent {
   @Input() texts: Text[];
   @Input() display;
   inCreateUpdateMode = false;
+  inTextSendMode = false;
   selectedText;
 
   constructor(
@@ -40,6 +41,16 @@ export class TextsListComponent {
   createUpdateFromText(text: Text) {
     this.inCreateUpdateMode = true;
     this.selectedText = text;
+  }
+
+  replyToText(text: Text) {
+    this.inTextSendMode = true;
+    this.selectedText = text;
+  }
+
+  onTextSendClose() {
+    this.inTextSendMode = false;
+    this.selectedText = undefined;
   }
 
   onStatusCreated() {

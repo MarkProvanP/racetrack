@@ -21,7 +21,7 @@
         {{text.body}}
       </md-card-content>
       <md-card-actions>
-        <button md-button>RESPOND</button>
+        <button md-button (click)='replyToText(text)'>RESPOND</button>
         <md-checkbox [(ngModel)]='text.read' (change)='markTextAsRead(text)'>
           Read
         </md-checkbox>
@@ -31,6 +31,9 @@
     </md-card>
     <div class='new-update-wrapper' *ngIf='inCreateUpdateMode && text == selectedText'>
       <new-update [team]='text.team' (onStatusCreated)='onStatusCreated()'></new-update>
+    </div>
+    <div class='text-send-wrapper' *ngIf='inTextSendMode && text == selectedText'>
+      <text-send [toRacer]='selectedText.racer' (onTextSendClose)='onTextSendClose()'></text-send>
     </div>
   </div>
 </div>

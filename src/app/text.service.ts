@@ -116,4 +116,15 @@ export class TextService {
       })
       .catch(this.handleError);
   }
+
+  sendText(to: PhoneNumber, message: string): Promise {
+    let text = {
+      to: to,
+      message: message
+    };
+    return this.http
+      .post(this.textsUrl, JSON.stringify(text), {headers: this.headers})
+      .toPromise()
+      .catch(this.handleError);
+  }
 }

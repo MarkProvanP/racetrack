@@ -49,7 +49,11 @@ setup(config.db_url)
     let racersRouter = racersRouterWithDb(db_facade);
     app.use("/racers", racersRouter);
 
-    let textsRouter = textsRouterWithDb(db_facade);
+    let twilioObj = {
+      client: twilioClient,
+      fromNumber: config.sendingNo
+    }
+    let textsRouter = textsRouterWithDb(db_facade, twilioObj);
     app.use("/texts", textsRouter);
 
     let updatesRouter = updatesRouterWithDb(db_facade);

@@ -1,0 +1,21 @@
+<div class='text-send'>
+  <md-card>
+    <md-card-content>
+      <div *ngIf='isSending'>
+        <i>Sending</i>
+      </div>
+      <table>
+        <tr>
+          <th>To:</th>
+          <td><md-input [(ngModel)]='toPhoneNumber'></md-input></td>
+        </tr>
+        <tr>
+          <th>Message:</th>
+          <td><md-input [(ngModel)]='message'></md-input></td>
+        </tr>
+      </table>
+      <button md-raised-button color='accent' (click)='sendNewText()'>Send</button>
+      <button md-raised-button (click)='cancelNewText()'>Cancel</button>
+    </md-card-content>
+  </md-card>
+</div>

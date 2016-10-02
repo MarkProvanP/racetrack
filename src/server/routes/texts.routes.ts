@@ -2,7 +2,7 @@ import * as express from "express";
 import { DbFacadeInterface} from "../db/db-facade";
 import { Text } from '../../common/text';
 
-export default function textsRouterWithDb(db_facade: DbFacadeInterface) {
+export default function textsRouterWithDb(db_facade: DbFacadeInterface, twilio) {
   let textsRouter = express.Router();
 
   textsRouter.use(function(req, res, next) {
@@ -25,6 +25,25 @@ export default function textsRouterWithDb(db_facade: DbFacadeInterface) {
         res.type('application/json');
         res.send(JSON.stringify(texts));
       });
+  });
+
+  textsRouter.post('/', (req, res) => {
+    let newText = req.body;
+    let twilioClient = twilio.client;
+    twilioClient.messages.create({
+      body: newText.message,
+      to: newText.to,
+      from: twilio.fromNumber
+    }, (err, data) => {
+      if (err) {
+        console.error('twilio sending error');
+        console.error(err);
+        res.status(500).send(`Twilio error! : ${err}`);
+      } else {
+        console.log('successfully sent text', newText);
+        res.status(200).send("It worked!");
+      }
+    });
   });
 
   textsRouter.put('/:id', (req, res) => {

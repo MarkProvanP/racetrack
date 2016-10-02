@@ -36,6 +36,7 @@ import { TeamCardComponent } from './teams/team-card';
 import { DashboardComponent } from './dashboard';
 import { MapComponent } from './map';
 import { NewUpdateComponent } from './updates/new-update';
+import { TextSendComponent } from './texts/text-send';
 
 import { DataService } from './data.service';
 import { TextService } from './text.service';
@@ -78,6 +79,7 @@ const APP_PROVIDERS = [
     DashboardComponent,
     MapComponent,
     NewUpdateComponent,
+    TextSendComponent,
     OrderBy,
     KeysPipe
   ],
