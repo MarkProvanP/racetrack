@@ -5,7 +5,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 
 import { AppState } from './app.service';
 
-import { DataService } from './data.service';
+import { TextService } from './text.service';
 
 /*
  * App Component
@@ -29,7 +29,7 @@ export class App {
 
   constructor(
     public appState: AppState,
-    private dataService: DataService
+    private textService: TextService
   ) {
 
   }
@@ -37,7 +37,7 @@ export class App {
   ngOnInit() {
     console.log('Initial App State', this.appState.state);
     this.getNumberUnreadTexts();
-    this.dataService.onTextReceived(text => this.onTextReceived(text));
+    this.textService.onTextReceived(text => this.onTextReceived(text));
   }
 
   onTextReceived(text: Text) {
@@ -45,7 +45,7 @@ export class App {
   }
 
   getNumberUnreadTexts() {
-    this.dataService.getTexts()
+    this.textService.getTexts()
       .then(texts => this.numberUnreadTexts = texts.filter(text => !text.read).length)
   }
 }

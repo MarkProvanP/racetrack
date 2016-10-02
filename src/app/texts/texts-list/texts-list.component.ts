@@ -4,6 +4,7 @@ import { Racer } from "../../../common/racer";
 import { Team } from "../../../common/team";
 import { Text } from '../../../common/text';
 import { DataService } from '../../data.service';
+import { TextService } from '../../text.service';
 
 import * as moment from "moment";
 
@@ -18,10 +19,13 @@ export class TextsListComponent {
   inCreateUpdateMode = false;
   selectedText;
 
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService,
+    private textService: TextService
+  ) {}
 
   markTextAsRead(text: Text) {
-    this.dataService.updateText(text)
+    this.textService.updateText(text)
   }
 
   checkInTeamFromText(text: Text) {

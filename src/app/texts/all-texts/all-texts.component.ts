@@ -4,7 +4,7 @@ import { Router } from "@angular/router";
 import { Racer } from "../../../common/racer";
 import { Team } from "../../../common/team";
 import { Text } from '../../../common/text';
-import { DataService } from '../../data.service';
+import { TextService } from '../../text.service';
 
 import * as moment from "moment";
 
@@ -23,11 +23,11 @@ export class AllTextsComponent {
   }
 
   constructor(
-    private dataService: DataService,
+    private textService: TextService,
     private router: Router) {}
 
   getTexts(): void {
-    this.dataService.getTexts()
+    this.textService.getTexts()
       .then(texts => {
         this.texts = texts.reverse();
       });
@@ -39,6 +39,6 @@ export class AllTextsComponent {
 
   ngOnInit(): void {
     this.getTexts();
-    this.dataService.onTextReceived(text => this.onTextReceived(text));
+    this.textService.onTextReceived(text => this.onTextReceived(text));
   }
 }

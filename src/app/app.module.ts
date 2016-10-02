@@ -38,6 +38,7 @@ import { MapComponent } from './map';
 import { NewUpdateComponent } from './updates/new-update';
 
 import { DataService } from './data.service';
+import { TextService } from './text.service';
 import { OrderBy } from './orderBy.pipe';
 import { KeysPipe } from './keys.pipe';
 
@@ -48,7 +49,8 @@ import { XLarge } from './home/x-large';
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
   AppState,
-  DataService
+  DataService,
+  TextService
 ];
 
 /**

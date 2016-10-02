@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { Racer } from "../../common/racer";
 import { Team } from "../../common/team";
 import { Text } from '../../common/text';
-import { DataService }         from '../data.service';
+import { TextService } from '../text.service';
 
 import * as moment from "moment";
 

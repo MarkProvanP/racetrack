@@ -5,6 +5,7 @@ import { Racer } from "../../../common/racer";
 import { Team } from "../../../common/team";
 import { Text } from '../../../common/text';
 import { DataService } from '../../data.service';
+import { TextService } from '../../text.service';
 
 import * as moment from "moment";
 
@@ -27,12 +28,13 @@ export class RacerTextsComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
+    private textService: TextService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {};
 
   getTexts() {
-    return this.dataService.getTexts()
+    return this.textService.getTexts()
       .then(texts => {
         this.texts = texts.reverse();
       });
@@ -59,7 +61,7 @@ export class RacerTextsComponent implements OnInit {
   }
 
   markTextAsRead(text) {
-    this.dataService.updateText(text)
+    this.textService.updateText(text)
   }
   onTextReceived(text) {
     this.texts.unshift(text);
@@ -80,6 +82,6 @@ export class RacerTextsComponent implements OnInit {
           this.selectTextsByRacer(racer);
         });
       });
-    this.dataService.onTextReceived(text => this.onTextReceived(text));
+    this.textService.onTextReceived(text => this.onTextReceived(text));
   }
 }
