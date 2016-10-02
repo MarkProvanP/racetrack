@@ -5,6 +5,31 @@ import 'rxjs/add/operator/toPromise';
 import { Text, PhoneNumber } from '../common/text';
 import { TextReceivedMessage } from "../common/message";
 
+export class TextFilterOptions {
+  racer: Racer,
+  team: Team,
+  read: boolean
+
+  constructor(opts) {
+    this.racer = opts.racer;
+    this.team = opts.team;
+    this.read = opts.read;
+  }
+
+  filter(text: Text): boolean {
+    if (this.racer !+ undefined) {
+      if (text.racer.id != this.racer.id) return false;
+    }
+    if (this.team != undefined) {
+      if (text.team.id != this.team.id) return false;
+    }
+    if (this.read != undefined) {
+      if (text.read != this.read) return false;
+    }
+    return true;
+  }
+}
+
 type textCallback = (Text) => void;
 @Injectable()
 export class TextService {
@@ -16,10 +41,14 @@ export class TextService {
 
   private socket;
 
+  private texts: Text[] = [];
+
   private textReceivers: [textCallback] = <[textCallback]>[];
 
   constructor(private http: Http) {
     this.socket = io(this.backendHost, {path: '/r2bcknd/socket.io'});
+    this.getAllTextsFromBackend()
+      .then(texts => this.texts = texts);
     this.socket.on(TextReceivedMessage.event, (messageString) => {
       let parsed = JSON.parse(messageString);
       let message = TextReceivedMessage.fromJSON(parsed);
@@ -33,7 +62,19 @@ export class TextService {
     this.textReceivers.push(callback);
   }
 
+  getAllTexts(): Text[] {
+    return this.texts;
+  }
+
+  getTextsFiltered(options: TextFilterOptions) {
+    return this.texts.filter(text => options.filter(text));
+  }
+
   getTexts(): Promise<[Text]> {
+    return Promise.resolve(this.texts);
+  }
+
+  private getAllTextsFromBackend(): Promise<[Text]> {
     return this.http.get(this.textsUrl)
       .toPromise()
       .then(response => response.json()
@@ -41,7 +82,22 @@ export class TextService {
       .catch(this.handleError);
   }
 
-  updateText(text: Text): Promise<Text> {
+  updateText(text: Text) {
+    // Find this text in the TextService local cache
+    let foundIndex;
+    for (let i = 0; i < this.texts.length; i++) {
+      if (this.texts[i].id == text.id) {
+        foundIndex = i;
+        break;
+      }
+    }
+    if (foundIndex) {
+      this.texts[foundIndex] = text;
+    }
+    return this.writeTextToBackend(text);
+  }
+
+  private writeTextToBackend(text: Text): Promise<Text> {
     const url = `${this.textsUrl}/${text.id}`;
     return this.http
       .put(url, JSON.stringify(text), {headers: this.headers})

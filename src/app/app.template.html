@@ -3,7 +3,7 @@
       <span>{{ name }}</span>
       <span class="fill"></span>
       <a md-button [routerLink]=" ['./texts'] ">
-        Texts ({{numberUnreadTexts}})
+        Texts ({{getNumberUnreadTexts()}})
       </a>
       <a md-button [routerLink]=" ['./map'] ">
         Map

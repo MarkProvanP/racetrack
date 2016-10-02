@@ -5,7 +5,7 @@ import { Racer } from "../../../common/racer";
 import { Team } from "../../../common/team";
 import { Text } from '../../../common/text';
 import { DataService } from '../../data.service';
-import { TextService } from '../../text.service';
+import { TextService, TextFilterOptions } from '../../text.service';
 
 import * as moment from "moment";
 
@@ -68,9 +68,8 @@ export class RacerTextsComponent implements OnInit {
   }
 
   numberUnreadMessagesForRacer(racer: Racer) {
-    return this.texts
-      .filter(text => text.racer.id == racer.id && !text.read)
-      .length
+    let filterOptions = new TextFilterOptions({racer: racer, read: false});
+    return this.textService.getTextsFiltered(filterOptions).length;
   }
 
   ngOnInit(): void {

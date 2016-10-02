@@ -5,7 +5,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 
 import { AppState } from './app.service';
 
-import { TextService } from './text.service';
+import { TextService, TextFilterOptions } from './text.service';
 
 /*
  * App Component
@@ -25,8 +25,6 @@ export class App {
   name = 'Race 2 Prague';
   url = 'https://twitter.com/AngularClass';
 
-  numberUnreadTexts: number;
-
   constructor(
     public appState: AppState,
     private textService: TextService
@@ -36,17 +34,15 @@ export class App {
 
   ngOnInit() {
     console.log('Initial App State', this.appState.state);
-    this.getNumberUnreadTexts();
     this.textService.onTextReceived(text => this.onTextReceived(text));
   }
 
   onTextReceived(text: Text) {
-    this.getNumberUnreadTexts();
   }
 
   getNumberUnreadTexts() {
-    this.textService.getTexts()
-      .then(texts => this.numberUnreadTexts = texts.filter(text => !text.read).length)
+    let filterOptions = new TextFilterOptions({read: false});
+    return this.textService.getTextsFiltered(filterOptions).length;
   }
 }
 
