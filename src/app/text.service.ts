@@ -43,23 +43,35 @@ export class TextService {
 
   private texts: Text[] = [];
 
-  private textReceivers: [textCallback] = <[textCallback]>[];
+  private onTextsChangedReceivers: [Function] = [];
 
   constructor(private http: Http) {
     this.socket = io(this.backendHost, {path: '/r2bcknd/socket.io'});
     this.getAllTextsFromBackend()
-      .then(texts => this.texts = texts);
+      .then(texts => {
+        this.texts = texts
+        this.broadcastTextsChanged();
+      });
     this.socket.on(TextReceivedMessage.event, (messageString) => {
       let parsed = JSON.parse(messageString);
       let message = TextReceivedMessage.fromJSON(parsed);
       console.log('Received message', message);
       let text = message.text;
-      this.textReceivers.forEach(receiver => receiver(text));
+      this.addText(text);
     });
   }
 
-  onTextReceived(callback: textCallback) {
-    this.textReceivers.push(callback);
+  private addText(text: Text) {
+    this.texts.push(text);
+    this.broadcastTextsChanged();
+  }
+
+  addTextsChangedCallback(callback: Function) {
+    this.onTextsChangedReceivers.push(callback);
+  }
+
+  private broadcastTextsChanged() {
+    this.onTextsChangedReceivers.forEach(callback => callback(this.texts));
   }
 
   getAllTexts(): Text[] {
@@ -70,10 +82,6 @@ export class TextService {
     return this.texts.filter(text => options.filter(text));
   }
 
-  getTexts(): Promise<[Text]> {
-    return Promise.resolve(this.texts);
-  }
-
   private getAllTextsFromBackend(): Promise<[Text]> {
     return this.http.get(this.textsUrl)
       .toPromise()
@@ -82,7 +90,7 @@ export class TextService {
       .catch(this.handleError);
   }
 
-  updateText(text: Text) {
+  updateText(text: Text): Promise<Text> {
     // Find this text in the TextService local cache
     let foundIndex;
     for (let i = 0; i < this.texts.length; i++) {

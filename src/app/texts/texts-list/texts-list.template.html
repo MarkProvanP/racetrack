@@ -1,5 +1,5 @@
 <div class="texts-list">
-  <div class='text-card-wrapper' *ngFor="let text of texts">
+  <div class='text-card-wrapper' *ngFor="let text of texts | orderBy: '-timestamp'">
     <md-card class='text-card'>
       <md-card-header>
         <md-card-title>

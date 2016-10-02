@@ -33,24 +33,8 @@ export class TeamTextsComponent implements OnInit {
     private router: Router
   ) {};
 
-  selectTextsByTeam(team: Team) {
-    this.selectedTeam = team;
-    this.selectedTeamTexts = this.texts.filter(text => {
-      if (team && text.team) {
-        return text.team.id === team.id;
-      }
-    });
-  }
-
   routeToTeam(team: Team) {
     this.router.navigate(['/texts', 'by-team', team.id]);
-  }
-
-  getTexts(){
-    return this.textService.getTexts()
-      .then(texts => {
-        this.texts = texts.reverse();
-      });
   }
 
   getTeams() {
@@ -60,12 +44,14 @@ export class TeamTextsComponent implements OnInit {
       });
   }
 
-  markTextAsRead(text) {
-    this.textService.updateText(text)
+  selectTextsByTeam(team: Team) {
+    this.selectedTeam = team;
+    let filterOptions = new TextFilterOptions({team: this.selectedTeam});
+    this.selectedTeamTexts = this.textService.getTextsFiltered(filterOptions);
   }
 
-  onTextReceived(text) {
-    this.texts.unshift(text);
+  markTextAsRead(text) {
+    this.textService.updateText(text)
   }
 
   numberUnreadMessagesForTeam(team: Team) {
@@ -73,15 +59,22 @@ export class TeamTextsComponent implements OnInit {
     return this.textService.getTextsFiltered(filterOptions).length;
   }
 
+  private onTextsChanged() {
+    this.selectTextsByTeam(this.selectedTeam);
+  }
+
   ngOnInit(): void {
-    this.getTexts()
-      .then(texts => this.getTeams())
+    this.textService.addTextsChangedCallback(texts => {
+      this.texts = texts;
+      this.onTextsChanged();
+    });
+    this.texts = this.textService.getAllTexts();
+    this.getTeams()
       .then(teams => {
         this.paramsSub = this.activatedRoute.params.subscribe(params => {
           let team = this.teams.filter(team => team.id == params['id'])[0]
           this.selectTextsByTeam(team);
         });
       });
-    this.textService.onTextReceived(text => this.onTextReceived(text));
   }
 }

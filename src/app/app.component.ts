@@ -34,7 +34,6 @@ export class App {
 
   ngOnInit() {
     console.log('Initial App State', this.appState.state);
-    this.textService.onTextReceived(text => this.onTextReceived(text));
   }
 
   onTextReceived(text: Text) {

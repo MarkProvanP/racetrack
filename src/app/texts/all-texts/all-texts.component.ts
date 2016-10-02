@@ -26,19 +26,15 @@ export class AllTextsComponent {
     private textService: TextService,
     private router: Router) {}
 
-  getTexts(): void {
-    this.textService.getTexts()
-      .then(texts => {
-        this.texts = texts.reverse();
-      });
-  }
-
-  onTextReceived(text) {
-    this.texts.unshift(text);
+  private onTextsChanged() {
+  
   }
 
   ngOnInit(): void {
-    this.getTexts();
-    this.textService.onTextReceived(text => this.onTextReceived(text));
+    this.textService.addTextsChangedCallback(texts => {
+      this.texts = texts;
+      this.onTextsChanged();
+    });
+    this.texts = this.textService.getAllTexts();
   }
 }

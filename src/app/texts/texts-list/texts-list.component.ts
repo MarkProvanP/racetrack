@@ -8,10 +8,13 @@ import { TextService } from '../../text.service';
 
 import * as moment from "moment";
 
+import { OrderBy } from '../../orderBy.pipe.ts';
+
 @Component({
   selector: "texts-list",
   templateUrl: "./texts-list.template.html",
-  styleUrls: ["./texts-list.styles.scss"]
+  styleUrls: ["./texts-list.styles.scss"],
+  pipes: [OrderBy]
 })
 export class TextsListComponent {
   @Input() texts: Text[];
