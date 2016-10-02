@@ -1,20 +1,26 @@
 <md-content>
-  <md-toolbar color="primary">
+  <md-toolbar class='toolbar' [ngClass]='toolbarClass()'>
       <span>{{ name }}</span>
-      <span class="fill"></span>
-      <a md-button [routerLink]=" ['./texts'] ">
-        Texts ({{getNumberUnreadTexts()}})
+      <span class="fill">
+        <div class='text-received-flash' *ngIf='getNumberUnreadTexts()'>
+          <a [routerLink]="['texts', 'all', 'unread']" md-button>
+            {{getUnreadTextsNotification()}}
+          </a>
+        </div>
+      </span>
+      <a md-button [routerLink]=" ['./texts'] " routerLinkActive='active'>
+        Texts
       </a>
-      <a md-button [routerLink]=" ['./map'] ">
+      <a md-button [routerLink]=" ['./map'] " routerLinkActive='active'>
         Map
       </a>
-      <a md-button [routerLink]=" ['./dashboard'] ">
+      <a md-button [routerLink]=" ['./dashboard'] " routerLinkActive='active'>
         Dashboard
       </a>
-      <a md-button [routerLink]=" ['./racers'] ">
+      <a md-button [routerLink]=" ['./racers'] " routerLinkActive='active'>
         Racers
       </a>
-      <a md-button [routerLink]=" ['./teams'] ">
+      <a md-button [routerLink]=" ['./teams'] " routerLinkActive='active'>
         Teams
       </a>
   </md-toolbar>

@@ -11,13 +11,34 @@ button.active{
 button.active:hover{
   color: #fff;
 }
+
+.toolbar {
+  transition: background-color 2s;
+}
+
+.toolbar-normal {
+  background-color: #FFEB3B;
+}
+
+.toolbar-warning {
+  background-color: #FF9800;
+}
+
 .fill{
   flex: 1 1 auto;
+  height: 100%;
+  display: flex;
 }
-.app-state{
-  margin: 15px;
+
+.text-received-flash {
   flex: 1;
+  margin: 5px 10px 5px 10px;
+  font-size: initial;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 .home{
   flex: 1;
 }
@@ -64,6 +85,10 @@ map {
   flex-direction: column;
 }
 
+.active {
+  background-color: green;
+}
+
 /** remove when fixed in angular2-material **/
 /** The overlay-container is an invisible element which contains all individual overlays. */
 .md-overlay-container {
@@ -80,4 +105,3 @@ map {
   pointer-events: auto;
   box-sizing: border-box;
   z-index: 1000; }
-

@@ -44,6 +44,7 @@ export class TextService {
   private texts: Text[] = [];
 
   private onTextsChangedReceivers: [Function] = [];
+  private onTextReceivedReceivers: [Function] = [];
 
   constructor(private http: Http) {
     this.socket = io(this.backendHost, {path: '/r2bcknd/socket.io'});
@@ -57,6 +58,7 @@ export class TextService {
       let message = TextReceivedMessage.fromJSON(parsed);
       console.log('Received message', message);
       let text = message.text;
+      this.broadcastTextReceived(text);
       this.addText(text);
     });
   }
@@ -70,8 +72,16 @@ export class TextService {
     this.onTextsChangedReceivers.push(callback);
   }
 
+  addTextReceivedCallback(callback: Function) {
+    this.onTextReceivedReceivers.push(callback);
+  }
+
   private broadcastTextsChanged() {
     this.onTextsChangedReceivers.forEach(callback => callback(this.texts));
+  }
+
+  private broadcastTextReceived(text: Text) {
+    this.onTextReceivedReceivers.forEach(callback => callback(text));
   }
 
   getAllTexts(): Text[] {

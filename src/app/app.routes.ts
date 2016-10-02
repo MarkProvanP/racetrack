@@ -20,7 +20,13 @@ export const ROUTES: Routes = [
     component: TextsComponent,
     children: [
       { path: '', redirectTo: 'all', pathMatch: 'full'},
-      { path: 'all', component: AllTextsComponent },
+      { 
+        path: 'all',
+        children: [
+          { path: '', component: AllTextsComponent }
+          { path: 'unread', component: AllTextsComponent }
+        ]
+      },
       {
         path: 'by-racer',
         children: [

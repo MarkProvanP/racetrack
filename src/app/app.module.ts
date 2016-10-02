@@ -1,7 +1,7 @@
 import "./rxjs-extensions";
 
 import { NgModule, ApplicationRef } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { Title, BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
@@ -41,7 +41,8 @@ import { KeysPipe } from './keys.pipe';
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
   DataService,
-  TextService
+  TextService,
+  Title
 ];
 
 /**
