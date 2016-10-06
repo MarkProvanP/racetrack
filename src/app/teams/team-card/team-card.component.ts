@@ -26,6 +26,7 @@ export class TeamCardComponent implements OnInit, OnDestroy {
   addRacerFilterName: string;
 
   inNewUpdateMode: boolean = false;
+  newStatusObj = {};
 
   constructor(
     private dataService: DataService,
@@ -37,17 +38,13 @@ export class TeamCardComponent implements OnInit, OnDestroy {
     this.paramsSub = this.activatedRoute.params.subscribe(params => {
       this.dataService.getTeam(params['id'])
         .then(team => this.team = team)
-    }, 10);
+    });
     this.routeSub = this.activatedRoute.url.subscribe(urlSegments => {
       this.inEditMode = (urlSegments[urlSegments.length - 1].path == 'edit');
       if (this.inEditMode) {
         this.updateUnteamedRacers();
       }
     });
-  }
-
-  createNewUpdate() {
-    
   }
 
   updateUnteamedRacers() {
@@ -114,7 +111,7 @@ export class TeamCardComponent implements OnInit, OnDestroy {
   createNewUpdate() {
     this.inNewUpdateMode = true;
     this.newStatusObj = {
-      location: new Location();
+      location: new Location()
     }
   }
 

@@ -6,6 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import { Team, TeamId } from '../common/team';
 import { Racer, RacerId } from '../common/racer';
 import { TeamUpdate } from '../common/update';
+import { PhoneNumber } from '../common/text';
 
 @Injectable()
 export class DataService {
@@ -116,7 +117,7 @@ export class DataService {
       });
   }
 
-  getRacersWithoutTeams(): Promise<[Racer]> {
+  getRacersWithoutTeams(): Promise<Racer[]> {
     return this.getRacers()
       .then(racers => {
         return this.getTeams()

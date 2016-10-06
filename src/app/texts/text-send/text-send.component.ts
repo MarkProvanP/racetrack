@@ -15,7 +15,7 @@ export class TextSendComponent {
   @Output() onTextSendClose = new EventEmitter();
   toPhoneNumber: PhoneNumber;
   message: string;
-  isSending: false;
+  isSending = false;
 
   constructor(
     private textService: TextService

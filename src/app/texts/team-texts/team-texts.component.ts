@@ -15,10 +15,10 @@ import * as moment from "moment";
   styleUrls: ["./team-texts.styles.scss"]
 })
 export class TeamTextsComponent implements OnInit {
-  @Input() texts: [Text];
-  teams: [Team];
+  @Input() texts: Text[];
+  teams: Team[];
   selectedTeam: Team;
-  selectedTeamTexts: [Text];
+  selectedTeamTexts: Text[];
   displayOptions = {
     oneline: false,
     racer: true,

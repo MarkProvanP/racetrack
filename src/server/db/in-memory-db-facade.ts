@@ -43,8 +43,8 @@ export class InMemoryDbFacade implements DbFacadeInterface {
   private teamUpdates = {};
   private texts = {};
 
-  getRacers(): Promise<[Racer]> {
-    let racersArray : [Racer] = <[Racer]> [];
+  getRacers(): Promise<Racer[]> {
+    let racersArray : Racer[] = <Racer[]> [];
     for (var id in this.racers) {
       let racerString = this.racers[id];
       let racer = Racer.fromJSON(JSON.parse(racerString));
@@ -82,7 +82,7 @@ export class InMemoryDbFacade implements DbFacadeInterface {
 
 //================================================================
 
-  getTeams() : Promise<[Team]> {
+  getTeams() : Promise<Team[]> {
     let teams : [UnpopulatedTeam] = <[UnpopulatedTeam]> [];
     for (var id in this.teams) {
       let teamString = this.teams[id];
@@ -101,10 +101,10 @@ export class InMemoryDbFacade implements DbFacadeInterface {
       .map(racer => this.getRacer(racer));
     let copy = JSON.parse(JSON.stringify(team));
     return Promise.all(updatePromises)
-      .then((statuses: [TeamUpdate]) => {
+      .then((statuses: TeamUpdate[]) => {
         copy.statusUpdates = statuses;
         return Promise.all(racerPromises)
-          .then((racers: [Racer]) => {
+          .then((racers: Racer[]) => {
             copy.racers = racers;
             return Promise.resolve(copy);
           });
@@ -160,7 +160,7 @@ export class InMemoryDbFacade implements DbFacadeInterface {
       });
   }
 
-  getTexts(): Promise<[Text]> {
+  getTexts(): Promise<Text[]> {
     let textsArray = [];
     for (var id in this.texts) {
       let textString = this.texts[id];
@@ -172,7 +172,7 @@ export class InMemoryDbFacade implements DbFacadeInterface {
       .then(texts => texts.map(text => Text.fromJSON(text)));
   }
 
-  getTextsByNumber(number: PhoneNumber): Promise<[Text]> {
+  getTextsByNumber(number: PhoneNumber): Promise<Text[]> {
     return this.getTexts()
       .then(texts => texts
         .filter(text => text.from === number));
@@ -197,8 +197,8 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     return Promise.resolve(newStatusUpdate);
   }
 
-  getStatusUpdates(): Promise<[TeamUpdate]> {
-    let updatesArray: [TeamUpdate] = <[TeamUpdate]>[];
+  getStatusUpdates(): Promise<TeamUpdate[]> {
+    let updatesArray: TeamUpdate[] = [];
     for (var id in this.teamUpdates) {
       let updateString = this.teamUpdates[String(id)];
       let update = TeamUpdate.fromJSON(JSON.parse(updateString));

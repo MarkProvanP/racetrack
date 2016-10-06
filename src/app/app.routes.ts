@@ -23,7 +23,7 @@ export const ROUTES: Routes = [
       { 
         path: 'all',
         children: [
-          { path: '', component: AllTextsComponent }
+          { path: '', component: AllTextsComponent },
           { path: 'unread', component: AllTextsComponent }
         ]
       },

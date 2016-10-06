@@ -14,12 +14,12 @@ import * as moment from "moment";
   styleUrls: ["./all-texts.styles.scss"]
 })
 export class AllTextsComponent {
-  texts: [Text];
+  texts: Text[];
   displayOptions = {
     name: true,
     number: true,
     team: true,
-    oneline: true;
+    oneline: true
   }
 
   constructor(

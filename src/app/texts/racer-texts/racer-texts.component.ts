@@ -15,10 +15,10 @@ import * as moment from "moment";
   styleUrls: ["./racer-texts.styles.scss"]
 })
 export class RacerTextsComponent implements OnInit {
-  texts: [Text];
-  racers: [Racer];
+  texts: Text[];
+  racers: Racer[];
   selectedRacer: Racer;
-  selectedRacerTexts: [Text];
+  selectedRacerTexts: Text[];
   displayOptions = {
     oneline: false,
     team: true,
@@ -75,5 +75,6 @@ export class RacerTextsComponent implements OnInit {
           let racer = this.racers.filter(racer => racer.id == params['id'])[0]
           this.selectTextsByRacer(racer);
         });
+      });
   }
 }

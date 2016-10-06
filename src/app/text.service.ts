@@ -3,11 +3,13 @@ import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 
 import { Text, PhoneNumber } from '../common/text';
+import { Racer } from '../common/racer';
+import { Team } from '../common/team';
 import { TextReceivedMessage } from "../common/message";
 
 export class TextFilterOptions {
-  racer: Racer,
-  team: Team,
+  racer: Racer;
+  team: Team;
   read: boolean
 
   constructor(opts) {
@@ -17,7 +19,7 @@ export class TextFilterOptions {
   }
 
   filter(text: Text): boolean {
-    if (this.racer !+ undefined) {
+    if (this.racer != undefined) {
       if (text.racer.id != this.racer.id) return false;
     }
     if (this.team != undefined) {
@@ -43,8 +45,8 @@ export class TextService {
 
   private texts: Text[] = [];
 
-  private onTextsChangedReceivers: [Function] = [];
-  private onTextReceivedReceivers: [Function] = [];
+  private onTextsChangedReceivers = [];
+  private onTextReceivedReceivers = [];
 
   constructor(private http: Http) {
     this.socket = io(this.backendHost, {path: '/r2bcknd/socket.io'});
@@ -92,7 +94,7 @@ export class TextService {
     return this.texts.filter(text => options.filter(text));
   }
 
-  private getAllTextsFromBackend(): Promise<[Text]> {
+  private getAllTextsFromBackend(): Promise<Text[]> {
     return this.http.get(this.textsUrl)
       .toPromise()
       .then(response => response.json()
@@ -127,7 +129,7 @@ export class TextService {
       .catch(this.handleError);
   }
 
-  sendText(to: PhoneNumber, message: string): Promise {
+  sendText(to: PhoneNumber, message: string): Promise<any> {
     let text = {
       to: to,
       message: message
@@ -136,5 +138,10 @@ export class TextService {
       .post(this.textsUrl, JSON.stringify(text), {headers: this.headers})
       .toPromise()
       .catch(this.handleError);
+  }
+
+  private handleError(error: any): Promise<any> {
+    console.error('An error occurred', error); // for demo purposes only
+    return Promise.reject(error.message || error);
   }
 }

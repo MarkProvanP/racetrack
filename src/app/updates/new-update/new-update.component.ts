@@ -14,6 +14,12 @@ export class NewUpdateComponent implements OnInit {
   @Input() team: Team;
   @Output() onStatusCreated = new EventEmitter();
   newStatusObj = {
+    status: undefined,
+    location: {
+      place: undefined,
+      latitude: undefined,
+      longitude: undefined
+    }
   }
   statusEnum = TeamStatus;
   default = {
@@ -35,7 +41,7 @@ export class NewUpdateComponent implements OnInit {
 
   getPrettyStatusName(item) {
     let enumVal = TeamStatus[item.value];
-    return prettyStatusName(enumVal);
+    return prettyStatusName(TeamStatus[enumVal]);
   }
 
   cancelNewUpdate() {

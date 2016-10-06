@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 
 import { DataService } from '../data.service';
 
+import { Team } from '../../common/team';
+
 @Component({
   selector: 'map',
   templateUrl: './map.template.html',

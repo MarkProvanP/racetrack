@@ -37,7 +37,7 @@ class MongoDbFacade implements DbFacadeInterface {
     process.on('uncaughtException', exitHandler.bind(this, {exit:true}));
   }
 
-  getRacers(): Promise<[Racer]> {
+  getRacers(): Promise<Racer[]> {
     let collection = this.db.collection('racers');
     return collection.find({}).toArray()
       .then(docs => {
@@ -87,7 +87,7 @@ class MongoDbFacade implements DbFacadeInterface {
 
 //================================================================
 
-  getTeams(): Promise<[Team]> {
+  getTeams(): Promise<Team[]> {
     let collection = this.db.collection('teams');
     return collection.find({}).toArray()
       .then(docs => {
@@ -105,10 +105,10 @@ class MongoDbFacade implements DbFacadeInterface {
       .map(racer => this.getRacer(racer));
     let copy = JSON.parse(JSON.stringify(team));
     return Promise.all(updatePromises)
-      .then((statuses: [TeamUpdate]) => {
+      .then((statuses: TeamUpdate[]) => {
         copy.statusUpdates = statuses;
         return Promise.all(racerPromises)
-          .then((racers: [Racer]) => {
+          .then((racers: Racer[]) => {
             copy.racers = racers;
             return Promise.resolve(copy);
           });
@@ -193,7 +193,7 @@ class MongoDbFacade implements DbFacadeInterface {
       });
   }
 
-  getTexts(): Promise<[Text]>{
+  getTexts(): Promise<Text[]>{
     let collection = this.db.collection('texts');
     return collection.find({}).toArray()
       .then(docs => {
@@ -203,7 +203,7 @@ class MongoDbFacade implements DbFacadeInterface {
       });
   }
 
-  getTextsByNumber(number: PhoneNumber): Promise<[Text]>{
+  getTextsByNumber(number: PhoneNumber): Promise<Text[]>{
     let collection = this.db.collection('texts');
     return collection.find({from: number}).toArray()
       .then(docs => {
@@ -232,7 +232,7 @@ class MongoDbFacade implements DbFacadeInterface {
       });
   }
 
-  getStatusUpdates(): Promise<[TeamUpdate]> {
+  getStatusUpdates(): Promise<TeamUpdate[]> {
     let collection = this.db.collection('updates');
     return collection.find({}).toArray()
       .then(docs => {

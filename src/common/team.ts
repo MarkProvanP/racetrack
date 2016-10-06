@@ -13,15 +13,15 @@ export interface UnpopulatedTeam {
 export interface PopulatedTeam {
   id: TeamId;
   name: string;
-  statusUpdates: [TeamUpdate];
-  racers: [Racer];
+  statusUpdates: TeamUpdate[];
+  racers: Racer[];
 }
 
 export class Team {
   id: TeamId;
   name: string;
-  statusUpdates: [TeamUpdate] = <[TeamUpdate]>[];
-  racers: [Racer] = <[Racer]>[];
+  statusUpdates: TeamUpdate[] = [];
+  racers: Racer[] = [];
   lastCheckin: Date;
   inEurope: boolean = false;
 

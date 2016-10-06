@@ -30,7 +30,7 @@ export class RacerCardComponent implements OnInit, OnDestroy {
     this.paramsSub = this.activatedRoute.params.subscribe(params => {
       this.dataService.getRacer(params['id'])
         .then(racer => this.racer = racer)
-    }, 10);
+    });
     this.routeSub = this.activatedRoute.url.subscribe(urlSegments => {
       this.inEditMode = (urlSegments[urlSegments.length - 1].path == 'edit');
     });
