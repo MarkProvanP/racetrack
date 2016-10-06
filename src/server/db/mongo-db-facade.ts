@@ -1,7 +1,7 @@
 import { Racer, RacerId } from "../../common/racer";
 import { Team, TeamId, PopulatedTeam, UnpopulatedTeam } from "../../common/team";
 import { TeamStatus, TeamUpdate, TeamUpdateId, Location } from "../../common/update";
-import { Text, PhoneNumber, TwilioText, FullFormText, DbFormText } from "../../common/text";
+import { Text, InboundText, OutboundText, PhoneNumber, TwilioInboundText, TwilioOutboundText, FullFormText, DbFormText } from "../../common/text";
 import { DbFacadeInterface } from "./db-facade";
 import { MongoClient } from "mongodb";
 import { Promise } from "es6-promise";
@@ -156,15 +156,39 @@ class MongoDbFacade implements DbFacadeInterface {
       });
   }
 
-  addText(text: TwilioText): Promise<Text> {
+  createFromInboundText(text: TwilioInboundText): Promise<Text> {
     let collection = this.db.collection('texts');
     let id = uuid.v4();
-    let createdText = Text.fromTwilio(id, text);
+    let createdText = InboundText.fromTwilio(id, text);
     let fromNumber = createdText.from;
     return this.getRacers()
       .then(racers => {
         createdText.racer = racers.filter(
           racer => racer.phone == fromNumber)[0];
+        return this.getTeams()
+      })
+      .then(teams => {
+        createdText.team = teams
+          .filter(team =>
+            team.racers.filter(racer => racer.id == createdText.racer.id).length > 0)[0];
+      })
+      .then(result => {
+        return collection.insert(createdText.toDbForm());
+      })
+      .then(result => {
+        return Promise.resolve(createdText)
+      });
+  }
+
+  createFromOutboundText(text: TwilioOutboundText): Promise<Text> {
+    let collection = this.db.collection('texts');
+    let id = uuid.v4();
+    let createdText = OutboundText.fromTwilio(id, text);
+    let toNumber = createdText.to;
+    return this.getRacers()
+      .then(racers => {
+        createdText.racer = racers.filter(
+          racer => racer.phone == toNumber)[0];
         return this.getTeams()
       })
       .then(teams => {
@@ -199,7 +223,7 @@ class MongoDbFacade implements DbFacadeInterface {
       .then(docs => {
         let textPromises = docs.map(text => this.populateText(text))
         return Promise.all(textPromises)
-          .then(texts => texts.map(text => Text.fromJSON(text)));
+          .then(texts => texts.map(text => <FullFormText> Text.fromJSON(text)));
       });
   }
 
@@ -209,7 +233,7 @@ class MongoDbFacade implements DbFacadeInterface {
       .then(docs => {
         let textPromises = docs.map(text => this.populateText(text))
         return Promise.all(textPromises)
-          .then(texts => texts.map(text => Text.fromJSON(text)));
+          .then(texts => texts.map(text => <FullFormText> Text.fromJSON(text)));
       });
   }
 

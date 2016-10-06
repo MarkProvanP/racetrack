@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 
-import { Text, PhoneNumber } from '../common/text';
+import { Text, PhoneNumber, InboundText, OutboundText } from '../common/text';
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
 import { TextReceivedMessage } from "../common/message";
@@ -25,8 +25,8 @@ export class TextFilterOptions {
     if (this.team != undefined) {
       if (text.team.id != this.team.id) return false;
     }
-    if (this.read != undefined) {
-      if (text.read != this.read) return false;
+    if (text instanceof InboundText && this.read != undefined) {
+      if ((<InboundText> text).read != this.read) return false;
     }
     return true;
   }
@@ -65,9 +65,10 @@ export class TextService {
     });
   }
 
-  private addText(text: Text) {
+  private addText(text: Text): Promise<Text> {
     this.texts.push(text);
     this.broadcastTextsChanged();
+    return Promise.resolve(text);
   }
 
   addTextsChangedCallback(callback: Function) {
@@ -129,7 +130,7 @@ export class TextService {
       .catch(this.handleError);
   }
 
-  sendText(to: PhoneNumber, message: string): Promise<any> {
+  sendText(to: PhoneNumber, message: string): Promise<OutboundText> {
     let text = {
       to: to,
       message: message
@@ -137,6 +138,8 @@ export class TextService {
     return this.http
       .post(this.textsUrl, JSON.stringify(text), {headers: this.headers})
       .toPromise()
+      .then(response => OutboundText.fromJSON(response.json()))
+      .then(text => this.addText(text))
       .catch(this.handleError);
   }
 

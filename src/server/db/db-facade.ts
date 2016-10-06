@@ -1,7 +1,7 @@
 import { Racer, RacerId } from "../../common/racer";
 import { Team, TeamId } from "../../common/team";
 import { TeamUpdate, TeamUpdateId } from "../../common/update";
-import { Text, PhoneNumber, TwilioText } from "../../common/text";
+import { Text, PhoneNumber, TwilioInboundText, TwilioOutboundText } from "../../common/text";
 
 var Promise = require("es6-promise").Promise;
 
@@ -18,7 +18,8 @@ export interface DbFacadeInterface {
   createTeam(properties): Promise<Team>;
   deleteTeam(id: TeamId): Promise<any>;
 
-  addText(text: TwilioText): Promise<Text>;
+  createFromInboundText(text: TwilioInboundText): Promise<Text>;
+  createFromOutboundText(text: TwilioOutboundText): Promise<Text>;
   getTexts(): Promise<Text[]>;
   getTextsByNumber(phone: PhoneNumber): Promise<Text[]>;
   updateText(text: Text): Promise<Text>;

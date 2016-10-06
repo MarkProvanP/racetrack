@@ -16,7 +16,7 @@ var PORT = config.SERVER_PORT;
 
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
-import { Text, TwilioText } from "../common/text";
+import { Text, TwilioInboundText } from "../common/text";
 import { TextReceivedMessage } from "../common/message";
 
 var path = require('path');
@@ -79,8 +79,8 @@ setup(config.db_url)
   });
 
 
-function handleTextMessage(db_facade, twilioText: TwilioText) {
-  db_facade.addText(twilioText)
+function handleTextMessage(db_facade, twilioText: TwilioInboundText) {
+  db_facade.createText(twilioText)
     .then(text => {
       console.log('successfully added', text, 'to db');
       let newMessage = new TextReceivedMessage(text)

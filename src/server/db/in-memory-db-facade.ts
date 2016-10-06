@@ -1,7 +1,7 @@
 import { Racer, RacerId } from "../../common/racer";
 import { Team, UnpopulatedTeam, PopulatedTeam, TeamId } from "../../common/team";
 import { TeamUpdate, TeamUpdateId, TeamStatus, Location } from "../../common/update";
-import { Text, PhoneNumber, TwilioText, FullFormText, DbFormText } from "../../common/text";
+import { Text, InboundText, OutboundText, PhoneNumber, TwilioInboundText, TwilioOutboundText, FullFormText, DbFormText } from "../../common/text";
 import { DbFacadeInterface } from "./db-facade";
 import { Promise } from "es6-promise";
 import * as uuid from "node-uuid";
@@ -141,9 +141,15 @@ export class InMemoryDbFacade implements DbFacadeInterface {
 
 //================================================================
 
-  addText(text: TwilioText): Promise<Text> {
+  createFromInboundText(text: TwilioInboundText): Promise<Text> {
     let id = uuid.v4();
-    let createdText = Text.fromTwilio(id, text);
+    let createdText = InboundText.fromTwilio(id, text);
+    return this.writeText(createdText);
+  }
+
+  createFromOutboundText(text: TwilioOutboundText): Promise<Text> {
+    let id = uuid.v4();
+    let createdText = OutboundText.fromTwilio(id, text);
     return this.writeText(createdText);
   }
 

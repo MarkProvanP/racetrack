@@ -2,7 +2,7 @@ import { Component, Input } from "@angular/core";
 
 import { Racer } from "../../../common/racer";
 import { Team } from "../../../common/team";
-import { Text } from '../../../common/text';
+import { Text, InboundText, OutboundText } from '../../../common/text';
 import { DataService } from '../../data.service';
 import { TextService } from '../../text.service';
 
@@ -30,6 +30,14 @@ export class TextsListComponent {
 
   markTextAsRead(text: Text) {
     this.textService.updateText(text)
+  }
+
+  isOutboundText(text: Text) {
+    return text instanceof OutboundText;
+  }
+
+  isInboundText(text: Text) {
+    return text instanceof InboundText;
   }
 
   checkInTeamFromText(text: Text) {
