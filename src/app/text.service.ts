@@ -28,6 +28,9 @@ export class TextFilterOptions {
     if (text instanceof InboundText && this.read != undefined) {
       if ((<InboundText> text).read != this.read) return false;
     }
+    if (text instanceof OutboundText && this.read != undefined) {
+      return false;
+    }
     return true;
   }
 }

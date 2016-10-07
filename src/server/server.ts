@@ -7,7 +7,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 
-import * as config from './server-config';
+import * as config from '../../app-config';
 
 var twilio = require('twilio');
 var twilioClient = twilio(config.accountSid, config.authToken);

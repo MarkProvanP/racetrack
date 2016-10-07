@@ -37,6 +37,8 @@ import { TextService } from './text.service';
 import { OrderBy } from './orderBy.pipe';
 import { KeysPipe } from './keys.pipe';
 
+import * as config from "../../app-config";
+
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
@@ -75,7 +77,7 @@ const APP_PROVIDERS = [
     RouterModule.forRoot(ROUTES, { useHash: true }),
     MdModule.forRoot(),
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAffhQUtmEnMCrrFtdkXfW1eW8zU8MBonw'
+      apiKey: config.GoogleMapsAPIKey
     })
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
