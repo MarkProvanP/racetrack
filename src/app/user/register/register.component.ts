@@ -15,7 +15,7 @@ export class RegisterComponent implements OnInit {
   password: FormControl;
   form: FormGroup;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private router: Router) {
 
   }
 
@@ -30,15 +30,12 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    debugger;
     this.userService.register(this.form.value)
       .then(data => {
-        debugger;
-        console.log(data);
+        this.router.navigate(['/']);
       })
       .catch(err => {
         console.log(err);
-        debugger;
       });
   }
 }

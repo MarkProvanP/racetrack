@@ -86,7 +86,7 @@ export class App {
   }
 
   loggedIn() {
-    return false;
+    return this.userService.isAuthenticated();
   }
 
   getUsername() {

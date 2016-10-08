@@ -41,6 +41,7 @@ export class TextService {
   
   private headers = new Headers({'Content-Type': 'application/json'});
   private backendHost = "";
+  private socketIoHost = "https://mrp4.host.cs.st-andrews.ac.uk";
   private baseUrl = this.backendHost + "/r2bcknd/";
   private textsUrl = this.baseUrl + "texts";
 
@@ -52,7 +53,7 @@ export class TextService {
   private onTextReceivedReceivers = [];
 
   constructor(private http: Http) {
-    this.socket = io(this.backendHost, {path: '/r2bcknd/socket.io'});
+    this.socket = io(this.socketIoHost, {path: '/r2bcknd/socket.io'});
     this.getAllTextsFromBackend()
       .then(texts => {
         this.texts = texts

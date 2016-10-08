@@ -73,6 +73,42 @@ export function AuthWithDbFacade(db_facade) {
       .then(user => done(null, user));
   });
 
+  router.post('/api/login', passport.authenticate('local'), (req, res) => {
+    console.log('logging in user', req.user);
+    db_facade.getUser(req.user.username)
+      .then(user => {
+        res.type('application/json');
+        res.send(JSON.stringify(user));
+      })
+      .catch(err => {
+        res.type('application/json');
+        res.json({error: err})
+      })
+  });
+
+  router.post('/api/register', passport.authenticate('local-register'), (req, res) => {
+    db_facade.getUser(req.user.username)
+      .then(user => {
+        res.type('application/json');
+        res.send(JSON.stringify(user));
+      });
+  });
+
+  router.get('/api/logout', isLoggedIn, (req, res) => {
+    req.session.destroy(err => {
+      if (err) {
+        console.log('logout error!', err);                    
+        res.json({status: 'error'});
+      }
+      res.json({status: 'logged out'});
+    });
+  });
+
+  router.get('/api/authenticated', isLoggedIn, (req, res) => {
+    res.type('application/json');
+    res.json({authenticated: true});
+  });
+
   router.get('/login', (req, res) => {
     let html = `
     <!DOCTYPE html>
@@ -91,6 +127,10 @@ export function AuthWithDbFacade(db_facade) {
     res.type('text/html');
     res.send(html);
   });
+  router.post('/login', passport.authenticate('local'),
+    (req, res) => {
+      res.redirect('/r2bcknd/auth/done');
+    });
 
   passport.use('local-register', new LocalStrategy({passReqToCallback: true},
     (req, username, password, done) => {
@@ -134,10 +174,7 @@ export function AuthWithDbFacade(db_facade) {
     res.send(html);
   });
 
-  router.post('/login', passport.authenticate('local'),
-    (req, res) => {
-      res.redirect('/r2bcknd/auth/done');
-    });
+
 
   router.get('/logout', isLoggedIn, (req, res) => {
     req.session.destroy(err => {
@@ -153,6 +190,8 @@ export function AuthWithDbFacade(db_facade) {
       res.send(html);
     });
   });
+
+
 
   router.get('/done', isLoggedIn, (req, res) => {
     let html = `
