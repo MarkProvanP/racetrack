@@ -18,6 +18,9 @@ import { LogoutComponent } from './user/logout';
 import { MeComponent } from './user/me';
 import { RegisterComponent } from './user/register';
 
+import { UnauthenticatedGuard } from './unauthenticated.guard';
+import { AuthenticatedGuard } from './authenticated.guard';
+
 export const ROUTES: Routes = [
   {
     path: 'texts',
@@ -69,10 +72,10 @@ export const ROUTES: Routes = [
   { path: 'map', component: MapComponent },
   {
     path: 'user', children: [
-      { path: 'login', component: LoginComponent },
-      { path: 'logout', component: LogoutComponent },
-      { path: 'me', component: MeComponent },
-      { path: 'register', component: RegisterComponent }
+      { path: 'login', component: LoginComponent, canActivate: [UnauthenticatedGuard] },
+      { path: 'logout', component: LogoutComponent, canActivate: [AuthenticatedGuard] },
+      { path: 'me', component: MeComponent, canActivate: [AuthenticatedGuard] },
+      { path: 'register', component: RegisterComponent, canActivate: [UnauthenticatedGuard] }
     ]
   },
   { path: '**', component: DashboardComponent }

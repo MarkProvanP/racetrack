@@ -42,6 +42,8 @@ import { TextService } from './text.service';
 import { UserService } from './user.service';
 import { OrderBy } from './orderBy.pipe';
 import { KeysPipe } from './keys.pipe';
+import { UnauthenticatedGuard } from './unauthenticated.guard';
+import { AuthenticatedGuard } from './authenticated.guard';
 
 import * as config from "../../app-config";
 
@@ -51,6 +53,8 @@ const APP_PROVIDERS = [
   DataService,
   TextService,
   UserService,
+  AuthenticatedGuard,
+  UnauthenticatedGuard,
   Title
 ];
 

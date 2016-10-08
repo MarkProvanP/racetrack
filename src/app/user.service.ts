@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class UserService {
@@ -10,7 +11,7 @@ export class UserService {
   private loginUrl = this.baseUrl + "login";
   private logoutUrl = this.baseUrl + "logout";
   private registerUrl = this.baseUrl + "register";
-  private authenticatedUrl = this.baseUrl = "authenticated";
+  private authenticatedUrl = this.baseUrl + "authenticated";
   private meUrl = this.baseUrl + "me";
 
   private authenticated: boolean = false;
@@ -39,6 +40,10 @@ export class UserService {
         this.authenticated = false;
         return this.authenticated;
       })
+  }
+
+  authenticatedCheck(): Observable<any> {
+    return Observable.of({authenticated: this.authenticated});
   }
 
   login(user): Promise<any> {
@@ -94,7 +99,7 @@ export class UserService {
     return Promise.reject(error.message || error);
   }
 
-  isAuthenticated() {
+  public isAuthenticated() {
     return this.authenticated;
   }
 
