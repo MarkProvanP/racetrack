@@ -5,39 +5,59 @@ let LocalStrategy = localStrategy.Strategy;
 
 let router = express.Router();
 
+import { PhoneNumber } from '../common/text';
+
 import * as bcrypt from "bcrypt-nodejs";
+
+export interface UserWithoutPassword {
+  username: string;
+  name: string;
+  email: string;
+  phone: PhoneNumber;
+}
 
 export class User {
   username: string;
   password: string;
+  name: string;
+  email: string;
+  phone: PhoneNumber;
 
   validPassword(password) {
     return bcrypt.compareSync(password, this.password);
   }
 
-  static createWithPassword(username, password) {
+  static createWithPassword(username, password, properties) {
     let salt = bcrypt.genSaltSync(10);
     let hashed = bcrypt.hashSync(password, salt);
-    return new User(username, hashed);
+    return new User(username, hashed, properties);
   }
 
-  constructor(username: string, password: string) {
+  constructor(username: string, password: string, properties) {
     this.username = username;
     this.password = password;
+    this.name = properties.name;
+    this.email = properties.email;
+    this.phone = properties.phone;
+  }
+
+  copyWithoutPassword(): UserWithoutPassword {
+    console.log('copyWithoutPassword', this);
+    let copy = {} as UserWithoutPassword;
+    copy.username = this.username;
+    copy.name = this.name;
+    copy.email = this.email;
+    copy.phone = this.phone;
+    console.log('copy is', copy);
+    return copy;
   }
 
   static fromJSON(obj) {
-    return new User(obj.username, obj.password);
+    return new User(obj.username, obj.password, obj);
   }
 }
 
 export function AuthWithDbFacade(db_facade) {
-
-  function getPublicUser(id) {
-    return db_facade.getUser(id)
-      .then(user => { return {username: user.username} })
-  }
-
   passport.use(new LocalStrategy((username, password, done) => {
     db_facade.getUser(username)
       .then(user => {
@@ -54,6 +74,27 @@ export function AuthWithDbFacade(db_facade) {
       });
   }));
 
+  passport.use('local-register', new LocalStrategy({passReqToCallback: true},
+    (req, username, password, done) => {
+      db_facade.canAddUser(username)
+        .then(can => {
+          if (!can) {
+            return done(`already have user with username: ${username}`);
+          } else {
+            let properties = req.body;
+            console.log(`creating user with username: ${username}, password: ${password}, properties: ${properties}`);
+            return db_facade.addUser(username, password, properties)
+          }
+        })
+        .then(user => {
+          return done(null, user);
+        })
+        .catch(err => {
+          console.log('local-register error', err);
+          return done(err);
+        })
+    }));
+
   function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
       next();
@@ -62,14 +103,19 @@ export function AuthWithDbFacade(db_facade) {
     }
   }
 
+  function getPublicUser(username) {
+    return db_facade.getUser(username)
+      .then(user => user.copyWithoutPassword());
+  }
+
   passport.serializeUser((user, done) => {
     console.log('serialising user', user);
     done(null, user.username);
   });
 
-  passport.deserializeUser((id, done) => {
-    console.log('deserialising user', id);
-    getPublicUser(id)
+  passport.deserializeUser((username, done) => {
+    console.log('deserialising user', username);
+    getPublicUser(username)
       .then(user => done(null, user));
   });
 
@@ -77,20 +123,27 @@ export function AuthWithDbFacade(db_facade) {
     console.log('logging in user', req.user);
     db_facade.getUser(req.user.username)
       .then(user => {
-        res.type('application/json');
-        res.send(JSON.stringify(user));
+        res.json(user.copyWithoutPassword())
       })
       .catch(err => {
-        res.type('application/json');
+        res.status(500);
         res.json({error: err})
       })
   });
 
   router.post('/api/register', passport.authenticate('local-register'), (req, res) => {
+    console.log('registering user', req.user);
     db_facade.getUser(req.user.username)
       .then(user => {
-        res.type('application/json');
-        res.send(JSON.stringify(user));
+        console.log('got user', user);
+        let withoutPassword = user.copyWithoutPassword();
+        console.log('without password', withoutPassword);
+        res.json(user.copyWithoutPassword());
+        console.log('sent response');
+      })
+      .catch(err => {
+        console.log('error!', err);
+        res.status(500).send(err);
       });
   });
 
@@ -105,7 +158,6 @@ export function AuthWithDbFacade(db_facade) {
   });
 
   router.get('/api/authenticated', isLoggedIn, (req, res) => {
-    res.type('application/json');
     res.json({authenticated: true});
   });
 
@@ -132,24 +184,6 @@ export function AuthWithDbFacade(db_facade) {
       res.redirect('/r2bcknd/auth/done');
     });
 
-  passport.use('local-register', new LocalStrategy({passReqToCallback: true},
-    (req, username, password, done) => {
-      db_facade.canAddUser(username)
-        .then(can => {
-          if (!can) {
-            return done(`already have user with username: ${username}`);
-          } else {
-            return db_facade.addUser(username, password)
-          }
-        })
-        .then(user => {
-          return done(null, user);
-        })
-        .catch(err => {
-          console.log('local-register error', err);
-          return done(err);
-        })
-    }));
 
   router.post('/register', passport.authenticate('local-register', {
     successRedirect: '/r2bcknd/auth/done',

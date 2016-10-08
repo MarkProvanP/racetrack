@@ -234,8 +234,8 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     return Promise.resolve(canCreateUser);
   }
 
-  addUser(username, password) {
-    let user = User.createWithPassword(username, password);
+  addUser(username, password, properties) {
+    let user = User.createWithPassword(username, password, properties);
     this.users[String(username)] = JSON.stringify(user);
     return Promise.resolve(user);
   }

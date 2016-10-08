@@ -32,6 +32,6 @@ export interface DbFacadeInterface {
 
   getUser(username): Promise<User>;
   canAddUser(username): Promise<boolean>;
-  addUser(username, password): Promise<User>;
+  addUser(username, password, properties): Promise<User>;
 }
 

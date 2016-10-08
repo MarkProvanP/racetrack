@@ -1,7 +1,14 @@
-<h1>Login Component</h1>
-
-<form [formGroup]='form' (ngSubmit)='onSubmit()' #loginForm='ngForm'>
-  <md-input formControlName='username' required placeholder='Username'></md-input>
-  <md-input formControlName='password' required placeholder='Password' type='password'></md-input>
-  <button md-raised-button color='primary' type='submit'>Login</button>
-</form>
+<div class='login-wrapper'>
+  <md-card class='login-card'>
+    <md-card-title>
+      Login
+    </md-card-title>
+    <md-card-content>
+      <form [formGroup]='form' (ngSubmit)='onSubmit()' #loginForm='ngForm' class='form'>
+        <md-input formControlName='username' required placeholder='Username'></md-input>
+        <md-input formControlName='password' required placeholder='Password' type='password'></md-input>
+        <button md-raised-button color='primary' type='submit'>Login</button>
+      </form>
+    </md-card-content>
+  </md-card>
+</div>

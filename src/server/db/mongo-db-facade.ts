@@ -285,7 +285,7 @@ class MongoDbFacade implements DbFacadeInterface {
         if (docs.length == 0) {
           return Promise.reject(`No user with username: ${username}`);
         }
-        let user = docs[0];
+        let user = User.fromJSON(docs[0]);
         console.log('mongo-db got user', user);
         return Promise.resolve(user);
       });
@@ -303,9 +303,9 @@ class MongoDbFacade implements DbFacadeInterface {
       });
   }
 
-  addUser(username, password): Promise<User> {
+  addUser(username, password, properties): Promise<User> {
     let collection = this.db.collection('users');
-    let user = User.createWithPassword(username, password);
+    let user = User.createWithPassword(username, password, properties);
     return collection.insert(user)
       .then(result => {
         return Promise.resolve(user);

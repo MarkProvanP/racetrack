@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { UserService } from '../../user.service';
 
 @Component({
@@ -6,12 +6,12 @@ import { UserService } from '../../user.service';
   styleUrls: ['./logout.style.scss'],
   templateUrl: './logout.template.html'
 })
-export class LogoutComponent {
+export class LogoutComponent implements OnInit {
   constructor(private userService: UserService) {
 
   }
 
-  logout() {
+  ngOnInit() {
     this.userService.logout()
       .then(response => {
         console.log('response', response);

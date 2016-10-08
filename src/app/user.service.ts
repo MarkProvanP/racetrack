@@ -14,10 +14,17 @@ export class UserService {
   private meUrl = this.baseUrl + "me";
 
   private authenticated: boolean = false;
+  private user;
 
   constructor(private http: Http) {
     this.authenticate()
       .then(val => {console.log('auth status:', val)});
+  }
+
+  private setUser(user): Promise<any> {
+    this.authenticated = true;
+    this.user = user;
+    return Promise.resolve(user);
   }
 
   authenticate(): Promise<any> {
@@ -40,8 +47,10 @@ export class UserService {
       .toPromise()
       .then(response => {
         this.authenticated = true;
+        console.log('login response', response);
         return response.json()
       })
+      .then(user => this.setUser(user))
       .catch(this.handleError)
   }
 
@@ -51,6 +60,7 @@ export class UserService {
       .toPromise()
       .then(response => {
         this.authenticated = false;
+        this.user = undefined
         return response.json()
       })
       .catch(this.handleError)
@@ -63,8 +73,10 @@ export class UserService {
       .toPromise()
       .then(response => {
         this.authenticated = true;
+        console.log('register response', response);
         return response.json()
       })
+      .then(user => this.setUser(user))
       .catch(this.handleError)
   }
 
@@ -73,6 +85,7 @@ export class UserService {
       .get(this.meUrl, {withCredentials: true})
       .toPromise()
       .then(response => response.json())
+      .then(user => this.setUser(user))
       .catch(this.handleError)
   }
 
@@ -83,5 +96,9 @@ export class UserService {
 
   isAuthenticated() {
     return this.authenticated;
+  }
+
+  getUser() {
+    return this.user;
   }
 }

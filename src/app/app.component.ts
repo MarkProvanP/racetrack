@@ -90,7 +90,7 @@ export class App {
   }
 
   getUsername() {
-    return "derp";
+    return this.userService.getUser().name;
   }
 }
 
