@@ -159,20 +159,32 @@ class MongoDbFacade implements DbFacadeInterface {
   }
 
   createFromInboundText(text: TwilioInboundText): Promise<Text> {
+    console.log('create from inbound text');
     let collection = this.db.collection('texts');
     let id = uuid.v4();
     let createdText = InboundText.fromTwilio(id, text);
     let fromNumber = createdText.from;
     return this.getRacers()
       .then(racers => {
-        createdText.racer = racers.filter(
-          racer => racer.phones.filter(contact => contact.number == fromNumber).length)[0];
+        console.log('adding racer to inbound text');
+        let matchingRacers = racers.filter(
+          racer => racer.phones.filter(contact => contact.number == fromNumber).length);
+        console.log('matching racers', matchingRacers);
+        if (matchingRacers.length > 0) {
+          createdText.racer = matchingRacers[0];
+        } else {
+          console.log('no racer with this number', fromNumber);
+        }
         return this.getTeams()
       })
       .then(teams => {
-        createdText.team = teams
+        let matchingTeams = teams
           .filter(team =>
-            team.racers.filter(racer => racer.id == createdText.racer.id).length > 0)[0];
+            team.racers.filter(racer => createdText.racer && racer.id == createdText.racer.id).length > 0);
+        console.log('matching teams', matchingTeams);
+        if (matchingTeams.length > 0) {
+          createdText.team = matchingTeams[0];
+        }
       })
       .then(result => {
         return collection.insert(createdText.toDbForm());
@@ -189,14 +201,19 @@ class MongoDbFacade implements DbFacadeInterface {
     let toNumber = createdText.to;
     return this.getRacers()
       .then(racers => {
-        createdText.racer = racers.filter(
-          racer => racer.phone == toNumber)[0];
+        let matchingRacers = racers.filter(
+          racer => racer.phones.filter(contact => contact.number == toNumber).length);
+        if (matchingRacers.length > 0) {
+          createdText.racer = matchingRacers[0];
+        } else {
+          console.log('no racer with this number', fromNumber);
+        }
         return this.getTeams()
       })
       .then(teams => {
         createdText.team = teams
           .filter(team =>
-            team.racers.filter(racer => racer.id == createdText.racer.id).length > 0)[0];
+            team.racers.filter(racer => createdText.racer && racer.id == createdText.racer.id).length > 0)[0];
       })
       .then(result => {
         return collection.insert(createdText.toDbForm());
@@ -206,24 +223,81 @@ class MongoDbFacade implements DbFacadeInterface {
       });
   }
 
-  private populateText(text: DbFormText): Promise<FullFormText> {
+  private addRacerToText(text): Promise<any> {
     let copy = JSON.parse(JSON.stringify(text));
-    return this.getRacer(text.racer)
-      .then(racer => {
-        copy.racer = racer;
-        return this.getTeam(text.team)
-          .then(team => {
-            copy.team = team;
-            return Promise.resolve(copy);
-          });
-      });
+    console.log('adding racer to text', text);
+    if (text.racer) {
+      return this.getRacer(text.racer)
+        .then(racer => {copy.racer = racer; return copy});
+    } else {
+      console.log("text doesn't have racer specified");
+      return this.getRacers()
+        .then(racers => {
+          let possibleRacers = racers
+            .filter(racer => {
+              console.log('looking at racer', racer);
+              return racer.phones.filter(contact => {
+                return contact.number == text.from
+              }).length
+            });
+          if (possibleRacers.length > 0) {
+            copy.racer = possibleRacers[0];
+            console.log('racer was', text.racer, 'now', copy.racer);
+          } else {
+            console.log('no racer with this number', text.from);
+          }
+          return copy;
+        })
+    }
+  }
+
+  private addTeamToText(text): Promise<any> {
+    let copy = JSON.parse(JSON.stringify(text));
+//    console.log('adding team to text', text);
+    if (text.team) {
+//      console.log('text already has team id specified');
+      return this.getTeam(text.team)
+        .then(team => {
+          copy.team = team;
+   //       console.log('copy', copy);
+          return Promise.resolve(copy);
+        })
+        .catch(err => {
+    //      console.error('error', err);
+          return err;
+        });
+    } else {
+ //     console.log("text doesn't have team specified");
+      return this.getTeams()
+        .then(teams => {
+          copy.team = teams.filter(team => team.racers.filter(racer => text.racer && racer.id == text.racer.id).length)[0];
+  //        console.log('with team', copy);
+          return Promise.resolve(copy);
+        })
+        .catch(err => {
+          console.error('error', err);
+          return err;
+        });
+    }
+  }
+
+  private populateText(text: DbFormText): Promise<FullFormText> {
+    return this.addRacerToText(text)
+      .then(textWithRacer => this.addTeamToText(textWithRacer))
+//      .then(populatedText => {console.log('populated text', populatedText); return populatedText})
   }
 
   getTexts(): Promise<Text[]>{
     let collection = this.db.collection('texts');
     return collection.find({}).toArray()
       .then(docs => {
-        let textPromises = docs.map(text => this.populateText(text))
+        let textPromises = docs.map(text => {
+          console.log('populating text', text);
+          let promise = this.populateText(text)
+          console.log('promise is', promise);
+          return promise;
+        })
+        console.log('text promises', textPromises);
         return Promise.all(textPromises)
           .then(texts => texts.map(text => <FullFormText> Text.fromJSON(text)));
       });

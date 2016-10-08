@@ -97,6 +97,9 @@ function handleTextMessage(db_facade, twilioText: TwilioInboundText) {
       console.log('successfully added', text, 'to db');
       let newMessage = new TextReceivedMessage(text)
       sendMessageToWebClients(newMessage);
+    })
+    .catch(err => {
+      console.error('error adding', twilioText, 'to db: ', err);
     });
 }
 

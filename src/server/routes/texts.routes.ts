@@ -15,6 +15,11 @@ export default function textsRouterWithDb(db_facade: DbFacadeInterface, twilio) 
       .then(texts => {
         res.type('application/json');
         res.send(JSON.stringify(texts));
+      })
+      .catch(err => {
+        console.error('textsrouter error', err);
+        res.status(500)
+        res.json({err: err});
       });
   })
 
@@ -24,6 +29,10 @@ export default function textsRouterWithDb(db_facade: DbFacadeInterface, twilio) 
       .then(texts => {
         res.type('application/json');
         res.send(JSON.stringify(texts));
+      })
+      .catch(err => {
+        res.status(500);
+        res.json({err: err});
       });
   });
 
