@@ -166,7 +166,7 @@ class MongoDbFacade implements DbFacadeInterface {
     return this.getRacers()
       .then(racers => {
         createdText.racer = racers.filter(
-          racer => racer.phone == fromNumber)[0];
+          racer => racer.phones.filter(contact => contact.number == fromNumber).length)[0];
         return this.getTeams()
       })
       .then(teams => {

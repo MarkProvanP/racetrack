@@ -1,4 +1,10 @@
 export type PhoneNumber = string;
+export interface ContactNumber {
+  number: PhoneNumber,
+  name: string,
+  notes: string,
+  preferred: boolean
+}
 export type TextId = string;
 
 import { Racer, RacerId } from './racer';

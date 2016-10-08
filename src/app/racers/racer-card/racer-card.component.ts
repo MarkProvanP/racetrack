@@ -59,4 +59,13 @@ export class RacerCardComponent implements OnInit, OnDestroy {
   goToRacerTexts(racer: Racer) {
     this.router.navigate(['/texts', 'by-racer', racer.id]);
   }
+
+  addNumberToRacer() {
+    this.racer.phones.push({});
+  }
+
+  removeContactFromRacer(contact) {
+    let index = this.racer.phones.indexOf(contact);
+    this.racer.phones.splice(index, 1);
+  }
 }

@@ -1,4 +1,4 @@
-import { PhoneNumber } from './text';
+import { PhoneNumber, ContactNumber } from './text';
 
 export type RacerId = string;
 
@@ -6,7 +6,7 @@ export class Racer {
   id: RacerId;
   name: string;
   nationality: string;
-  phone: PhoneNumber;
+  phones: ContactNumber[] = [];
 
   static fromJSON(obj) {
     return new Racer(obj.id, obj);
@@ -20,6 +20,8 @@ export class Racer {
     this.id = id;
     this.name = properties.name;
     this.nationality = properties.nationality;
-    this.phone = properties.phone;
+    if (properties.phones) {
+      this.phones = properties.phones;
+    }
   }
 }
