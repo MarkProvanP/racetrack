@@ -12,7 +12,7 @@ import { PhoneNumber } from '../common/text';
 export class DataService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
-  private backendHost = "https://mrp4.host.cs.st-andrews.ac.uk";
+  private backendHost = "";
   private baseUrl = this.backendHost + "/r2bcknd/";
   private teamsUrl = this.baseUrl + 'teams';  // URL to web api
   private racersUrl = this.baseUrl + 'racers';

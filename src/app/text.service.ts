@@ -40,7 +40,7 @@ type textCallback = (Text) => void;
 export class TextService {
   
   private headers = new Headers({'Content-Type': 'application/json'});
-  private backendHost = "https://mrp4.host.cs.st-andrews.ac.uk";
+  private backendHost = "";
   private baseUrl = this.backendHost + "/r2bcknd/";
   private textsUrl = this.baseUrl + "texts";
 

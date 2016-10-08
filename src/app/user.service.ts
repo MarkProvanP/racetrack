@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class UserService {
   private headers = new Headers({'Content-Type': 'application/json'});
-  private backendHost = "https://mrp4.host.cs.st-andrews.ac.uk";
+  private backendHost = "";
   private baseUrl = this.backendHost + "/r2bcknd/auth/";
   private loginUrl = this.baseUrl + "login";
   private logoutUrl = this.baseUrl + "logout";
