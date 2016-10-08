@@ -1,9 +1,13 @@
 <div class="texts-list">
   <div class='text-card-wrapper' *ngFor="let text of texts | orderBy: '-timestamp'">
-    <md-card class='text-card' *ngIf='isInboundText(text)'>
+    <md-card class='text-card' *ngIf='isInboundText(text)' [ngClass]='getTextCardClass(text)'>
       <md-card-header>
         <md-card-title>
-          <div class='inline-text-title' *ngIf="display.oneline">
+          <div class='text-unknown-sender' *ngIf='!text.racer'>
+            <i>Text from unknown number! {{text.from}}</i>
+            <button md-raised-button (click)='linkUnknownTextToRacer(text)'>Link number to racer</button>
+          </div>
+          <div class='inline-text-title' *ngIf="display.oneline && text.racer">
             <span>({{text.from}})</span>
             -
             <span *ngIf="text.racer">{{text.racer.name}}</span>
@@ -11,7 +15,7 @@
             <span *ngIf="text.team">{{text.team.name}}</span>
           </div>
           <div>{{text.getPrettyTimestamp()}}</div>
-          <div class='text-title' *ngIf='!display.oneline'>
+          <div class='text-title' *ngIf='!display.oneline && text.racer'>
             <div *ngIf="display.number">{{text.from}}</div>
             <div *ngIf="display.time">{{text.getPrettyTimestamp()}}</div>
           </div>

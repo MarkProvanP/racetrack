@@ -19,11 +19,13 @@ export class TextFilterOptions {
   }
 
   filter(text: Text): boolean {
-    if (this.racer != undefined) {
-      if (text.racer.id != this.racer.id) return false;
+    if (this.racer !== undefined) {
+      if (this.racer === true) { if (!text.racer) return false }
+      if (!text.racer || text.racer.id != this.racer.id) return false;
     }
-    if (this.team != undefined) {
-      if (text.team.id != this.team.id) return false;
+    if (this.team !== undefined) {
+      if (this.team === true) { if (!text.team) return false }
+      if (!text.team || text.team.id != this.team.id) return false;
     }
     if (text instanceof InboundText && this.read != undefined) {
       if ((<InboundText> text).read != this.read) return false;

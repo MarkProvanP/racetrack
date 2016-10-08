@@ -92,7 +92,7 @@ setup(config.db_url)
 
 
 function handleTextMessage(db_facade, twilioText: TwilioInboundText) {
-  db_facade.createText(twilioText)
+  db_facade.createFromInboundText(twilioText)
     .then(text => {
       console.log('successfully added', text, 'to db');
       let newMessage = new TextReceivedMessage(text)

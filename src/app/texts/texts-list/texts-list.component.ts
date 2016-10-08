@@ -28,6 +28,16 @@ export class TextsListComponent {
     private textService: TextService
   ) {}
 
+  getTextCardClass(text: Text) {
+    if (!text.racer || !text.team) {
+      return 'unknown-sender';
+    }
+  }
+
+  linkUnknownTextToRacer(text: Text) {
+
+  }
+
   markTextAsRead(text: Text) {
     this.textService.updateText(text)
   }

@@ -14,12 +14,13 @@ export class NewUpdateComponent implements OnInit {
   @Input() team: Team;
   @Output() onStatusCreated = new EventEmitter();
   newStatusObj = {
-    status: undefined,
+    status: TeamStatus.ON_START_BUS,
     location: {
-      place: undefined,
-      latitude: undefined,
-      longitude: undefined
-    }
+      place: 'St Andrews',
+      latitude: 56.3397753,
+      longitude: -2.796721400000024
+    },
+    notes: "Default starting status"
   }
   statusEnum = TeamStatus;
   default = {
@@ -35,13 +36,15 @@ export class NewUpdateComponent implements OnInit {
 
   ngOnInit() {
     let lastUpdate = this.team.getLastUpdate();
-    this.newStatusObj.status = lastUpdate.status;
-    this.newStatusObj.location = lastUpdate.location;
+    if (lastUpdate) {
+      this.newStatusObj.status = lastUpdate.status;
+      this.newStatusObj.location = lastUpdate.location;
+    }
   }
 
   getPrettyStatusName(item) {
     let enumVal = TeamStatus[item.value];
-    return prettyStatusName(TeamStatus[enumVal]);
+    return prettyStatusName(enumVal);
   }
 
   cancelNewUpdate() {

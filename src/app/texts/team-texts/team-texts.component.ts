@@ -17,7 +17,7 @@ import * as moment from "moment";
 export class TeamTextsComponent implements OnInit {
   @Input() texts: Text[];
   teams: Team[];
-  selectedTeam: Team;
+  selectedTeam: Team = true;
   selectedTeamTexts: Text[];
   displayOptions = {
     oneline: false,
