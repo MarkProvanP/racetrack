@@ -3,6 +3,8 @@ import { Team, TeamId } from "../../common/team";
 import { TeamUpdate, TeamUpdateId } from "../../common/update";
 import { Text, PhoneNumber, TwilioInboundText, TwilioOutboundText } from "../../common/text";
 
+import { User } from '../auth';
+
 var Promise = require("es6-promise").Promise;
 
 export interface DbFacadeInterface {
@@ -27,5 +29,9 @@ export interface DbFacadeInterface {
   createStatusUpdate(properties): Promise<TeamUpdate>;
   getStatusUpdates(): Promise<TeamUpdate[]>;
   getStatusUpdate(id: TeamUpdateId): Promise<TeamUpdate>;
+
+  getUser(username): Promise<User>;
+  canAddUser(username): Promise<boolean>;
+  addUser(username, password): Promise<User>;
 }
 

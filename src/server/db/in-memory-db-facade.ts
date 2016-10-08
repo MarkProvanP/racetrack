@@ -5,6 +5,7 @@ import { Text, InboundText, OutboundText, PhoneNumber, TwilioInboundText, Twilio
 import { DbFacadeInterface } from "./db-facade";
 import { Promise } from "es6-promise";
 import * as uuid from "node-uuid";
+import { User } from '../auth';
 
 export class InMemoryDbFacade implements DbFacadeInterface {
   constructor() {
@@ -42,6 +43,7 @@ export class InMemoryDbFacade implements DbFacadeInterface {
   private teams = {};
   private teamUpdates = {};
   private texts = {};
+  private users = {};
 
   getRacers(): Promise<Racer[]> {
     let racersArray : Racer[] = <Racer[]> [];
@@ -217,6 +219,25 @@ export class InMemoryDbFacade implements DbFacadeInterface {
     let updateString = this.teamUpdates[String(id)];
     let update = TeamUpdate.fromJSON(JSON.parse(updateString));
     return Promise.resolve(update);
+  }
+
+//================================================================
+
+  getUser(username): Promise<User> {
+    let userString = this.users[String(username)];
+    let user = User.fromJSON(JSON.parse(userString));
+    return Promise.resolve(user);
+  }
+
+  canAddUser(username): Promise<boolean> {
+    let canCreateUser = !this.users[String(username)];
+    return Promise.resolve(canCreateUser);
+  }
+
+  addUser(username, password) {
+    let user = User.createWithPassword(username, password);
+    this.users[String(username)] = JSON.stringify(user);
+    return Promise.resolve(user);
   }
 }
 

@@ -37,83 +37,8 @@ app.use(expressSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
-let testUser = {name: 'hello world', id: '12983123'}
+import { AuthWithDbFacade } from "./auth";
 
-passport.use(new LocalStrategy((username, password, done) => {
-  console.log(`checking username: ${username}, password: ${password}`);
-  return done(null, testUser);
-}));
-
-passport.serializeUser((user, done) => {
-  console.log('serializeUser', user);
-  done(null, testUser.id);
-});
-
-passport.deserializeUser((id, done) => {
-  console.log('deSerializeUser', id);
-  done(null, testUser);  
-});
-
-app.get('/login', (req, res) => {
-  let html = `
-  <!DOCTYPE html>
-  <head><title>Login</title></head>
-  <body>
-    <h1>Login</h1>
-    <form method='post'>
-      <label>Username<input name='username' type='text' required></label>
-      <label>Password<input name='password' type='password' required></label>
-      <button type='submit'>Login</button>
-    </form>
-  </body>
-  </html>
-  `;
-  res.type('text/html');
-  res.send(html);
-});
-
-function isLoggedIn(req, res, next) {
-  console.log('checking credentials');
-  console.log(req.user);
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    res.redirect("/r2bcknd/login");
-  }
-}
-
-app.get('/done', isLoggedIn, (req, res) => {
-  let html = `
-  <!DOCTYPE html>
-  <head><title>Done!</title></head>
-  <body>
-    <h1>Private data!</h1>
-    <a href='/r2bcknd/logout'>Log Out</a>
-  </body>
-  </html>
-  `;
-  res.type('text/html');
-  res.send(html);
-});
-
-app.get('/logout', isLoggedIn, (req, res) => {
-  req.session.destroy(err => {
-  let html = `
-    <!DOCTYPE html>
-    <head><title>Logged out!</title></head>
-    <body>
-      <h1>Logged out!</h1>
-    </body>
-    </html>
-    `;
-    res.type('text/html');
-    res.send(html);
-  });
-});
-
-app.post('/login', passport.authenticate('local', {failureRedirect: '/r2bcknd/login' }), (req, res) => {
-  res.redirect('/r2bcknd/done');
-});
 
 app.all('/*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -135,6 +60,9 @@ import { setup } from './db/mongo-db-facade';
 setup(config.db_url)
   .then(db_facade => {
     console.log('db_facade available');
+
+    let authRouter = AuthWithDbFacade(db_facade);
+    app.use('/auth', authRouter);
 
     let teamsRouter = teamsRouterWithDb(db_facade);
     app.use('/teams', teamsRouter);

@@ -6,6 +6,8 @@ import { DbFacadeInterface } from "./db-facade";
 import { MongoClient } from "mongodb";
 import { Promise } from "es6-promise";
 
+import { User } from '../auth';
+
 import * as uuid from "node-uuid";
 
 export function setup(url): Promise<MongoDbFacade> {
@@ -273,6 +275,42 @@ class MongoDbFacade implements DbFacadeInterface {
         return Promise.resolve(update);
       });
   }
+
+//================================================================
+
+  getUser(username): Promise<User> {
+    let collection = this.db.collection('users');
+    return collection.find({username: username}).toArray()
+      .then(docs => {
+        if (docs.length == 0) {
+          return Promise.reject(`No user with username: ${username}`);
+        }
+        let user = docs[0];
+        console.log('mongo-db got user', user);
+        return Promise.resolve(user);
+      });
+  }
+
+  canAddUser(username): Promise<boolean> {
+    let collection = this.db.collection('users');
+    return collection.find({username: username}).toArray()
+      .then(docs => {
+        if (docs.length == 0) {
+          return Promise.resolve(true)
+        } else {
+          return Promise.resolve(false)
+        }
+      });
+  }
+
+  addUser(username, password): Promise<User> {
+    let collection = this.db.collection('users');
+    let user = User.createWithPassword(username, password);
+    return collection.insert(user)
+      .then(result => {
+        return Promise.resolve(user);
+      });
+  }
 }
 
 
@@ -285,4 +323,3 @@ class MongoDbFacade implements DbFacadeInterface {
 //================================================================
 
 
-//================================================================
