@@ -34,6 +34,8 @@ export class UserService {
   }
 
   register(user): Promise<any> {
+    console.log('user service register user', user);
+    debugger
     return this.http
       .post(this.registerUrl, JSON.stringify(user), {headers: this.headers, withCredentials: true})
       .toPromise()
@@ -50,6 +52,7 @@ export class UserService {
   }
 
   private handleError(error: any): Promise<any> {
+    debugger;
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);
   }
