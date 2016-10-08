@@ -4,6 +4,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 import { TextService, TextFilterOptions } from './text.service';
+import { UserService } from './user.service';
 
 /*
  * App Component
@@ -26,7 +27,8 @@ export class App {
 
   constructor(
     private textService: TextService,
-    private titleService: Title
+    private titleService: Title,
+    private userService: UserService
   ) {}
 
   toolbarClass() {
@@ -81,6 +83,14 @@ export class App {
   getUnreadTexts() {
     let filterOptions = new TextFilterOptions({read: false});
     return this.textService.getTextsFiltered(filterOptions);
+  }
+
+  loggedIn() {
+    return false;
+  }
+
+  getUsername() {
+    return "derp";
   }
 }
 

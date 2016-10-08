@@ -1,6 +1,18 @@
 <md-content>
   <md-toolbar class='toolbar' [ngClass]='toolbarClass()'>
       <span>{{ name }}</span>
+      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./user/login'] " routerLinkActive='active'>
+        Login
+      </a>
+      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./user/register'] " routerLinkActive='active'>
+        Register 
+      </a>
+      <a *ngIf='loggedIn()' md-button [routerLink]=" ['./user/me'] " routerLinkActive='active'>
+        {{getUsername()}}
+      </a>
+      <a *ngIf='loggedIn()' md-button [routerLink]=" ['./user/logout'] " routerLinkActive='active'>
+        Log out
+      </a>
       <span class="fill">
         <div class='text-received-flash' *ngIf='getNumberUnreadTexts()'>
           <a [routerLink]="['texts', 'all', 'unread']" md-button>

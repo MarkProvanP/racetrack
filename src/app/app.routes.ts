@@ -13,6 +13,10 @@ import { TeamCardComponent } from './teams/team-card';
 import { MapComponent } from './map';
 import { DataResolver } from './app.resolver';
 
+import { LoginComponent } from './user/login';
+import { LogoutComponent } from './user/logout';
+import { MeComponent } from './user/me';
+import { RegisterComponent } from './user/register';
 
 export const ROUTES: Routes = [
   {
@@ -63,5 +67,13 @@ export const ROUTES: Routes = [
   },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'map', component: MapComponent },
+  {
+    path: 'user', children: [
+      { path: 'login', component: LoginComponent },
+      { path: 'logout', component: LogoutComponent },
+      { path: 'me', component: MeComponent },
+      { path: 'register', component: RegisterComponent }
+    ]
+  },
   { path: '**', component: DashboardComponent }
 ];

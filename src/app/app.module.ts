@@ -32,8 +32,14 @@ import { MapComponent } from './map';
 import { NewUpdateComponent } from './updates/new-update';
 import { TextSendComponent } from './texts/text-send';
 
+import { LoginComponent } from './user/login';
+import { LogoutComponent } from './user/logout';
+import { MeComponent } from './user/me';
+import { RegisterComponent } from './user/register';
+
 import { DataService } from './data.service';
 import { TextService } from './text.service';
+import { UserService } from './user.service';
 import { OrderBy } from './orderBy.pipe';
 import { KeysPipe } from './keys.pipe';
 
@@ -44,6 +50,7 @@ const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
   DataService,
   TextService,
+  UserService,
   Title
 ];
 
@@ -67,6 +74,10 @@ const APP_PROVIDERS = [
     MapComponent,
     NewUpdateComponent,
     TextSendComponent,
+    LoginComponent,
+    LogoutComponent,
+    MeComponent,
+    RegisterComponent,
     OrderBy,
     KeysPipe
   ],
