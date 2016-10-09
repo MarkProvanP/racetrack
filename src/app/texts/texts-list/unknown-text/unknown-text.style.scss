@@ -1,7 +1,66 @@
+.text-card {
+  width: 500px;
+}
+
+.text-card.linking {
+  width: 800px;
+}
+
 .unknown-text {
   background-color: pink;
 }
 
 md-card-title {
   display: flex;
+}
+
+.master-detail {
+  flex: 1;
+  display: flex;
+  .master {
+    width: 200px;
+    overflow-y: scroll;
+    background-color: white;
+  }
+
+  .detail {
+    flex: 1;
+    overflow-y: scroll;
+    background-color: white;
+    
+    div {
+      margin: 10px;
+    }
+  }
+}
+
+.linking-card {
+  max-height: 400px;
+}
+
+.existing-racer-contacts {
+  width: 100%;
+
+  td {
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+
+.new-contact {
+  display: flex;
+  align-items: center;
+
+  * {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .number-input {
+    width: 130px;
+  }
+
+  .shrink {
+    flex: 1;
+  }
 }

@@ -1,10 +1,67 @@
-<md-card class='text-card unknown-text'>
+<md-card class='text-card unknown-text' [ngClass]='{"linking": inLinkingMode}'>
   <md-card-header>
     <md-card-title>
       <i>Text from unknown number! {{text.from}}</i>
-      <button md-raised-button (click)='linkUnknownTextToRacer(text)'>Link number to racer</button>
+      <button md-raised-button
+        (click)='linkUnknownTextToRacer(text)'
+        [disabled]='inLinkingMode'>
+        Link number to racer
+      </button>
     </md-card-title>
   </md-card-header>
+  <md-card class='linking-card' *ngIf='inLinkingMode'>
+    <div class='master-detail'>
+      <div class='racers-list master'>
+        <md-list>
+          <md-list-item
+            *ngFor='let racer of racersList'
+            (click)='pickRacer(racer)'>
+            {{racer.name}}
+            <i *ngIf='selectedRacer == racer'> - Selected</i>
+          </md-list-item>
+        </md-list>
+      </div>
+      <div class='detail'>
+        <div *ngIf='selectedRacer'>
+          <h3>Existing numbers for {{selectedRacer.name}}</h3>
+          <table class='existing-racer-contacts'>
+            <thead>
+              <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Notes</th>
+                <th>Preferred</th>
+              </tr>
+              </thead>
+            <tbody>
+              <tr *ngFor='let contact of selectedRacer.phones'>
+                <td>{{contact.number}}</td>
+                <td>{{contact.name}}</td>
+                <td>{{contact.notes}}</td>
+                <td>
+                  <md-checkbox [(ngModel)]='contact.preferred' [disabled]='true'>
+                  </md-checkbox>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <h3>New contact number details</h3>
+          <div class='new-contact'>
+            <md-input class='number-input' placeholder='Phone number' [(ngModel)]='newContact.number'></md-input>
+            <md-input class='shrink' placeholder='Number desc' [(ngModel)]='newContact.name'></md-input>
+            <md-input class='shrink' placeholder='Notes' [(ngModel)]='newContact.notes'></md-input>
+            <md-checkbox [(ngModel)]='newContact.preferred'>Preferred</md-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button md-raised-button color='primary' (click)='saveNumberToRacer()' [disabled]='!selectedRacer'>
+      Save
+    </button>
+    <button md-raised-button color='warn' (click)='finishLinking()'>
+      Cancel
+    </button>
+  </md-card>
   <md-card-content>
     {{text.body}}
   </md-card-content>
