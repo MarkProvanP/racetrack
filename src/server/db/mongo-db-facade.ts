@@ -12,6 +12,8 @@ import * as uuid from "node-uuid";
 
 import * as winston from "winston";
 
+import { NoSuchUserError } from '../../common/error';
+
 export function setup(url): Promise<MongoDbFacade> {
 
   return MongoClient.connect(url)
@@ -350,7 +352,7 @@ class MongoDbFacade implements DbFacadeInterface {
     return collection.find({username: username}).toArray()
       .then(docs => {
         if (docs.length == 0) {
-          return Promise.reject(`No user with username: ${username}`);
+          throw new NoSuchUserError(username);
         }
         let user = User.fromJSON(docs[0]);
         return Promise.resolve(user);

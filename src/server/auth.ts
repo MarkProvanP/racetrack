@@ -10,6 +10,8 @@ import { PhoneNumber } from '../common/text';
 
 import * as bcrypt from "bcrypt-nodejs";
 
+import { NoSuchUserError } from '../common/error';
+
 export interface UserWithoutPassword {
   username: string;
   name: string;
@@ -60,16 +62,18 @@ export function AuthWithDbFacade(db_facade) {
   passport.use(new LocalStrategy((username, password, done) => {
     db_facade.getUser(username)
       .then(user => {
-        if (user) {
-          return done(null, user);
-        }
         if (!user.validPassword(password)) {
           return done(null, false, { message: 'incorrect password' });
         }
         return done(null, user);
       })
       .catch(err => {
-        return done(err);
+        if (err instanceof NoSuchUserError) {
+          console.log('no such user!', username);
+          return done(err);
+        } else {
+          winston.log('error','Error getting user!');
+        }
       });
   }));
 
@@ -116,33 +120,38 @@ export function AuthWithDbFacade(db_facade) {
   });
 
   router.post('/api/login', passport.authenticate('local'), (req, res) => {
-    winston.verbose('/api/login request');
+    winston.log('verbose', '/api/login request');
     db_facade.getUser(req.user.username)
       .then(user => {
         res.json(user.copyWithoutPassword())
       })
       .catch(err => {
-        winston.error('/api/login error!', {err});
-        res.status(500);
-        res.json({error: err})
+        winston.log('error','/api/login error!', {err});
+        if (err instanceof NoSuchUserError) {
+          res.status(NO_USER_ERROR_CODE);
+          res.send();
+        } else {
+          res.status(500);
+          res.json({error: err})
+        }
       })
   });
 
   router.post('/api/register', passport.authenticate('local-register'), (req, res) => {
-    winston.verbose('/api/register request');
+    winston.log('verbose', '/api/register request');
     db_facade.getUser(req.user.username)
       .then(user => {
         let withoutPassword = user.copyWithoutPassword();
         res.json(user.copyWithoutPassword());
       })
       .catch(err => {
-        winston.error('/api/login error!', {err});
+        winston.log('error','/api/login error!', {err});
         res.status(500).send(err);
       });
   });
 
   router.get('/api/logout', isLoggedIn, (req, res) => {
-    winston.verbose('/api/logout request');
+    winston.log('verbose', '/api/logout request');
     req.session.destroy(err => {
       if (err) {
         res.status(500);
@@ -153,7 +162,7 @@ export function AuthWithDbFacade(db_facade) {
   });
 
   router.get('/api/authenticated', isLoggedIn, (req, res) => {
-    winston.verbose('/api/authenticated request');
+    winston.log('verbose', '/api/authenticated request');
     res.json({authenticated: true});
   });
 

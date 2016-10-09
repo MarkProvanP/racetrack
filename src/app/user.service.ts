@@ -50,25 +50,25 @@ export class UserService {
     return this.http
       .post(this.loginUrl, JSON.stringify(user), {headers: this.headers, withCredentials: true})
       .toPromise()
+      .catch(this.handleHttpError)
       .then(response => {
         this.authenticated = true;
         console.log('login response', response);
         return response.json()
       })
       .then(user => this.setUser(user))
-      .catch(this.handleError)
   }
 
   logout(): Promise<any> {
     return this.http
       .get(this.logoutUrl, {withCredentials: true})
       .toPromise()
+      .catch(this.handleHttpError)
       .then(response => {
         this.authenticated = false;
         this.user = undefined
         return response.json()
       })
-      .catch(this.handleError)
   }
 
   register(user): Promise<any> {
@@ -76,27 +76,27 @@ export class UserService {
     return this.http
       .post(this.registerUrl, JSON.stringify(user), {headers: this.headers, withCredentials: true})
       .toPromise()
+      .catch(this.handleHttpError)
       .then(response => {
         this.authenticated = true;
         console.log('register response', response);
         return response.json()
       })
       .then(user => this.setUser(user))
-      .catch(this.handleError)
   }
 
   getMe(): Promise<any> {
     return this.http
       .get(this.meUrl, {withCredentials: true})
       .toPromise()
+      .catch(this.handleHttpError)
       .then(response => response.json())
       .then(user => this.setUser(user))
-      .catch(this.handleError)
   }
 
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
-    return Promise.reject(error.message || error);
+  private handleHttpError(error: any): Promise<any> {
+    console.log('UserService handleHttpError', error);
+    return Promise.reject(error);
   }
 
   public isAuthenticated() {
