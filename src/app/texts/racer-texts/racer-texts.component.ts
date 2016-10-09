@@ -46,8 +46,12 @@ export class RacerTextsComponent implements OnInit {
 
   selectTextsByRacer(racer: Racer) {
     this.selectedRacer = racer;
-    let filterOptions = new TextFilterOptions({racer: this.selectedRacer});
-    this.selectedRacerTexts = this.textService.getTextsFiltered(filterOptions); 
+    if (racer) {
+      let filterOptions = new TextFilterOptions({racer: this.selectedRacer});
+      this.selectedRacerTexts = this.textService.getTextsFiltered(filterOptions); 
+    } else {
+      this.selectedRacerTexts = [];
+    }
   }
 
   markTextAsRead(text) {

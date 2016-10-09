@@ -46,8 +46,12 @@ export class TeamTextsComponent implements OnInit {
 
   selectTextsByTeam(team: Team) {
     this.selectedTeam = team;
-    let filterOptions = new TextFilterOptions({team: this.selectedTeam});
-    this.selectedTeamTexts = this.textService.getTextsFiltered(filterOptions);
+    if (team) {
+      let filterOptions = new TextFilterOptions({team: this.selectedTeam});
+      this.selectedTeamTexts = this.textService.getTextsFiltered(filterOptions);
+    } else {
+      this.selectedTeamTexts = [];
+    }
   }
 
   markTextAsRead(text) {
