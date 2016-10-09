@@ -1,66 +1,39 @@
 <div class="texts-list">
   <div class='text-card-wrapper' *ngFor="let text of texts | orderBy: '-timestamp'">
-    <md-card class='text-card' *ngIf='isInboundText(text)' [ngClass]='getTextCardClass(text)'>
-      <md-card-header>
-        <md-card-title>
-          <div class='text-unknown-sender' *ngIf='!text.racer'>
-            <i>Text from unknown number! {{text.from}}</i>
-            <button md-raised-button (click)='linkUnknownTextToRacer(text)'>Link number to racer</button>
-          </div>
-          <div class='inline-text-title' *ngIf="display.oneline && text.racer">
-            <span>({{text.from}})</span>
-            -
-            <span *ngIf="text.racer">{{text.racer.name}}</span>
-            -
-            <span *ngIf="text.team">{{text.team.name}}</span>
-          </div>
-          <div>{{text.getPrettyTimestamp()}}</div>
-          <div class='text-title' *ngIf='!display.oneline && text.racer'>
-            <div *ngIf="display.number">{{text.from}}</div>
-            <div *ngIf="display.time">{{text.getPrettyTimestamp()}}</div>
-          </div>
-        </md-card-title>
-      </md-card-header>
-      <md-card-content>
-        {{text.body}}
-      </md-card-content>
-      <md-card-actions>
-        <button md-button (click)='replyToText(text)'>RESPOND</button>
-        <md-checkbox [(ngModel)]='text.read' (change)='markTextAsRead(text)'>
-          Read
-        </md-checkbox>
-        <button md-button (click)="checkInTeamFromText(text)">Add Check In</button>
-        <button md-button (click)="createUpdateFromText(text)">Create Team Update</button>
-      </md-card-actions>
-    </md-card>
-    <md-card class='text-card text-outbound' *ngIf='isOutboundText(text)'>
-      <md-card-header>
-        <md-card-title>
-          <div class='inline-text-title' *ngIf="display.oneline">
-            <span>({{text.to}})</span>
-            -
-            <span *ngIf="text.racer">{{text.racer.name}}</span>
-            -
-            <span *ngIf="text.team">{{text.team.name}}</span>
-          </div>
-          <div>{{text.getPrettyTimestamp()}}</div>
-          <div class='text-title' *ngIf='!display.oneline'>
-            <div *ngIf="display.number">{{text.from}}</div>
-            <div *ngIf="display.time">{{text.getPrettyTimestamp()}}</div>
-          </div>
-        </md-card-title>
-      </md-card-header>
-      <md-card-content>
-        {{text.body}}
-      </md-card-content>
-      <md-card-actions>
-      </md-card-actions>
-    </md-card>
+    <normal-text
+      class='text-card normal-text' 
+      [text]='text' 
+      [display]='display'
+      (onMakeRead)='markTextAsRead($event)'
+      (onCreateReply)='replyToText($event)'
+      (onAddCheckin)='checkInTeamFromText($event)'
+      (onCreateUpdate)='createUpdateFromText($event)'
+      *ngIf='isInboundText(text) && text.racer'>
+    </normal-text>
+    <sent-text
+      class='text-card sent-text' 
+      [text]='text' 
+      [display]='display' 
+      *ngIf='!isInboundText(text)'></sent-text>
+    <unknown-text 
+      class='text-card unknown-text' 
+      [text]='text' 
+      [display]='display' 
+      (onMakeRead)='markTextAsRead($event)'
+      (onCreateReply)='replyToText($event)'
+      *ngIf='!text.racer'></unknown-text>
     <div class='new-update-wrapper' *ngIf='inCreateUpdateMode && text == selectedText'>
-      <new-update [team]='text.team' (onStatusCreated)='onStatusCreated()'></new-update>
+      <new-update
+        [team]='text.team'
+        (onStatusCreated)='onStatusCreated()'>
+      </new-update>
     </div>
     <div class='text-send-wrapper' *ngIf='inTextSendMode && text == selectedText'>
-      <text-send [toRacer]='selectedText.racer' (onTextSendClose)='onTextSendClose()'></text-send>
+      <text-send 
+        [toRacer]='selectedText.racer'
+        [toNumber]='selectedText.from' 
+        (onTextSendClose)='onTextSendClose()'>
+      </text-send>
     </div>
   </div>
 </div>

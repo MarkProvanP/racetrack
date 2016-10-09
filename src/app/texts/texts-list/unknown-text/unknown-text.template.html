@@ -1,0 +1,17 @@
+<md-card class='text-card unknown-text'>
+  <md-card-header>
+    <md-card-title>
+      <i>Text from unknown number! {{text.from}}</i>
+      <button md-raised-button (click)='linkUnknownTextToRacer(text)'>Link number to racer</button>
+    </md-card-title>
+  </md-card-header>
+  <md-card-content>
+    {{text.body}}
+  </md-card-content>
+  <md-card-actions>
+    <button md-button (click)='replyToText()'>RESPOND</button>
+    <md-checkbox [(ngModel)]='text.read' (change)='markTextAsRead()'>
+      Read
+    </md-checkbox>
+  </md-card-actions>
+</md-card>

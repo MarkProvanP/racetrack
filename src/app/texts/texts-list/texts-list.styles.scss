@@ -6,10 +6,6 @@
   padding: 20px;
 }
 
-.unknown-sender {
-  background-color: pink;
-}
-
 .text-card {
   flex: 1;
   width: 500px;
@@ -28,8 +24,7 @@
   width: 100%;
 }
 
-.text-outbound {
-  background-color: gold;
+.sent-text {
   margin-left: 200px;
   width: 300px;
 }

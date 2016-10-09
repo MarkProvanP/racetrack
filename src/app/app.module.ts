@@ -31,6 +31,9 @@ import { DashboardComponent } from './dashboard';
 import { MapComponent } from './map';
 import { NewUpdateComponent } from './updates/new-update';
 import { TextSendComponent } from './texts/text-send';
+import { NormalTextComponent } from './texts/texts-list/normal-text';
+import { SentTextComponent } from './texts/texts-list/sent-text';
+import { UnknownTextComponent } from './texts/texts-list/unknown-text';
 
 import { LoginComponent } from './user/login';
 import { LogoutComponent } from './user/logout';
@@ -78,6 +81,9 @@ const APP_PROVIDERS = [
     MapComponent,
     NewUpdateComponent,
     TextSendComponent,
+    NormalTextComponent,
+    SentTextComponent,
+    UnknownTextComponent,
     LoginComponent,
     LogoutComponent,
     MeComponent,

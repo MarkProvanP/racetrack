@@ -13,7 +13,7 @@ import { TextService } from '../../text.service';
 export class TextSendComponent {
   @Input() toRacer: Racer;
   @Output() onTextSendClose = new EventEmitter();
-  toPhoneNumber: PhoneNumber;
+  @Input() toNumber: PhoneNumber;
   message: string;
   isSending = false;
 
@@ -23,7 +23,7 @@ export class TextSendComponent {
 
   sendNewText() {
     this.isSending = true;
-    this.textService.sendText(this.toPhoneNumber, this.message)
+    this.textService.sendText(this.toNumber, this.message)
       .then(response => {
         this.isSending = false;
         this.onTextSendClose.emit();
@@ -35,8 +35,5 @@ export class TextSendComponent {
   }
 
   ngOnInit() {
-    if (this.toRacer) {
-      this.toPhoneNumber = this.toRacer.phone;
-    }
   }
 }

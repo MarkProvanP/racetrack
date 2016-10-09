@@ -134,7 +134,7 @@ export class DataService {
 
   getRacerForPhoneNumber(phone: PhoneNumber): Promise<Racer> {
     return this.getRacers()
-      .then(racers => racers.filter(racer => racer.phone === phone)[0]);
+      .then(racers => racers.filter(racer => racer.phones.filter(contact => contact.number === phone))[0]);
   }
 
   getTeamForRacer(racer: Racer): Promise<Team> {
