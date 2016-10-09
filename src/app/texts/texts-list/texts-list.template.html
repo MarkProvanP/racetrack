@@ -21,7 +21,7 @@
       [display]='display' 
       (onMakeRead)='markTextAsRead($event)'
       (onCreateReply)='replyToText($event)'
-      *ngIf='!text.racer'></unknown-text>
+      *ngIf='isInboundText(text) && !text.racer'></unknown-text>
     <div class='new-update-wrapper' *ngIf='inCreateUpdateMode && text == selectedText'>
       <new-update
         [team]='text.team'

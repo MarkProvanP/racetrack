@@ -52,9 +52,11 @@ export default function textsRouterWithDb(db_facade: DbFacadeInterface, twilio) 
         console.log('successfully sent text', text);
         db_facade.createFromOutboundText(text)
           .then(createdText => {
-          res.type('application/json');
-          res.send(JSON.stringify(createdText));
-        });
+            res.json(createdText);
+          })
+          .catch(err => {
+            res.status(500).json({err: err});
+          })
       }
     });
   });
