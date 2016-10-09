@@ -1,12 +1,12 @@
 import * as express from "express";
 import { DbFacadeInterface} from "../db/db-facade";
 import { Text, InboundText, OutboundText } from '../../common/text';
+import * as winston from "winston";
 
 export default function textsRouterWithDb(db_facade: DbFacadeInterface, twilio) {
   let textsRouter = express.Router();
 
   textsRouter.use(function(req, res, next) {
-    console.log("Texts request");
     next();
   });
 
@@ -45,11 +45,9 @@ export default function textsRouterWithDb(db_facade: DbFacadeInterface, twilio) 
       from: twilio.fromNumber
     }, (err, text) => {
       if (err) {
-        console.error('twilio sending error');
-        console.error(err);
+        winston.error('Twilio send text error!', {err});
         res.status(500).send(`Twilio error! : ${err}`);
       } else {
-        console.log('successfully sent text', text);
         db_facade.createFromOutboundText(text)
           .then(createdText => {
             res.json(createdText);
@@ -63,8 +61,6 @@ export default function textsRouterWithDb(db_facade: DbFacadeInterface, twilio) 
 
   textsRouter.put('/:id', (req, res) => {
     let newDetailsText = Text.fromJSON(req.body);
-    console.log('updating text');
-    console.log(newDetailsText);
     db_facade.updateText(newDetailsText)
       .then(changedText => {
         res.type("application/json");

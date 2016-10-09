@@ -103,6 +103,7 @@
     "@types/selenium-webdriver": "^2.44.29",
     "@types/socket.io": "^1.4.27",
     "@types/twilio": "0.0.5",
+    "@types/winston": "0.0.28",
     "angular2-google-maps": "^0.15.0",
     "angular2-in-memory-web-api": "0.0.20",
     "angular2-template-loader": "^0.5.0",
@@ -126,6 +127,7 @@
     "rxjs": "^5.0.0-beta.6",
     "socket.io": "^1.4.8",
     "twilio": "^2.11.0",
+    "winston": "^2.2.0",
     "zone.js": "~0.6.17"
   },
   "devDependencies": {

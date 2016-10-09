@@ -10,11 +10,13 @@ import { User } from '../auth';
 
 import * as uuid from "node-uuid";
 
+import * as winston from "winston";
+
 export function setup(url): Promise<MongoDbFacade> {
 
   return MongoClient.connect(url)
     .then(db => {
-      console.log("connected to MongoDB server!");
+      winston.info("Got connection to MongoDB server!");
       return Promise.resolve(new MongoDbFacade(db));
     });
 }
@@ -25,10 +27,10 @@ class MongoDbFacade implements DbFacadeInterface {
     function exitHandler(options, err) {
       if (this.db) {
         this.db.close();
-        console.log("closed db");
+        winston.info('MongoDB connection closed safely');
       }
-      if (options.cleanup) console.log('clean');
-      if (err) console.log(err.stack);
+      if (options.cleanup)
+      if (err) winston.error(err.stack);
       if (options.exit) process.exit();
     }
     //do something when app is closing
@@ -158,22 +160,20 @@ class MongoDbFacade implements DbFacadeInterface {
       });
   }
 
+//================================================================
+
   createFromInboundText(text: TwilioInboundText): Promise<Text> {
-    console.log('create from inbound text');
     let collection = this.db.collection('texts');
     let id = uuid.v4();
     let createdText = InboundText.fromTwilio(id, text);
     let fromNumber = createdText.from;
     return this.getRacers()
       .then(racers => {
-        console.log('adding racer to inbound text');
         let matchingRacers = racers.filter(
           racer => racer.phones.filter(contact => contact.number == fromNumber).length);
-        console.log('matching racers', matchingRacers);
         if (matchingRacers.length > 0) {
           createdText.racer = matchingRacers[0];
         } else {
-          console.log('no racer with this number', fromNumber);
         }
         return this.getTeams()
       })
@@ -181,7 +181,6 @@ class MongoDbFacade implements DbFacadeInterface {
         let matchingTeams = teams
           .filter(team =>
             team.racers.filter(racer => createdText.racer && racer.id == createdText.racer.id).length > 0);
-        console.log('matching teams', matchingTeams);
         if (matchingTeams.length > 0) {
           createdText.team = matchingTeams[0];
         }
@@ -198,7 +197,6 @@ class MongoDbFacade implements DbFacadeInterface {
     let collection = this.db.collection('texts');
     let id = uuid.v4();
     let createdText = OutboundText.fromTwilio(id, text);
-    console.log('outbound created text', createdText);
     let toNumber = createdText.to;
     return this.getRacers()
       .then(racers => {
@@ -207,9 +205,7 @@ class MongoDbFacade implements DbFacadeInterface {
         if (matchingRacers.length > 0) {
           createdText.racer = matchingRacers[0];
         } else {
-          console.log('no racer with this number', toNumber);
         }
-        console.log('text with racer', createdText.racer);
         return this.getTeams()
       })
       .then(teams => {
@@ -218,8 +214,6 @@ class MongoDbFacade implements DbFacadeInterface {
             team.racers.filter(racer => createdText.racer && racer.id == createdText.racer.id).length);
         if (matchingTeams.length) {
           createdText.team = matchingTeams[0];
-        } else {
-          console.log('could not match text with team');
         }
       })
       .then(result => {
@@ -232,28 +226,18 @@ class MongoDbFacade implements DbFacadeInterface {
 
   private addRacerToText(text): Promise<any> {
     let copy = JSON.parse(JSON.stringify(text));
-    console.log('adding racer to text', text);
     if (text.racer) {
       return this.getRacer(text.racer)
         .then(racer => {copy.racer = racer; return copy});
     } else {
-      console.log("text doesn't have racer specified");
       let inbound = text.text_subclass == "InboundText";
       if (inbound) {
-        console.log('adding racer to inbound text', text);
       } else {
-        console.log('adding racer to outbound text', text);
       }
       return this.getRacers()
         .then(racers => {
           let possibleRacers = racers
             .filter(racer => {
-              console.log('looking at racer', racer);
-              if (inbound) {
-                console.log('inbound text, looking at text from no:', text.from, text.body);
-              } else {
-                console.log('outbound text, looking at text to no:', text.to, text.body);
-              }
               return racer.phones.filter(contact => {
                 if (inbound) {
                   return contact.number == text.from;
@@ -264,13 +248,6 @@ class MongoDbFacade implements DbFacadeInterface {
             });
           if (possibleRacers.length > 0) {
             copy.racer = possibleRacers[0];
-            console.log('racer was', text.racer, 'now', copy.racer);
-          } else {
-            if (inbound) {
-              console.log('addRacerToText no racer with this number', text.from);
-            } else {
-              console.log('addRacerToText no racer with this number', text.to);
-            }
           }
           return copy;
         })
@@ -279,25 +256,19 @@ class MongoDbFacade implements DbFacadeInterface {
 
   private addTeamToText(text): Promise<any> {
     let copy = JSON.parse(JSON.stringify(text));
-//    console.log('adding team to text', text);
     if (text.team) {
-//      console.log('text already has team id specified');
       return this.getTeam(text.team)
         .then(team => {
           copy.team = team;
-   //       console.log('copy', copy);
           return Promise.resolve(copy);
         })
         .catch(err => {
-    //      console.error('error', err);
           return err;
         });
     } else {
- //     console.log("text doesn't have team specified");
       return this.getTeams()
         .then(teams => {
           copy.team = teams.filter(team => team.racers.filter(racer => text.racer && racer.id == text.racer.id).length)[0];
-  //        console.log('with team', copy);
           return Promise.resolve(copy);
         })
         .catch(err => {
@@ -310,7 +281,6 @@ class MongoDbFacade implements DbFacadeInterface {
   private populateText(text: DbFormText): Promise<FullFormText> {
     return this.addRacerToText(text)
       .then(textWithRacer => this.addTeamToText(textWithRacer))
-//      .then(populatedText => {console.log('populated text', populatedText); return populatedText})
   }
 
   getTexts(): Promise<Text[]>{
@@ -383,7 +353,6 @@ class MongoDbFacade implements DbFacadeInterface {
           return Promise.reject(`No user with username: ${username}`);
         }
         let user = User.fromJSON(docs[0]);
-        console.log('mongo-db got user', user);
         return Promise.resolve(user);
       });
   }
@@ -409,14 +378,3 @@ class MongoDbFacade implements DbFacadeInterface {
       });
   }
 }
-
-
-
-
-//================================================================
-//================================================================
-
-
-//================================================================
-
-

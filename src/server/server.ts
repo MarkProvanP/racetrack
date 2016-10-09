@@ -2,6 +2,9 @@
 import * as express from "express";
 var app = express();
 
+import * as winston from "winston";
+winston.add(winston.transports.File, { filename: 'logfile.log' })
+
 var http = require('http').Server(app);
 
 var io = require('socket.io')(http);
@@ -50,7 +53,7 @@ import { setup } from './db/mongo-db-facade';
 //let db_facade : DbFacadeInterface = new InMemoryDbFacade();
 setup(config.db_url)
   .then(db_facade => {
-    console.log('db_facade available');
+    winston.info('MongoDB now ready for use');
 
     let authRouter = AuthWithDbFacade(db_facade);
     app.use('/auth', authRouter);
@@ -72,18 +75,19 @@ setup(config.db_url)
     app.use("/updates", updatesRouter);
 
     http.listen(PORT, function() {
-      console.log('app listening on port:', PORT);
+      winston.info(`App now listening on port: ${PORT}`);
     });
 
     app.post('/twiml', function(req, res) {
       if (twilio.validateExpressRequest(req, config.authToken, {url: config.twilioSMSWebHook})) {
         let text = req.body;
-        console.log('received text from twilio', text);
+        winston.verbose(`Received text from Twilio`, {text});
         handleTextMessage(db_facade, text);
         let response = new twilio.TwimlResponse();
         response.message("Working");
         res.send(response.toString());
       } else {
+        winston.warn('Invalid Twilio request received!');
         res.status(403).send("Error, you're not twilio!");
       }
     });
@@ -94,12 +98,11 @@ setup(config.db_url)
 function handleTextMessage(db_facade, twilioText: TwilioInboundText) {
   db_facade.createFromInboundText(twilioText)
     .then(text => {
-      console.log('successfully added', text, 'to db');
       let newMessage = new TextReceivedMessage(text)
       sendMessageToWebClients(newMessage);
     })
     .catch(err => {
-      console.error('error adding', twilioText, 'to db: ', err);
+      winston.error('Could not add inbound Twilio text to database!', {text: twilioText, err: err});
     });
 }
 
@@ -112,32 +115,14 @@ function sendMessageToWebClients(message: TextReceivedMessage) {
 let webClients = [];
 
 io.on('connection', function(socket) {
-  console.log('Web client connected');
+  winston.verbose('Socket.io connection from web client started');
   webClients.push(socket);
 
   socket.on('disconnect', function() {
-    console.log('Web client disconnecting');
+    winston.verbose('Socket.io connection from web client ended');
     let index = webClients.indexOf(socket);
     if (index > -1) {
       webClients.splice(index, 1);
     }
-  });
-
-  socket.on('sendMessage', function(msg) {
-    console.log('sendMessage');
-    var msgObj = JSON.parse(msg);
-    console.log(msgObj);
-    twilioClient.messages.create({
-      body: msgObj.message,
-      to: msgObj.to,
-      from: config.sendingNo
-    }, function(err, data) {
-      if (err) {
-        console.log('error!');
-        console.log(err);
-      } else {
-        console.log('success');
-      }
-    })
   });
 });

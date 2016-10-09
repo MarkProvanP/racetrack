@@ -3,6 +3,7 @@ import * as passport from "passport";
 import * as localStrategy from "passport-local";
 let LocalStrategy = localStrategy.Strategy;
 
+import * as winston from "winston";
 let router = express.Router();
 
 import { PhoneNumber } from '../common/text';
@@ -42,13 +43,11 @@ export class User {
   }
 
   copyWithoutPassword(): UserWithoutPassword {
-    console.log('copyWithoutPassword', this);
     let copy = {} as UserWithoutPassword;
     copy.username = this.username;
     copy.name = this.name;
     copy.email = this.email;
     copy.phone = this.phone;
-    console.log('copy is', copy);
     return copy;
   }
 
@@ -82,7 +81,6 @@ export function AuthWithDbFacade(db_facade) {
             return done(`already have user with username: ${username}`);
           } else {
             let properties = req.body;
-            console.log(`creating user with username: ${username}, password: ${password}, properties: ${properties}`);
             return db_facade.addUser(username, password, properties)
           }
         })
@@ -90,7 +88,7 @@ export function AuthWithDbFacade(db_facade) {
           return done(null, user);
         })
         .catch(err => {
-          console.log('local-register error', err);
+          winston.info('Error registering user', {err});
           return done(err);
         })
     }));
@@ -109,48 +107,45 @@ export function AuthWithDbFacade(db_facade) {
   }
 
   passport.serializeUser((user, done) => {
-    console.log('serialising user', user);
     done(null, user.username);
   });
 
   passport.deserializeUser((username, done) => {
-    console.log('deserialising user', username);
     getPublicUser(username)
       .then(user => done(null, user));
   });
 
   router.post('/api/login', passport.authenticate('local'), (req, res) => {
-    console.log('logging in user', req.user);
+    winston.verbose('/api/login request');
     db_facade.getUser(req.user.username)
       .then(user => {
         res.json(user.copyWithoutPassword())
       })
       .catch(err => {
+        winston.error('/api/login error!', {err});
         res.status(500);
         res.json({error: err})
       })
   });
 
   router.post('/api/register', passport.authenticate('local-register'), (req, res) => {
-    console.log('registering user', req.user);
+    winston.verbose('/api/register request');
     db_facade.getUser(req.user.username)
       .then(user => {
-        console.log('got user', user);
         let withoutPassword = user.copyWithoutPassword();
-        console.log('without password', withoutPassword);
         res.json(user.copyWithoutPassword());
-        console.log('sent response');
       })
       .catch(err => {
-        console.log('error!', err);
+        winston.error('/api/login error!', {err});
         res.status(500).send(err);
       });
   });
 
   router.get('/api/logout', isLoggedIn, (req, res) => {
+    winston.verbose('/api/logout request');
     req.session.destroy(err => {
       if (err) {
-        console.log('logout error!', err);                    
+        res.status(500);
         res.json({status: 'error'});
       }
       res.json({status: 'logged out'});
@@ -158,87 +153,8 @@ export function AuthWithDbFacade(db_facade) {
   });
 
   router.get('/api/authenticated', isLoggedIn, (req, res) => {
+    winston.verbose('/api/authenticated request');
     res.json({authenticated: true});
-  });
-
-  router.get('/login', (req, res) => {
-    let html = `
-    <!DOCTYPE html>
-    <head><title>Login</title></head>
-    <body>
-      <h1>Login</h1>
-      <form method='post'>
-        <label>Username<input name='username' type='text' required></label>
-        <label>Password<input name='password' type='password' required></label>
-        <button type='submit'>Login</button>
-        <a href='/r2bcknd/auth/register'>Register</a>
-      </form>
-    </body>
-    </html>
-    `;
-    res.type('text/html');
-    res.send(html);
-  });
-  router.post('/login', passport.authenticate('local'),
-    (req, res) => {
-      res.redirect('/r2bcknd/auth/done');
-    });
-
-
-  router.post('/register', passport.authenticate('local-register', {
-    successRedirect: '/r2bcknd/auth/done',
-    failureRedirect: '/r2bcknd/auth/register'
-  }));
-
-  router.get('/register', (req, res) => {
-    let html = `
-    <!DOCTYPE html>
-    <head><title>Register</title></head>
-    <body>
-      <h1>Register</h1>
-      <form method='post'>
-        <label>Username<input name='username' type='text' required></label>
-        <label>Password<input name='password' type='password' required></label>
-        <button type='submit'>Register</button>
-      </form>
-    </body>
-    </html>
-    `;
-    res.type('text/html');
-    res.send(html);
-  });
-
-
-
-  router.get('/logout', isLoggedIn, (req, res) => {
-    req.session.destroy(err => {
-      let html = `
-      <!DOCTYPE html>
-      <head><title>Logged out!</title></head>
-      <body>
-        <h1>Logged out!</h1>
-      </body>
-      </html>
-      `;
-      res.type('text/html');
-      res.send(html);
-    });
-  });
-
-
-
-  router.get('/done', isLoggedIn, (req, res) => {
-    let html = `
-    <!DOCTYPE html>
-    <head><title>Done!</title></head>
-    <body>
-      <h1>Private data!</h1>
-      <a href='/r2bcknd/auth/logout'>Log Out</a>
-    </body>
-    </html>
-    `;
-    res.type('text/html');
-    res.send(html);
   });
 
   return router;

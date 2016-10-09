@@ -1,11 +1,12 @@
 import * as express from "express";
 import { DbFacadeInterface } from "../db/db-facade";
+import * as winston from "winston";
 
 export default function updatesRouterWithDb(db_facade: DbFacadeInterface) {
 let updatesRouter = express.Router();
 
   updatesRouter.use(function(req, res, next) {
-    console.log("Updates request");
+    winston.verbose("Updates request");
     next();
   });
 
@@ -27,13 +28,9 @@ let updatesRouter = express.Router();
   });
 
   updatesRouter.post('/', (req, res) => {
-    console.log('creating status update');
-    console.log('req body', req.body);
     let newUpdateProperties = req.body;
-    console.log(newUpdateProperties);
     db_facade.createStatusUpdate(newUpdateProperties)
       .then(update => {
-        console.log(update);
         res.type("application/json");
         res.send(JSON.stringify(update));
       });
