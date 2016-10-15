@@ -1,16 +1,20 @@
 <md-content>
-  <md-toolbar class='toolbar' [ngClass]='toolbarClass()'>
-      <span>{{ name }}</span>
-      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./user/login'] " routerLinkActive='active'>
+  <md-toolbar class='toolbar not-logged-in' [ngClass]='toolbarClass()' *ngIf='!loggedIn()'>
+      <a md-button [routerLink]=" ['/'] ">{{ name }}</a>
+      <span class='fill'></span>
+      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./login'] " routerLinkActive='active'>
         Login
       </a>
-      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./user/register'] " routerLinkActive='active'>
+      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./register'] " routerLinkActive='active'>
         Register 
       </a>
-      <a *ngIf='loggedIn()' md-button [routerLink]=" ['./user/me'] " routerLinkActive='active'>
+  </md-toolbar>
+  <md-toolbar class='toolbar logged-in' [ngClass]='toolbarClass()' *ngIf='loggedIn()'>
+      <a md-button [routerLink]=" ['/'] ">{{ name }}</a>
+      <a *ngIf='loggedIn()' md-button [routerLink]=" ['./safetyteam/user/me'] " routerLinkActive='active'>
         {{getUsername()}}
       </a>
-      <a *ngIf='loggedIn()' md-button [routerLink]=" ['./user/logout'] " routerLinkActive='active'>
+      <a *ngIf='loggedIn()' md-button [routerLink]=" ['./safetyteam/user/logout'] " routerLinkActive='active'>
         Log out
       </a>
       <span class="fill">
@@ -20,19 +24,19 @@
           </a>
         </div>
       </span>
-      <a md-button [routerLink]=" ['./texts'] " routerLinkActive='active'>
+      <a md-button [routerLink]=" ['./safetyteam/texts'] " routerLinkActive='active'>
         Texts
       </a>
-      <a md-button [routerLink]=" ['./map'] " routerLinkActive='active'>
+      <a md-button [routerLink]=" ['./safetyteam/map'] " routerLinkActive='active'>
         Map
       </a>
-      <a md-button [routerLink]=" ['./dashboard'] " routerLinkActive='active'>
+      <a md-button [routerLink]=" ['./safetyteam/dashboard'] " routerLinkActive='active'>
         Dashboard
       </a>
-      <a md-button [routerLink]=" ['./racers'] " routerLinkActive='active'>
+      <a md-button [routerLink]=" ['./safetyteam/racers'] " routerLinkActive='active'>
         Racers
       </a>
-      <a md-button [routerLink]=" ['./teams'] " routerLinkActive='active'>
+      <a md-button [routerLink]=" ['./safetyteam/teams'] " routerLinkActive='active'>
         Teams
       </a>
   </md-toolbar>

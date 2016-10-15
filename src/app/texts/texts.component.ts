@@ -27,12 +27,12 @@ export class TextsComponent {
 
   goToTabIndex() {
     let split = this.router.url.split("/");
-    let tab = split[2];
+    let tab = split[3];
     return this.tabs.indexOf(tab);
   }
 
   onSelectChange(event) {
     let selection = this.tabs[event.index];
-    this.router.navigate(['/texts', selection]);
+    this.router.navigate(['/safetyteam', 'texts', selection]);
   }
 }

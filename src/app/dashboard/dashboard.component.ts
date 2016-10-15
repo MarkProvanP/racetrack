@@ -43,6 +43,6 @@ export class DashboardComponent implements OnInit {
   }
 
   goToTeamTexts(team: Team) {
-    this.router.navigate(['/texts', 'by-team', team.id]);
+    this.router.navigate(['/safetyteam', 'texts', 'by-team', team.id]);
   }
 }

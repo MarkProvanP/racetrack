@@ -34,7 +34,7 @@ export class RacerTextsComponent implements OnInit {
   ) {};
 
   routeToRacer(racer: Racer) {
-    this.router.navigate(['/texts', 'by-racer', racer.id]);
+    this.router.navigate(['/safetyteam', 'texts', 'by-racer', racer.id]);
   }
 
   getRacers() {

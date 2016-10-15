@@ -34,7 +34,7 @@ export class TeamTextsComponent implements OnInit {
   ) {};
 
   routeToTeam(team: Team) {
-    this.router.navigate(['/texts', 'by-team', team.id]);
+    this.router.navigate(['/safetyteam', 'texts', 'by-team', team.id]);
   }
 
   getTeams() {

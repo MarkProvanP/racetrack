@@ -31,14 +31,14 @@ export class RacersComponent implements OnInit {
   }
 
   onSelect(racer: Racer): void {
-    this.router.navigate(['/racers', racer.id]);
+    this.router.navigate(['/safetyteam', 'racers', racer.id]);
   }
 
   createRacer() {
     this.dataService.createRacer({})
       .then(racer => {
         this.getRacers();
-        this.router.navigate(['/racers', racer.id, 'edit']);
+        this.router.navigate(['/safetyteam', 'racers', racer.id, 'edit']);
       });
   }
 }

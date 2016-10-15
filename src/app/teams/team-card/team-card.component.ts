@@ -59,13 +59,13 @@ export class TeamCardComponent implements OnInit, OnDestroy {
   }
 
   editTeam() {
-    this.router.navigate(['/teams', this.team.id, 'edit']);
+    this.router.navigate(['/safetyteam', 'teams', this.team.id, 'edit']);
   }
 
   saveTeam() {
     this.dataService.updateTeam(this.team)
       .then(team =>  {
-        this.router.navigate(['/teams', team.id]);
+        this.router.navigate(['/safetyteam', 'teams', team.id]);
       });
   }
 
@@ -120,6 +120,6 @@ export class TeamCardComponent implements OnInit, OnDestroy {
   }
 
   goToTeamTexts(team: Team) {
-    this.router.navigate(['/texts', 'by-team', team.id]);
+    this.router.navigate(['/safetyteam', 'texts', 'by-team', team.id]);
   }
 }

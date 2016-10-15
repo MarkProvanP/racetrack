@@ -21,33 +21,13 @@ export class TeamsComponent implements OnInit {
     private router: Router) { }
 
   onSelect(team: Team) {
-    this.router.navigate(['/teams', team.id]);
+    this.router.navigate(['/safetyteam', 'teams', team.id]);
   }
 
   getTeams(): void {
     this.dataService
         .getTeams()
         .then(teams => this.teams = teams);
-  }
-
-  add(name: string): void {
-    name = name.trim();
-    if (!name) { return; }
-    let properties = {name: name};
-    this.dataService.createTeam(properties)
-      .then(team => {
-        this.teams.push(team);
-        this.router.navigate(['/team']);
-      });
-  }
-
-  delete(team: Team): void {
-    this.dataService
-        .deleteTeam(team.id)
-        .then(() => {
-          this.teams = this.teams.filter(h => h !== team);
-          if (this.router.url.split("/").pop() == team.id) { this.router.navigate(['/team']) }
-        });
   }
 
   ngOnInit(): void {
@@ -58,7 +38,7 @@ export class TeamsComponent implements OnInit {
     this.dataService.createTeam({})
       .then(team => {
         this.getTeams();
-        this.router.navigate(['/teams', team.id, 'edit']);
+        this.router.navigate(['/safetyteam', 'teams', team.id, 'edit']);
       })
   }
 }

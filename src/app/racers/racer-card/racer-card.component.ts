@@ -41,23 +41,23 @@ export class RacerCardComponent implements OnInit, OnDestroy {
   }
 
   enterEditMode() {
-    this.router.navigate(['/racers', this.racer.id, 'edit']);
+    this.router.navigate(['/safetyteam', 'racers', this.racer.id, 'edit']);
   }
 
   exitEditMode() {
     this.dataService.updateRacer(this.racer)
       .then(racer =>  {
-        this.router.navigate(['/racers', racer.id]);
+        this.router.navigate(['/safetyteam', 'racers', racer.id]);
       });
   }
 
   deleteRacer() {
     this.dataService.deleteRacer(this.racer.id);
-    this.router.navigate(['/racers']);
+    this.router.navigate(['/safetyteam', 'racers']);
   }
 
   goToRacerTexts(racer: Racer) {
-    this.router.navigate(['/texts', 'by-racer', racer.id]);
+    this.router.navigate(['/safetyteam', 'texts', 'by-racer', racer.id]);
   }
 
   addNumberToRacer() {
