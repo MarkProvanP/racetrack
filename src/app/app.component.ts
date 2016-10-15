@@ -43,6 +43,7 @@ export class App {
     this.textService.addTextReceivedCallback(text => this.onTextReceived(text));
     this.textService.addTextsChangedCallback(texts => this.onTextsChanged());
     this.setTitle();
+    this.userService.authenticate();
   }
 
   getUnreadTextsNotification() {

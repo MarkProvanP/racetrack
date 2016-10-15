@@ -169,7 +169,20 @@ export function AuthWithDbFacade(db_facade) {
 
   router.get('/api/authenticated', isLoggedIn, (req, res) => {
     winston.log('info', '/api/authenticated request');
-    res.json({authenticated: true});
+    db_facade.getUser(req.user.username)
+      .then(user => {
+        res.json(user.copyWithoutPassword())
+      })
+      .catch(err => {
+        winston.log('error','/api/authenticated error!', {err});
+        if (err instanceof NoSuchUserError) {
+          res.status(NO_USER_ERROR_CODE);
+          res.send();
+        } else {
+          res.status(500);
+          res.json({error: err})
+        }
+      })
   });
 
   return router;

@@ -30,13 +30,15 @@ export class UserService {
 
   authenticate(): Promise<any> {
     return this.http
-      .get(this.authenticatedUrl, {headers: this.headers, withCredentials: true})
+      .get(this.authenticatedUrl, {headers: this.headers, withCredentials: true, body: ''})
       .toPromise()
       .then(response => {
-        this.authenticated = response.json().authenticated;
+        console.log('authenticated!');
+        this.setUser(response.json());
         return this.authenticated;
       })
       .catch(err => {
+        console.log('not authenticated', err);
         this.authenticated = false;
         return this.authenticated;
       })
