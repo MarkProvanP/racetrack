@@ -7,12 +7,12 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
   let racersRouter = express.Router();
 
   racersRouter.use(function(req, res, next) {
-    winston.verbose('Racers request');
+    winston.log('verbose', 'Racers request');
     next();
   });
 
   racersRouter.get('/', function(req, res) {
-    winston.verbose('GET /racers'); 
+    winston.log('verbose', 'GET /racers'); 
     db_facade.getRacers()
       .then(racers => {
         res.type('application/json');
@@ -30,7 +30,7 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
   });
 
   racersRouter.post('/', function(req, res) {
-    winston.verbose('POST /racers')
+    winston.log('verbose', 'POST /racers')
     let body = req.body;
     db_facade.createRacer(body)
       .then(newRacer => {
@@ -40,9 +40,9 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
   })
 
   racersRouter.put('/:id', function(req, res) {
-    winston.verbose('PUT /racers')
+    winston.log('verbose', 'PUT /racers')
     let body = req.body;
-    winston.verbose(body);
+    winston.log('verbose', body);
     let newDetailsRacer = Racer.fromJSON(body);
 
     db_facade.updateRacer(req.params.id, newDetailsRacer)
@@ -53,7 +53,7 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
   })
 
   racersRouter.delete('/:id', function(req, res) {
-    winston.verbose('DELETE /racers');
+    winston.log('verbose', 'DELETE /racers');
     let body = req.body;
     let deletedRacerId = req.params.id;
 

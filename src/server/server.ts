@@ -81,7 +81,7 @@ setup(config.db_url)
     app.post('/twiml', function(req, res) {
       if (twilio.validateExpressRequest(req, config.authToken, {url: config.twilioSMSWebHook})) {
         let text = req.body;
-        winston.verbose(`Received text from Twilio`, {text});
+        winston.log('verbose', `Received text from Twilio`, {text});
         handleTextMessage(db_facade, text);
         let response = new twilio.TwimlResponse();
         response.message("Working");
@@ -115,11 +115,11 @@ function sendMessageToWebClients(message: TextReceivedMessage) {
 let webClients = [];
 
 io.on('connection', function(socket) {
-  winston.verbose('Socket.io connection from web client started');
+  winston.log('verbose', 'Socket.io connection from web client started');
   webClients.push(socket);
 
   socket.on('disconnect', function() {
-    winston.verbose('Socket.io connection from web client ended');
+    winston.log('verbose', 'Socket.io connection from web client ended');
     let index = webClients.indexOf(socket);
     if (index > -1) {
       webClients.splice(index, 1);

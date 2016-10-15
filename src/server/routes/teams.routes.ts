@@ -7,7 +7,7 @@ export default function teamsRouterWithDb(db_facade: DbFacadeInterface) {
   let teamsRouter = express.Router();
 
   teamsRouter.use(function(req, res, next) {
-    winston.verbose('Teams request');
+    winston.log('verbose', 'Teams request');
     next();
   });
 

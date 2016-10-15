@@ -19,6 +19,8 @@ export interface UserWithoutPassword {
   phone: PhoneNumber;
 }
 
+const NO_USER_ERROR_CODE = 402;
+
 export class User {
   username: string;
   password: string;
@@ -60,17 +62,21 @@ export class User {
 
 export function AuthWithDbFacade(db_facade) {
   passport.use(new LocalStrategy((username, password, done) => {
+    winston.log('info', `username: ${username} attempting login`);
     db_facade.getUser(username)
       .then(user => {
+        winston.log('info', `username: ${username} exists`);
         if (!user.validPassword(password)) {
-          return done(null, false, { message: 'incorrect password' });
+          winston.log('info', `username: ${username} provided incorrect password!`);
+          return done(null, false, { message: 'Incorrect password' });
         }
+        winston.log('info', `username: ${username} successfully logged in`)
         return done(null, user);
       })
       .catch(err => {
         if (err instanceof NoSuchUserError) {
-          console.log('no such user!', username);
-          return done(err);
+          winston.log('info', `username: ${username} does not exist!`);
+          return done(null, false, { message: 'Invalid username' });
         } else {
           winston.log('error','Error getting user!');
         }
@@ -120,7 +126,7 @@ export function AuthWithDbFacade(db_facade) {
   });
 
   router.post('/api/login', passport.authenticate('local'), (req, res) => {
-    winston.log('verbose', '/api/login request');
+    winston.log('info', '/api/login request');
     db_facade.getUser(req.user.username)
       .then(user => {
         res.json(user.copyWithoutPassword())
@@ -138,7 +144,7 @@ export function AuthWithDbFacade(db_facade) {
   });
 
   router.post('/api/register', passport.authenticate('local-register'), (req, res) => {
-    winston.log('verbose', '/api/register request');
+    winston.log('info', '/api/register request');
     db_facade.getUser(req.user.username)
       .then(user => {
         let withoutPassword = user.copyWithoutPassword();
@@ -151,7 +157,7 @@ export function AuthWithDbFacade(db_facade) {
   });
 
   router.get('/api/logout', isLoggedIn, (req, res) => {
-    winston.log('verbose', '/api/logout request');
+    winston.log('info', '/api/logout request');
     req.session.destroy(err => {
       if (err) {
         res.status(500);
@@ -162,7 +168,7 @@ export function AuthWithDbFacade(db_facade) {
   });
 
   router.get('/api/authenticated', isLoggedIn, (req, res) => {
-    winston.log('verbose', '/api/authenticated request');
+    winston.log('info', '/api/authenticated request');
     res.json({authenticated: true});
   });
 

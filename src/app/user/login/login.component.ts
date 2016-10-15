@@ -14,6 +14,7 @@ export class LoginComponent {
   username: FormControl;
   password: FormControl;
   form: FormGroup;
+  loginError: boolean;
 
   constructor(private userService: UserService, private router: Router) {
 
@@ -32,10 +33,15 @@ export class LoginComponent {
   onSubmit() {
     this.userService.login(this.form.value)
       .then(data => {
+        this.loginError = false;
         this.router.navigate(['/']);
       })
       .catch(err => {
-        console.log(err);
+        this.loginError = true;
       });
+  }
+
+  getLoginErrorMessage() {
+    return "Invalid credentials! Try again!";
   }
 }

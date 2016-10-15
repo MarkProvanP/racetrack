@@ -7,6 +7,7 @@
       <form [formGroup]='form' (ngSubmit)='onSubmit()' #loginForm='ngForm' class='form'>
         <md-input formControlName='username' required placeholder='Username'></md-input>
         <md-input formControlName='password' required placeholder='Password' type='password'></md-input>
+        <p *ngIf='loginError' class='login-error'>{{getLoginErrorMessage()}}</p>
         <button md-raised-button color='primary' type='submit'>Login</button>
       </form>
     </md-card-content>

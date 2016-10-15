@@ -6,7 +6,7 @@ export default function updatesRouterWithDb(db_facade: DbFacadeInterface) {
 let updatesRouter = express.Router();
 
   updatesRouter.use(function(req, res, next) {
-    winston.verbose("Updates request");
+    winston.log('verbose', "Updates request");
     next();
   });
 
