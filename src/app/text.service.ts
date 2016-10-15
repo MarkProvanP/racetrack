@@ -47,6 +47,15 @@ export class TextService {
   private baseUrl = this.backendHost + "/r2bcknd/";
   private textsUrl = this.baseUrl + "texts";
 
+  private httpNoBodyExtras = {
+    headers: this.headers,
+    withCredentials: true,
+    body: ''
+  };
+  private httpExtras = {
+    headers: this.headers,
+    withCredentials: true
+  }
   private socket;
 
   private texts: Text[] = [];
@@ -102,7 +111,7 @@ export class TextService {
   }
 
   private getAllTextsFromBackend(): Promise<Text[]> {
-    return this.http.get(this.textsUrl)
+    return this.http.get(this.textsUrl, this.httpNoBodyExtras)
       .toPromise()
       .then(response => response.json()
             .map(text => Text.fromJSON(text)))
@@ -127,7 +136,7 @@ export class TextService {
   private writeTextToBackend(text: Text): Promise<Text> {
     const url = `${this.textsUrl}/${text.id}`;
     return this.http
-      .put(url, JSON.stringify(text), {headers: this.headers})
+      .put(url, JSON.stringify(text), this.httpExtras)
       .toPromise()
       .then(response => {
         let t = Text.fromJSON(response.json());
@@ -142,7 +151,7 @@ export class TextService {
       message: message
     };
     return this.http
-      .post(this.textsUrl, JSON.stringify(text), {headers: this.headers})
+      .post(this.textsUrl, JSON.stringify(text), this.httpExtras)
       .toPromise()
       .then(response => OutboundText.fromJSON(response.json()))
       .then(text => this.addText(text))

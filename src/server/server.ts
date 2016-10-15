@@ -46,6 +46,7 @@ import teamsRouterWithDb from "./routes/teams.routes";
 import racersRouterWithDb from "./routes/racers.routes";
 import textsRouterWithDb from "./routes/texts.routes";
 import updatesRouterWithDb from "./routes/updates.routes";
+import eventsRouterWithDb from "./routes/events.routes";
 
 import { DbFacadeInterface } from './db/db-facade';
 import { InMemoryDbFacade } from './db/in-memory-db-facade';
@@ -73,6 +74,9 @@ setup(config.db_url)
 
     let updatesRouter = updatesRouterWithDb(db_facade);
     app.use("/updates", updatesRouter);
+
+    let eventsRouter = eventsRouterWithDb(db_facade);
+    app.use('/events', eventsRouter);
 
     http.listen(PORT, function() {
       winston.info(`App now listening on port: ${PORT}`);

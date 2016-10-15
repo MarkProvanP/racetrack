@@ -5,6 +5,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 import { TextService, TextFilterOptions } from './text.service';
 import { UserService } from './user.service';
+import { DataService } from './data.service';
 
 /*
  * App Component
@@ -28,7 +29,8 @@ export class App {
   constructor(
     private textService: TextService,
     private titleService: Title,
-    private userService: UserService
+    private userService: UserService,
+    private dataService: DataService
   ) {}
 
   toolbarClass() {

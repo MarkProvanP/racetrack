@@ -7,7 +7,12 @@ let updatesRouter = express.Router();
 
   updatesRouter.use(function(req, res, next) {
     winston.log('verbose', "Updates request");
-    next();
+    if (req.isAuthenticated()) {
+      next();
+    } else {
+      res.status(401);
+      res.send();
+    }
   });
 
   updatesRouter.get('/', function(req, res) {

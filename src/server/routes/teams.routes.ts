@@ -8,7 +8,12 @@ export default function teamsRouterWithDb(db_facade: DbFacadeInterface) {
 
   teamsRouter.use(function(req, res, next) {
     winston.log('verbose', 'Teams request');
-    next();
+    if (req.isAuthenticated()) {
+      next();
+    } else {
+      res.status(401);
+      res.send();
+    }
   });
 
   teamsRouter.get('/', function(req, res) {

@@ -12,17 +12,27 @@ import { PhoneNumber } from '../common/text';
 export class DataService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
+  private httpNoBodyExtras = {
+    headers: this.headers,
+    withCredentials: true,
+    body: ''
+  };
+  private httpExtras = {
+    headers: this.headers,
+    withCredentials: true
+  }
   private backendHost = "";
   private baseUrl = this.backendHost + "/r2bcknd/";
   private teamsUrl = this.baseUrl + 'teams';  // URL to web api
   private racersUrl = this.baseUrl + 'racers';
   private updatesUrl = this.baseUrl + "updates";
+  private eventsUrl = this.baseUrl + "events";
 
   constructor(private http: Http) {
   }
 
   getTeams(): Promise<Team[]> {
-    return this.http.get(this.teamsUrl)
+    return this.http.get(this.teamsUrl, this.httpNoBodyExtras)
                .toPromise()
                .then(response => response.json().map(Team.fromJSON))
                .catch(this.handleError);
@@ -30,7 +40,7 @@ export class DataService {
 
   getTeam(id: TeamId): Promise<Team> {
     let url = `${this.teamsUrl}/${id}`;
-    return this.http.get(url)
+    return this.http.get(url, this.httpNoBodyExtras)
       .toPromise()
       .then(response => Team.fromJSON(response.json()))
       .catch(this.handleError);
@@ -38,7 +48,7 @@ export class DataService {
 
   deleteTeam(id: TeamId): Promise<void> {
     let url = `${this.teamsUrl}/${id}`;
-    return this.http.delete(url, {body: "", headers: this.headers})
+    return this.http.delete(url, this.httpNoBodyExtras)
       .toPromise()
       .then(() => null)
       .catch(this.handleError);
@@ -46,7 +56,7 @@ export class DataService {
 
   createTeam(properties): Promise<Team> {
     return this.http
-      .post(this.teamsUrl, JSON.stringify(properties), {headers: this.headers})
+      .post(this.teamsUrl, JSON.stringify(properties), this.httpExtras)
       .toPromise()
       .then(res => Team.fromJSON(res.json()))
       .catch(this.handleError);
@@ -55,7 +65,7 @@ export class DataService {
   updateTeam(team: Team): Promise<Team> {
     const url = `${this.teamsUrl}/${team.id}`;
     return this.http
-      .put(url, JSON.stringify(team), {headers: this.headers})
+      .put(url, JSON.stringify(team), this.httpExtras)
       .toPromise()
       .then(response => {
         let t = Team.fromJSON(response.json())
@@ -65,7 +75,7 @@ export class DataService {
   }
 
   getRacers(): Promise<Racer[]> {
-    return this.http.get(this.racersUrl)
+    return this.http.get(this.racersUrl, this.httpNoBodyExtras)
                .toPromise()
                .then(response => response.json().map(Racer.fromJSON))
                .catch(this.handleError);
@@ -73,7 +83,7 @@ export class DataService {
 
   getRacer(id: RacerId): Promise<Racer> {
     let url = `${this.racersUrl}/${id}`;
-    return this.http.get(url)
+    return this.http.get(url, this.httpNoBodyExtras)
       .toPromise()
       .then(response => Racer.fromJSON(response.json()))
       .catch(this.handleError)
@@ -81,7 +91,7 @@ export class DataService {
 
   deleteRacer(id: RacerId): Promise<void> {
     let url = `${this.racersUrl}/${id}`;
-    return this.http.delete(url, {body: "", headers: this.headers})
+    return this.http.delete(url, this.httpNoBodyExtras)
       .toPromise()
       .then(() => null)
       .catch(this.handleError);
@@ -89,7 +99,7 @@ export class DataService {
 
   createRacer(properties): Promise<Racer> {
     return this.http
-      .post(this.racersUrl, JSON.stringify(properties), {headers: this.headers})
+      .post(this.racersUrl, JSON.stringify(properties), this.httpExtras)
       .toPromise()
       .then(res => Racer.fromJSON(res.json()))
       .catch(this.handleError);
@@ -98,7 +108,7 @@ export class DataService {
   updateRacer(racer: Racer): Promise<Racer> {
     const url = `${this.racersUrl}/${racer.id}`;
     return this.http
-      .put(url, JSON.stringify(racer), {headers: this.headers})
+      .put(url, JSON.stringify(racer), this.httpExtras)
       .toPromise()
       .then(response => {
         let r = Racer.fromJSON(response.json())
@@ -108,7 +118,7 @@ export class DataService {
   }
 
   createStatusUpdateForTeam(statusObj, team: Team): Promise<Team> {
-    return this.http.post(this.updatesUrl, JSON.stringify(statusObj), {headers: this.headers})
+    return this.http.post(this.updatesUrl, JSON.stringify(statusObj), this.httpExtras)
       .toPromise()
       .then(response => {
         let statusUpdate = TeamUpdate.fromJSON(response.json());

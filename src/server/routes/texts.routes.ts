@@ -7,7 +7,12 @@ export default function textsRouterWithDb(db_facade: DbFacadeInterface, twilio) 
   let textsRouter = express.Router();
 
   textsRouter.use(function(req, res, next) {
-    next();
+    if (req.isAuthenticated()) {
+      next();
+    } else {
+      res.status(401);
+      res.send();
+    }
   });
 
   textsRouter.get('/', function(req, res) {

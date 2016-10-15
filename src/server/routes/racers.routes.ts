@@ -8,7 +8,12 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
 
   racersRouter.use(function(req, res, next) {
     winston.log('verbose', 'Racers request');
-    next();
+    if (req.isAuthenticated()) {
+      next();
+    } else {
+      res.status(401);
+      res.send();
+    }
   });
 
   racersRouter.get('/', function(req, res) {
