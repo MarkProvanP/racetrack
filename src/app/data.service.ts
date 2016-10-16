@@ -7,6 +7,7 @@ import { Team, TeamId } from '../common/team';
 import { Racer, RacerId } from '../common/racer';
 import { TeamUpdate } from '../common/update';
 import { PhoneNumber } from '../common/text';
+import { UserService } from './user.service';
 
 @Injectable()
 export class DataService {
@@ -28,7 +29,25 @@ export class DataService {
   private updatesUrl = this.baseUrl + "updates";
   private eventsUrl = this.baseUrl + "events";
 
-  constructor(private http: Http) {
+  constructor(
+    private http: Http,
+    private userService: UserService
+  ) {
+    this.userService.addOnAuthStatusChangedListener(authenticated => {
+      if (authenticated) {
+        this.whenAuthenticated();
+      } else {
+        this.notAuthenticated();
+      }
+    });
+  }
+
+  private whenAuthenticated() {
+
+  }
+
+  private notAuthenticated() {
+
   }
 
   getTeams(): Promise<Team[]> {

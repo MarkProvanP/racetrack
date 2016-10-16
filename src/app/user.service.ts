@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
@@ -17,19 +17,39 @@ export class UserService {
   private authenticated: boolean = false;
   private user;
 
+  private authenticatedStatusListeners = [];
+
   constructor(private http: Http) {
     this.authenticate()
-      .then(val => {console.log('auth status:', val)});
+      .then(authenticated => {
+        
+      });
   }
 
-  public authStatusChanged: EventEmitter = new EventEmitter();
+  public addOnAuthStatusChangedListener(callback) {
+    this.authenticatedStatusListeners.push(callback);
+    callback(this.authenticated);
+  }
+
+  private broadcastAuthStatus() {
+    this.authenticatedStatusListeners.forEach(listener => listener(this.authenticated));
+  }
 
   private setUser(user): Promise<any> {
+    if (this.authenticated && this.user.username == user.username) {
+      return Promise.resolve(user);
+    }
     this.authenticated = true;
     console.log('setting authenticated to true');
-    this.authStatusChanged.emit(true);
+    this.broadcastAuthStatus();
     this.user = user;
     return Promise.resolve(user);
+  }
+
+  private setNotAuthenticated() {
+    this.authenticated = false;
+    this.user = undefined;
+    this.broadcastAuthStatus();
   }
 
   authenticate(): Promise<any> {
@@ -43,7 +63,7 @@ export class UserService {
       })
       .catch(err => {
         console.log('not authenticated', err);
-        this.authenticated = false;
+        this.setNotAuthenticated();
         return this.authenticated;
       })
   }
@@ -58,7 +78,6 @@ export class UserService {
       .toPromise()
       .catch(this.handleHttpError)
       .then(response => {
-        this.authenticated = true;
         console.log('login response', response);
         return response.json()
       })
@@ -71,8 +90,7 @@ export class UserService {
       .toPromise()
       .catch(this.handleHttpError)
       .then(response => {
-        this.authenticated = false;
-        this.user = undefined
+        this.setNotAuthenticated();
         return response.json()
       })
   }
@@ -84,7 +102,6 @@ export class UserService {
       .toPromise()
       .catch(this.handleHttpError)
       .then(response => {
-        this.authenticated = true;
         console.log('register response', response);
         return response.json()
       })

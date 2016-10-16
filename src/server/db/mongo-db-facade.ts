@@ -24,7 +24,7 @@ export function setup(url): Promise<MongoDbFacade> {
 }
 
 class MongoDbFacade implements DbFacadeInterface {
-  constructor(private db) {
+  constructor(public db) {
     process.stdin.resume();//so the program will not close instantly
     function exitHandler(options, err) {
       if (this.db) {
