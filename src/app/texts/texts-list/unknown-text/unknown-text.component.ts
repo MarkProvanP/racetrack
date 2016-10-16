@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 
 import { DataService } from '../../../data.service';
+import { UserService } from '../../../user.service';
 
-import { Text, ContactNumber } from '../../../../common/text';
+import { Text, ContactNumber, UserActionInfo } from '../../../../common/text';
 import { Racer } from '../../../../common/racer';
 
 @Component({
@@ -29,8 +30,10 @@ export class UnknownTextComponent implements OnInit {
     this.newContact.number = this.text.from;
   }
 
-  constructor(private dataService: DataService) {
-
+  constructor(
+    private dataService: DataService,
+    private userService: UserService
+  ) {
   }
 
   linkUnknownTextToRacer() {
@@ -55,6 +58,12 @@ export class UnknownTextComponent implements OnInit {
   }
 
   markTextAsRead() {
+    let user = this.userService.getUser();
+    let textRead = {
+      timestamp: new Date(),
+      user: user
+    } as UserActionInfo;
+    this.text.readBy = textRead;
     this.onMakeRead.emit(this.text);
   }
 

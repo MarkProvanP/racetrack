@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 
-import { Text } from '../../../../common/text';
+import { Text, UserActionInfo } from '../../../../common/text';
+
+import { UserService } from '../../../user.service';
 
 @Component({
   selector: 'normal-text',
@@ -15,7 +17,17 @@ export class NormalTextComponent {
   @Output() onAddCheckin: EventEmitter = new EventEmitter();
   @Output() onCreateUpdate: EventEmitter = new EventEmitter();
 
+  constructor(private userService: UserService) {
+    
+  }
+
   markTextAsRead() {
+    let user = this.userService.getUser();
+    let textRead = {
+      timestamp: new Date(),
+      user: user
+    } as UserActionInfo;
+    this.text.readBy = textRead;
     this.onMakeRead.emit(this.text);
   }
 

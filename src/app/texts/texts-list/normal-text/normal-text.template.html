@@ -16,13 +16,18 @@
     </md-card-title>
   </md-card-header>
   <md-card-content>
-    {{text.body}}
+    <div class='text-body'>
+      {{text.body}}
+    </div>
   </md-card-content>
+  <div class='text-read'>
+    {{text.getPrettyReadStatus()}}
+  </div>
   <md-card-actions>
     <button md-button (click)='replyToText()'>RESPOND</button>
-    <md-checkbox [(ngModel)]='text.read' (change)='markTextAsRead()'>
-      Read
-    </md-checkbox>
+    <button md-button (click)='markTextAsRead()' [disabled]='text.readBy'>
+      Mark as read
+    </button>
     <button md-button (click)="addCheckIn()">Add Check In</button>
     <button md-button (click)="createUpdate()">Create Team Update</button>
   </md-card-actions>

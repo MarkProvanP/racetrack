@@ -2,6 +2,7 @@ import { Racer, RacerId } from "../../common/racer";
 import { Team, TeamId } from "../../common/team";
 import { TeamUpdate, TeamUpdateId } from "../../common/update";
 import { Text, PhoneNumber, TwilioInboundText, TwilioOutboundText } from "../../common/text";
+import { UserWithoutPassword } from '../auth';
 
 import { User } from '../auth';
 
@@ -21,7 +22,7 @@ export interface DbFacadeInterface {
   deleteTeam(id: TeamId): Promise<any>;
 
   createFromInboundText(text: TwilioInboundText): Promise<Text>;
-  createFromOutboundText(text: TwilioOutboundText): Promise<Text>;
+  createFromOutboundText(text: TwilioOutboundText, user: UserWithoutPassword): Promise<Text>;
   getTexts(): Promise<Text[]>;
   getTextsByNumber(phone: PhoneNumber): Promise<Text[]>;
   updateText(text: Text): Promise<Text>;

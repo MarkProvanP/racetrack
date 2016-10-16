@@ -44,6 +44,7 @@ export default function textsRouterWithDb(db_facade: DbFacadeInterface, twilio) 
   textsRouter.post('/', (req, res) => {
     let newText = req.body;
     let twilioClient = twilio.client;
+    let user = newText.user;
     twilioClient.messages.create({
       body: newText.message,
       to: newText.to,
@@ -53,7 +54,7 @@ export default function textsRouterWithDb(db_facade: DbFacadeInterface, twilio) 
         winston.error('Twilio send text error!', {err});
         res.status(500).send(`Twilio error! : ${err}`);
       } else {
-        db_facade.createFromOutboundText(text)
+        db_facade.createFromOutboundText(text, user)
           .then(createdText => {
             res.json(createdText);
           })

@@ -176,9 +176,11 @@ export class TextService {
   }
 
   sendText(to: PhoneNumber, message: string): Promise<OutboundText> {
+    let user = this.userService.getUser();
     let text = {
       to: to,
-      message: message
+      message: message,
+      user: user
     };
     return this.http
       .post(this.textsUrl, JSON.stringify(text), this.httpExtras)

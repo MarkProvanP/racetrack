@@ -13,6 +13,7 @@ import * as uuid from "node-uuid";
 import * as winston from "winston";
 
 import { NoSuchUserError } from '../../common/error';
+import { UserWithoutPassword } from '../auth';
 
 export function setup(url): Promise<MongoDbFacade> {
 
@@ -195,10 +196,14 @@ class MongoDbFacade implements DbFacadeInterface {
       });
   }
 
-  createFromOutboundText(text: TwilioOutboundText): Promise<Text> {
+  createFromOutboundText(text: TwilioOutboundText, user: UserWithoutPassword): Promise<Text> {
     let collection = this.db.collection('texts');
     let id = uuid.v4();
     let createdText = OutboundText.fromTwilio(id, text);
+    createdText.sentBy = {
+      user: user,
+      timestamp: new Date()
+    }
     let toNumber = createdText.to;
     return this.getRacers()
       .then(racers => {

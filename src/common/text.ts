@@ -9,8 +9,14 @@ export type TextId = string;
 
 import { Racer, RacerId } from './racer';
 import { Team, TeamId } from './team';
+import { UserWithoutPassword } from '../server/auth';
 
 import * as moment from "moment";
+
+export interface UserActionInfo {
+  timestamp: Date,
+  user: UserWithoutPassword
+}
 
 export interface DbFormText {
   text_subclass: string;
@@ -23,7 +29,8 @@ export interface DbFormText {
   team: TeamId;
   twilio: TwilioInboundText | TwilioOutboundText;
   timestamp: Date;
-  read: boolean;
+  readBy?: UserActionInfo;
+  sentBy?: UserActionInfo;
 }
 
 export interface FullFormText {
@@ -37,7 +44,8 @@ export interface FullFormText {
   team: Team;
   twilio: TwilioInboundText | TwilioOutboundText;
   timestamp: Date;
-  read: boolean;
+  readBy?: UserActionInfo;
+  sentBy?: UserActionInfo;
 }
 
 export abstract class Text {
@@ -78,7 +86,7 @@ export class OutboundText extends Text {
   text_subclass: string = 'OutboundText'
 
   twilio: TwilioOutboundText;
-  sentBy: any;
+  sentBy: UserActionInfo;
 
   static fromJSON(obj: FullFormText) {
     let racer = obj.racer ? Racer.fromJSON(obj.racer) : undefined;
@@ -99,6 +107,15 @@ export class OutboundText extends Text {
     return new OutboundText(id, p);
   }
 
+  getPrettySentStatus() {
+    if (this.sentBy) {
+      let name = this.sentBy.user.name;
+      return "Sent by " + name;
+    } else {
+      return "Unknown sent info";
+    }
+  }
+
   constructor(id: TextId, properties) {
     super();
     this.id = id;
@@ -117,7 +134,7 @@ export class InboundText extends Text {
   text_subclass: string = 'InboundText'
 
   twilio: TwilioInboundText;
-  read: boolean;
+  readBy: UserActionInfo;
 
   static fromJSON(obj: FullFormText) {
     let racer = obj.racer ? Racer.fromJSON(obj.racer) : undefined;
@@ -138,6 +155,16 @@ export class InboundText extends Text {
     return new InboundText(id, p);
   }
 
+  getPrettyReadStatus() {
+    if (this.readBy) {
+      let time = moment(this.readBy.timestamp).format('HH:mm ddd, Do MMM');
+      let name = this.readBy.user.name;
+      return "Read by " + name + " at " + time;
+    } else {
+      return "Unknown read status";
+    }
+  }
+
   constructor(id: TextId, properties) {
     super();
     this.id = id;
@@ -146,7 +173,7 @@ export class InboundText extends Text {
     this.from = properties.from;
     this.twilio = properties.twilio;
     this.timestamp = properties.timestamp;
-    this.read = !!properties.read;
+    this.readBy = properties.readBy;
     this.racer = properties.racer;
     this.team = properties.team;
   }

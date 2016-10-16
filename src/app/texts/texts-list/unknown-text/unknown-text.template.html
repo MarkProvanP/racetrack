@@ -65,6 +65,9 @@
   <md-card-content>
     {{text.body}}
   </md-card-content>
+  <div class='text-read'>
+    {{text.getPrettyReadStatus()}}
+  </div>
   <md-card-actions>
     <button md-button (click)='replyToText()'>RESPOND</button>
     <md-checkbox [(ngModel)]='text.read' (change)='markTextAsRead()'>
