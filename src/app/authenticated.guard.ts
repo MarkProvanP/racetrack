@@ -11,8 +11,8 @@ export class AuthenticatedGuard implements CanActivate {
 
   canActivate(): Observable<boolean> {
     return this.userService.authenticatedCheck()
-      .map(result => {
-        if (result.authenticated) {
+      .map(authenticated => {
+        if (authenticated) {
           return true;
         } else {
           this.router.navigate(['/']);

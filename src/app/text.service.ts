@@ -6,6 +6,7 @@ import { Text, PhoneNumber, InboundText, OutboundText } from '../common/text';
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
 import { TextReceivedMessage } from "../common/message";
+import { UserService } from './user.service';
 
 export class TextFilterOptions {
   racer: Racer;
@@ -63,7 +64,10 @@ export class TextService {
   private onTextsChangedReceivers = [];
   private onTextReceivedReceivers = [];
 
-  constructor(private http: Http) {
+  constructor(
+    private http: Http,
+    private userService: UserService
+  ) {
     this.socket = io(this.socketIoHost, {path: '/r2bcknd/socket.io'});
     this.getAllTextsFromBackend()
       .then(texts => {
@@ -77,6 +81,18 @@ export class TextService {
       let text = message.text;
       this.broadcastTextReceived(text);
       this.addText(text);
+    });
+    this.userService.authenticatedCheck().subscribe(authenticated => {
+      console.log('authenticated status changed to', authenticated);
+      if (authenticated) {
+        this.getAllTextsFromBackend()
+          .then(texts => {
+            this.texts = texts
+            this.broadcastTextsChanged();
+          });
+      } else {
+        this.texts = [];
+      }
     });
   }
 

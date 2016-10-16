@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, EventEmitter } from "@angular/core";
 import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
@@ -22,8 +22,12 @@ export class UserService {
       .then(val => {console.log('auth status:', val)});
   }
 
+  public authStatusChanged: EventEmitter = new EventEmitter();
+
   private setUser(user): Promise<any> {
     this.authenticated = true;
+    console.log('setting authenticated to true');
+    this.authStatusChanged.emit(true);
     this.user = user;
     return Promise.resolve(user);
   }
@@ -45,7 +49,7 @@ export class UserService {
   }
 
   authenticatedCheck(): Observable<any> {
-    return Observable.of({authenticated: this.authenticated});
+    return Observable.of(this.authenticated);
   }
 
   login(user): Promise<any> {
