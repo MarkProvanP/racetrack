@@ -26,11 +26,12 @@ export class MapComponent implements OnInit {
     lat: 53.612805,
     lng: 5.301865,
     zoom: 6,
-    iconUrl: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
+    iconUrl: '/assets/icon/favicon-16x16.png'
   }
   hostel = {
     lat: 50.0718908,
-    lng: 14.4462584
+    lng: 14.4462584,
+    iconUrl: 'http://localhost:3000/assets/map-pin/Map_marker-64.png'
   }
 
   whut(team) {
