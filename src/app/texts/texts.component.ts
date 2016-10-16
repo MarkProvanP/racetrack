@@ -26,7 +26,7 @@ export class TextsComponent {
   ) {}
 
   goToTabIndex() {
-    let split = this.router.url.split("/");
+    let split = this.router.url.split(/\/|\;|\?/);
     let tab = split[3];
     return this.tabs.indexOf(tab);
   }

@@ -1,4 +1,5 @@
 import { Component, Input } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
 
 import { Racer } from "../../../common/racer";
 import { Team } from "../../../common/team";
@@ -17,15 +18,19 @@ import { OrderBy } from '../../orderBy.pipe.ts';
   pipes: [OrderBy]
 })
 export class TextsListComponent {
-  @Input() texts: Text[];
+  @Input("texts") allTexts: Text[];
+  filteredTexts: Text[];
   @Input() display;
   inCreateUpdateMode = false;
   inTextSendMode = false;
   selectedText;
+  paramsSub;
 
   constructor(
     private dataService: DataService,
-    private textService: TextService
+    private textService: TextService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {}
 
   markTextAsRead(text: Text) {
@@ -65,5 +70,16 @@ export class TextsListComponent {
   onStatusCreated() {
     this.inCreateUpdateMode = false;
     this.selectedText = undefined;
+  }
+
+  ngOnInit() {
+    this.queryParamsSub = this.activatedRoute.queryParams.subscribe(queryParams => {
+      let show = queryParams.show;
+      if (show == 'unread') {
+        this.filteredTexts = this.allTexts.filter(text => !text.isRead());
+      } else {
+        this.filteredTexts = this.allTexts;
+      }
+    });
   }
 }

@@ -1,5 +1,5 @@
 <div class="texts-list">
-  <div class='text-card-wrapper' *ngFor="let text of texts | orderBy: '-timestamp'">
+  <div class='text-card-wrapper' *ngFor="let text of filteredTexts | orderBy: '-timestamp'">
     <div class='text-send-wrapper' *ngIf='inTextSendMode && text == selectedText'>
       <text-send 
         [toRacer]='selectedText.racer'

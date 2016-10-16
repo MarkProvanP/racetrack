@@ -59,6 +59,8 @@ export abstract class Text {
   team: Team;
   timestamp: Date;
 
+  abstract isRead(): boolean;
+
   static fromJSON(obj: FullFormText): Text {
     if (obj.text_subclass == 'InboundText') {
       return InboundText.fromJSON(obj);
@@ -95,6 +97,10 @@ export class OutboundText extends Text {
     clone.racer = racer;
     clone.team = team;
     return new OutboundText(clone.id, clone);
+  }
+
+  isRead(): boolean {
+    return true;
   }
 
   static fromTwilio(id: TextId, twilio: TwilioOutboundText) {
@@ -153,6 +159,10 @@ export class InboundText extends Text {
     p['twilio'] = twilio;
     p['timestamp'] = new Date();
     return new InboundText(id, p);
+  }
+
+  isRead(): boolean {
+    return !!this.readBy;
   }
 
   getPrettyReadStatus() {
