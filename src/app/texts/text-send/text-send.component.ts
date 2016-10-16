@@ -4,6 +4,7 @@ import { Racer } from '../../../common/racer';
 import { Text, PhoneNumber } from '../../../common/text';
 
 import { TextService } from '../../text.service';
+import { DataService } from '../../data.service';
 
 @Component({
   selector: 'text-send',
@@ -16,18 +17,43 @@ export class TextSendComponent {
   @Input() toNumber: PhoneNumber;
   message: string;
   isSending = false;
+  recipients = [];
+  matchingRecipients = [];
+  allRecipients = [];
+  newRecipient = "";
+
+  filterRecipients() {
+    let search = this.newRecipient.toLowerCase();
+    this.matchingRecipients = this.allRecipients.filter(recipient => {
+      console.log('checking search', search, 'against recipient', recipient);
+      return (recipient.name.toLowerCase().indexOf(search) != -1
+        || recipient.number.indexOf(search) != -1)
+        && this.recipients.filter(r => r.number == recipient.number).length == 0;
+    });
+    console.log(this.allRecipients);
+    console.log(this.matchingRecipients);
+  }
+
+  addRecipient(recipient) {
+    this.recipients.push(recipient);
+    this.newRecipient = "";
+    this.filterRecipients();
+  }
 
   constructor(
-    private textService: TextService
+    private textService: TextService,
+    private dataService: DataService
   ) {}
 
   sendNewText() {
     this.isSending = true;
-    this.textService.sendText(this.toNumber, this.message)
-      .then(response => {
-        this.isSending = false;
-        this.onTextSendClose.emit();
-      });
+    this.recipients.forEach(recipient => {
+      this.textService.sendText(recipient.number, this.message)
+        .then(response => {
+          this.isSending = false;
+          this.onTextSendClose.emit();
+        });
+    });
   }
 
   cancelNewText() {
@@ -35,5 +61,22 @@ export class TextSendComponent {
   }
 
   ngOnInit() {
+    this.dataService.getRacers()
+      .then(racers => {
+        let allContacts = [];
+        racers.forEach(racer => {
+          let contacts = racer.phones.map(contact => {
+            console.log(racer, contact);
+            return {
+              name: racer.name,
+              numNote: '' + (contact.name || "") + (contact.notes || ""),
+              number: contact.number
+            }
+          });
+          allContacts = allContacts.concat(contacts);
+        });
+        this.allRecipients = allContacts;
+        this.recipients = this.allRecipients.filter(recipient => recipient.number == this.toNumber);
+      });
   }
 }

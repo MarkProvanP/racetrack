@@ -4,11 +4,24 @@
       <div *ngIf='isSending'>
         <i>Sending</i>
       </div>
+      <div class='text-recipients-list'>
+        <md-card *ngFor='let recipient of recipients'>
+          <md-card-content>
+            {{recipient.name}} {{recipient.numNote}} ({{recipient.number}}
+          </md-card-content>
+        </md-card>
+        <div class='next-recipient'>
+          <md-input [(ngModel)]='newRecipient' (input)='filterRecipients()' placeholder='Recipients'></md-input>
+          <md-card id='filter-recipients-list' class='filter-recipients-list'>
+            <md-list>
+              <md-list-item *ngFor='let recipient of matchingRecipients' (click)='addRecipient(recipient)'>
+                {{recipient.name}} {{recipient.numNote}} {{recipient.number}})
+              </md-list-item>
+            </md-list>
+          </md-card>
+        </div>
+      </div>
       <table>
-        <tr>
-          <th>To:</th>
-          <td><md-input [(ngModel)]='toNumber'></md-input></td>
-        </tr>
         <tr>
           <th>Message:</th>
           <td><md-input [(ngModel)]='message'></md-input></td>

@@ -1,5 +1,12 @@
 <div class="texts-list">
   <div class='text-card-wrapper' *ngFor="let text of texts | orderBy: '-timestamp'">
+    <div class='text-send-wrapper' *ngIf='inTextSendMode && text == selectedText'>
+      <text-send 
+        [toRacer]='selectedText.racer'
+        [toNumber]='selectedText.from' 
+        (onTextSendClose)='onTextSendClose()'>
+      </text-send>
+    </div>
     <normal-text
       class='text-card normal-text' 
       [text]='text' 
@@ -27,13 +34,6 @@
         [team]='text.team'
         (onStatusCreated)='onStatusCreated()'>
       </new-update>
-    </div>
-    <div class='text-send-wrapper' *ngIf='inTextSendMode && text == selectedText'>
-      <text-send 
-        [toRacer]='selectedText.racer'
-        [toNumber]='selectedText.from' 
-        (onTextSendClose)='onTextSendClose()'>
-      </text-send>
     </div>
   </div>
 </div>
