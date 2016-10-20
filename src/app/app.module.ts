@@ -30,6 +30,7 @@ import { TeamCardComponent } from './teams/team-card';
 import { DashboardComponent } from './dashboard';
 import { SafetyMapComponent } from './safety-map';
 import { PublicMapComponent } from './public-map';
+import { PublicTeamProgressMapComponent } from './public-team-progress-map';
 import { NewUpdateComponent } from './updates/new-update';
 import { TextSendComponent } from './texts/text-send';
 import { NormalTextComponent } from './texts/texts-list/normal-text';
@@ -80,6 +81,7 @@ const APP_PROVIDERS = [
     TeamCardComponent,
     DashboardComponent,
     PublicMapComponent,
+    PublicTeamProgressMapComponent,
     SafetyMapComponent,
     NewUpdateComponent,
     TextSendComponent,

@@ -1,4 +1,5 @@
 import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
 
 import { DataService } from '../data.service';
 
@@ -42,8 +43,15 @@ export class PublicMapComponent implements OnInit {
   //50.0718908,14.4462584
   //53.612805,5.301865,
 
-  constructor(private dataService: DataService) {
+  constructor(
+    private dataService: DataService,
+    private router: Router
+  ) {
 
+  }
+
+  goToTeamProgress(team: Team) {
+    this.router.navigate(['/team-progress', team.id]);
   }
 
   ngOnInit() {

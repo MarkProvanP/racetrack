@@ -59,6 +59,14 @@ export class DataService {
                .catch(this.handleError);
   }
 
+  getPublicTeam(id: TeamId): Promise<Team> {
+    let url = `${this.publicTeamsUrl}/${id}`;
+    return this.http.get(url, this.httpNoBodyExtras)
+      .toPromise()
+      .then(response => Team.fromJSON(response.json()))
+      .catch(this.handleError);
+  }
+
   getTeams(): Promise<Team[]> {
     return this.http.get(this.teamsUrl, this.httpNoBodyExtras)
                .toPromise()

@@ -1,0 +1,18 @@
+.sebm-google-map-container {
+  height: 100%;
+}
+
+.public-map-guide {
+  position: absolute;
+  left: 50px;
+  top: 50px;
+
+  .race-logo {
+    height: 50px;
+  }
+}
+
+.public-map-container {
+  flex: 1;
+  position: relative;
+}

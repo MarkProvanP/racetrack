@@ -1,0 +1,58 @@
+<div class='public-map-container'>
+  <sebm-google-map
+    [latitude]='default.lat'
+    [longitude]='default.lng'
+    [zoom]='default.zoom'>
+    <sebm-google-map-marker
+      [latitude]="hostel.lat"
+      [longitude]="hostel.lng"
+      [iconUrl]='hostel.iconUrl'>
+    </sebm-google-map-marker>
+    <sebm-google-map-polyline
+      [strokeColor]='polylineSettings.strokeColor'
+      [strokeWeight]='polylineSettings.strokeWeight'
+      [strokeOpacity]='polylineSettings.strokeOpacity'>
+      <sebm-google-map-polyline-point *ngFor='let update of teamStatusUpdates()'
+      [latitude]='update.location.latitude'
+      [longitude]='update.location.longitude'>
+      </sebm-google-map-polyline-point>
+    </sebm-google-map-polyline>
+    <sebm-google-map-marker *ngFor='let update of teamStatusUpdates()'
+      [latitude]='update.location.latitude'
+      [longitude]='update.location.longitude'>
+      <sebm-google-map-info-window>
+        <table>
+          <tr>
+            <th>Time:</th>
+            <td>
+              {{update.getPrettyTimestamp()}}
+            </td>
+          </tr>
+          <tr>
+            <th>Current place:</th>
+            <td>
+              {{update.location.place}}
+            </td>
+          </tr>
+        </table>
+      </sebm-google-map-info-window>
+    </sebm-google-map-marker>
+  </sebm-google-map>
+  <md-card class='public-map-guide'>
+    <md-card-title>
+      <img class='race-logo' src='/assets/img/race2_prague.jpg'>
+    </md-card-title>
+    <md-card-content>
+      <div *ngIf='team'>
+        <h3>{{team.name}} Progress</h3>
+        <i>Team members:</i><p>{{team.getPrettyRacersList()}}</p>
+      </div>
+      <md-list>
+        <md-list-item *ngFor='let update of teamStatusUpdates()'>
+          <h3 md-line>{{update.location.place}}</h3>
+          <p md-line>{{update.getPrettyTimestamp()}}</p>
+        </md-list-item>
+      </md-list>
+    </md-card-content>
+  </md-card>
+</div>
