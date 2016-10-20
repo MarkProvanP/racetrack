@@ -19,6 +19,13 @@ import { OrderBy } from '../../orderBy.pipe.ts';
 })
 export class TextsListComponent {
   @Input("texts") allTexts: Text[];
+  actuallyAllTexts: Text[];
+
+  set allTexts(texts: Text[]) {
+    this.actuallyAllTexts = texts;
+    this.updateTextFilter();
+  }
+
   filteredTexts: Text[];
   @Input() display;
   inCreateUpdateMode = false;
@@ -34,7 +41,6 @@ export class TextsListComponent {
   ) {}
 
   markTextAsRead(text: Text) {
-    console.log('marking text', text, 'as read');
     this.textService.updateText(text)
   }
 
@@ -72,14 +78,18 @@ export class TextsListComponent {
     this.selectedText = undefined;
   }
 
+  updateTextFilter(show) {
+    if (show == 'unread') {
+      this.filteredTexts = this.actuallyAllTexts.filter(text => !text.isRead());
+    } else {
+      this.filteredTexts = this.actuallyAllTexts;
+    }
+  }
+
   ngOnInit() {
     this.queryParamsSub = this.activatedRoute.queryParams.subscribe(queryParams => {
       let show = queryParams.show;
-      if (show == 'unread') {
-        this.filteredTexts = this.allTexts.filter(text => !text.isRead());
-      } else {
-        this.filteredTexts = this.allTexts;
-      }
+      this.updateTextFilter(show);
     });
   }
 }
