@@ -44,7 +44,9 @@
       <h3>Teams:</h3>
       <md-list>
         <md-list-item *ngFor='let team of teams'>
-          {{team.name}}
+          <h3 md-line>{{team.name}}</h3>
+          <p md-line>{{team.getPrettyRacersList()}}</p>
+          <p md-line>{{team.getLastPlaceName()}}</p>
         </md-list-item>
       </md-list>
     </md-card-content>

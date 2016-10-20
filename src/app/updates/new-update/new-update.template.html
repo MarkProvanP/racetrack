@@ -25,6 +25,7 @@
           </td>
         </tr>
       </table>
+      <md-checkbox [(ngModel)]='newStatusObj.isPublic'>Make public</md-checkbox>
       <button md-raised-button color='accent' (click)='saveNewUpdate()'>Save update</button>
       <button md-raised-button (click)='cancelNewUpdate()'>Cancel</button>
     </div>

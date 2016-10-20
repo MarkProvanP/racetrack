@@ -94,6 +94,13 @@ export class Team {
     return this.statusUpdates[this.statusUpdates.length - 1]
   }
 
+  getLastPlaceName(): string {
+    let lastStatusUpdate = this.statusUpdates[this.statusUpdates.length - 1];
+    if (lastStatusUpdate) {
+      return lastStatusUpdate.location.place;
+    }
+  }
+
   getCurrentStatusString(): string {
     return prettyStatusName(this.getCurrentStatus());
   }

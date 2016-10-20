@@ -20,7 +20,8 @@ export class NewUpdateComponent implements OnInit {
       latitude: 56.3397753,
       longitude: -2.796721400000024
     },
-    notes: "Default starting status"
+    notes: "Default starting status",
+    isPublic: false
   }
   statusEnum = TeamStatus;
   default = {
