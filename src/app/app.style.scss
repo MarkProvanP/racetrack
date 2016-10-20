@@ -84,6 +84,11 @@ map {
   display: flex;
   flex-direction: column;
 }
+public-map {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 .active {
   background-color: green;

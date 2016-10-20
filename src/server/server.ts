@@ -41,6 +41,7 @@ const SESSION_KEY = "express.sid";
 import { AuthWithDbFacade } from "./auth";
 
 import teamsRouterWithDb from "./routes/teams.routes";
+import publicRouterWithDb from "./routes/public.routes";
 import racersRouterWithDb from "./routes/racers.routes";
 import textsRouterWithDb from "./routes/texts.routes";
 import updatesRouterWithDb from "./routes/updates.routes";
@@ -126,6 +127,9 @@ setup(config.db_url)
 
     let eventsRouter = eventsRouterWithDb(db_facade);
     app.use('/events', eventsRouter);
+
+    let publicRouter = publicRouterWithDb(db_facade);
+    app.use('/public', publicRouter);
 
     http.listen(PORT, function() {
       winston.info(`App now listening on port: ${PORT}`);

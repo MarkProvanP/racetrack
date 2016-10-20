@@ -29,6 +29,8 @@ export class DataService {
   private updatesUrl = this.baseUrl + "updates";
   private eventsUrl = this.baseUrl + "events";
 
+  private publicTeamsUrl = this.baseUrl + 'public/teams';
+
   constructor(
     private http: Http,
     private userService: UserService
@@ -48,6 +50,13 @@ export class DataService {
 
   private notAuthenticated() {
 
+  }
+
+  getPublicTeams(): Promise<Team[]> {
+    return this.http.get(this.publicTeamsUrl, this.httpNoBodyExtras)
+               .toPromise()
+               .then(response => response.json().map(Team.fromJSON))
+               .catch(this.handleError);
   }
 
   getTeams(): Promise<Team[]> {

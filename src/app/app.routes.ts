@@ -10,6 +10,7 @@ import { TeamsComponent } from './teams';
 import { DashboardComponent } from './dashboard';
 import { RacerCardComponent } from './racers/racer-card';
 import { TeamCardComponent } from './teams/team-card';
+import { PublicMapComponent } from './public-map';
 import { MapComponent } from './map';
 import { DataResolver } from './app.resolver';
 
@@ -81,5 +82,5 @@ export const ROUTES: Routes = [
       ]
     },
   ] },
-  { path: '**', component: MapComponent },
+  { path: '**', component: PublicMapComponent },
 ];
