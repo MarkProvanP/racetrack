@@ -1,0 +1,44 @@
+<div class='safety-map-container'>
+  <sebm-google-map
+    [latitude]='default.lat'
+    [longitude]='default.lng'
+    [zoom]='default.zoom'>
+    <sebm-google-map-marker
+      [latitude]="hostel.lat"
+      [longitude]="hostel.lng"
+      [iconUrl]='hostel.iconUrl'>
+    </sebm-google-map-marker>
+    <sebm-google-map-marker *ngFor='let team of teams | teamHasUpdate '
+      [latitude]='team.getLastUpdate().location.latitude'
+      [longitude]='team.getLastUpdate().location.longitude'
+      [title]='team.name'>
+      <sebm-google-map-info-window>
+        <table>
+          <tr>
+            <th>Team name:</th>
+            <td>
+              {{team.name}}
+            </td>
+          </tr>
+          <tr>
+            <th>Racers:</th>
+            <td>
+              {{team.getPrettyRacersList()}}
+            </td>
+          </tr>
+          <tr>
+            <th>Current place:</th>
+            <td>
+              {{team.getLastUpdate().location.place}}
+            </td>
+          </tr>
+        </table>
+      </sebm-google-map-info-window>
+    </sebm-google-map-marker>
+  </sebm-google-map>
+  <md-card class='safety-map-guide'>
+    <md-card-title>
+      Safety map
+    </md-card-title>
+  </md-card>
+</div>

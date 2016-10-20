@@ -15,12 +15,12 @@ class TeamHasUpdate implements PipeTransform {
 }
 
 @Component({
-  selector: 'map',
-  templateUrl: './map.template.html',
-  styleUrls: ['./map.styles.scss'],
+  selector: 'safety-map',
+  templateUrl: './safety-map.template.html',
+  styleUrls: ['./safety-map.styles.scss'],
   pipes: [TeamHasUpdate]
 })
-export class MapComponent implements OnInit {
+export class SafetyMapComponent implements OnInit {
   teams: Team[] = [];
   default = {
     lat: 53.612805,

@@ -28,7 +28,7 @@ import { RacerCardComponent } from './racers/racer-card';
 import { TeamsComponent } from './teams';
 import { TeamCardComponent } from './teams/team-card';
 import { DashboardComponent } from './dashboard';
-import { MapComponent } from './map';
+import { SafetyMapComponent } from './safety-map';
 import { PublicMapComponent } from './public-map';
 import { NewUpdateComponent } from './updates/new-update';
 import { TextSendComponent } from './texts/text-send';
@@ -80,7 +80,7 @@ const APP_PROVIDERS = [
     TeamCardComponent,
     DashboardComponent,
     PublicMapComponent,
-    MapComponent,
+    SafetyMapComponent,
     NewUpdateComponent,
     TextSendComponent,
     NormalTextComponent,

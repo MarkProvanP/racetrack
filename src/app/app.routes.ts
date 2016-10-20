@@ -11,7 +11,7 @@ import { DashboardComponent } from './dashboard';
 import { RacerCardComponent } from './racers/racer-card';
 import { TeamCardComponent } from './teams/team-card';
 import { PublicMapComponent } from './public-map';
-import { MapComponent } from './map';
+import { SafetyMapComponent } from './safety-map';
 import { DataResolver } from './app.resolver';
 
 import { LoginComponent } from './user/login';
@@ -74,7 +74,7 @@ export const ROUTES: Routes = [
       ]
     },
     { path: 'dashboard', component: DashboardComponent },
-    { path: 'map', component: MapComponent },
+    { path: 'map', component: SafetyMapComponent },
     {
       path: 'user', children: [
         { path: 'logout', component: LogoutComponent, canActivate: [AuthenticatedGuard] },
