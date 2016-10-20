@@ -1,39 +1,49 @@
-<div class="texts-list">
-  <div class='text-card-wrapper' *ngFor="let text of filteredTexts | orderBy: '-timestamp'">
-    <div class='text-send-wrapper' *ngIf='inTextSendMode && text == selectedText'>
-      <text-send 
-        [toRacer]='selectedText.racer'
-        [toNumber]='selectedText.from' 
-        (onTextSendClose)='onTextSendClose()'>
-      </text-send>
-    </div>
-    <normal-text
-      class='text-card normal-text' 
-      [text]='text' 
-      [display]='display'
-      (onMakeRead)='markTextAsRead($event)'
-      (onCreateReply)='replyToText($event)'
-      (onAddCheckin)='checkInTeamFromText($event)'
-      (onCreateUpdate)='createUpdateFromText($event)'
-      *ngIf='isInboundText(text) && text.racer'>
-    </normal-text>
-    <sent-text
-      class='text-card sent-text' 
-      [text]='text' 
-      [display]='display' 
-      *ngIf='!isInboundText(text)'></sent-text>
-    <unknown-text 
-      class='text-card unknown-text' 
-      [text]='text' 
-      [display]='display' 
-      (onMakeRead)='markTextAsRead($event)'
-      (onCreateReply)='replyToText($event)'
-      *ngIf='isInboundText(text) && !text.racer'></unknown-text>
-    <div class='new-update-wrapper' *ngIf='inCreateUpdateMode && text == selectedText'>
-      <new-update
-        [team]='text.team'
-        (onStatusCreated)='onStatusCreated()'>
-      </new-update>
+<div class='text-list-wrapper'>
+  <div class='filter-options'>
+    <span class='filter-options-name'>Showing</span>
+    <md-button-toggle-group name='show' [(ngModel)]='readFilterOption' (change)='onFilterUpdate()'>
+      <md-button-toggle value='read'>Read</md-button-toggle>
+      <md-button-toggle value='unread'>Unread</md-button-toggle>
+      <md-button-toggle value='all' checked>All</md-button-toggle>
+    </md-button-toggle-group>
+  </div>
+  <div class="texts-list">
+    <div class='text-card-wrapper' *ngFor="let text of filteredTexts | orderBy: '-timestamp'">
+      <div class='text-send-wrapper' *ngIf='inTextSendMode && text == selectedText'>
+        <text-send 
+          [toRacer]='selectedText.racer'
+          [toNumber]='selectedText.from' 
+          (onTextSendClose)='onTextSendClose()'>
+        </text-send>
+      </div>
+      <normal-text
+        class='text-card normal-text' 
+        [text]='text' 
+        [display]='display'
+        (onMakeRead)='markTextAsRead($event)'
+        (onCreateReply)='replyToText($event)'
+        (onAddCheckin)='checkInTeamFromText($event)'
+        (onCreateUpdate)='createUpdateFromText($event)'
+        *ngIf='isInboundText(text) && text.racer'>
+      </normal-text>
+      <sent-text
+        class='text-card sent-text' 
+        [text]='text' 
+        [display]='display' 
+        *ngIf='!isInboundText(text)'></sent-text>
+      <unknown-text 
+        class='text-card unknown-text' 
+        [text]='text' 
+        [display]='display' 
+        (onMakeRead)='markTextAsRead($event)'
+        (onCreateReply)='replyToText($event)'
+        *ngIf='isInboundText(text) && !text.racer'></unknown-text>
+      <div class='new-update-wrapper' *ngIf='inCreateUpdateMode && text == selectedText'>
+        <new-update
+          [team]='text.team'
+          (onStatusCreated)='onStatusCreated()'>
+        </new-update>
+      </div>
     </div>
   </div>
 </div>

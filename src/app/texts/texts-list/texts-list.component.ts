@@ -1,6 +1,8 @@
 import { Component, Input } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
+import { MdUniqueSelectionDispatcher } from "@angular2-material/core";
+
 import { Racer } from "../../../common/racer";
 import { Team } from "../../../common/team";
 import { Text, InboundText, OutboundText } from '../../../common/text';
@@ -15,7 +17,8 @@ import { OrderBy } from '../../orderBy.pipe.ts';
   selector: "texts-list",
   templateUrl: "./texts-list.template.html",
   styleUrls: ["./texts-list.styles.scss"],
-  pipes: [OrderBy]
+  pipes: [OrderBy],
+  providers: [MdUniqueSelectionDispatcher]
 })
 export class TextsListComponent {
   @Input("texts") allTexts: Text[];
@@ -32,6 +35,8 @@ export class TextsListComponent {
   inTextSendMode = false;
   selectedText;
   paramsSub;
+
+  readFilterOption;
 
   constructor(
     private dataService: DataService,
@@ -81,14 +86,21 @@ export class TextsListComponent {
   updateTextFilter(show) {
     if (show == 'unread') {
       this.filteredTexts = this.actuallyAllTexts.filter(text => !text.isRead());
+    } else if (show == 'read') {
+      this.filteredTexts = this.actuallyAllTexts.filter(text => text.isRead());
     } else {
       this.filteredTexts = this.actuallyAllTexts;
     }
   }
 
+  onFilterUpdate() {
+    this.updateTextFilter(this.readFilterOption);
+  }
+
   ngOnInit() {
     this.queryParamsSub = this.activatedRoute.queryParams.subscribe(queryParams => {
       let show = queryParams.show;
+      this.readFilterOption = show;
       this.updateTextFilter(show);
     });
   }

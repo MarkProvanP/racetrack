@@ -1,9 +1,17 @@
 .texts-list {
-  display: flex;
+  //display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
+  //flex-wrap: wrap;
   align-items: center;
   padding: 20px;
+  flex: 1;
+  overflow-y: scroll;
+}
+
+.text-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .text-card {
@@ -22,3 +30,17 @@
 .new-update-wrapper {
   width: 100%;
 }
+
+.filter-options {
+  background-color: white;
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+  
+  .filter-options-name {
+    margin: 5px;
+    display: flex;
+    align-items: center;
+  }
+}
+
