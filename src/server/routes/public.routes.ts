@@ -15,7 +15,7 @@ export default function publicRouterWithDb(db_facade: DbFacadeInterface) {
     db_facade.getTeams()
       .then(teams => {
         res.type('application/json');
-        res.send(JSON.stringify(teams));
+        res.send(JSON.stringify(teams.map(team => team.stripPrivateData())));
       });
   })
   publicRouter.get('/teams/:id', (req, res) => {
@@ -23,7 +23,7 @@ export default function publicRouterWithDb(db_facade: DbFacadeInterface) {
     db_facade.getTeam(id)
       .then(team => {
         res.type('application/json');
-        res.send(JSON.stringify(team));
+        res.send(JSON.stringify(team.stripPrivateData()));
       });
   })
   return publicRouter;

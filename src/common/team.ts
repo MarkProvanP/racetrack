@@ -25,6 +25,21 @@ export class Team {
   lastCheckin: Date;
   inEurope: boolean = false;
 
+  stripPrivateData(): Team {
+    let strippedRacers = this.racers.map(racer => racer.stripPrivateData());
+    let strippedStatusUpdates = this.statusUpdates.filter(update => update.isPublic);
+    let stripped = this.makeClone();
+    stripped.racers = strippedRacers;
+    stripped.statusUpdates = strippedStatusUpdates;
+    stripped.lastCheckin = undefined;
+    return stripped;
+  }
+
+  makeClone() {
+    let copy = JSON.parse(JSON.stringify(this));
+    return Team.fromJSON(copy);
+  }
+
   static fromJSON(obj: PopulatedTeam) {
     let updates = obj.statusUpdates
       .map(team => TeamUpdate.fromJSON(team));

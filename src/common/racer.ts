@@ -8,6 +8,18 @@ export class Racer {
   nationality: string;
   phones: ContactNumber[] = [];
 
+  makeClone() {
+    let copy = JSON.parse(JSON.stringify(this));
+    return Racer.fromJSON(copy);
+  }
+
+  stripPrivateData(): Racer {
+    let stripped = this.makeClone();
+    stripped.nationality = undefined;
+    stripped.phones = [];
+    return stripped;
+  }
+
   static fromJSON(obj) {
     return new Racer(obj.id, obj);
   }

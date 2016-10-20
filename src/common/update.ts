@@ -33,6 +33,7 @@ export class TeamUpdate {
   timestamp: Date;
   status: TeamStatus;
   location: Location;
+  isPublic: boolean;
 
   static fromJSON(obj) {
     return new TeamUpdate(obj.id, obj)
@@ -60,5 +61,6 @@ export class TeamUpdate {
     } else {
       this.timestamp = new Date();
     }
+    this.isPublic = properties.isPublic;
   }
 }
