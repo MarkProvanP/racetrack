@@ -16,3 +16,8 @@
   flex: 1;
   position: relative;
 }
+
+.updates-list {
+  max-height: 400px;
+  overflow-y: scroll;
+}

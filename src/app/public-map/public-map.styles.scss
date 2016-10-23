@@ -6,6 +6,7 @@
   position: absolute;
   left: 50px;
   top: 50px;
+  width: 350px;
 
   .race-logo {
     height: 50px;
@@ -15,4 +16,9 @@
 .public-map-container {
   flex: 1;
   position: relative;
+}
+
+.teams-list {
+  max-height: 400px;
+  overflow-y: scroll;
 }

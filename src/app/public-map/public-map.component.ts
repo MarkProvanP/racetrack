@@ -15,6 +15,8 @@ class TeamHasUpdate implements PipeTransform {
   }
 }
 
+const ICON_FILENAME = "/assets/map-pin/Map_marker-64.png";
+
 @Component({
   selector: 'public-map',
   templateUrl: './public-map.template.html',
@@ -32,7 +34,7 @@ export class PublicMapComponent implements OnInit {
   hostel = {
     lat: 50.0718908,
     lng: 14.4462584,
-    iconUrl: 'http://localhost:3000/assets/map-pin/Map_marker-64.png'
+    iconUrl: ''
   }
 
   whut(team) {
@@ -55,6 +57,7 @@ export class PublicMapComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.hostel.iconUrl = window.location.origin + ICON_FILENAME;
     this.dataService.getPublicTeams()
       .then(teams => this.teams = teams);
   }

@@ -41,13 +41,14 @@
   <md-card class='public-map-guide'>
     <md-card-title>
       <img class='race-logo' src='/assets/img/race2_prague.jpg'>
+      <a md-button [routerLink]="['']">Back to all teams</a>
     </md-card-title>
     <md-card-content>
       <div *ngIf='team'>
         <h3>{{team.name}} Progress</h3>
         <i>Team members:</i><p>{{team.getPrettyRacersList()}}</p>
       </div>
-      <md-list>
+      <md-list class='updates-list'>
         <md-list-item *ngFor='let update of teamStatusUpdates()'>
           <h3 md-line>{{update.location.place}}</h3>
           <p md-line>{{update.getPrettyTimestamp()}}</p>
