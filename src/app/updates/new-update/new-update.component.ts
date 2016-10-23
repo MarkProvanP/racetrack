@@ -17,16 +17,16 @@ export class NewUpdateComponent implements OnInit {
     status: TeamStatus.ON_START_BUS,
     location: {
       place: 'St Andrews',
-      latitude: 56.3397753,
-      longitude: -2.796721400000024
+      latitude: "56.3397753",
+      longitude: "-2.796721400000024"
     },
     notes: "Default starting status",
     isPublic: false
   }
   statusEnum = TeamStatus;
   default = {
-    lat: 53.612805,
-    lng: 5.301865,
+    lat: "53.612805",
+    lng: "5.301865",
     zoom: 4,
     iconUrl: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
   }

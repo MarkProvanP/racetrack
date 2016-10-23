@@ -3,7 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { DataService } from '../../../data.service';
 import { UserService } from '../../../user.service';
 
-import { Text, ContactNumber, UserActionInfo } from '../../../../common/text';
+import { Text, InboundText, OutboundText, ContactNumber, UserActionInfo } from '../../../../common/text';
 import { Racer } from '../../../../common/racer';
 
 @Component({
@@ -14,8 +14,8 @@ import { Racer } from '../../../../common/racer';
 export class UnknownTextComponent implements OnInit {
   @Input() text: Text;
   @Input() display: any;
-  @Output() onMakeRead: EventEmitter = new EventEmitter();
-  @Output() onCreateReply: EventEmitter = new EventEmitter();
+  @Output() onMakeRead: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onCreateReply: EventEmitter<any> = new EventEmitter<any>();
   inLinkingMode: boolean = false;
   racersList: Racer[] = [];
   selectedRacer: Racer;
@@ -63,7 +63,7 @@ export class UnknownTextComponent implements OnInit {
       timestamp: new Date(),
       user: user
     } as UserActionInfo;
-    this.text.readBy = textRead;
+    (<InboundText> this.text).readBy = textRead;
     this.onMakeRead.emit(this.text);
   }
 

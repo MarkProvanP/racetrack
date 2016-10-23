@@ -61,7 +61,13 @@ export class RacerCardComponent implements OnInit, OnDestroy {
   }
 
   addNumberToRacer() {
-    this.racer.phones.push({});
+    let newContact = {
+      number: undefined,
+      name: "",
+      notes: "",
+      preferred: true
+    }
+    this.racer.phones.push(newContact);
   }
 
   removeContactFromRacer(contact) {

@@ -34,7 +34,7 @@ export class TextsListComponent {
   inCreateUpdateMode = false;
   inTextSendMode = false;
   selectedText;
-  paramsSub;
+  queryParamsSub: any;
 
   readFilterOption;
 
@@ -99,7 +99,7 @@ export class TextsListComponent {
 
   ngOnInit() {
     this.queryParamsSub = this.activatedRoute.queryParams.subscribe(queryParams => {
-      let show = queryParams.show;
+      let show = queryParams['show'];
       this.readFilterOption = show;
       this.updateTextFilter(show);
     });

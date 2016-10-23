@@ -9,8 +9,8 @@ import { TextReceivedMessage } from "../common/message";
 import { UserService } from './user.service';
 
 export class TextFilterOptions {
-  racer: Racer;
-  team: Team;
+  racer: Racer | boolean;
+  team: Team | boolean;
   read: boolean
 
   constructor(opts) {
