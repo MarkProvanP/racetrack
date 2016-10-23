@@ -1,3 +1,5 @@
+@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.scss';
+
 html, body{
   height: 100%;
   background: #F4FAFA;
@@ -96,7 +98,7 @@ public-team-progress-map {
 }
 
 .active {
-  background-color: green;
+  background-color: gold;
 }
 
 /** remove when fixed in angular2-material **/

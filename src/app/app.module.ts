@@ -1,5 +1,7 @@
 import "./rxjs-extensions";
 
+import { MaterialModule } from "@angular/material";
+
 import { NgModule, ApplicationRef } from '@angular/core';
 import { Title, BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +17,6 @@ import { ENV_PROVIDERS } from './environment';
 import { ROUTES } from './app.routes';
 // App is our top level component
 import { App } from './app.component';
-import { MdModule } from './md.module';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 
 import { AllTextsComponent } from './texts/all-texts';
@@ -100,7 +101,7 @@ const APP_PROVIDERS = [
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES, { useHash: true }),
-    MdModule.forRoot(),
+    MaterialModule.forRoot(),
     AgmCoreModule.forRoot({
       apiKey: config.GoogleMapsAPIKey
     })
