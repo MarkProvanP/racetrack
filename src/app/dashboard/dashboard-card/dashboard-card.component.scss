@@ -1,0 +1,68 @@
+.team-danger {
+  background-color: red;
+}
+
+.team-on-bus {
+  background-color: lightgrey;
+}
+
+.team-in-uk {
+  background-color: aliceblue;
+}
+
+.team-in-europe {
+  background-color: white;
+}
+
+.team-in-city {
+  background-color: gold;
+}
+
+.team-dropped-out {
+  background-color: lightblue;
+}
+
+.team-in-hostel {
+  background-color: limegreen;
+}
+
+.team-asleep {
+  background-color: #e2aae2;
+}
+
+.team-overdue {
+  background-color: orange;
+}
+
+.team-maybe-late {
+  background-color: cyan;
+}
+
+.team-error {
+  background-color: grey;
+}
+
+md-card-title {
+  display: flex;
+
+  b {
+    flex: 1;
+  }
+
+  .safety-team-flag {
+    height: 20px;
+
+    img {
+      height: 100%;
+    }
+  }
+}
+
+
+/deep/ .md-card-header-text {
+  flex: 1;
+}
+
+.last-update {
+  width: 100%;
+}

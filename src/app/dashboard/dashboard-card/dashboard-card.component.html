@@ -1,0 +1,54 @@
+<md-card [ngClass]='getCardClass(team)'>
+  <md-card-header>
+    <img md-card-avatar src="http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg">
+    <md-card-title>
+      <b md-row>{{team.name}}</b>
+      <div class='safety-team-flag'>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg" *ngIf="team.inEurope">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/1280px-Flag_of_the_United_Kingdom.svg.png" *ngIf="!team.inEurope">
+      </div>
+    </md-card-title>
+    <md-card-subtitle>
+      <i>{{team.getPrettyRacersList()}}</i>
+    </md-card-subtitle>
+  </md-card-header>
+  <md-card-content>
+    <h3>Last update</h3>
+    <table class='last-update' *ngIf="team.getLastUpdate()">
+      <tr>
+        <th>Time:</th>
+        <td>
+          {{team.getLastUpdate().getPrettyTimestamp()}}
+        </td>
+      </tr>
+      <tr>
+        <th>Status:</th>
+        <td>
+          {{team.getLastUpdate().prettyStatusName()}}
+        </td>
+      </tr>
+      <tr>
+        <th>Place:</th>
+        <td>
+          <span>
+            {{team.getLastUpdate().location.place}}
+          </span>
+          <button md-button (click)='openMap()'>See map</button>
+        </td>
+      </tr>
+      <tr>
+        <th>Notes:</th>
+        <td>
+          {{team.getLastUpdate().notes}}
+        </td>
+      </tr>
+    </table>
+    <div *ngIf="!team.getLastUpdate()">
+      <b>Team has no updates</b>
+    </div>
+  </md-card-content>
+  <md-card-actions>
+    <button md-button (click)='goToTeamTexts(team)'>TEXTS</button>
+    <button md-button>UPDATE STATUS</button>
+  </md-card-actions>
+</md-card>

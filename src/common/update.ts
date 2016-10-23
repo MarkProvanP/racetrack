@@ -1,7 +1,7 @@
 import * as moment from "moment";
 
 export enum TeamStatus {
-  ON_START_BUS, IN_UK, IN_EUROPE, IN_HOSTEL, DROPPED_OUT, ASLEEP, OVERDUE, MAYBE_LATE, IN_CITY, UNKNOWN
+  ON_START_BUS, IN_UK, IN_EUROPE, CROSSING_CHANNEL, IN_HOSTEL, DROPPED_OUT, ASLEEP, OVERDUE, MAYBE_LATE, IN_CITY, UNKNOWN
 }
 
 export function prettyStatusName(status: TeamStatus) {
@@ -9,6 +9,7 @@ export function prettyStatusName(status: TeamStatus) {
     case TeamStatus.ON_START_BUS: return "On start bus";
     case TeamStatus.IN_UK: return "In UK";
     case TeamStatus.IN_EUROPE: return "In Europe";
+    case TeamStatus.CROSSING_CHANNEL: return "Crossing the channel";
     case TeamStatus.IN_HOSTEL: return "In hostel";
     case TeamStatus.DROPPED_OUT: return "Dropped out";
     case TeamStatus.ASLEEP: return "Asleep";

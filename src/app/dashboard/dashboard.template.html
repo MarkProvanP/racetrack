@@ -1,51 +1,14 @@
 <div class='card-container'>
   <h1 x-large class='sample-content'>Race2 Dashboard</h1>
+  <div class='filter-options'>
+    <span class='filter-options-name'>Showing</span>
+    <md-button-toggle-group name='show' [(ngModel)]='teamsFilterOption' (change)='onFilterUpdate()'>
+      <md-button-toggle value='uk'>UK</md-button-toggle>
+      <md-button-toggle value='europe'>Europe</md-button-toggle>
+      <md-button-toggle value='all' checked>All</md-button-toggle>
+    </md-button-toggle-group>
+  </div>
   <div class='status-card-container'>
-    <md-card *ngFor="let team of teams" [ngClass]='getCardClass(team)'>
-      <md-card-header>
-        <img md-card-avatar src="http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg">
-        <md-card-title>
-          <b>{{team.name}}</b>
-          <div class='safety-team-flag'>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg" *ngIf="team.inEurope">
-            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/1280px-Flag_of_the_United_Kingdom.svg.png" *ngIf="!team.inEurope">
-          </div>
-        </md-card-title>
-        <md-card-subtitle>
-          <div>
-            <i *ngIf="team.lastCheckin">Last checked in {{team.getPrettyTimeSinceCheckin()}}</i>
-            <b *ngIf="!team.lastCheckin">Team has not checked in!</b>
-          </div>
-        </md-card-subtitle>
-      </md-card-header>
-      <md-card-content>
-        <div class='last-update' *ngIf="team.getLastUpdate()">
-          <div>
-            {{team.getLastUpdate().getPrettyTimestamp()}}
-          </div>
-          <div>
-            <span>
-              <i>Status:</i> {{team.getLastUpdate().prettyStatusName()}}
-            </span>
-            <span>
-              <i>Place:</i> {{team.getLastUpdate().location.place}}
-            </span>
-            <span *ngIf="team.getLastUpdate().location.latitude">
-              <i>Co-ords</i> {{team.getLastUpdate().location.latitude}}, {{team.getLastUpdate().location.longitude}}
-            </span>
-          </div>
-          <div>
-            <i>Notes:</i> {{team.getLastUpdate().notes}}
-          </div>
-        </div>
-        <div *ngIf="!team.getLastUpdate()">
-          <b>Team has no updates</b>
-        </div>
-      </md-card-content>
-      <md-card-actions>
-        <button md-button (click)='goToTeamTexts(team)'>TEXTS</button>
-        <button md-button>UPDATE STATUS</button>
-      </md-card-actions>
-    </md-card>
+    <dashboard-card *ngFor="let team of filteredTeams" [team]='team'></dashboard-card>
   <div>
 <div>

@@ -15,74 +15,12 @@
   display: flex;
   flex-wrap: wrap;
 
-  md-card {
-    max-width: 300px;
+  dashboard-card {
+    max-width: 400px;
     min-width: 300px;
     flex: 1;
-  }
-}
-
-.team-danger {
-  background-color: red;
-}
-
-.team-on-bus {
-  background-color: lightgrey;
-}
-
-.team-in-uk {
-  background-color: aliceblue;
-}
-
-.team-in-europe {
-  background-color: white;
-}
-
-.team-in-city {
-  background-color: gold;
-}
-
-.team-dropped-out {
-  background-color: lightblue;
-}
-
-.team-in-hostel {
-  background-color: limegreen;
-}
-
-.team-asleep {
-  background-color: #e2aae2;
-}
-
-.team-overdue {
-  background-color: orange;
-}
-
-.team-maybe-late {
-  background-color: cyan;
-}
-
-.team-error {
-  background-color: grey;
-}
-
-md-card-title {
-  display: flex;
-
-  b {
-    flex: 1;
+    margin: 10px;
   }
 
-  .safety-team-flag {
-    height: 20px;
-
-    img {
-      height: 100%;
-    }
-  }
 }
 
-
-/deep/ .md-card-header-text {
-  flex: 1;
-}

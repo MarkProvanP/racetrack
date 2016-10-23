@@ -29,6 +29,7 @@ import { RacerCardComponent } from './racers/racer-card';
 import { TeamsComponent } from './teams';
 import { TeamCardComponent } from './teams/team-card';
 import { DashboardComponent } from './dashboard';
+import { DashboardCardComponent } from './dashboard/dashboard-card';
 import { SafetyMapComponent } from './safety-map';
 import { PublicMapComponent } from './public-map';
 import { PublicTeamProgressMapComponent } from './public-team-progress-map';
@@ -81,6 +82,7 @@ const APP_PROVIDERS = [
     TeamsComponent,
     TeamCardComponent,
     DashboardComponent,
+    DashboardCardComponent,
     PublicMapComponent,
     PublicTeamProgressMapComponent,
     SafetyMapComponent,

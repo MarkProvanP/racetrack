@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 
 import { DataService } from '../data.service';
 import { Team } from '../../common/team';
@@ -11,8 +11,13 @@ import { TeamStatus } from '../../common/update';
   styleUrls: ['./dashboard.styles.scss']
 })
 export class DashboardComponent implements OnInit {
-  teams: Team[] = [];
+  allTeams: Team[] = [];
+  filteredTeams: Team[];
+  queryParamsSub: any;
+  teamsFilterOption: any;
+
   constructor(
+    private activatedRoute: ActivatedRoute,
     private dataService: DataService,
     private router: Router
   ) {}
@@ -20,26 +25,34 @@ export class DashboardComponent implements OnInit {
   getTeams(): void {
     this.dataService
         .getTeams()
-        .then(teams => this.teams = teams);
+        .then(teams => this.allTeams = teams)
+        .then(teams => this.filterTeams());
   }
 
-  getCardClass(team: Team) {
-    switch (team.getCurrentStatus()) {
-      case TeamStatus.ON_START_BUS: return "team-on-bus";
-      case TeamStatus.IN_UK: return "team-in-uk";
-      case TeamStatus.IN_EUROPE: return "team-in-europe";
-      case TeamStatus.IN_HOSTEL: return "team-in-hostel";
-      case TeamStatus.DROPPED_OUT: return "team-dropped-out";
-      case TeamStatus.ASLEEP: return "team-asleep";
-      case TeamStatus.OVERDUE: return "team-overdue";
-      case TeamStatus.MAYBE_LATE: return "team-maybe-late";
-      case TeamStatus.IN_CITY: return "team-in-city";
-      case TeamStatus.UNKNOWN: return "team-error";
+  filterTeams() {
+    let check = () => true;
+    if (this.teamsFilterOption == 'uk') {
+      check = (team) => !team.inEurope;
+    } else if (this.teamsFilterOption == 'europe') {
+      check = (team) => team.inEurope;
     }
+    this.filteredTeams = this.allTeams.filter(check);
+  }
+
+  onFilterUpdate() {
+    let navigationExtras = {
+      queryParams: { show: this.teamsFilterOption }
+    }
+    this.router.navigate(['/safetyteam', 'dashboard'], navigationExtras);
   }
 
   ngOnInit(): void {
     this.getTeams();
+    this.queryParamsSub = this.activatedRoute.queryParams.subscribe(queryParams => {
+      let show = queryParams['show'];
+      this.teamsFilterOption = show;
+      this.filterTeams();
+    });
   }
 
   goToTeamTexts(team: Team) {
