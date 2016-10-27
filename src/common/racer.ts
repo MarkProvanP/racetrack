@@ -36,4 +36,13 @@ export class Racer {
       this.phones = properties.phones;
     }
   }
+
+  getPrimaryContactNumber() {
+    let primary = this.phones.filter(contact => contact.preferred);
+    if (!primary) {
+      return null;
+    } else {
+      return primary[0];
+    }
+  }
 }

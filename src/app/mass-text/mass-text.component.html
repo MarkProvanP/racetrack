@@ -1,0 +1,73 @@
+<md-card class='mass-text-component' *ngIf='!sentMassText'>
+  <md-card-title>
+    Mass Text
+  </md-card-title>
+  <md-card-content>
+    <div class='response-safeword'>
+      <label>Keyword</label>
+      <md-input [(ngModel)]='massTextKeyword'></md-input>
+    </div>
+    <div class='response-timeout'>
+      <label>Reply time (mins)</label>
+      <label>0</label>
+      <md-slider min='1' max='60' tick-interval='auto' thumb-label [(ngModel)]='massTextTimeout'></md-slider>
+      <label>60</label>
+    </div>
+    <div class='message-body'>
+      <label>Message body</label>
+      <md-input [(ngModel)]='massTextBody'></md-input>
+    </div>
+    <div class='message-preview'>
+      <b>Message preview:</b>
+      <i>{{getMessagePreview()}}</i>
+    </div>
+  </md-card-content>
+  <md-card-actions>
+    <md-checkbox [(ngModel)]='confirmSend'>Confirm sending</md-checkbox>
+    <button md-raised-button color='primary' [disabled]='!confirmSend' (click)='massSend()'>Mass send</button>
+  </md-card-actions>
+</md-card>
+
+<md-card class='mass-text-component' *ngIf='sentMassText'>
+  <md-card-title>
+    Sent Text
+  </md-card-title>
+  <md-card-content>
+    <div class='message-sent-number'>
+      Sent to {{sentMassText.numberSent}} of {{racers.length}}
+    </div>
+    <div class='message-preview'>
+      <i>{{getMessagePreview()}}</i>
+    </div>
+  </md-card-content>
+</md-card>
+
+<md-card class='mass-text-component' *ngIf='sentMassText'>
+  <md-card-title>
+    Responses
+  </md-card-title>
+  <md-card-content>
+    <table>
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>Racer name</th>
+          <th>Primary number</th>
+          <th>Text sent time</th>
+          <th>Response time</th>
+          <th>Response text</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor='let racer of racers' [ngClass]='getRacerRowClass(racer)'>
+          <td>{{getTeamForRacer(racer).name}}</td>
+          <td>{{racer.name}}</td>
+          <td>{{racer.getPrimaryContactNumber().number}}</td>
+          <td>{{getTextSentTimeForRacer(racer)}}</td>
+          <td>{{getTextResponseTimeForRacer(racer)}}</td>
+          <td>{{getTextResponseTextForRacer(racer)}}</td>
+        </tr>
+      <tbody>
+    </table>
+  </md-card-content>
+</md-card>

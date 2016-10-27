@@ -8,15 +8,25 @@ import { Team } from '../common/team';
 import { TextReceivedMessage } from "../common/message";
 import { UserService } from './user.service';
 
+import * as moment from "moment";
+
 export class TextFilterOptions {
   racer: Racer | boolean;
   team: Team | boolean;
   read: boolean
+  inbound: boolean;
+  outbound: boolean;
+  afterTime: Date;
+  beforeTime: Date;
 
   constructor(opts) {
     this.racer = opts.racer;
     this.team = opts.team;
     this.read = opts.read;
+    this.inbound = opts.inbound;
+    this.outbound = opts.outbound;
+    this.afterTime = opts.afterTime;
+    this.beforeTime = opts.beforeTime;
   }
 
   filter(text: Text): boolean {
@@ -33,6 +43,18 @@ export class TextFilterOptions {
     }
     if (text instanceof OutboundText && this.read != undefined) {
       return false;
+    }
+    if (this.inbound !== undefined) {
+      if (text instanceof InboundText != this.inbound) return false;
+    }
+    if (this.outbound !== undefined) {
+      if (text instanceof OutboundText != this.outbound) return false;
+    }
+    if (this.afterTime !== undefined) {
+      if (moment(text.timestamp).isBefore(this.afterTime)) return false;
+    }
+    if (this.beforeTime !== undefined) {
+      if (moment(text.timestamp).isAfter(this.beforeTime)) return false;
     }
     return true;
   }

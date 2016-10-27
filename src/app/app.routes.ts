@@ -12,6 +12,7 @@ import { RacerCardComponent } from './racers/racer-card';
 import { TeamCardComponent } from './teams/team-card';
 import { PublicMapComponent } from './public-map';
 import { PublicTeamProgressMapComponent } from './public-team-progress-map';
+import { MassTextComponent } from './mass-text';
 import { SafetyMapComponent } from './safety-map';
 import { DataResolver } from './app.resolver';
 
@@ -82,6 +83,9 @@ export const ROUTES: Routes = [
         { path: 'me', component: MeComponent, canActivate: [AuthenticatedGuard] }
       ]
     },
+    {
+      path: 'mass-text', component: MassTextComponent
+    }
   ] },
   { path: 'team-progress/:id', component: PublicTeamProgressMapComponent },
   { path: '**', component: PublicMapComponent },
