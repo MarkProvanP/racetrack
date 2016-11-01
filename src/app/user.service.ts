@@ -3,6 +3,8 @@ import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 
+import { UserActionInfo } from "../server/auth";
+
 @Injectable()
 export class UserService {
   private headers = new Headers({'Content-Type': 'application/json'});
@@ -128,5 +130,13 @@ export class UserService {
 
   getUser() {
     return this.user;
+  }
+
+  public getUserAction() {
+    let userAction = {
+      user: this.getUser(),
+      timestamp: new Date()
+    } as UserActionInfo;
+    return userAction;
   }
 }

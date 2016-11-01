@@ -2,6 +2,7 @@ import { Racer, RacerId } from "../../common/racer";
 import { Team, TeamId, PopulatedTeam, UnpopulatedTeam } from "../../common/team";
 import { TeamStatus, TeamUpdate, TeamUpdateId, Location } from "../../common/update";
 import { Text, InboundText, OutboundText, PhoneNumber, TwilioInboundText, TwilioOutboundText, FullFormText, DbFormText } from "../../common/text";
+import { ThingEvent, ThingEventId } from "../../common/event";
 import { DbFacadeInterface } from "./db-facade";
 import { MongoClient } from "mongodb";
 import { Promise } from "es6-promise";
@@ -383,5 +384,45 @@ class MongoDbFacade implements DbFacadeInterface {
       .then(result => {
         return Promise.resolve(user);
       });
+  }
+
+//================================================================
+
+  getEvents(): Promise<ThingEvent[]> {
+    let collection = this.db.collection('events');
+    return collection.find({}).toArray()
+      .then(docs => docs.map(event => ThingEvent.fromJSON(event)))
+  }
+
+  getEvent(id: ThingEventId): Promise<ThingEvent> {
+    let collection = this.db.collection('events');
+    return collection.find({id}).toArray()
+    .then(docs => {
+      if (docs.length > 0) {
+        return Promise.resolve(ThingEvent.fromJSON(docs[0]))
+      } else {
+        return Promise.reject(`No event with id ${id}`);
+      }
+    })
+  }
+
+  updateEvent(event: ThingEvent): Promise<ThingEvent> {
+    let collection = this.db.collection('events');
+    let id = event.id;
+    return collection.updateOne({id}, {$set: event})
+      .then(result => event);
+  }
+
+  createEvent(obj): Promise<ThingEvent> {
+    let collection = this.db.collection('events');
+    let id = uuid.v4();
+    let newEvent = ThingEvent.create(id, obj);
+    return collection.insert(newEvent)
+      .then(result => newEvent);
+  }
+
+  deleteEvent(id: ThingEventId): Promise<void> {
+    let collection = this.db.collection('events');
+    return collection.deleteOne({id: id})
   }
 }

@@ -1,3 +1,5 @@
 export class NoSuchUserError extends Error {
-  constructor(private username);
+  constructor(private username) {
+    super();
+  }
 }

@@ -7,6 +7,7 @@ import { Team, TeamId } from '../common/team';
 import { Racer, RacerId } from '../common/racer';
 import { TeamUpdate } from '../common/update';
 import { PhoneNumber } from '../common/text';
+import { ThingEvent, ThingEventId } from '../common/event';
 import { UserService } from './user.service';
 
 @Injectable()
@@ -186,6 +187,46 @@ export class DataService {
   getTeamForRacer(racer: Racer): Promise<Team> {
     return this.getTeams()
       .then(teams => teams.filter(team => team.hasRacer(racer))[0]);
+  }
+
+  getEvents(): Promise<ThingEvent[]> {
+    return this.http.get(this.eventsUrl, this.httpNoBodyExtras)
+      .toPromise()
+      .then(response => response.json().map(ThingEvent.fromJSON))
+      .catch(this.handleError);
+  }
+
+  getEvent(id: ThingEventId): Promise<ThingEvent> {
+    let url = `${this.eventsUrl}/${id}`
+    return this.http.get(url, this.httpNoBodyExtras)
+      .toPromise()
+      .then(response => ThingEvent.fromJSON(response.json()))
+      .catch(this.handleError);
+  }
+
+  deleteEvent(event: ThingEvent): Promise<ThingEvent> {
+    let url = `${this.eventsUrl}/${event.id}`;
+    return this.http.delete(url, this.httpNoBodyExtras)
+      .toPromise()
+      .then(() => null)
+      .catch(this.handleError);
+  }
+
+  createEvent(properties): Promise<ThingEvent> {
+    return this.http
+      .post(this.eventsUrl, JSON.stringify(properties), this.httpExtras)
+      .toPromise()
+      .then(res => ThingEvent.fromJSON(res.json()))
+      .catch(this.handleError)
+  }
+
+  updateEvent(event: ThingEvent): Promise<ThingEvent> {
+    let url = `${this.eventsUrl}/${event.id}`
+    return this.http
+      .put(url, JSON.stringify(event), this.httpExtras)
+      .toPromise()
+      .then(response => ThingEvent.fromJSON(response.json()))
+      .catch(this.handleError);
   }
 
   private handleError(error: any): Promise<any> {

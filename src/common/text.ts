@@ -9,14 +9,10 @@ export type TextId = string;
 
 import { Racer, RacerId } from './racer';
 import { Team, TeamId } from './team';
-import { UserWithoutPassword } from '../server/auth';
+import { UserActionInfo, UserWithoutPassword } from '../server/auth';
 
 import * as moment from "moment";
 
-export interface UserActionInfo {
-  timestamp: Date,
-  user: UserWithoutPassword
-}
 
 export interface DbFormText {
   text_subclass: string;

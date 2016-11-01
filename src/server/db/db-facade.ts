@@ -3,6 +3,7 @@ import { Team, TeamId } from "../../common/team";
 import { TeamUpdate, TeamUpdateId } from "../../common/update";
 import { Text, PhoneNumber, TwilioInboundText, TwilioOutboundText } from "../../common/text";
 import { UserWithoutPassword } from '../auth';
+import { ThingEvent, ThingEventId } from "../../common/event";
 
 import { User } from '../auth';
 
@@ -34,5 +35,11 @@ export interface DbFacadeInterface {
   getUser(username): Promise<User>;
   canAddUser(username): Promise<boolean>;
   addUser(username, password, properties): Promise<User>;
+
+  getEvents(): Promise<ThingEvent[]>;
+  getEvent(id: ThingEventId): Promise<ThingEvent>;
+  updateEvent(event: ThingEvent): Promise<ThingEvent>;
+  createEvent(obj): Promise<ThingEvent>;
+  deleteEvent(event: ThingEvent): Promise<void>;
 }
 

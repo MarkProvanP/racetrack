@@ -1,73 +1,113 @@
-<md-card class='mass-text-component' *ngIf='!sentMassText'>
-  <md-card-title>
-    Mass Text
-  </md-card-title>
-  <md-card-content>
-    <div class='response-safeword'>
-      <label>Keyword</label>
-      <md-input [(ngModel)]='massTextKeyword'></md-input>
-    </div>
-    <div class='response-timeout'>
-      <label>Reply time (mins)</label>
-      <label>0</label>
-      <md-slider min='1' max='60' tick-interval='auto' thumb-label [(ngModel)]='massTextTimeout'></md-slider>
-      <label>60</label>
-    </div>
-    <div class='message-body'>
-      <label>Message body</label>
-      <md-input [(ngModel)]='massTextBody'></md-input>
-    </div>
-    <div class='message-preview'>
-      <b>Message preview:</b>
-      <i>{{getMessagePreview()}}</i>
-    </div>
-  </md-card-content>
-  <md-card-actions>
-    <md-checkbox [(ngModel)]='confirmSend'>Confirm sending</md-checkbox>
-    <button md-raised-button color='primary' [disabled]='!confirmSend' (click)='massSend()'>Mass send</button>
-  </md-card-actions>
-</md-card>
+<div *ngIf='ready'>
+  <md-card class='mass-text-component' *ngIf='!currentEvent || isSending'>
+    <md-card-title>
+      Mass Text
+    </md-card-title>
+    <md-card-content>
+      <div class='response-safeword'>
+        <label>Keyword</label>
+        <md-input [(ngModel)]='newMassTextKeyword'></md-input>
+      </div>
+      <div class='response-timeout'>
+        <label>Reply time (mins)</label>
+        <label>0</label>
+        <md-slider min='1' max='60' tick-interval='auto' thumb-label [(ngModel)]='newMassTextTimeout'></md-slider>
+        <label>60</label>
+      </div>
+      <div class='message-body'>
+        <label>Message body</label>
+        <md-input [(ngModel)]='newMassTextBody'></md-input>
+      </div>
+      <div class='message-preview'>
+        <b>Message preview:</b>
+        <i>{{getMessagePreview()}}</i>
+      </div>
+    </md-card-content>
+    <md-card-actions>
+      <md-checkbox [(ngModel)]='confirmSend'>Confirm sending</md-checkbox>
+      <button md-raised-button color='primary' [disabled]='!confirmSend' (click)='massSend()'>Mass send</button>
+    </md-card-actions>
+    <md-progress-bar mode='determinate' *ngIf='isSending' value='getProgressBarValue()'> </md-progress-bar>
+  </md-card>
 
-<md-card class='mass-text-component' *ngIf='sentMassText'>
-  <md-card-title>
-    Sent Text
-  </md-card-title>
-  <md-card-content>
-    <div class='message-sent-number'>
-      Sent to {{sentMassText.numberSent}} of {{racers.length}}
-    </div>
-    <div class='message-preview'>
-      <i>{{getMessagePreview()}}</i>
-    </div>
-  </md-card-content>
-</md-card>
+  <md-card class='mass-text-component' *ngIf='currentEvent && !isSending'>
+    <md-card-title>
+      Sent Text
+    </md-card-title>
+    <md-card-content>
+      <div class='message-preview'>
+        <i>{{getSentMessage()}}</i>
+      </div>
+    </md-card-content>
+    <md-card-actions>
+      <button md-raised-button color='warn' (click)='endMassTextEvent()'>Mark as Complete</button>
+    </md-card-actions>
+  </md-card>
 
-<md-card class='mass-text-component' *ngIf='sentMassText'>
-  <md-card-title>
-    Responses
-  </md-card-title>
-  <md-card-content>
-    <table>
-      <thead>
+  <md-card class='mass-text-component' *ngIf='currentEvent'>
+    <md-card-title>
+      Responses
+    </md-card-title>
+    <md-card-content>
+      <div class='response-table'>
+      </div>
+      <table class='response-table'>
+        <thead>
+          <tr>
+            <th>Team</th>
+            <th>Racer name</th>
+            <th>Primary number</th>
+            <th>Response time</th>
+            <th>Response text</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor='let racer of racers' [ngClass]='getRacerRowClass(racer)'>
+            <td>{{getTeamForRacer(racer).name}}</td>
+            <td>{{racer.name}}</td>
+            <td>{{racer.getPrimaryContactNumber().number}}</td>
+            <td>{{getTextResponseTimeForRacer(racer)}}</td>
+            <td>{{getTextResponseTextForRacer(racer)}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </md-card-content>
+  </md-card>
+  
+  <h3 class='mass-text-component'>Previous Mass Texts</h3>
+
+  <md-card class='old-mass-texts mass-text-component' *ngFor='let oldMassText of oldMassTexts'>
+    <md-card-content>
+      <table>
         <tr>
-          <th>Team</th>
-          <th>Racer name</th>
-          <th>Primary number</th>
-          <th>Text sent time</th>
-          <th>Response time</th>
-          <th>Response text</th>
+          <th>Started by</th>
+          <td>{{oldMassText.byUser.user.name}}</td>
         </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor='let racer of racers' [ngClass]='getRacerRowClass(racer)'>
-          <td>{{getTeamForRacer(racer).name}}</td>
-          <td>{{racer.name}}</td>
-          <td>{{racer.getPrimaryContactNumber().number}}</td>
-          <td>{{getTextSentTimeForRacer(racer)}}</td>
-          <td>{{getTextResponseTimeForRacer(racer)}}</td>
-          <td>{{getTextResponseTextForRacer(racer)}}</td>
+        <tr>
+          <th>At time</th>
+          <td>{{oldMassText.byUser.timestamp}}</td>
         </tr>
-      <tbody>
-    </table>
-  </md-card-content>
-</md-card>
+        <tr>
+          <th>Keyword</th>
+          <td>{{oldMassText.keyword}}</td>
+        </tr>
+        <tr>
+          <th>Timeout (mins)</th>
+          <td>{{oldMassText.timeout}}</td>
+        </tr>
+        <tr>
+          <th>Message body</th>
+          <td>{{oldMassText.body}}</td>
+        </tr>
+        <tr>
+          <th>Marked as completed by</th>
+          <td>{{oldMassText.endedBy.user.name}}</td>
+        </tr>
+        <tr>
+          <th>At time</th>
+          <td>{{oldMassText.endedBy.timestamp}}</td>
+        </tr>
+      </table>
+    </md-card-content>
+  </md-card>
+</div>

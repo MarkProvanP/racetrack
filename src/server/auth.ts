@@ -21,6 +21,11 @@ export interface UserWithoutPassword {
 
 const NO_USER_ERROR_CODE = 402;
 
+export interface UserActionInfo {
+  timestamp: Date,
+  user: UserWithoutPassword
+}
+
 export class User {
   username: string;
   password: string;

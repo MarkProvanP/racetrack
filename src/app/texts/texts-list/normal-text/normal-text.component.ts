@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 
-import { Text, UserActionInfo } from '../../../../common/text';
+import { Text } from '../../../../common/text';
+
+import { UserActionInfo } from "../../../../server/auth";
 
 import { UserService } from '../../../user.service';
 
@@ -22,12 +24,7 @@ export class NormalTextComponent {
   }
 
   markTextAsRead() {
-    let user = this.userService.getUser();
-    let textRead = {
-      timestamp: new Date(),
-      user: user
-    } as UserActionInfo;
-    this.text.readBy = textRead;
+    this.text.readBy = this.userService.getUserAction();
     this.onMakeRead.emit(this.text);
   }
 

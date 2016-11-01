@@ -1,11 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 
 import { DataService } from "../data.service";
+import { UserService } from "../user.service";
 import { TextService, TextFilterOptions } from "../text.service";
 import { InboundText, OutboundText } from "../../common/text";
 
 import { Team } from "../../common/team";
 import { Racer } from "../../common/racer";
+import { MassTextEvent } from "../../common/event";
 
 import * as moment from "moment";
 
@@ -21,39 +23,87 @@ export class MassTextComponent implements OnInit {
   racerToTeamMap = new WeakMap();
   sentTexts = new WeakMap();
 
-  massTextKeyword: string = "";
-  massTextTimeout: number = 30;
-  massTextBody: string = "";
+  newMassTextKeyword: string = "";
+  newMassTextTimeout: number = 30;
+  newMassTextBody: string = "";
 
-  sentMassText = undefined;
+  ready = false;
+
+  currentEvent = undefined;
+  numberSent = 0;
+
+  isSending = false;
+
+  oldMassTexts = [];
 
   constructor(
     private dataService: DataService,
-    private textService: TextService
+    private textService: TextService,
+    private userService: UserService
   ) {
     
   }
 
-  massSend() {
-    this.sentMassText = {
-      keyword: this.massTextKeyword,
-      timeout: this.massTextTimeout,
-      body: this.massTextBody,
-      numberSent: 0
+  endMassTextEvent() {
+    if (this.currentEvent) {
+      this.currentEvent.endedBy = this.userService.getUserAction();
+      this.dataService.updateEvent(this.currentEvent)
+        .then(event => this.currentEvent = undefined)
     }
+  }
+
+  getActiveMassTextEvent() {
+    this.dataService.getEvents()
+    .then(events => {
+      return events.filter(event => event instanceof MassTextEvent) as MassTextEvent[]
+    })
+    .then(events => {
+      this.oldMassTexts = events.filter(event => event.endedBy);
+      return events.filter(event => !event.endedBy)
+    })
+    .then(events => {
+      this.currentEvent = events.length ? events[0] : undefined;
+      this.ready = true;
+    });
+  }
+
+  massSend() {
+    let newMassTextEventProperties = {
+      eventType: MassTextEvent.EVENT_TYPE,
+      byUser: this.userService.getUserAction(),
+      keyword: this.newMassTextKeyword,
+      timeout: this.newMassTextTimeout,
+      body: this.newMassTextBody
+    }
+    this.dataService.createEvent(newMassTextEventProperties)
+    .then(event => {
+      this.currentEvent = event;
+    })
+    this.isSending = true;
     this.racers.forEach(racer => {
       let number = racer.getPrimaryContactNumber().number;
       let message = this.getMessagePreview();
       this.textService.sendText(number, message)
         .then(text => {
-          this.sentMassText.numberSent++;
+          this.numberSent++;
           this.sentTexts.set(racer, text);
+          if (this.numberSent == this.racers.length) {
+            this.isSending = false;
+          }
         });
     });
   }
+
+  getProgressBarValue() {
+    return this.numberSent / this.racers.length;
+  }
   
   getMessagePreview() {
-    return `Race2 Alert - ${this.massTextBody} - Your team MUST respond "${this.massTextKeyword}" within ${this.massTextTimeout} minutes!`;
+    return `Race2 Alert - ${this.newMassTextBody} - Your team MUST respond "${this.newMassTextKeyword}" within ${this.newMassTextTimeout} minutes!`;
+  }
+
+  getSentMessage() {
+    return `Race2 Alert - ${this.currentEvent.body} - Your team MUST respond "${this.currentEvent.keyword}" within ${this.currentEvent.timeout} minutes!`;
   }
 
   getTeamForRacer(racer: Racer) {
@@ -61,7 +111,7 @@ export class MassTextComponent implements OnInit {
   }
 
   getMostRecentReceivedTextForRacer(racer: Racer) {
-    let textSentTime = this.getTextSentTimeForRacer(racer);
+    let textSentTime = this.currentEvent.byUser.timestamp;
     let opts = {
       racer: racer,
       inbound: true,
@@ -73,49 +123,40 @@ export class MassTextComponent implements OnInit {
     let sorted = matchingTexts.sort((t1, t2) => moment(t2.timestamp).diff(t1.timestamp));
     if (matchingTexts.length) {
       return sorted[0];
-    } else {
-      return null;
-    }
-  }
-
-  getTextSentTimeForRacer(racer: Racer) {
-    let sentText = this.sentTexts.get(racer);
-    if (sentText) {
-      return sentText.timestamp;
-    } else {
-      return undefined;
     }
   }
 
   getTextResponseTimeForRacer(racer: Racer) {
-    let mostRecentResponse = this.getMostRecentReceivedTextForRacer(racer);
-    if (mostRecentResponse) {
-      return mostRecentResponse.timestamp;
+    if (this.hasRacerResponded(racer)) {
+      let mostRecentResponse = this.getMostRecentReceivedTextForRacer(racer);
+      if (mostRecentResponse) {
+        return mostRecentResponse.timestamp;
+      }
     }
   }
 
   getTextResponseTextForRacer(racer: Racer) {
-    let mostRecentResponse = this.getMostRecentReceivedTextForRacer(racer);
-    if (mostRecentResponse) {
-      return mostRecentResponse.body;
+    if (this.hasRacerResponded(racer)) {
+      let mostRecentResponse = this.getMostRecentReceivedTextForRacer(racer);
+      if (mostRecentResponse) {
+        return mostRecentResponse.body;
+      }
     }
   }
 
-  getRacerResponded(racer: Racer) {
+  hasRacerResponded(racer: Racer) {
     let mostRecentResponse = this.getMostRecentReceivedTextForRacer(racer);
     if (!mostRecentResponse) {
-      return false;
+      return;
     }
 
-    if (mostRecentResponse.body == this.sentMassText.body) {
-      return true;
-    } else {
-      return false;
+    if (mostRecentResponse.body.indexOf(this.currentEvent.keyword) != -1) {
+      return mostRecentResponse;
     }
   }
 
   getRacerRowClass(racer: Racer) {
-    if (this.getRacerResponded(racer)) {
+    if (this.hasRacerResponded(racer)) {
       return "responded";
     } else {
       return "not-responded";
@@ -123,12 +164,13 @@ export class MassTextComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getActiveMassTextEvent();
     this.dataService.getTeams()
       .then(teams => {
         this.teams = teams;
         this.teams.forEach(team => {
           this.racers = this.racers.concat(team.racers);
-          this.racers.forEach(racer => {
+          team.racers.forEach(racer => {
             this.racerToTeamMap.set(racer, team);
           });
         });

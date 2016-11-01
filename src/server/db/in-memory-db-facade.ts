@@ -7,7 +7,7 @@ import { Promise } from "es6-promise";
 import * as uuid from "node-uuid";
 import { User } from '../auth';
 
-export class InMemoryDbFacade implements DbFacadeInterface {
+export class InMemoryDbFacade {
   constructor() {
     let racerProperties = [
       {name: 'Tom Smith', nationality: 'GB', phone: '+12134732'},
