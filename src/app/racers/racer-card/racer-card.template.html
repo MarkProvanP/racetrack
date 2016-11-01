@@ -20,13 +20,11 @@
               <div *ngFor='let contact of racer.phones'>
                 <div *ngIf='!inEditMode' class='contact-view contact-row'>
                   <p>{{contact.number}}</p>
-                  <p><i>Name:</i> {{contact.name}}</p>
                   <p><i>Notes:</i> {{contact.notes || "No notes"}}</p>
                   <md-checkbox [(ngModel)]='contact.preferred' disabled>Preferred</md-checkbox>
                 </div>
                 <div *ngIf='inEditMode' class='contact-edit contact-row'>
                   <md-input placeholder='Phone number' [(ngModel)]='contact.number'></md-input>
-                  <md-input placeholder='Number desc' [(ngModel)]='contact.name'></md-input>
                   <md-input placeholder='Notes' [(ngModel)]='contact.notes'></md-input>
                   <md-checkbox [(ngModel)]='contact.preferred'>Preferred</md-checkbox>
                   <button md-mini-fab color='warn' (click)='removeContactFromRacer(contact)'>

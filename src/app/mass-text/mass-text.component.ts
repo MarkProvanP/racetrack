@@ -75,10 +75,12 @@ export class MassTextComponent implements OnInit {
       timeout: this.newMassTextTimeout,
       body: this.newMassTextBody
     }
+
     this.dataService.createEvent(newMassTextEventProperties)
     .then(event => {
       this.currentEvent = event;
     })
+
     this.isSending = true;
     this.racers.forEach(racer => {
       let number = racer.getPrimaryContactNumber().number;

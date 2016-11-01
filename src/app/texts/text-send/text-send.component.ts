@@ -77,6 +77,13 @@ export class TextSendComponent {
         });
         this.allRecipients = allContacts;
         this.recipients = this.allRecipients.filter(recipient => recipient.number == this.toNumber);
+        if (!this.recipients.length) {
+          this.recipients.push({
+            name: '?',
+            numNote: '?',
+            number: this.toNumber
+          })
+        }
       });
   }
 }

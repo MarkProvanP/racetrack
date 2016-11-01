@@ -1,7 +1,6 @@
 export type PhoneNumber = string;
 export interface ContactNumber {
   number: PhoneNumber,
-  name: string,
   notes: string,
   preferred: boolean
 }

@@ -24,7 +24,7 @@ export class NormalTextComponent {
   }
 
   markTextAsRead() {
-    this.text.readBy = this.userService.getUserAction();
+    (<InboundText> this.text).readBy = this.userService.getUserAction();
     this.onMakeRead.emit(this.text);
   }
 

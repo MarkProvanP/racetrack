@@ -21,9 +21,8 @@ export class UnknownTextComponent implements OnInit {
   selectedRacer: Racer;
   newContact: ContactNumber = {
     number: undefined,
-    name: undefined,
     notes: undefined,
-    preferred: false
+    preferred: true 
   };
 
   ngOnInit() {
@@ -58,12 +57,7 @@ export class UnknownTextComponent implements OnInit {
   }
 
   markTextAsRead() {
-    let user = this.userService.getUser();
-    let textRead = {
-      timestamp: new Date(),
-      user: user
-    } as UserActionInfo;
-    (<InboundText> this.text).readBy = textRead;
+    (<InboundText> this.text).readBy = this.userService.getUserAction();
     this.onMakeRead.emit(this.text);
   }
 

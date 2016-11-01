@@ -7,7 +7,7 @@
       <div class='text-recipients-list'>
         <md-card *ngFor='let recipient of recipients'>
           <md-card-content>
-            {{recipient.name}} {{recipient.numNote}} ({{recipient.number}}
+            {{recipient.name}} {{recipient.numNote}} ({{recipient.number}})
           </md-card-content>
         </md-card>
         <div class='next-recipient'>
@@ -15,16 +15,18 @@
           <md-card id='filter-recipients-list' class='filter-recipients-list'>
             <md-list>
               <md-list-item *ngFor='let recipient of matchingRecipients' (click)='addRecipient(recipient)'>
-                {{recipient.name}} {{recipient.numNote}} {{recipient.number}})
+                {{recipient.name}} {{recipient.numNote}} ({{recipient.number}})
               </md-list-item>
             </md-list>
           </md-card>
         </div>
       </div>
-      <table>
+      <table style='width: 100%'>
         <tr>
           <th>Message:</th>
-          <td><md-input [(ngModel)]='message'></md-input></td>
+        </tr>
+        <tr>
+          <td><md-input style='width: 100%'[(ngModel)]='message'></md-input></td>
         </tr>
       </table>
       <button md-raised-button color='accent' (click)='sendNewText()'>Send</button>

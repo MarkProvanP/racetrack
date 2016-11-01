@@ -28,7 +28,6 @@
             <thead>
               <tr>
                 <th>Number</th>
-                <th>Name</th>
                 <th>Notes</th>
                 <th>Preferred</th>
               </tr>
@@ -36,7 +35,6 @@
             <tbody>
               <tr *ngFor='let contact of selectedRacer.phones'>
                 <td>{{contact.number}}</td>
-                <td>{{contact.name}}</td>
                 <td>{{contact.notes}}</td>
                 <td>
                   <md-checkbox [(ngModel)]='contact.preferred' [disabled]='true'>
@@ -48,7 +46,6 @@
           <h3>New contact number details</h3>
           <div class='new-contact'>
             <md-input class='number-input' placeholder='Phone number' [(ngModel)]='newContact.number'></md-input>
-            <md-input class='shrink' placeholder='Number desc' [(ngModel)]='newContact.name'></md-input>
             <md-input class='shrink' placeholder='Notes' [(ngModel)]='newContact.notes'></md-input>
             <md-checkbox [(ngModel)]='newContact.preferred'>Preferred</md-checkbox>
           </div>
@@ -70,8 +67,8 @@
   </div>
   <md-card-actions>
     <button md-button (click)='replyToText()'>RESPOND</button>
-    <md-checkbox [(ngModel)]='text.read' (change)='markTextAsRead()'>
-      Read
-    </md-checkbox>
+    <button md-button (click)='markTextAsRead()' [disabled]='text.readBy'>
+      Mark as read
+    </button>
   </md-card-actions>
 </md-card>
