@@ -66,7 +66,6 @@ export class TextService {
   
   private headers = new Headers({'Content-Type': 'application/json'});
   private backendHost = "";
-  private socketIoHost = "";//"https://mrp4.host.cs.st-andrews.ac.uk";
   private baseUrl = this.backendHost + "/r2bcknd/";
   private textsUrl = this.baseUrl + "texts";
 
@@ -79,7 +78,6 @@ export class TextService {
     headers: this.headers,
     withCredentials: true
   }
-  private socket;
 
   private texts: Text[] = [];
 
@@ -87,23 +85,12 @@ export class TextService {
   private onTextReceivedReceivers = [];
 
   private whenAuthenticated() {
-    if (this.socket) {
-      console.error("socket already exists!");
-    }
-    this.socket = io(this.socketIoHost, {path: '/r2bcknd/socket.io'});
-    this.socket.on('connect', () => {
-      console.log('Socket io connection established!');
-    });
-    this.socket.on('connect_error', () => {
-      console.log('Socket io connection error!');
-    });
     this.getAllTextsFromBackend()
       .then(texts => {
         this.texts = texts
         this.broadcastTextsChanged();
       });
-    this.socket.on('message', (s) => console.log('received', s));
-    this.socket.on(TextReceivedMessage.event, (messageString) => {
+    this.userService.addSocketEventListener(TextReceivedMessage.event, (messageString) => {
       let parsed = JSON.parse(messageString);
       let message = TextReceivedMessage.fromJSON(parsed);
       console.log('Received message', message);
@@ -114,13 +101,12 @@ export class TextService {
   }
 
   private notAuthenticated() {
-    this.socket = undefined;
     this.texts = [];
   }
 
   constructor(
     private http: Http,
-    private userService: UserService
+    private userService: UserService,
   ) {
     this.userService.addOnAuthStatusChangedListener(authenticated => {
       console.log('authenticated status changed to', authenticated);

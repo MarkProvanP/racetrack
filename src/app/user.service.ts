@@ -3,7 +3,7 @@ import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 
-import { UserActionInfo } from "../common/user";
+import { UserWithoutPassword, UserActionInfo } from "../common/user";
 
 @Injectable()
 export class UserService {
@@ -17,11 +17,48 @@ export class UserService {
   private meUrl = this.baseUrl + "me";
 
   private authenticated: boolean = false;
-  private user;
+  private user: UserWithoutPassword;
+  private otherUsers: UserWithoutPassword[];
 
   private authenticatedStatusListeners = [];
+  private otherUsersListeners = [];
 
-  constructor(private http: Http) {
+  private socketIoHost = "";//"https://mrp4.host.cs.st-andrews.ac.uk";
+  private socket;
+
+  private socketEventListenerMap = {};
+
+  addSocketEventListener(event, callback) {
+    if (!this.socketEventListenerMap[event]) {
+      this.socketEventListenerMap[event] = [];
+      console.log('Adding socket event listener', event, callback);
+      this.socket.on(event, (m) => {
+        this.socketEventListenerMap[event].forEach(callback => callback(m));
+      })
+    }
+    this.socketEventListenerMap[event].push(callback);
+  }
+
+  private whenAuthenticated() {
+    if (this.socket) {
+      console.error("socket already exists!");
+    }
+    this.socket = io(this.socketIoHost, {path: '/r2bcknd/socket.io'});
+    this.socket.on('connect', () => {
+      console.log('Socket io connection established!');
+    });
+    this.socket.on('connect_error', () => {
+      console.log('Socket io connection error!');
+    });
+  }
+
+  private notAuthenticated() {
+    this.socket = undefined;
+  }
+
+  constructor(
+    private http: Http,
+  ) {
     this.authenticate()
       .then(authenticated => {
         
@@ -33,8 +70,17 @@ export class UserService {
     callback(this.authenticated);
   }
 
+  public addOtherUsersListener(callback) {
+    this.otherUsersListeners.push(callback);
+    callback(this.otherUsers);
+  }
+
   private broadcastAuthStatus() {
     this.authenticatedStatusListeners.forEach(listener => listener(this.authenticated));
+  }
+
+  private broadcastOtherUsers() {
+    this.otheUsersListeners.forEach(listener => listener(this.otherUsers));
   }
 
   private setUser(user): Promise<any> {
@@ -43,6 +89,7 @@ export class UserService {
     }
     this.authenticated = true;
     console.log('setting authenticated to true');
+    this.whenAuthenticated();
     this.broadcastAuthStatus();
     this.user = user;
     return Promise.resolve(user);
@@ -52,6 +99,7 @@ export class UserService {
     this.authenticated = false;
     this.user = undefined;
     this.broadcastAuthStatus();
+    this.notAuthenticated();
   }
 
   authenticate(): Promise<any> {
@@ -110,13 +158,16 @@ export class UserService {
       .then(user => this.setUser(user))
   }
 
-  getMe(): Promise<any> {
+  getMe(): Promise<UserWithoutPassword> {
     return this.http
       .get(this.meUrl, {withCredentials: true})
       .toPromise()
       .catch(this.handleHttpError)
       .then(response => response.json())
-      .then(user => this.setUser(user))
+      .then(user => {
+        this.setUser(user);
+        return user;
+      });
   }
 
   private handleHttpError(error: any): Promise<any> {
@@ -128,9 +179,14 @@ export class UserService {
     return this.authenticated;
   }
 
-  getUser() {
+  getUser(): UserWithoutPassword {
     return this.user;
   }
+
+  getOtherLoggedInUsers(): UserWithoutPassword[] {
+    return this.otherUsers;
+  }
+
 
   public getUserAction() {
     let userAction = {
