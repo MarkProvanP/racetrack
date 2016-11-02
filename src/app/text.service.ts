@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 import { Text, PhoneNumber, InboundText, OutboundText } from '../common/text';
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
-import { TextReceivedMessage } from "../common/message";
+import { TextReceivedMessage, TextUpdatedMessage, TextSentMessage } from "../common/message";
 import { UserService } from './user.service';
 
 import * as moment from "moment";
@@ -96,6 +96,18 @@ export class TextService {
       this.broadcastTextReceived(text);
       this.addText(text);
     });
+    this.userService.addSocketEventListener(TextSentMessage.event, (message) => {
+      let textSentMessage = TextReceivedMessage.fromJSON(message);
+      let text = textSentMessage.text;
+      this.broadcastTextReceived(text);
+      this.addText(text)
+    });
+    this.userService.addSocketEventListener(TextUpdatedMessage.event, (message) => {
+      let textReadMessage = TextUpdatedMessage.fromJSON(event);
+      let text = textReadMessage.text;
+      this.updateText(text);
+      this.broadcastTextsChanged();
+    })
   }
 
   private notAuthenticated() {
@@ -120,6 +132,16 @@ export class TextService {
     this.texts.push(text);
     this.broadcastTextsChanged();
     return Promise.resolve(text);
+  }
+
+  private updateText(text: Text) {
+    for (let i = 0; i < this.texts.length; i++) {
+      let t = this.texts[i];
+      if (t.id == text.id) {
+        this.texts[i] = text;
+        return;
+      }
+    }
   }
 
   addTextsChangedCallback(callback: Function) {

@@ -26,7 +26,15 @@ const PORT = process.env.PORT || config.SERVER_PORT;
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
 import { Text, TwilioInboundText } from "../common/text";
-import { AbstractMessage, TextReceivedMessage, UserLoggedInMessage, UserLoggedOutMessage, OtherLoggedInUsersMessage } from "../common/message";
+import { 
+  AbstractMessage,
+  TextReceivedMessage,
+  TextSentMessage,
+  TextUpdatedMessage,
+  UserLoggedInMessage,
+  UserLoggedOutMessage,
+  OtherLoggedInUsersMessage
+} from "../common/message";
 
 var path = require('path');
 
@@ -47,6 +55,7 @@ import textsRouterWithDb from "./routes/texts.routes";
 import updatesRouterWithDb from "./routes/updates.routes";
 import eventsRouterWithDb from "./routes/events.routes";
 
+import { GetDataIntermediary } from "./data-intermediate";
 import { DbFacadeInterface } from './db/db-facade';
 import { InMemoryDbFacade } from './db/in-memory-db-facade';
 import { setup } from './db/mongo-db-facade';
@@ -61,10 +70,14 @@ function onAuthorizeFail(data, message, error, accept) {
   accept(new Error("not allowed!"));
 }
 
+let dataIntermediary;
+
 //let db_facade : DbFacadeInterface = new InMemoryDbFacade();
 setup(config.db_url)
   .then(db_facade => {
     winston.info('MongoDB now ready for use');
+
+    dataIntermediary = GetDataIntermediary(db_facade);
 
     let mongoSessionStore = new MongoStore({
       db: db_facade.db,
@@ -129,7 +142,7 @@ setup(config.db_url)
       client: twilioClient,
       fromNumber: config.sendingNo
     }
-    let textsRouter = textsRouterWithDb(db_facade, twilioObj);
+    let textsRouter = textsRouterWithDb(dataIntermediary, twilioObj);
     app.use("/texts", textsRouter);
 
     let updatesRouter = updatesRouterWithDb(db_facade);
@@ -164,7 +177,7 @@ setup(config.db_url)
 
 
 function handleTextMessage(db_facade, twilioText: TwilioInboundText) {
-  db_facade.createFromInboundText(twilioText)
+  dataIntermediary.createFromInboundText(twilioText)
     .then(text => {
       let newMessage = new TextReceivedMessage(text)
       sendMessageToWebClients(newMessage);
@@ -174,12 +187,12 @@ function handleTextMessage(db_facade, twilioText: TwilioInboundText) {
     });
 }
 
-function sendMessageToWebClients(message: AbstractMessage, excluded) {
+function sendMessageToWebClients(message: AbstractMessage, excluded?) {
   let event = message.getEvent();
   console.log('sending message to web clients', message);
   webClients.forEach(socket => {
     if (socket != excluded) {
-      socket.emit(event, message));
+      socket.emit(event, message);
     } else {
       console.log('excluding socket');
     }

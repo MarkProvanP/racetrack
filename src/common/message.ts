@@ -8,6 +8,10 @@ export abstract class AbstractMessage {
   static fromJSON(obj): AbstractMessage {
     if (obj.messageType == TextReceivedMessage.event) {
       return TextReceivedMessage.fromJSON(obj);
+    } else if (obj.messageType == TextSentMessage.event) {
+      return TextSentMessage.fromJSON(obj);
+    } else if (obj.messageType == TextUpdatedMessage.event) {
+      return TextUpdatedMessage.fromJSON(obj);
     } else if (obj.messageType == OtherLoggedInUsersMessage.event) {
       return OtherLoggedInUsersMessage.fromJSON(obj);
     } else if (obj.messageType == UserLoggedInMessage.event) {
@@ -19,6 +23,34 @@ export abstract class AbstractMessage {
 
   getEvent() {
     return this.messageType;
+  }
+}
+
+export class TextUpdatedMessage extends AbstractMessage {
+  static event: string = "text-updated";
+  messageType = TextUpdatedMessage.event;
+
+  static fromJSON(obj) {
+    let text = Text.fromJSON(obj.text);
+    return new TextUpdatedMessage(text);
+  }
+
+  constructor(private text: Text) {
+    super();
+  }
+}
+
+export class TextSentMessage extends AbstractMessage {
+  static event: string = "text-sent";
+  messageType = TextSentMessage.event;
+
+  static fromJSON(obj) {
+    let text = Text.fromJSON(obj.text);
+    return new TextSentMessage(text);
+  }
+
+  constructor(private text: Text) {
+    super();
   }
 }
 

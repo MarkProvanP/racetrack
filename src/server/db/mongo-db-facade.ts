@@ -28,6 +28,8 @@ export function setup(url): Promise<MongoDbFacade> {
 }
 
 class MongoDbFacade implements DbFacadeInterface {
+  textsCollection;
+
   constructor(public db) {
     process.stdin.resume();//so the program will not close instantly
     function exitHandler(options, err) {
@@ -45,6 +47,8 @@ class MongoDbFacade implements DbFacadeInterface {
     process.on('SIGINT', exitHandler.bind(this, {exit:true}));
     //catches uncaught exceptions
     process.on('uncaughtException', exitHandler.bind(this, {exit:true}));
+
+    this.textsCollection = this.db.collection('texts');
   }
 
   getRacers(): Promise<Racer[]> {
@@ -167,171 +171,26 @@ class MongoDbFacade implements DbFacadeInterface {
   }
 
 //================================================================
-
-  createFromInboundText(text: TwilioInboundText): Promise<Text> {
-    let collection = this.db.collection('texts');
-    let id = uuid.v4();
-    let createdText;
-
-    if (text.Body.indexOf(APP_TEXT_HEADER) == 0) {
-      console.log('app text!', text.Body);
-      createdText = AppText.fromTwilio(id, text);
-    } else {
-      createdText = InboundText.fromTwilio(id, text);
-    }
-
-    let fromNumber = createdText.from;
-    return this.getRacers()
-      .then(racers => {
-        let matchingRacers = racers.filter(
-          racer => racer.phones.filter(contact => contact.number == fromNumber).length);
-        if (matchingRacers.length > 0) {
-          createdText.racer = matchingRacers[0];
-        } else {
-        }
-        return this.getTeams()
-      })
-      .then(teams => {
-        let matchingTeams = teams
-          .filter(team =>
-            team.racers.filter(racer => createdText.racer && racer.id == createdText.racer.id).length > 0);
-        if (matchingTeams.length > 0) {
-          createdText.team = matchingTeams[0];
-        }
-      })
-      .then(result => {
-        return collection.insert(createdText.toDbForm());
-      })
-      .then(result => {
-        return Promise.resolve(createdText)
-      });
+  getTexts(query): Promise<DbFormText[]> {
+    let t = this.textsCollection.find(query).toArray() as DbFormText[]
+    return Promise.resolve(t);
   }
 
-  createFromOutboundText(text: TwilioOutboundText, user: UserWithoutPassword): Promise<Text> {
-    let collection = this.db.collection('texts');
-    let id = uuid.v4();
-    let createdText = OutboundText.fromTwilio(id, text);
-    createdText.sentBy = {
-      user: user,
-      timestamp: new Date()
-    }
-    let toNumber = createdText.to;
-    return this.getRacers()
-      .then(racers => {
-        let matchingRacers = racers.filter(
-          racer => racer.phones.filter(contact => contact.number == toNumber).length);
-        if (matchingRacers.length > 0) {
-          createdText.racer = matchingRacers[0];
-        } else {
-        }
-        return this.getTeams()
-      })
-      .then(teams => {
-        let matchingTeams = teams
-          .filter(team =>
-            team.racers.filter(racer => createdText.racer && racer.id == createdText.racer.id).length);
-        if (matchingTeams.length) {
-          createdText.team = matchingTeams[0];
-        }
-      })
-      .then(result => {
-        return collection.insert(createdText.toDbForm());
-      })
-      .then(result => {
-        return Promise.resolve(createdText)
-      });
+  getText(query): Promise<DbFormText> {
+    let t = this.textsCollection.findOne(query) as DbFormText
+    return Promise.resolve(t);
+  }
+  updateText(text: DbFormText): Promise<void> {
+    return this.textsCollection.updateOne({id: text.id}, { $set: text})
+  }
+  createText(text: DbFormText): Promise<void> {
+    return this.textsCollection.insert(text);
+  }
+  deleteText(text: DbFormText): Promise<void> {
+    return this.textsCollection.deleteOne({id: text.id})
   }
 
-  private addRacerToText(text): Promise<any> {
-    let copy = JSON.parse(JSON.stringify(text));
-    if (text.racer) {
-      return this.getRacer(text.racer)
-        .then(racer => {copy.racer = racer; return copy});
-    } else {
-      let inbound = text.text_subclass == "InboundText";
-      if (inbound) {
-      } else {
-      }
-      return this.getRacers()
-        .then(racers => {
-          let possibleRacers = racers
-            .filter(racer => {
-              return racer.phones.filter(contact => {
-                if (inbound) {
-                  return contact.number == text.from;
-                } else {
-                  return contact.number == text.to;
-                }
-              }).length
-            });
-          if (possibleRacers.length > 0) {
-            copy.racer = possibleRacers[0];
-          }
-          return copy;
-        })
-    }
-  }
-
-  private addTeamToText(text): Promise<any> {
-    let copy = JSON.parse(JSON.stringify(text));
-    if (text.team) {
-      return this.getTeam(text.team)
-        .then(team => {
-          copy.team = team;
-          return Promise.resolve(copy);
-        })
-        .catch(err => {
-          return err;
-        });
-    } else {
-      return this.getTeams()
-        .then(teams => {
-          copy.team = teams.filter(team => team.racers.filter(racer => text.racer && racer.id == text.racer.id).length)[0];
-          return Promise.resolve(copy);
-        })
-        .catch(err => {
-          console.error('error', err);
-          return err;
-        });
-    }
-  }
-
-  private populateText(text: DbFormText): Promise<FullFormText> {
-    return this.addRacerToText(text)
-      .then(textWithRacer => this.addTeamToText(textWithRacer))
-  }
-
-  getTexts(): Promise<Text[]>{
-    let collection = this.db.collection('texts');
-    return collection.find({}).toArray()
-      .then(docs => {
-        let textPromises = docs.map(text => {
-          let promise = this.populateText(text)
-          return promise;
-        })
-        return Promise.all(textPromises)
-          .then(texts => texts.map(text => <FullFormText> Text.fromJSON(text)));
-      });
-  }
-
-  getTextsByNumber(number: PhoneNumber): Promise<Text[]>{
-    let collection = this.db.collection('texts');
-    return collection.find({from: number}).toArray()
-      .then(docs => {
-        let textPromises = docs.map(text => this.populateText(text))
-        return Promise.all(textPromises)
-          .then(texts => texts.map(text => <FullFormText> Text.fromJSON(text)));
-      });
-  }
-
-  updateText(text: Text): Promise<Text> {
-    let collection = this.db.collection('texts');
-    let textInDbForm = text.toDbForm();
-    return collection.updateOne({id: text.id}, { $set: textInDbForm})
-      .then(result => {
-        return Promise.resolve(text);
-      });
-  }
+//================================================================
 
   createStatusUpdate(properties): Promise<TeamUpdate> {
     let collection = this.db.collection('updates');
