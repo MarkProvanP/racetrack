@@ -90,11 +90,9 @@ export class TextService {
         this.texts = texts
         this.broadcastTextsChanged();
       });
-    this.userService.addSocketEventListener(TextReceivedMessage.event, (messageString) => {
-      let parsed = JSON.parse(messageString);
-      let message = TextReceivedMessage.fromJSON(parsed);
-      console.log('Received message', message);
-      let text = message.text;
+    this.userService.addSocketEventListener(TextReceivedMessage.event, (message) => {
+      let textReceivedMessage = TextReceivedMessage.fromJSON(message);
+      let text = textReceivedMessage.text;
       this.broadcastTextReceived(text);
       this.addText(text);
     });
