@@ -7,6 +7,7 @@
         <span *ngIf="text.racer">{{text.racer.name}}</span>
         -
         <span *ngIf="text.team">{{text.team.name}}</span>
+        <span *ngIf='!text.team' class='error'>ERROR: No Team for Racer!</span>
       </div>
       <time-widget [time]='text.timestamp'></time-widget>
       <div class='text-title' *ngIf='!display.oneline'>
