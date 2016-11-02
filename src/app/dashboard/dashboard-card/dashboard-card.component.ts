@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
+import { DataService } from "../../data.service";
 
 import { Team } from '../../../common/team';
 import { TeamStatus } from '../../../common/update';
@@ -12,11 +13,12 @@ import { TeamStatus } from '../../../common/update';
 export class DashboardCardComponent implements OnInit {
   @Input() team: Team;
   constructor(
-    private router: Router
+    private router: Router,
+    private dataService: DataService
   ) {}
 
-  getCardClass(team: Team) {
-    switch (team.getCurrentStatus()) {
+  getCardClass() {
+    switch (this.team.getCurrentStatus()) {
       case TeamStatus.ON_START_BUS: return "team-on-bus";
       case TeamStatus.IN_UK: return "team-in-uk";
       case TeamStatus.IN_EUROPE: return "team-in-europe";
@@ -34,7 +36,16 @@ export class DashboardCardComponent implements OnInit {
 
   }
 
-  goToTeamTexts(team: Team) {
-    this.router.navigate(['/safetyteam', 'texts', 'by-team', team.id]);
+  goToTeamTexts() {
+    this.router.navigate(['/safetyteam', 'texts', 'by-team', this.team.id]);
+  }
+
+  checkinTimeoutClass() {
+
+  }
+
+  checkInTeam() {
+    this.team.lastCheckin = new Date();
+    this.dataService.updateTeam(this.team);
   }
 }

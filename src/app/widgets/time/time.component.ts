@@ -9,8 +9,24 @@ import * as moment from "moment";
 })
 export class TimeWidget {
   @Input() time: Date;
+  @Input() fromNow: boolean;
+  moment: Moment;
+
+  set time(date: Date) {
+    this.moment = moment(date);
+  }
+
+  isDateValid() {
+    return this.moment.isValid();
+  }
 
   getPrettyTimestamp() {
-    return moment(this.time).format('HH:mm ddd, Do MMM');
+    return this.moment.format('HH:mm ddd, Do MMM');
+  }
+
+  getPrettyTimeSinceNow() {
+    let now = moment();
+    let duration = moment.duration(this.moment.diff(now));
+    return duration.humanize(true);
   }
 }

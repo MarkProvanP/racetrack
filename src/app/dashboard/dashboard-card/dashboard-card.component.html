@@ -1,4 +1,4 @@
-<md-card [ngClass]='getCardClass(team)'>
+<md-card [ngClass]='getCardClass()'>
   <md-card-header>
     <img md-card-avatar src="http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg">
     <md-card-title>
@@ -13,6 +13,8 @@
     </md-card-subtitle>
   </md-card-header>
   <md-card-content>
+    <h3>Last checkin</h3>
+    <time-widget [time]='team.lastCheckin' [fromNow]='true'></time-widget>
     <h3>Last update</h3>
     <table class='last-update' *ngIf="team.getLastUpdate()">
       <tr>
@@ -48,7 +50,8 @@
     </div>
   </md-card-content>
   <md-card-actions>
-    <button md-button (click)='goToTeamTexts(team)'>TEXTS</button>
+    <button md-button (click)='goToTeamTexts()'>TEXTS</button>
     <button md-button>UPDATE STATUS</button>
+    <button md-button (click)='checkInTeam()'>ADD CHECKIN</button>
   </md-card-actions>
 </md-card>
