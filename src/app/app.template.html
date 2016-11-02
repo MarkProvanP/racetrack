@@ -1,53 +1,72 @@
-<div class='md-content'>
-  <md-toolbar class='toolbar not-logged-in' [ngClass]='toolbarClass()' *ngIf='!loggedIn()'>
-      <a md-button [routerLink]=" ['/'] ">{{ name }}</a>
-      <span class='fill'></span>
-      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./login'] " routerLinkActive='active'>
-        Login
-      </a>
-      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./register'] " routerLinkActive='active'>
-        Register 
-      </a>
-  </md-toolbar>
-  <md-toolbar class='toolbar logged-in' [ngClass]='toolbarClass()' *ngIf='loggedIn()'>
-      <a md-button [routerLink]=" ['/'] ">{{ name }}</a>
+<md-sidenav-layout class='md-content'>
+  <md-sidenav #start mode='side' class='sidebar'>
+    <button md-button (click)='start.close()'>Close</button>
+    <div class='sidebar-top'>
+    </div>
+    <div class='sidebar-items'>
+      <h3>User</h3>
       <a *ngIf='loggedIn()' md-button [routerLink]=" ['./safetyteam/user/me'] " routerLinkActive='active'>
         {{getUsername()}}
       </a>
       <a *ngIf='loggedIn()' md-button [routerLink]=" ['./safetyteam/user/logout'] " routerLinkActive='active'>
         Log out
       </a>
-      <span class="fill">
-        <div class='text-received-flash' *ngIf='getNumberUnreadTexts()'>
-          <a [routerLink]="['safetyteam', 'texts', 'all']" [queryParams]="{show: 'unread'}" md-button>
-            {{getUnreadTextsNotification()}}
-          </a>
-        </div>
-      </span>
-      <a md-button [routerLink]=" ['/safetyteam/texts'] " routerLinkActive='active'>
-        Texts
+      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./login'] " routerLinkActive='active'>
+        Login
       </a>
-      <a md-button [routerLink]=" ['/safetyteam/map'] " routerLinkActive='active'>
-        Map
+      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./register'] " routerLinkActive='active'>
+        Register 
       </a>
-      <a md-button [routerLink]=" ['/safetyteam/dashboard'] " routerLinkActive='active'>
-        Dashboard
-      </a>
+      <h3>Records</h3>
       <a md-button [routerLink]=" ['/safetyteam/racers'] " routerLinkActive='active'>
         Racers
       </a>
       <a md-button [routerLink]=" ['/safetyteam/teams'] " routerLinkActive='active'>
         Teams
       </a>
+      <h3>Actions</h3>
       <a md-button [routerLink]=" ['/safetyteam/mass-text'] " routerLinkActive='active'>
         Mass Text
       </a>
-  </md-toolbar>
+    </div>
+  </md-sidenav>
 
-  <md-progress-bar mode="indeterminate" color="primary" *ngIf="loading"></md-progress-bar>
+  <div class='md-content'>
+    <md-toolbar class='toolbar not-logged-in' [ngClass]='toolbarClass()' *ngIf='!loggedIn()'>
+        <button md-icon-button (click)='start.toggle()'>
+          <md-icon>more_vert</md-icon>
+        </button>
+        <a md-button [routerLink]=" ['/'] ">{{ name }}</a>
+        <span class='fill'></span>
+    </md-toolbar>
+    <md-toolbar class='toolbar logged-in' [ngClass]='toolbarClass()' *ngIf='loggedIn()'>
+        <button md-icon-button (click)='start.toggle()'>
+          <md-icon>more_vert</md-icon>
+        </button>
+        <a md-button [routerLink]=" ['/'] ">{{ name }}</a>
+        <span class="fill">
+          <div class='text-received-flash' *ngIf='getNumberUnreadTexts()'>
+            <a [routerLink]="['safetyteam', 'texts', 'all']" [queryParams]="{show: 'unread'}" md-button>
+              {{getUnreadTextsNotification()}}
+            </a>
+          </div>
+        </span>
+        <a md-button [routerLink]=" ['/safetyteam/texts'] " routerLinkActive='active'>
+          Texts
+        </a>
+        <a md-button [routerLink]=" ['/safetyteam/map'] " routerLinkActive='active'>
+          Safety Map
+        </a>
+        <a md-button [routerLink]=" ['/safetyteam/dashboard'] " routerLinkActive='active'>
+          Dashboard
+        </a>
+    </md-toolbar>
 
-  <main>
-    <router-outlet></router-outlet>
-  </main>
+    <md-progress-bar mode="indeterminate" color="primary" *ngIf="loading"></md-progress-bar>
 
-</div>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+</md-sidenav-layout>
