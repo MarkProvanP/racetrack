@@ -1,6 +1,5 @@
 <md-sidenav-layout class='md-content'>
-  <md-sidenav #start mode='side' class='sidebar'>
-    <button md-button (click)='start.close()'>Close</button>
+  <md-sidenav #start mode='over' class='sidebar'>
     <div class='sidebar-top'>
     </div>
     <div class='sidebar-items'>
@@ -38,14 +37,14 @@
   <div class='md-content'>
     <md-toolbar class='toolbar not-logged-in' [ngClass]='toolbarClass()' *ngIf='!loggedIn()'>
         <button md-icon-button (click)='start.toggle()'>
-          <md-icon>more_vert</md-icon>
+          <md-icon>menu</md-icon>
         </button>
         <a md-button [routerLink]=" ['/'] ">{{ name }}</a>
         <span class='fill'></span>
     </md-toolbar>
     <md-toolbar class='toolbar logged-in' [ngClass]='toolbarClass()' *ngIf='loggedIn()'>
         <button md-icon-button (click)='start.toggle()'>
-          <md-icon>more_vert</md-icon>
+          <md-icon>menu</md-icon>
         </button>
         <a md-button [routerLink]=" ['/'] ">{{ name }}</a>
         <span class="fill">
