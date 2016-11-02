@@ -9,7 +9,7 @@ import { Team } from '../../common/team';
   name: 'teamHasUpdate',
   pure: true
 })
-class TeamHasUpdate implements PipeTransform {
+export class TeamHasUpdatePipe implements PipeTransform {
   transform(input: any) {
     return input.filter(team => team.getLastUpdate())
   }
@@ -21,7 +21,7 @@ const ICON_FILENAME = "/assets/map-pin/Map_marker-64.png";
   selector: 'public-map',
   templateUrl: './public-map.template.html',
   styleUrls: ['./public-map.styles.scss'],
-  pipes: [TeamHasUpdate]
+  pipes: [TeamHasUpdatePipe]
 })
 export class PublicMapComponent implements OnInit {
   teams: Team[] = [];

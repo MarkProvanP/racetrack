@@ -1,4 +1,4 @@
-<md-content>
+<div class='md-content'>
   <md-toolbar class='toolbar not-logged-in' [ngClass]='toolbarClass()' *ngIf='!loggedIn()'>
       <a md-button [routerLink]=" ['/'] ">{{ name }}</a>
       <span class='fill'></span>
@@ -50,4 +50,4 @@
     <router-outlet></router-outlet>
   </main>
 
-</md-content>
+</div>

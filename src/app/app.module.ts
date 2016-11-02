@@ -4,7 +4,7 @@ import { MaterialModule } from "@angular/material";
 
 import { NgModule, ApplicationRef } from '@angular/core';
 import { Title, BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
@@ -31,7 +31,7 @@ import { TeamCardComponent } from './teams/team-card';
 import { DashboardComponent } from './dashboard';
 import { DashboardCardComponent } from './dashboard/dashboard-card';
 import { SafetyMapComponent } from './safety-map';
-import { PublicMapComponent } from './public-map';
+import { PublicMapComponent, TeamHasUpdatePipe } from './public-map';
 import { PublicTeamProgressMapComponent } from './public-team-progress-map';
 import { NewUpdateComponent } from './updates/new-update';
 import { TextSendComponent } from './texts/text-send';
@@ -100,11 +100,13 @@ const APP_PROVIDERS = [
     MeComponent,
     RegisterComponent,
     OrderBy,
+    TeamHasUpdatePipe,
     KeysPipe
   ],
   imports: [ // import Angular's modules
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES, { useHash: true }),
     MaterialModule.forRoot(),
