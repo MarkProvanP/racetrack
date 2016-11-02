@@ -9,8 +9,6 @@ import { Text, InboundText, OutboundText, AppText } from '../../../common/text';
 import { DataService } from '../../data.service';
 import { TextService } from '../../text.service';
 
-import * as moment from "moment";
-
 import { OrderBy } from '../../orderBy.pipe.ts';
 
 @Component({

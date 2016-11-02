@@ -6,8 +6,6 @@ import { Team } from "../../../common/team";
 import { Text } from '../../../common/text';
 import { TextService } from '../../text.service';
 
-import * as moment from "moment";
-
 @Component({
   selector: "all-texts",
   templateUrl: "./all-texts.template.html",

@@ -46,6 +46,8 @@ import { LogoutComponent } from './user/logout';
 import { MeComponent } from './user/me';
 import { RegisterComponent } from './user/register';
 
+import { TimeWidget } from "./widgets/time";
+
 import { DataService } from './data.service';
 import { TextService } from './text.service';
 import { UserService } from './user.service';
@@ -99,6 +101,7 @@ const APP_PROVIDERS = [
     LogoutComponent,
     MeComponent,
     RegisterComponent,
+    TimeWidget,
     OrderBy,
     TeamHasUpdatePipe,
     KeysPipe

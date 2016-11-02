@@ -12,9 +12,6 @@ import { Racer, RacerId } from './racer';
 import { Team, TeamId } from './team';
 import { UserActionInfo, UserWithoutPassword } from '../server/auth';
 
-import * as moment from "moment";
-
-
 export interface DbFormText {
   text_subclass: string;
 
@@ -69,10 +66,6 @@ export abstract class Text {
       // For non-updated ones!
       return InboundText.fromJSON(obj);
     }
-  }
-
-  getPrettyTimestamp(): string {
-    return moment(this.timestamp).format('HH:mm ddd, Do MMM');
   }
 
   toDbForm(): DbFormText {
@@ -162,16 +155,6 @@ export class InboundText extends Text {
 
   isRead(): boolean {
     return !!this.readBy;
-  }
-
-  getPrettyReadStatus() {
-    if (this.readBy) {
-      let time = moment(this.readBy.timestamp).format('HH:mm ddd, Do MMM');
-      let name = this.readBy.user.name;
-      return "Read by " + name + " at " + time;
-    } else {
-      return "Unknown read status";
-    }
   }
 
   constructor(id: TextId, properties) {

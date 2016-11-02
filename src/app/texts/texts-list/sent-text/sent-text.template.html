@@ -8,7 +8,7 @@
         -
         <span *ngIf="text.team">{{text.team.name}}</span>
       </div>
-      <div>{{text.getPrettyTimestamp()}}</div>
+      <time-widget [time]='text.timestamp'></time-widget>
       <div class='text-title' *ngIf='!display.oneline'>
         <div *ngIf="display.number">{{text.from}}</div>
         <div *ngIf="display.time">{{text.getPrettyTimestamp()}}</div>
@@ -18,8 +18,8 @@
   <md-card-content>
     {{text.body}}
   </md-card-content>
-  <div class='text-sent'>
-    {{text.getPrettySentStatus()}}
+  <div class='text-sent' *ngIf='text.sentBy'>
+    Sent by {{text.sentBy.user.name}}
   </div>
   <md-card-actions>
   </md-card-actions>

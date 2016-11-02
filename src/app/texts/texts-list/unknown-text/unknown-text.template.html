@@ -2,6 +2,7 @@
   <md-card-header>
     <md-card-title>
       <i>Text from unknown number! {{text.from}}</i>
+      <time-widget [time]='text.timestamp'></time-widget>
       <button md-raised-button
         (click)='linkUnknownTextToRacer(text)'
         [disabled]='inLinkingMode'>
@@ -62,8 +63,9 @@
   <md-card-content>
     {{text.body}}
   </md-card-content>
-  <div class='text-read'>
-    {{text.getPrettyReadStatus()}}
+  <div class='text-read' *ngIf='text.readBy'>
+    Read by {{text.readBy.user.name}} at
+    <time-widget [time]='text.readBy.timestamp'></time-widget>
   </div>
   <md-card-actions>
     <button md-button (click)='replyToText()'>RESPOND</button>

@@ -18,7 +18,7 @@
       <tr>
         <th>Time:</th>
         <td>
-          {{team.getLastUpdate().getPrettyTimestamp()}}
+          <time-widget [time]='team.getLastUpdate().timestamp'></time-widget>
         </td>
       </tr>
       <tr>

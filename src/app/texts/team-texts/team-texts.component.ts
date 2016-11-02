@@ -7,8 +7,6 @@ import { Text } from '../../../common/text';
 import { DataService } from '../../data.service';
 import { TextService, TextFilterOptions } from '../../text.service';
 
-import * as moment from "moment";
-
 @Component({
   selector: "team-texts",
   templateUrl: "./team-texts.template.html",

@@ -14,7 +14,7 @@
       <div class='status-update-list-wrapper'>
         <md-list>
           <md-list-item *ngFor="let update of team.statusUpdates | orderBy: '-timestamp' ">
-            <div md-line>{{update.getPrettyTimestamp()}}</div>
+            <time-widget md-line [time]='update.timestamp'></time-widget>
             <div md-line>
               <span><i>Status:</i> {{update.prettyStatusName()}}</span>
               <span><i>Place:</i> {{update.location.place}}</span>

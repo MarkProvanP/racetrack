@@ -25,7 +25,7 @@
           <tr>
             <th>Time:</th>
             <td>
-              {{update.getPrettyTimestamp()}}
+              <time-widget time='update.timestamp'></time-widget>
             </td>
           </tr>
           <tr>
@@ -51,7 +51,7 @@
       <md-list class='updates-list'>
         <md-list-item *ngFor='let update of teamStatusUpdates()'>
           <h3 md-line>{{update.location.place}}</h3>
-          <p md-line>{{update.getPrettyTimestamp()}}</p>
+          <time-widget md-line [time]='update.timestamp'></time-widget>
         </md-list-item>
       </md-list>
     </md-card-content>

@@ -9,7 +9,7 @@
         <span *ngIf="text.team">{{text.team.name}}</span>
       </div>
       <div>
-        {{text.getPrettyTimestamp()}}
+        <time-widget [time]='text.timestamp'></time-widget>
         {{text.location.latitude}}
         {{text.location.longitude}}
         {{text.location.source}}
@@ -18,7 +18,7 @@
       <div class='text-title' *ngIf='!display.oneline'>
         <div *ngIf="display.number">{{text.from}}</div>
         <div *ngIf="display.time">
-          {{text.getPrettyTimestamp()}}
+          <time-widget [time]='text.timestamp'></time-widget>
           {{text.location.latitude}}
           {{text.location.longitude}}
           {{text.location.source}}
@@ -33,8 +33,9 @@
     </div>
     {{stringThing()}}
   </md-card-content>
-  <div class='text-read'>
-    {{text.getPrettyReadStatus()}}
+  <div class='text-read' *ngIf='text.readBy'>
+    Read by {{text.readBy.user.name}} at
+    <time-widget [time]='text.readBy.timestamp'></time-widget>
   </div>
   <md-card-actions>
     <button md-button (click)='replyToText()'>RESPOND</button>

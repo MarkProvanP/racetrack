@@ -69,7 +69,7 @@
             <td>{{getTeamForRacer(racer).name}}</td>
             <td>{{racer.name}}</td>
             <td>{{racer.getPrimaryContactNumber().number}}</td>
-            <td>{{getTextResponseTimeForRacer(racer)}}</td>
+            <td><time-widget [time]='getTextResponseTimeForRacer(racer)'></time-widget></td>
             <td>{{getTextResponseTextForRacer(racer)}}</td>
           </tr>
         </tbody>
@@ -88,7 +88,9 @@
         </tr>
         <tr>
           <th>At time</th>
-          <td>{{oldMassText.byUser.timestamp}}</td>
+          <td>
+            <time-widget [time]='oldMassText.byUser.timestamp'></time-widget>
+          </td>
         </tr>
         <tr>
           <th>Keyword</th>
@@ -108,7 +110,9 @@
         </tr>
         <tr>
           <th>At time</th>
-          <td>{{oldMassText.endedBy.timestamp}}</td>
+          <td>
+            <time-widget [time]='oldMassText.endedBy.timestamp'></time-widget>
+          </td>
         </tr>
       </table>
     </md-card-content>
