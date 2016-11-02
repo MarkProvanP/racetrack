@@ -1,3 +1,5 @@
+const APP_TEXT_HEADER = "!AutoUpdate!";
+
 export type PhoneNumber = string;
 export interface ContactNumber {
   number: PhoneNumber,
@@ -57,7 +59,9 @@ export abstract class Text {
   abstract isRead(): boolean;
 
   static fromJSON(obj: FullFormText): Text {
-    if (obj.text_subclass == 'InboundText') {
+    if (obj.text_subclass == 'AppText') {
+      return AppText.fromJSON(obj);
+    } else if (obj.text_subclass == 'InboundText') {
       return InboundText.fromJSON(obj);
     } else if (obj.text_subclass == 'OutboundText') {
       return OutboundText.fromJSON(obj);
@@ -181,6 +185,49 @@ export class InboundText extends Text {
     this.readBy = properties.readBy;
     this.racer = properties.racer;
     this.team = properties.team;
+  }
+}
+
+export interface AppTextLocation {
+  latitude: string;
+  longitude: string;
+  accuracy: string;
+  source: string;
+}
+
+export class AppText extends InboundText {
+  text_subclass: string = 'AppText';
+
+  location: AppTextLocation;
+
+  constructor(id, obj) {
+    super(id, obj);
+    this.location = obj.location;
+  }
+
+  static fromJSON(obj) {
+    let racer = obj.racer ? Racer.fromJSON(obj.racer) : undefined;
+    let team = obj.team ? Team.fromJSON(obj.team) : undefined;
+    let clone = JSON.parse(JSON.stringify(obj));
+    clone.racer = racer;
+    clone.team = team;
+    return new AppText(clone.id, clone);
+  }
+
+  static fromTwilio(id: TextId, twilio: TwilioInboundText) {
+    let p = {};
+
+    let messageWithoutHeader = twilio.Body.substring(APP_TEXT_HEADER.length + 1);
+    let parsedAppMessage = JSON.parse(messageWithoutHeader);
+
+    
+    p['body'] = parsedAppMessage.message;
+    p['location'] = parsedAppMessage.location;
+    p['to'] = twilio.To;
+    p['from'] = twilio.From;
+    p['twilio'] = twilio;
+    p['timestamp'] = new Date();
+    return new AppText(id, p);
   }
 }
 

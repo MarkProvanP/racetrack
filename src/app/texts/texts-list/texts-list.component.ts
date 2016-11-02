@@ -5,7 +5,7 @@ import { MdUniqueSelectionDispatcher } from "@angular2-material/core";
 
 import { Racer } from "../../../common/racer";
 import { Team } from "../../../common/team";
-import { Text, InboundText, OutboundText } from '../../../common/text';
+import { Text, InboundText, OutboundText, AppText } from '../../../common/text';
 import { DataService } from '../../data.service';
 import { TextService } from '../../text.service';
 
@@ -54,7 +54,11 @@ export class TextsListComponent {
   }
 
   isInboundText(text: Text) {
-    return text instanceof InboundText;
+    return text instanceof InboundText && !this.isAppText(text);
+  }
+
+  isAppText(text: Text) {
+    return text instanceof AppText;
   }
 
   checkInTeamFromText(text: Text) {

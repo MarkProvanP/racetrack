@@ -1,7 +1,9 @@
+const APP_TEXT_HEADER = "!AutoUpdate!";
+
 import { Racer, RacerId } from "../../common/racer";
 import { Team, TeamId, PopulatedTeam, UnpopulatedTeam } from "../../common/team";
 import { TeamStatus, TeamUpdate, TeamUpdateId, Location } from "../../common/update";
-import { Text, InboundText, OutboundText, PhoneNumber, TwilioInboundText, TwilioOutboundText, FullFormText, DbFormText } from "../../common/text";
+import { Text, InboundText, OutboundText, AppText, PhoneNumber, TwilioInboundText, TwilioOutboundText, FullFormText, DbFormText } from "../../common/text";
 import { ThingEvent, ThingEventId } from "../../common/event";
 import { DbFacadeInterface } from "./db-facade";
 import { MongoClient } from "mongodb";
@@ -169,7 +171,15 @@ class MongoDbFacade implements DbFacadeInterface {
   createFromInboundText(text: TwilioInboundText): Promise<Text> {
     let collection = this.db.collection('texts');
     let id = uuid.v4();
-    let createdText = InboundText.fromTwilio(id, text);
+    let createdText;
+
+    if (text.Body.indexOf(APP_TEXT_HEADER) == 0) {
+      console.log('app text!', text.Body);
+      createdText = AppText.fromTwilio(id, text);
+    } else {
+      createdText = InboundText.fromTwilio(id, text);
+    }
+
     let fromNumber = createdText.from;
     return this.getRacers()
       .then(racers => {

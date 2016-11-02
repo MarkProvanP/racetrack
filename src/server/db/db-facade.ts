@@ -40,6 +40,6 @@ export interface DbFacadeInterface {
   getEvent(id: ThingEventId): Promise<ThingEvent>;
   updateEvent(event: ThingEvent): Promise<ThingEvent>;
   createEvent(obj): Promise<ThingEvent>;
-  deleteEvent(event: ThingEvent): Promise<void>;
+  deleteEvent(id: ThingEventId): Promise<void>;
 }
 

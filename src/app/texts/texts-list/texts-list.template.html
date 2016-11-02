@@ -26,11 +26,21 @@
         (onCreateUpdate)='createUpdateFromText($event)'
         *ngIf='isInboundText(text) && text.racer'>
       </normal-text>
+      <app-text
+        class='text-card normal-text' 
+        [text]='text' 
+        [display]='display'
+        (onMakeRead)='markTextAsRead($event)'
+        (onCreateReply)='replyToText($event)'
+        (onAddCheckin)='checkInTeamFromText($event)'
+        (onCreateUpdate)='createUpdateFromText($event)'
+        *ngIf='isAppText(text) && text.racer'>
+      </app-text>
       <sent-text
         class='text-card sent-text' 
         [text]='text' 
         [display]='display' 
-        *ngIf='!isInboundText(text)'></sent-text>
+        *ngIf='isOutboundText(text)'></sent-text>
       <unknown-text 
         class='text-card unknown-text' 
         [text]='text' 

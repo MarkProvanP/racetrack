@@ -36,6 +36,7 @@ import { PublicTeamProgressMapComponent } from './public-team-progress-map';
 import { NewUpdateComponent } from './updates/new-update';
 import { TextSendComponent } from './texts/text-send';
 import { NormalTextComponent } from './texts/texts-list/normal-text';
+import { AppTextComponent } from './texts/texts-list/app-text';
 import { SentTextComponent } from './texts/texts-list/sent-text';
 import { UnknownTextComponent } from './texts/texts-list/unknown-text';
 import { MassTextComponent } from './mass-text';
@@ -90,6 +91,7 @@ const APP_PROVIDERS = [
     NewUpdateComponent,
     TextSendComponent,
     NormalTextComponent,
+    AppTextComponent,
     SentTextComponent,
     UnknownTextComponent,
     MassTextComponent,
