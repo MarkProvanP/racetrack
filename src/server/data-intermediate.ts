@@ -65,7 +65,12 @@ export class DataIntermediary {
   public updateText(text: Text): Promise<Text> {
     let textInDbForm = text.toDbForm();
     return this.dbFacade.updateText(textInDbForm)
-      .then(t => text);
+    .then(t => {
+      let newMessage = new TextUpdatedMessage(text);
+      console.log(newMessage);
+      this.messageSender.sendMessageToWebClients(newMessage);
+      return text;
+    });
   }
 
   public addTextFromTwilio(text: TwilioInboundText): Promise<Text> {

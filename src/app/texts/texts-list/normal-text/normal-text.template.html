@@ -30,6 +30,9 @@
     <button md-button (click)='markTextAsRead()' [disabled]='text.readBy'>
       Mark as read
     </button>
+    <button md-button (click)='setTextUnread()' [disabled]='!text.readBy'>
+      Set unread
+    </button>
     <button md-button [disabled]='!text.team' (click)="addCheckIn()">Add Check In</button>
     <button md-button [disabled]='!text.team' (click)="createUpdate()">Create Team Update</button>
   </md-card-actions>

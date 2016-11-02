@@ -20,7 +20,7 @@
         class='text-card normal-text' 
         [text]='text' 
         [display]='display'
-        (onMakeRead)='markTextAsRead($event)'
+        (onMakeRead)='updateText($event)'
         (onCreateReply)='replyToText($event)'
         (onAddCheckin)='checkInTeamFromText($event)'
         (onCreateUpdate)='createUpdateFromText($event)'
@@ -30,7 +30,7 @@
         class='text-card normal-text' 
         [text]='text' 
         [display]='display'
-        (onMakeRead)='markTextAsRead($event)'
+        (onMakeRead)='updateText($event)'
         (onCreateReply)='replyToText($event)'
         (onAddCheckin)='checkInTeamFromText($event)'
         (onCreateUpdate)='createUpdateFromText($event)'
@@ -45,7 +45,7 @@
         class='text-card unknown-text' 
         [text]='text' 
         [display]='display' 
-        (onMakeRead)='markTextAsRead($event)'
+        (onMakeRead)='updateText($event)'
         (onCreateReply)='replyToText($event)'
         *ngIf='isInboundText(text) && !text.racer'></unknown-text>
       <div class='new-update-wrapper' *ngIf='inCreateUpdateMode && text == selectedText'>

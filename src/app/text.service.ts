@@ -103,9 +103,11 @@ export class TextService {
       this.broadcastTextsChanged(text);
     });
     this.userService.addSocketEventListener(TextUpdatedMessage.event, (message) => {
-      let textReadMessage = TextUpdatedMessage.fromJSON(event);
+      console.log(message);
+      let textReadMessage = TextUpdatedMessage.fromJSON(message);
       let text = textReadMessage.text;
-      this.updateText(text);
+      console.log(textReadMessage, text);
+      this.updateTextLocally(text);
       this.broadcastTextsChanged();
     })
   }
@@ -134,7 +136,7 @@ export class TextService {
     return Promise.resolve(text);
   }
 
-  private updateText(text: Text) {
+  private updateTextLocally(text: Text) {
     for (let i = 0; i < this.texts.length; i++) {
       let t = this.texts[i];
       if (t.id == text.id) {
@@ -143,6 +145,12 @@ export class TextService {
       }
     }
   }
+
+  updateTextAndWriteToBackend(text: Text): Promise<Text> {
+    this.updateTextLocally(text);
+    return this.writeTextToBackend(text);
+  }
+
 
   addTextsChangedCallback(callback: Function) {
     this.onTextsChangedReceivers.push(callback);
@@ -174,21 +182,6 @@ export class TextService {
       .then(response => response.json()
             .map(text => Text.fromJSON(text)))
       .catch(this.handleError);
-  }
-
-  updateText(text: Text): Promise<Text> {
-    // Find this text in the TextService local cache
-    let foundIndex;
-    for (let i = 0; i < this.texts.length; i++) {
-      if (this.texts[i].id == text.id) {
-        foundIndex = i;
-        break;
-      }
-    }
-    if (foundIndex) {
-      this.texts[foundIndex] = text;
-    }
-    return this.writeTextToBackend(text);
   }
 
   private writeTextToBackend(text: Text): Promise<Text> {

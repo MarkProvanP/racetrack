@@ -43,8 +43,8 @@ export class TextsListComponent {
     private router: Router
   ) {}
 
-  markTextAsRead(text: Text) {
-    this.textService.updateText(text)
+  updateText(text: Text) {
+    this.textService.updateTextAndWriteToBackend(text)
   }
 
   isOutboundText(text: Text) {

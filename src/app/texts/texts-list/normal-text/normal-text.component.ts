@@ -12,7 +12,7 @@ import { UserService } from '../../../user.service';
   styleUrls: ['./normal-text.style.scss']
 })
 export class NormalTextComponent {
-  @Input() text: Text;
+  @Input() text: InboundText;
   @Input() display: any;
   @Output() onMakeRead: EventEmitter = new EventEmitter();
   @Output() onCreateReply: EventEmitter = new EventEmitter();
@@ -24,7 +24,12 @@ export class NormalTextComponent {
   }
 
   markTextAsRead() {
-    (<InboundText> this.text).readBy = this.userService.getUserAction();
+    this.text.readBy = this.userService.getUserAction();
+    this.onMakeRead.emit(this.text);
+  }
+
+  setTextUnread() {
+    this.text.readBy = undefined;
     this.onMakeRead.emit(this.text);
   }
 
