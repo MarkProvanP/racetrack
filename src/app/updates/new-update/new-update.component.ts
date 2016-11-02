@@ -23,6 +23,7 @@ export class NewUpdateComponent implements OnInit {
     },
     notes: "Default starting status",
     isPublic: false,
+    byUser: undefined
   }
   statusEnum = TeamStatus;
   default = {

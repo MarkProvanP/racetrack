@@ -20,10 +20,9 @@ import { OrderBy } from '../../orderBy.pipe.ts';
   providers: [MdUniqueSelectionDispatcher]
 })
 export class TextsListComponent {
-  @Input("texts") allTexts: Text[];
   actuallyAllTexts: Text[];
 
-  set allTexts(texts: Text[]) {
+  @Input("texts") set allTexts(texts: Text[]) {
     this.actuallyAllTexts = texts;
     this.updateTextFilter();
   }
@@ -64,8 +63,8 @@ export class TextsListComponent {
   checkInTeamFromText(text: Text) {
     let team = text.team;
     team.lastCheckin = {
-      checkinTime: text.timestamp;
-      byUser: this.userService.getUserAction();
+      checkinTime: text.timestamp,
+      byUser: this.userService.getUserAction()
     }
     this.dataService.updateTeam(team);
   }
@@ -90,7 +89,7 @@ export class TextsListComponent {
     this.selectedText = undefined;
   }
 
-  updateTextFilter(show) {
+  updateTextFilter(show?) {
     if (show == 'unread') {
       this.filteredTexts = this.actuallyAllTexts.filter(text => !text.isRead());
     } else if (show == 'read') {

@@ -53,7 +53,7 @@ export class RacerTextsComponent implements OnInit {
   }
 
   markTextAsRead(text) {
-    this.textService.updateText(text)
+    this.textService.updateTextAndWriteToBackend(text)
   }
 
   numberUnreadMessagesForRacer(racer: Racer) {

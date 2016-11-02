@@ -35,7 +35,7 @@ export class TextUpdatedMessage extends AbstractMessage {
     return new TextUpdatedMessage(text);
   }
 
-  constructor(private text: Text) {
+  constructor(public text: Text) {
     super();
   }
 }
@@ -49,7 +49,7 @@ export class TextSentMessage extends AbstractMessage {
     return new TextSentMessage(text);
   }
 
-  constructor(private text: Text) {
+  constructor(public text: Text) {
     super();
   }
 }
@@ -63,7 +63,7 @@ export class TextReceivedMessage extends AbstractMessage {
     return new TextReceivedMessage(text);
   }
 
-  constructor(private text: Text) {
+  constructor(public text: Text) {
     super();
   }
 }
@@ -71,7 +71,7 @@ export class TextReceivedMessage extends AbstractMessage {
 export class OtherLoggedInUsersMessage extends AbstractMessage {
   static event: string = "other-logged-in-users";
   messageType = OtherLoggedInUsersMessage.event;
-  constructor(private users: UserWithoutPassword[]) {
+  constructor(public users: UserWithoutPassword[]) {
     super();
   }
   static fromJSON(obj) {
@@ -82,7 +82,7 @@ export class OtherLoggedInUsersMessage extends AbstractMessage {
 export class UserLoggedInMessage extends AbstractMessage {
   static event: string = "user-logged-in";
   messageType = UserLoggedInMessage.event;
-  constructor(private user: UserWithoutPassword) {
+  constructor(public user: UserWithoutPassword) {
     super();
   }
   static fromJSON(obj) {
@@ -93,7 +93,7 @@ export class UserLoggedInMessage extends AbstractMessage {
 export class UserLoggedOutMessage extends AbstractMessage {
   static event: string = "user-logged-out";
   messageType = UserLoggedOutMessage.event;
-  constructor(private user: UserWithoutPassword) {
+  constructor(public user: UserWithoutPassword) {
     super();
   }
   static fromJSON(obj) {

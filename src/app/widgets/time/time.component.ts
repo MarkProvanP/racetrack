@@ -8,11 +8,10 @@ import * as moment from "moment";
   styleUrls: ['./time.component.scss']
 })
 export class TimeWidget {
-  @Input() time: Date;
   @Input() fromNow: boolean;
-  moment: Moment;
+  moment: any;
 
-  set time(date: Date) {
+  @Input() set time(date: Date) {
     this.moment = moment(date);
   }
 

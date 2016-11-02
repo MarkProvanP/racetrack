@@ -100,7 +100,7 @@ export class TextService {
       let textSentMessage = TextReceivedMessage.fromJSON(message);
       let text = textSentMessage.text;
       this.addText(text)
-      this.broadcastTextsChanged(text);
+      this.broadcastTextsChanged();
     });
     this.userService.addSocketEventListener(TextUpdatedMessage.event, (message) => {
       console.log(message);

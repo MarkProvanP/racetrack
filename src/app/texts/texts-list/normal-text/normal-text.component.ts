@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 
-import { Text } from '../../../../common/text';
+import { Text, InboundText } from '../../../../common/text';
 
 import { UserActionInfo } from "../../../../common/user";
 
@@ -14,10 +14,10 @@ import { UserService } from '../../../user.service';
 export class NormalTextComponent {
   @Input() text: InboundText;
   @Input() display: any;
-  @Output() onMakeRead: EventEmitter = new EventEmitter();
-  @Output() onCreateReply: EventEmitter = new EventEmitter();
-  @Output() onAddCheckin: EventEmitter = new EventEmitter();
-  @Output() onCreateUpdate: EventEmitter = new EventEmitter();
+  @Output() onMakeRead: EventEmitter<InboundText> = new EventEmitter();
+  @Output() onCreateReply: EventEmitter<InboundText> = new EventEmitter();
+  @Output() onAddCheckin: EventEmitter<InboundText> = new EventEmitter();
+  @Output() onCreateUpdate: EventEmitter<InboundText> = new EventEmitter();
 
   constructor(private userService: UserService) {
     

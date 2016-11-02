@@ -69,7 +69,7 @@ export class TextSendComponent {
             console.log(racer, contact);
             return {
               name: racer.name,
-              numNote: '' + (contact.name || "") + (contact.notes || ""),
+              numNote: contact.notes || "",
               number: contact.number
             }
           });

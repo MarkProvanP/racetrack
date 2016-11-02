@@ -14,10 +14,10 @@ import { UserService } from '../../../user.service';
 export class AppTextComponent {
   @Input() text: AppText;
   @Input() display: any;
-  @Output() onMakeRead: EventEmitter = new EventEmitter();
-  @Output() onCreateReply: EventEmitter = new EventEmitter();
-  @Output() onAddCheckin: EventEmitter = new EventEmitter();
-  @Output() onCreateUpdate: EventEmitter = new EventEmitter();
+  @Output() onMakeRead: EventEmitter<AppText> = new EventEmitter();
+  @Output() onCreateReply: EventEmitter<AppText> = new EventEmitter();
+  @Output() onAddCheckin: EventEmitter<AppText> = new EventEmitter();
+  @Output() onCreateUpdate: EventEmitter<AppText> = new EventEmitter();
 
   constructor(private userService: UserService) {
     
@@ -28,7 +28,7 @@ export class AppTextComponent {
   }
 
   markTextAsRead() {
-    (<InboundText> this.text).readBy = this.userService.getUserAction();
+    this.text.readBy = this.userService.getUserAction();
     this.onMakeRead.emit(this.text);
   }
 
