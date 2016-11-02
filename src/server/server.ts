@@ -26,7 +26,7 @@ const PORT = process.env.PORT || config.SERVER_PORT;
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
 import { Text, TwilioInboundText } from "../common/text";
-import { TextReceivedMessage } from "../common/message";
+import { AbstractMessage, TextReceivedMessage, UserLoggedInMessage, UserLoggedOutMessage } from "../common/message";
 
 var path = require('path');
 
@@ -97,8 +97,15 @@ setup(config.db_url)
 
       socket.emit('message', 'hello' + socketUser.name);
 
+      let userLoggedInMessage = new UserLoggedInMessage(socketUser);
+      sendMessageToWebClients(userLoggedInMessage);
+
       socket.on('disconnect', function() {
         winston.log('info', 'Socket.io connection from web client ended');
+
+        let userLoggedOutMessage = new UserLoggedOutMessage(socketUser);
+        sendMessageToWebClients(userLoggedOutMessage);
+
         let index = webClients.indexOf(socket);
         if (index > -1) {
           webClients.splice(index, 1);
@@ -164,10 +171,10 @@ function handleTextMessage(db_facade, twilioText: TwilioInboundText) {
     });
 }
 
-function sendMessageToWebClients(message: TextReceivedMessage) {
+function sendMessageToWebClients(message: AbstractMessage) {
   let event = message.getEvent();
-  let body = JSON.stringify(message);
-  webClients.forEach(socket => socket.emit(event, body));
+  console.log('sending message to web clients', message);
+  webClients.forEach(socket => socket.emit(event, message));
 }
 
 let webClients = [];

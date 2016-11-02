@@ -3,6 +3,7 @@ import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 
+import { UserLoggedInMessage, UserLoggedOutMessage } from "../common/message";
 import { UserWithoutPassword, UserActionInfo } from "../common/user";
 
 @Injectable()
@@ -49,6 +50,14 @@ export class UserService {
     });
     this.socket.on('connect_error', () => {
       console.log('Socket io connection error!');
+    });
+    this.socket.on(UserLoggedInMessage.event, (message) => {
+      let loggedInMessage = UserLoggedInMessage.fromJSON(JSON.parse(message));
+      console.log(loggedInMessage);
+    });
+    this.socket.on(UserLoggedOutMessage.event, (message) => {
+      let loggedOutMessage = UserLoggedOutMessage.fromJSON(JSON.parse(message));
+      console.log(loggedOutMessage);
     });
   }
 

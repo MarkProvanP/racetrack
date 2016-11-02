@@ -1,3 +1,5 @@
+import { PhoneNumber } from "./text";
+
 export interface UserWithoutPassword {
   username: string;
   name: string;
