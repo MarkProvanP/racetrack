@@ -26,6 +26,7 @@
         </tr>
       </table>
       <md-checkbox [(ngModel)]='newStatusObj.isPublic'>Make public</md-checkbox>
+      <md-slide-toggle [(ngModel)]='team.inEurope'>In Europe?</md-slide-toggle>
       <button md-raised-button color='accent' (click)='saveNewUpdate()'>Save update</button>
       <button md-raised-button (click)='cancelNewUpdate()'>Cancel</button>
     </div>
