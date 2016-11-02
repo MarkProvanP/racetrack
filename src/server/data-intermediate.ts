@@ -68,7 +68,7 @@ export class DataIntermediary {
       .then(t => text);
   }
 
-  public createFromInboundText(text: TwilioInboundText): Promise<Text> {
+  public addTextFromTwilio(text: TwilioInboundText): Promise<Text> {
     let id = uuid.v4();
     let createdText;
 
@@ -101,11 +101,13 @@ export class DataIntermediary {
         return this.dbFacade.createText(createdText.toDbForm());
       })
       .then(result => {
+        let newMessage = new TextReceivedMessage(createdText);
+        this.messageSender.sendMessageToWebClients(newMessage);
         return Promise.resolve(createdText)
       });
   }
 
-  public createFromOutboundText(text: TwilioOutboundText, user: UserWithoutPassword): Promise<Text> {
+  public addNewSentText(text: TwilioOutboundText, user: UserWithoutPassword): Promise<Text> {
     let id = uuid.v4();
     let createdText = OutboundText.fromTwilio(id, text);
     createdText.sentBy = {
@@ -135,6 +137,8 @@ export class DataIntermediary {
         return this.dbFacade.createText(createdText.toDbForm());
       })
       .then(result => {
+        let newMessage = new TextSentMessage(createdText);
+        this.messageSender.sendMessageToWebClients(newMessage);
         return Promise.resolve(createdText)
       });
   }

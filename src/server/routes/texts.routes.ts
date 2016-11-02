@@ -68,7 +68,7 @@ export default function textsRouterWithDb(textIntermediary: DataIntermediary, tw
         winston.error('Twilio send text error!', {err});
         res.status(500).send(`Twilio error! : ${err}`);
       } else {
-        textIntermediary.createFromOutboundText(text, user)
+        textIntermediary.addNewSentText(text, user)
           .then(createdText => {
             res.json(createdText);
           })

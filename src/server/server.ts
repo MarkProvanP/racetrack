@@ -111,7 +111,7 @@ setup(config.db_url)
   .then(db_facade => {
     winston.info('MongoDB now ready for use');
 
-    dataIntermediary = GetDataIntermediary(db_facade);
+    dataIntermediary = GetDataIntermediary(db_facade, messageSender);
 
     let mongoSessionStore = new MongoStore({
       db: db_facade.db,
@@ -209,11 +209,7 @@ setup(config.db_url)
 
 
 function handleTextMessage(db_facade, twilioText: TwilioInboundText) {
-  dataIntermediary.createFromInboundText(twilioText)
-    .then(text => {
-      let newMessage = new TextReceivedMessage(text)
-      messageSender.sendMessageToWebClients(newMessage);
-    })
+  dataIntermediary.addTextFromTwilio(twilioText)
     .catch(err => {
       winston.error('Could not add inbound Twilio text to database!', {text: twilioText, err: err});
     });
