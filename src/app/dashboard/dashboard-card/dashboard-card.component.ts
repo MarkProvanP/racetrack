@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { DataService } from "../../data.service";
+import { UserService } from "../../user.service";
 
 import { Team } from '../../../common/team';
 import { TeamStatus } from '../../../common/update';
@@ -14,7 +15,8 @@ export class DashboardCardComponent implements OnInit {
   @Input() team: Team;
   constructor(
     private router: Router,
-    private dataService: DataService
+    private dataService: DataService,
+    private userService: UserService
   ) {}
 
   getCardClass() {
@@ -45,7 +47,10 @@ export class DashboardCardComponent implements OnInit {
   }
 
   checkInTeam() {
-    this.team.lastCheckin = new Date();
+    this.team.lastCheckin = {
+      checkinTime: new Date(),
+      byUser: this.userService.getUserAction()
+    }
     this.dataService.updateTeam(this.team);
   }
 }

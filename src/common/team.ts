@@ -1,7 +1,23 @@
 import { Racer, RacerId } from "./racer";
 import { TeamUpdate, TeamUpdateId, TeamStatus, Location, prettyStatusName } from "./update";
+import { UserActionInfo } from "./user";
 
 import * as moment from "moment";
+
+export interface CheckinInfo {
+  checkinTime: Date;
+  byUser: UserActionInfo;
+}
+
+function checkinMigrate(obj) {
+  if (obj && obj.checkinTime) {
+    return obj;
+  } else {
+    return {
+      checkinTime: obj,
+    }
+  }
+}
 
 export type TeamId = string;
 export interface UnpopulatedTeam {
@@ -22,7 +38,7 @@ export class Team {
   name: string;
   statusUpdates: TeamUpdate[] = [];
   racers: Racer[] = [];
-  lastCheckin: Date;
+  lastCheckin: CheckinInfo;
   inEurope: boolean = false;
 
   stripPrivateData(): Team {
@@ -67,7 +83,7 @@ export class Team {
     if (properties.statusUpdates) {
       this.statusUpdates = properties.statusUpdates;
     }
-    this.lastCheckin = properties.lastCheckin;
+    this.lastCheckin = checkinMigrate(properties.lastCheckin);
     this.inEurope = Boolean(properties.inEurope);
   }
 

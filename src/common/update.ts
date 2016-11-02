@@ -1,3 +1,5 @@
+import { UserActionInfo } from "./user";
+
 export enum TeamStatus {
   ON_START_BUS, OKAY, CROSSING_CHANNEL, IN_HOSTEL, DROPPED_OUT, ASLEEP, OVERDUE, MAYBE_LATE, IN_CITY, UNKNOWN
 }
@@ -38,6 +40,7 @@ export class TeamUpdate {
   status: TeamStatus;
   location: Location;
   isPublic: boolean;
+  byUser: UserActionInfo;
 
   static fromJSON(obj) {
     return new TeamUpdate(obj.id, obj)
@@ -62,5 +65,6 @@ export class TeamUpdate {
       this.timestamp = new Date();
     }
     this.isPublic = properties.isPublic;
+    this.byUser = properties.byUser;
   }
 }

@@ -4,6 +4,7 @@ import { Team } from "../../../common/team";
 import { TeamStatus, Location, prettyStatusName } from "../../../common/update";
 
 import { DataService } from '../../data.service';
+import { UserService } from '../../user.service';
 
 @Component({
   selector: 'new-update',
@@ -21,7 +22,7 @@ export class NewUpdateComponent implements OnInit {
       longitude: -2.7967214
     },
     notes: "Default starting status",
-    isPublic: false
+    isPublic: false,
   }
   statusEnum = TeamStatus;
   default = {
@@ -31,9 +32,10 @@ export class NewUpdateComponent implements OnInit {
     iconUrl: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
   }
 
-  constructor(private dataService: DataService) {
-
-  }
+  constructor(
+    private dataService: DataService,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
     let lastUpdate = this.team.getLastUpdate();
@@ -53,6 +55,7 @@ export class NewUpdateComponent implements OnInit {
   }
 
   saveNewUpdate() {
+    this.newStatusObj.byUser = this.userService.getUserAction();
     this.dataService.createStatusUpdateForTeam(this.newStatusObj, this.team)
       .then(team => {
         this.team = team

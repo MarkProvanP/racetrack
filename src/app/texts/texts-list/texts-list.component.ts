@@ -4,10 +4,11 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { MdUniqueSelectionDispatcher } from "@angular2-material/core";
 
 import { Racer } from "../../../common/racer";
-import { Team } from "../../../common/team";
+import { Team, CheckinInfo } from "../../../common/team";
 import { Text, InboundText, OutboundText, AppText } from '../../../common/text';
 import { DataService } from '../../data.service';
 import { TextService } from '../../text.service';
+import { UserService } from '../../user.service';
 
 import { OrderBy } from '../../orderBy.pipe.ts';
 
@@ -39,6 +40,7 @@ export class TextsListComponent {
   constructor(
     private dataService: DataService,
     private textService: TextService,
+    private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {}
@@ -61,7 +63,10 @@ export class TextsListComponent {
 
   checkInTeamFromText(text: Text) {
     let team = text.team;
-    team.lastCheckin = text.timestamp;
+    team.lastCheckin = {
+      checkinTime: text.timestamp;
+      byUser: this.userService.getUserAction();
+    }
     this.dataService.updateTeam(team);
   }
 
