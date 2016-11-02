@@ -9,7 +9,9 @@ import { RacersComponent } from './racers';
 import { TeamsComponent } from './teams';
 import { DashboardComponent } from './dashboard';
 import { RacerCardComponent } from './racers/racer-card';
+import { NoRacerComponent } from './racers/no-racer';
 import { TeamCardComponent } from './teams/team-card';
+import { NoTeamComponent } from './teams/no-team';
 import { PublicMapComponent } from './public-map';
 import { PublicTeamProgressMapComponent } from './public-team-progress-map';
 import { MassTextComponent } from './mass-text';
@@ -61,7 +63,7 @@ export const ROUTES: Routes = [
       path: 'racers',
       component: RacersComponent,
       children: [
-        { path: '' },
+        { path: '', component: NoRacerComponent },
         { path: ':id', component: RacerCardComponent },
         { path: ':id/edit', component: RacerCardComponent }
       ]
@@ -70,7 +72,7 @@ export const ROUTES: Routes = [
       path: 'teams',
       component: TeamsComponent,
       children: [
-        { path: '' },
+        { path: '', component: NoTeamComponent },
         { path: ':id', component: TeamCardComponent },
         { path: ':id/edit', component: TeamCardComponent }
       ]

@@ -4,27 +4,27 @@
     </div>
     <div class='sidebar-items'>
       <h3>User</h3>
-      <a *ngIf='loggedIn()' md-button [routerLink]=" ['./safetyteam/user/me'] " routerLinkActive='active'>
+      <a *ngIf='loggedIn()' md-button [routerLink]=" ['./safetyteam/user/me'] " routerLinkActive='active' (click)='start.toggle()'>
         {{getUsername()}}
       </a>
-      <a *ngIf='loggedIn()' md-button [routerLink]=" ['./safetyteam/user/logout'] " routerLinkActive='active'>
+      <a *ngIf='loggedIn()' md-button [routerLink]=" ['./safetyteam/user/logout'] " routerLinkActive='active' (click)='start.toggle()'>
         Log out
       </a>
-      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./login'] " routerLinkActive='active'>
+      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./login'] " routerLinkActive='active' (click)='start.toggle()'>
         Login
       </a>
-      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./register'] " routerLinkActive='active'>
+      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./register'] " routerLinkActive='active' (click)='start.toggle()'>
         Register 
       </a>
       <h3>Records</h3>
-      <a md-button [routerLink]=" ['/safetyteam/racers'] " routerLinkActive='active'>
+      <a md-button [routerLink]=" ['/safetyteam/racers'] " routerLinkActive='active' (click)='start.toggle()'>
         Racers
       </a>
-      <a md-button [routerLink]=" ['/safetyteam/teams'] " routerLinkActive='active'>
+      <a md-button [routerLink]=" ['/safetyteam/teams'] " routerLinkActive='active' (click)='start.toggle()'>
         Teams
       </a>
       <h3>Actions</h3>
-      <a md-button [routerLink]=" ['/safetyteam/mass-text'] " routerLinkActive='active'>
+      <a md-button [routerLink]=" ['/safetyteam/mass-text'] " routerLinkActive='active' (click)='start.toggle()'>
         Mass Text
       </a>
       <h3>Other users</h3>

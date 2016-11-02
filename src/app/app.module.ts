@@ -26,8 +26,10 @@ import { TextsListComponent } from './texts/texts-list';
 import { TextsComponent } from './texts';
 import { RacersComponent } from './racers';
 import { RacerCardComponent } from './racers/racer-card';
+import { NoRacerComponent } from './racers/no-racer';
 import { TeamsComponent } from './teams';
 import { TeamCardComponent } from './teams/team-card';
+import { NoTeamComponent } from './teams/no-team';
 import { DashboardComponent } from './dashboard';
 import { DashboardCardComponent } from './dashboard/dashboard-card';
 import { SafetyMapComponent } from './safety-map';
@@ -83,8 +85,10 @@ const APP_PROVIDERS = [
     TextsComponent,
     RacersComponent,
     RacerCardComponent,
+    NoRacerComponent,
     TeamsComponent,
     TeamCardComponent,
+    NoTeamComponent,
     DashboardComponent,
     DashboardCardComponent,
     PublicMapComponent,
@@ -143,3 +147,4 @@ export class AppModule {
     delete store.disposeOldHosts;
   }
 }
+    
