@@ -35,8 +35,8 @@
         [longitude]='default.lng'
         [zoom]='default.zoom'>
         <sebm-google-map-marker
-          [latitude]="newStatusObj.location.latitude"
-          [longitude]="newStatusObj.location.longitude"
+          [latitude]="toNumber(newStatusObj.location.latitude)"
+          [longitude]="toNumber(newStatusObj.location.longitude)"
           [markerDraggable]='true'
           (dragEnd)='onMarkerDragEnd($event)'>
         </sebm-google-map-marker>

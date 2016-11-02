@@ -13,13 +13,13 @@
       [strokeWeight]='polylineSettings.strokeWeight'
       [strokeOpacity]='polylineSettings.strokeOpacity'>
       <sebm-google-map-polyline-point *ngFor='let update of teamStatusUpdates()'
-      [latitude]='update.location.latitude'
-      [longitude]='update.location.longitude'>
+      [latitude]='toNumber(update.location.latitude)'
+      [longitude]='toNumber(update.location.longitude)'>
       </sebm-google-map-polyline-point>
     </sebm-google-map-polyline>
     <sebm-google-map-marker *ngFor='let update of teamStatusUpdates()'
-      [latitude]='update.location.latitude'
-      [longitude]='update.location.longitude'>
+      [latitude]='toNumber(update.location.latitude)'
+      [longitude]='toNumber(update.location.longitude)'>
       <sebm-google-map-info-window>
         <table>
           <tr>

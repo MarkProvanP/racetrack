@@ -50,4 +50,8 @@ export class SafetyMapComponent implements OnInit {
     this.dataService.getTeams()
       .then(teams => this.teams = teams);
   }
+
+  toNumber(s) {
+    return Number(s);
+  }
 }

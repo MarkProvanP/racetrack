@@ -61,4 +61,8 @@ export class PublicMapComponent implements OnInit {
     this.dataService.getPublicTeams()
       .then(teams => this.teams = teams);
   }
+
+  toNumber(s) {
+    return Number(s);
+  }
 }
