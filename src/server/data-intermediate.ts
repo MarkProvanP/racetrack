@@ -13,22 +13,33 @@ import {
   FullFormText,
 } from "../common/text";
 import { UserWithoutPassword } from "../common/user";
+import {
+  TextReceivedMessage,
+  TextSentMessage,
+  TextUpdatedMessage
+} from "../common/message";
+import { MessageSender } from "./server";
+
 import * as winston from "winston";
 import * as uuid from "node-uuid";
 
 let singleton;
 
-export function GetDataIntermediary(dbFacade: DbFacadeInterface) {
+export function GetDataIntermediary(
+  dbFacade: DbFacadeInterface,
+  messageSender: MessageSender
+) {
   if (!singleton) {
-    singleton = new DataIntermediary(dbFacade)
+    singleton = new DataIntermediary(dbFacade, messageSender);
   }
   return singleton;
 }
 
 export class DataIntermediary {
-  constructor(private dbFacade: DbFacadeInterface) {
-
-  }
+  constructor(
+    private dbFacade: DbFacadeInterface,
+    private messageSender: MessageSender
+  ) {}
 
   public getTexts(): Promise<Text[]> {
     return this.dbFacade.getTexts({})

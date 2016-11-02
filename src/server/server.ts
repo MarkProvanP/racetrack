@@ -72,6 +72,40 @@ function onAuthorizeFail(data, message, error, accept) {
 
 let dataIntermediary;
 
+
+export class MessageSender {
+  sockets = [];
+
+  constructor() {
+
+  }
+
+  addClient(socket) {
+    this.sockets.push(socket);
+  }
+
+  removeClient(socket) {
+    let index = this.sockets.indexOf(socket);
+    if (index > -1) {
+      this.sockets.splice(index, 1);
+    }
+  }
+
+  sendMessageToWebClients(message: AbstractMessage, excluded?) {
+    let event = message.getEvent();
+    console.log('sending message to web clients', message);
+    this.sockets.forEach(socket => {
+      if (socket != excluded) {
+        socket.emit(event, message);
+      } else {
+        console.log('excluding socket');
+      }
+    });
+  }
+}
+
+let messageSender = new MessageSender();
+
 //let db_facade : DbFacadeInterface = new InMemoryDbFacade();
 setup(config.db_url)
   .then(db_facade => {
@@ -106,26 +140,24 @@ setup(config.db_url)
     io.on('connection', function(socket) {
       let socketUser = socket.request.user;
       winston.log('info', `Socket.io connection from web client started, username: ${socketUser.name}`);
-      console.log('Users now', webClients.map(client => client.request.user));
+      console.log('Users now', messageSender.sockets.map(client => client.request.user));
 
       let userLoggedInMessage = new UserLoggedInMessage(socketUser);
-      sendMessageToWebClients(userLoggedInMessage, socket);
+      messageSender.sendMessageToWebClients(userLoggedInMessage, socket);
 
-      let otherLoggedInUsers = webClients.map(client => client.request.user);
+      let otherLoggedInUsers = messageSender.sockets.map(client => client.request.user);
       let otherLoggedInUsersMessage = new OtherLoggedInUsersMessage(otherLoggedInUsers);
       socket.emit(OtherLoggedInUsersMessage.event, otherLoggedInUsersMessage);
 
-      webClients.push(socket);
+      messageSender.addClient(socket);
 
       socket.on('disconnect', function() {
         winston.log('info', 'Socket.io connection from web client ended');
-        let index = webClients.indexOf(socket);
-        if (index > -1) {
-          webClients.splice(index, 1);
-        }
-        console.log('Users now', webClients.map(client => client.request.user));
+        messageSender.removeClient(socket);
+        console.log('Users now', messageSender.sockets.map(client => client.request.user));
+
         let userLoggedOutMessage = new UserLoggedOutMessage(socketUser);
-        sendMessageToWebClients(userLoggedOutMessage, socket);
+        messageSender.sendMessageToWebClients(userLoggedOutMessage, socket);
       });
     });
 
@@ -180,23 +212,10 @@ function handleTextMessage(db_facade, twilioText: TwilioInboundText) {
   dataIntermediary.createFromInboundText(twilioText)
     .then(text => {
       let newMessage = new TextReceivedMessage(text)
-      sendMessageToWebClients(newMessage);
+      messageSender.sendMessageToWebClients(newMessage);
     })
     .catch(err => {
       winston.error('Could not add inbound Twilio text to database!', {text: twilioText, err: err});
     });
 }
 
-function sendMessageToWebClients(message: AbstractMessage, excluded?) {
-  let event = message.getEvent();
-  console.log('sending message to web clients', message);
-  webClients.forEach(socket => {
-    if (socket != excluded) {
-      socket.emit(event, message);
-    } else {
-      console.log('excluding socket');
-    }
-  });
-}
-
-let webClients = [];
