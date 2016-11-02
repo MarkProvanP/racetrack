@@ -64,8 +64,4 @@ export class NewUpdateComponent implements OnInit {
     this.newStatusObj.location.latitude = event.coords.lat;
     this.newStatusObj.location.longitude = event.coords.lng;
   }
-
-  toNumber(s) {
-    return Number(s);
-  }
 }

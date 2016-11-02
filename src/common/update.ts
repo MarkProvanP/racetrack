@@ -20,9 +20,15 @@ export function prettyStatusName(status: TeamStatus) {
 export type TeamUpdateId = string;
 
 export class Location {
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
   place: string;
+}
+
+export function MakeCoordsNumbers(location: Location) {
+  location.latitude = Number(location.latitude);
+  location.longitude = Number(location.longitude);
+  return location;
 }
 
 export class TeamUpdate {
@@ -48,7 +54,7 @@ export class TeamUpdate {
   constructor(id: TeamUpdateId, properties) {
     this.id = id;
     this.status = Number(properties.status);
-    this.location = properties.location;
+    this.location = MakeCoordsNumbers(properties.location);
     this.notes = properties.notes;
     if (properties.timestamp) {
       this.timestamp = properties.timestamp;

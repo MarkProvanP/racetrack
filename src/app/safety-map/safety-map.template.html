@@ -9,8 +9,8 @@
       [iconUrl]='hostel.iconUrl'>
     </sebm-google-map-marker>
     <sebm-google-map-marker *ngFor='let team of teams | teamHasUpdate '
-      [latitude]='toNumber(team.getLastUpdate().location.latitude)'
-      [longitude]='toNumber(team.getLastUpdate().location.longitude)'
+      [latitude]='(team.getLastUpdate().location.latitude)'
+      [longitude]='(team.getLastUpdate().location.longitude)'
       [title]='team.name'>
       <sebm-google-map-info-window>
         <table>

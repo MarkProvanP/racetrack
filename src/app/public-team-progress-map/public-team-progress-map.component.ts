@@ -62,8 +62,4 @@ export class PublicTeamProgressMapComponent implements OnInit {
         .then(team => this.team = team);
     });
   }
-
-  toNumber(s) {
-    return Number(s);
-  }
 }

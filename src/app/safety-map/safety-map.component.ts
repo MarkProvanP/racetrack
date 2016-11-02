@@ -39,9 +39,6 @@ export class SafetyMapComponent implements OnInit {
     return JSON.stringify(team);
   }
 
-  //50.0718908,14.4462584
-  //53.612805,5.301865,
-
   constructor(private dataService: DataService) {
 
   }
@@ -49,9 +46,5 @@ export class SafetyMapComponent implements OnInit {
   ngOnInit() {
     this.dataService.getTeams()
       .then(teams => this.teams = teams);
-  }
-
-  toNumber(s) {
-    return Number(s);
   }
 }
