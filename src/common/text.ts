@@ -10,7 +10,7 @@ export type TextId = string;
 
 import { Racer, RacerId } from './racer';
 import { Team, TeamId } from './team';
-import { UserActionInfo, UserWithoutPassword } from '../server/auth';
+import { UserActionInfo, UserWithoutPassword } from './user';
 
 export interface DbFormText {
   text_subclass: string;

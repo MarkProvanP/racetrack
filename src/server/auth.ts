@@ -1,30 +1,21 @@
 import * as express from "express";
 import * as passport from "passport";
 import * as localStrategy from "passport-local";
+
+
 let LocalStrategy = localStrategy.Strategy;
 
 import * as winston from "winston";
 let router = express.Router();
 
+import { UserWithoutPassword, UserActionInfo } from "../common/user";
 import { PhoneNumber } from '../common/text';
 
 import * as bcrypt from "bcrypt-nodejs";
 
 import { NoSuchUserError } from '../common/error';
 
-export interface UserWithoutPassword {
-  username: string;
-  name: string;
-  email: string;
-  phone: PhoneNumber;
-}
-
 const NO_USER_ERROR_CODE = 402;
-
-export interface UserActionInfo {
-  timestamp: Date,
-  user: UserWithoutPassword
-}
 
 export class User {
   username: string;

@@ -2,7 +2,7 @@ import { Racer, RacerId } from "../../common/racer";
 import { Team, TeamId } from "../../common/team";
 import { TeamUpdate, TeamUpdateId } from "../../common/update";
 import { Text, PhoneNumber, TwilioInboundText, TwilioOutboundText } from "../../common/text";
-import { UserWithoutPassword } from '../auth';
+import { UserWithoutPassword } from '../../common/user';
 import { ThingEvent, ThingEventId } from "../../common/event";
 
 import { User } from '../auth';

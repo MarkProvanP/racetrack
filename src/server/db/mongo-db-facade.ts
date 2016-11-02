@@ -16,7 +16,7 @@ import * as uuid from "node-uuid";
 import * as winston from "winston";
 
 import { NoSuchUserError } from '../../common/error';
-import { UserWithoutPassword } from '../auth';
+import { UserWithoutPassword } from '../../common/user';
 
 export function setup(url): Promise<MongoDbFacade> {
 

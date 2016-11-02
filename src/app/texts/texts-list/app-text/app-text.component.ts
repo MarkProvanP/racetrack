@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 import { Text, AppText } from '../../../../common/text';
 
-import { UserActionInfo } from "../../../../server/auth";
+import { UserActionInfo } from "../../../../common/user";
 
 import { UserService } from '../../../user.service';
 

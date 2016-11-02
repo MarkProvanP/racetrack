@@ -1,4 +1,4 @@
-import { UserActionInfo } from "../server/auth";
+import { UserActionInfo } from "./user";
 
 export type ThingEventId = string;
 
