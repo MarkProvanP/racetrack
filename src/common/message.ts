@@ -8,6 +8,8 @@ export abstract class AbstractMessage {
   static fromJSON(obj): AbstractMessage {
     if (obj.messageType == TextReceivedMessage.event) {
       return TextReceivedMessage.fromJSON(obj);
+    } else if (obj.messageType == OtherLoggedInUsersMessage.event) {
+      return OtherLoggedInUsersMessage.fromJSON(obj);
     } else if (obj.messageType == UserLoggedInMessage.event) {
       return UserLoggedInMessage.fromJSON(obj);
     } else if (obj.messageType == UserLoggedOutMessage.event) {
@@ -31,6 +33,17 @@ export class TextReceivedMessage extends AbstractMessage {
 
   constructor(private text: Text) {
     super();
+  }
+}
+
+export class OtherLoggedInUsersMessage extends AbstractMessage {
+  static event: string = "other-logged-in-users";
+  messageType = OtherLoggedInUsersMessage.event;
+  constructor(private users: UserWithoutPassword[]) {
+    super();
+  }
+  static fromJSON(obj) {
+    return new OtherLoggedInUsersMessage(obj.users);
   }
 }
 

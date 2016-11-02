@@ -28,6 +28,10 @@
       <a md-button [routerLink]=" ['/safetyteam/mass-text'] " routerLinkActive='active'>
         Mass Text
       </a>
+      <h3>Other users</h3>
+      <div *ngFor='let otherUser of getOtherUsers()'>
+        {{otherUser.name}}
+      </div>
     </div>
   </md-sidenav>
 

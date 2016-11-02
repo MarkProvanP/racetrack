@@ -3,8 +3,17 @@ import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 
-import { UserLoggedInMessage, UserLoggedOutMessage } from "../common/message";
+import { UserLoggedInMessage, UserLoggedOutMessage, OtherLoggedInUsersMessage } from "../common/message";
 import { UserWithoutPassword, UserActionInfo } from "../common/user";
+
+function myIndexOf(array, element, check) {
+  for (let i = 0; i < array.length; i++) {
+    if (check(array[i], element)) {
+      return i;
+    }
+  }
+  return -1;
+}
 
 @Injectable()
 export class UserService {
@@ -19,7 +28,7 @@ export class UserService {
 
   private authenticated: boolean = false;
   private user: UserWithoutPassword;
-  private otherUsers: UserWithoutPassword[];
+  private otherUsers: UserWithoutPassword[] = [];
 
   private authenticatedStatusListeners = [];
   private otherUsersListeners = [];
@@ -51,13 +60,27 @@ export class UserService {
     this.socket.on('connect_error', () => {
       console.log('Socket io connection error!');
     });
+    // I don't know why, but the socket.emit() call in the server upon-login code
+    // results in this message being pre-parsed as an object
+    this.socket.on(OtherLoggedInUsersMessage.event, (message) => {
+      let otherUsersMessage = OtherLoggedInUsersMessage.fromJSON(message);
+      this.otherUsers = otherUsersMessage.users;
+    })
+    // These messages, however, come as strings?
     this.socket.on(UserLoggedInMessage.event, (message) => {
-      let loggedInMessage = UserLoggedInMessage.fromJSON(JSON.parse(message));
-      console.log(loggedInMessage);
+      let loggedInMessage = UserLoggedInMessage.fromJSON(message);
+      let u = loggedInMessage.user;
+      if (u.username != this.user.username) {
+        this.otherUsers.push(u);
+      }
     });
     this.socket.on(UserLoggedOutMessage.event, (message) => {
-      let loggedOutMessage = UserLoggedOutMessage.fromJSON(JSON.parse(message));
-      console.log(loggedOutMessage);
+      let loggedOutMessage = UserLoggedOutMessage.fromJSON(message);
+      let u = loggedOutMessage.user;
+      let index = myIndexOf(this.otherUsers, u, (u1, u2) => u1.username == u2.username)
+      if (index != -1) {
+        this.otherUsers.splice(index, 1);
+      }
     });
   }
 

@@ -95,6 +95,10 @@ export class App {
   getUsername() {
     return this.userService.getUser().name;
   }
+
+  getOtherUsers() {
+    return this.userService.getOtherLoggedInUsers();
+  }
 }
 
 /*

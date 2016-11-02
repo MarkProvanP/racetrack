@@ -26,7 +26,7 @@ const PORT = process.env.PORT || config.SERVER_PORT;
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
 import { Text, TwilioInboundText } from "../common/text";
-import { AbstractMessage, TextReceivedMessage, UserLoggedInMessage, UserLoggedOutMessage } from "../common/message";
+import { AbstractMessage, TextReceivedMessage, UserLoggedInMessage, UserLoggedOutMessage, OtherLoggedInUsersMessage } from "../common/message";
 
 var path = require('path');
 
@@ -93,23 +93,26 @@ setup(config.db_url)
     io.on('connection', function(socket) {
       let socketUser = socket.request.user;
       winston.log('info', `Socket.io connection from web client started, username: ${socketUser.name}`);
-      webClients.push(socket);
-
-      socket.emit('message', 'hello' + socketUser.name);
+      console.log('Users now', webClients.map(client => client.request.user));
 
       let userLoggedInMessage = new UserLoggedInMessage(socketUser);
-      sendMessageToWebClients(userLoggedInMessage);
+      sendMessageToWebClients(userLoggedInMessage, socket);
+
+      let otherLoggedInUsers = webClients.map(client => client.request.user);
+      let otherLoggedInUsersMessage = new OtherLoggedInUsersMessage(otherLoggedInUsers);
+      socket.emit(OtherLoggedInUsersMessage.event, otherLoggedInUsersMessage);
+
+      webClients.push(socket);
 
       socket.on('disconnect', function() {
         winston.log('info', 'Socket.io connection from web client ended');
-
-        let userLoggedOutMessage = new UserLoggedOutMessage(socketUser);
-        sendMessageToWebClients(userLoggedOutMessage);
-
         let index = webClients.indexOf(socket);
         if (index > -1) {
           webClients.splice(index, 1);
         }
+        console.log('Users now', webClients.map(client => client.request.user));
+        let userLoggedOutMessage = new UserLoggedOutMessage(socketUser);
+        sendMessageToWebClients(userLoggedOutMessage, socket);
       });
     });
 
@@ -171,10 +174,16 @@ function handleTextMessage(db_facade, twilioText: TwilioInboundText) {
     });
 }
 
-function sendMessageToWebClients(message: AbstractMessage) {
+function sendMessageToWebClients(message: AbstractMessage, excluded) {
   let event = message.getEvent();
   console.log('sending message to web clients', message);
-  webClients.forEach(socket => socket.emit(event, message));
+  webClients.forEach(socket => {
+    if (socket != excluded) {
+      socket.emit(event, message));
+    } else {
+      console.log('excluding socket');
+    }
+  });
 }
 
 let webClients = [];
