@@ -1,37 +1,63 @@
 <md-sidenav-layout class='md-content'>
   <md-sidenav #start mode='over' class='sidebar'>
-    <div class='sidebar-top'>
+    <div class='user-profile'>
+
     </div>
-    <div class='sidebar-items'>
-      <h3>User</h3>
-      <a *ngIf='loggedIn()' md-button [routerLink]=" ['./safetyteam/user/me'] " routerLinkActive='active' (click)='start.toggle()'>
-        {{getUsername()}}
+    <md-nav-list>
+      <a *ngIf='loggedIn()' md-list-item [routerLink]=" ['./safetyteam/user/me'] " routerLinkActive='active' (click)='start.toggle()'>
+        <div class='md-list-item'>
+          <div class='md-list-text'>
+            <span md-line>{{getUsername()}}</span>
+            <span md-line class='secondary'>My profile</span>
+          </div>
+        </div>
       </a>
-      <a *ngIf='loggedIn()' md-button [routerLink]=" ['./safetyteam/user/logout'] " routerLinkActive='active' (click)='start.toggle()'>
-        Log out
+      <a *ngIf='loggedIn()' md-list-item [routerLink]=" ['./safetyteam/user/logout'] " routerLinkActive='active' (click)='start.toggle()'>
+        <div class='md-list-item'>
+          <div class='md-list-text'>
+            Log out
+          </div>
+        </div>
       </a>
-      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./login'] " routerLinkActive='active' (click)='start.toggle()'>
-        Login
+      <a *ngIf='!loggedIn()' md-list-item [routerLink]=" ['./login'] " routerLinkActive='active' (click)='start.toggle()'>
+        <div class='md-list-item'>
+          <div class='md-list-text'>
+            Login
+          </div>
+        </div>
       </a>
-      <a *ngIf='!loggedIn()' md-button [routerLink]=" ['./register'] " routerLinkActive='active' (click)='start.toggle()'>
-        Register 
+      <a *ngIf='!loggedIn()' md-list-item [routerLink]=" ['./register'] " routerLinkActive='active' (click)='start.toggle()'>
+        <div class='md-list-item'>
+          <div class='md-list-text'>
+            Register 
+          </div>
+        </div>
       </a>
-      <h3>Records</h3>
-      <a md-button [routerLink]=" ['/safetyteam/racers'] " routerLinkActive='active' (click)='start.toggle()'>
-        Racers
+      <a md-list-item [routerLink]=" ['/safetyteam/racers'] " routerLinkActive='active' (click)='start.toggle()'>
+        <div class='md-list-item'>
+          <div class='md-list-text'>
+            Racers
+          </div>
+        </div>
       </a>
-      <a md-button [routerLink]=" ['/safetyteam/teams'] " routerLinkActive='active' (click)='start.toggle()'>
-        Teams
+      <a md-list-item [routerLink]=" ['/safetyteam/teams'] " routerLinkActive='active' (click)='start.toggle()'>
+        <div class='md-list-item'>
+          <div class='md-list-text'>
+            Teams
+          </div>
+        </div>
       </a>
-      <h3>Actions</h3>
-      <a md-button [routerLink]=" ['/safetyteam/mass-text'] " routerLinkActive='active' (click)='start.toggle()'>
-        Mass Text
+      <a md-list-item [routerLink]=" ['/safetyteam/mass-text'] " routerLinkActive='active' (click)='start.toggle()'>
+        <div class='md-list-item'>
+          <div class='md-list-text'>
+            Mass Text
+          </div>
+        </div>
       </a>
-      <h3>Other users</h3>
       <div *ngFor='let otherUser of getOtherUsers()'>
         {{otherUser.name}}
       </div>
-    </div>
+    </md-nav-list>
   </md-sidenav>
 
   <div class='md-content'>

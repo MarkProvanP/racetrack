@@ -1,7 +1,12 @@
 @import '~@angular/material/core/theming/prebuilt/deeppurple-amber.scss';
 
-.sidebar {
-  width: 300px;
+.user-profile {
+  width: 250px;
+  height: 200px;
+  padding-left: 10px;
+  background-color: gold;
+  color: white;
+  box-sizing: border-box;
 }
 
 .sidebar-items {
