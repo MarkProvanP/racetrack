@@ -101,9 +101,9 @@ export function AuthWithDbFacade(db_facade) {
 
   function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
-      next();
+      return next();
     } else {
-      res.redirect("/r2bcknd/auth/login");
+      res.json({auth: false});
     }
   }
 
@@ -161,6 +161,10 @@ export function AuthWithDbFacade(db_facade) {
       }
       res.json({status: 'logged out'});
     });
+  });
+
+  router.get('/api/auth', isLoggedIn, (req, res) => {
+    res.json({auth: true})
   });
 
   router.get('/api/authenticated', isLoggedIn, (req, res) => {

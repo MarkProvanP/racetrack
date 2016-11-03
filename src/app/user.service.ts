@@ -26,7 +26,10 @@ export class UserService {
   private authenticatedUrl = this.baseUrl + "authenticated";
   private meUrl = this.baseUrl + "me";
 
-  private authenticated: boolean = false;
+  private authApi = this.baseUrl + "auth";
+
+  private authenticated;
+  private authenticateObservable = Observable.of(undefined);
   private user: UserWithoutPassword;
   private otherUsers: UserWithoutPassword[] = [];
 
@@ -91,10 +94,13 @@ export class UserService {
   constructor(
     private http: Http,
   ) {
-    this.authenticate()
-      .then(authenticated => {
-        
-      });
+    this.auth()
+      .toPromise()
+      .then(isAuthenticated => {
+        if (isAuthenticated) {
+          this.getMe();
+        }
+      })
   }
 
   public addOnAuthStatusChangedListener(callback) {
@@ -112,7 +118,7 @@ export class UserService {
   }
 
   private broadcastOtherUsers() {
-    this.otheUsersListeners.forEach(listener => listener(this.otherUsers));
+    this.otherUsersListeners.forEach(listener => listener(this.otherUsers));
   }
 
   private setUser(user): Promise<any> {
@@ -134,24 +140,10 @@ export class UserService {
     this.notAuthenticated();
   }
 
-  authenticate(): Promise<any> {
-    return this.http
-      .get(this.authenticatedUrl, {headers: this.headers, withCredentials: true, body: ''})
-      .toPromise()
-      .then(response => {
-        console.log('authenticated!');
-        this.setUser(response.json());
-        return this.authenticated;
-      })
-      .catch(err => {
-        console.log('not authenticated', err);
-        this.setNotAuthenticated();
-        return this.authenticated;
-      })
-  }
-
-  authenticatedCheck(): Observable<any> {
-    return Observable.of(this.authenticated);
+  auth() {
+    return this.http.get(this.authApi, {withCredentials: true})
+      .map(res => res.json().auth)
+      .catch(this.handleError)
   }
 
   login(user): Promise<any> {
