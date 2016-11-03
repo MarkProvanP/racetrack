@@ -33,7 +33,8 @@ import {
   TextUpdatedMessage,
   UserLoggedInMessage,
   UserLoggedOutMessage,
-  OtherLoggedInUsersMessage
+  OtherLoggedInUsersMessage,
+  CLOSE_SOCKET
 } from "../common/message";
 
 var path = require('path');
@@ -150,6 +151,10 @@ setup(config.db_url)
       socket.emit(OtherLoggedInUsersMessage.event, otherLoggedInUsersMessage);
 
       messageSender.addClient(socket);
+
+      socket.on(CLOSE_SOCKET, () => {
+        socket.disconnect();
+      });
 
       socket.on('disconnect', function() {
         winston.log('info', 'Socket.io connection from web client ended');

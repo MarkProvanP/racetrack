@@ -3,7 +3,12 @@ import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 
-import { UserLoggedInMessage, UserLoggedOutMessage, OtherLoggedInUsersMessage } from "../common/message";
+import {
+  UserLoggedInMessage,
+  UserLoggedOutMessage,
+  OtherLoggedInUsersMessage,
+  CLOSE_SOCKET
+} from "../common/message";
 import { UserWithoutPassword, UserActionInfo } from "../common/user";
 
 function myIndexOf(array, element, check) {
@@ -88,6 +93,7 @@ export class UserService {
   }
 
   private notAuthenticated() {
+    this.socket.emit(CLOSE_SOCKET);
     this.socket = undefined;
   }
 

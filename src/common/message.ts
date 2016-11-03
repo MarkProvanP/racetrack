@@ -2,6 +2,8 @@ import { Text } from "./text";
 
 import { UserWithoutPassword } from "./user";
 
+export const CLOSE_SOCKET = "close-socket";
+
 export abstract class AbstractMessage {
   messageType: string;
 
