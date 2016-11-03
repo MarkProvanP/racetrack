@@ -13,11 +13,11 @@ export class UnauthenticatedGuard implements CanActivate {
     console.log('unauthenticatedGuard canActivate');
     return this.userService.auth()
       .map(authenticated => {
-        console.log('result was', authenticated);
+        console.log('authenticated?', authenticated);
         if (!authenticated) {
           return true;
         } else {
-          this.router.navigate(['/']);
+          this.router.navigate(['/safetyteam']);
           return false;
         }
       }).catch(error => {

@@ -3,23 +3,23 @@
  */
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Title } from "@angular/platform-browser";
-import { TextService, TextFilterOptions } from './text.service';
-import { UserService } from './user.service';
-import { DataService } from './data.service';
+import { TextService, TextFilterOptions } from '../text.service';
+import { UserService } from '../user.service';
+import { DataService } from '../data.service';
 
 /*
  * App Component
  * Top Level Component
  */
 @Component({
-  selector: 'app',
-  encapsulation: ViewEncapsulation.None,
+  selector: 'private-app',
+  //encapsulation: ViewEncapsulation.None,
   styleUrls: [
-    './app.style.scss'
+    './private-app.style.scss'
   ],
-  template: '<router-outlet></router-outlet>'
+  templateUrl: './private-app.template.html'
 })
-export class App {
+export class PrivateApp {
   angularclassLogo = 'assets/img/angularclass-avatar.png';
   loading = false;
   name = 'Race 2 Prague';
@@ -92,7 +92,9 @@ export class App {
   }
 
   getUsername() {
-    return this.userService.getUser().name;
+    if (this.userService.getUser()) {
+      return this.userService.getUser().name;
+    }
   }
 
   getOtherUsers() {

@@ -1,0 +1,130 @@
+@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.scss';
+
+.user-profile {
+  width: 250px;
+  height: 200px;
+  padding-left: 10px;
+  background-color: gold;
+  color: white;
+  box-sizing: border-box;
+}
+
+.sidebar-items {
+  display: flex;
+  flex-direction: column;
+}
+
+html, body{
+  height: 100%;
+  background: #F4FAFA;
+  font-family: Roboto, sans-serif;
+  margin: 0;
+}
+button.active{
+  background: #fff;
+  color: #009688;
+}
+button.active:hover{
+  color: #fff;
+}
+
+.top-bar {
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0.7;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+}
+
+.fill{
+  flex: 1 1 auto;
+  height: 100%;
+  display: flex;
+}
+
+.text-received-flash {
+  flex: 1;
+  margin: 5px 10px 5px 10px;
+  font-size: initial;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home{
+  flex: 1;
+}
+.md-content{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+my-teams {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+my-racers {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+texts {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+footer{
+  flex: 0 0 60px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+safety-map {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+public-map {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+public-team-progress-map {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.active {
+  background-color: gold;
+}
+
+/** remove when fixed in angular2-material **/
+/** The overlay-container is an invisible element which contains all individual overlays. */
+.md-overlay-container {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%; }
+
+/** A single overlay pane. */
+.md-overlay-pane {
+  position: absolute;
+  pointer-events: auto;
+  box-sizing: border-box;
+  z-index: 1000; }

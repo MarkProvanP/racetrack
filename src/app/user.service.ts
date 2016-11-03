@@ -24,7 +24,7 @@ export class UserService {
   private logoutUrl = this.baseUrl + "logout";
   private registerUrl = this.baseUrl + "register";
   private authenticatedUrl = this.baseUrl + "authenticated";
-  private meUrl = this.baseUrl + "me";
+  private meUrl = this.authenticatedUrl//this.baseUrl + "me";
 
   private authApi = this.baseUrl + "auth";
 

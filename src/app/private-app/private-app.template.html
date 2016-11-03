@@ -4,7 +4,7 @@
 
     </div>
     <md-nav-list>
-      <a *ngIf='loggedIn()' md-list-item [routerLink]=" ['./safetyteam/user/me'] " routerLinkActive='active' (click)='start.toggle()'>
+      <a md-list-item [routerLink]=" ['/safetyteam', 'user', 'me'] " routerLinkActive='active' (click)='start.toggle()'>
         <div class='md-list-item'>
           <div class='md-list-text'>
             <span md-line>{{getUsername()}}</span>
@@ -12,42 +12,28 @@
           </div>
         </div>
       </a>
-      <a *ngIf='loggedIn()' md-list-item [routerLink]=" ['./safetyteam/user/logout'] " routerLinkActive='active' (click)='start.toggle()'>
+      <a md-list-item [routerLink]=" ['/safetyteam', 'user', 'logout'] " routerLinkActive='active' (click)='start.toggle()'>
         <div class='md-list-item'>
           <div class='md-list-text'>
             Log out
           </div>
         </div>
       </a>
-      <a *ngIf='!loggedIn()' md-list-item [routerLink]=" ['./login'] " routerLinkActive='active' (click)='start.toggle()'>
-        <div class='md-list-item'>
-          <div class='md-list-text'>
-            Login
-          </div>
-        </div>
-      </a>
-      <a *ngIf='!loggedIn()' md-list-item [routerLink]=" ['./register'] " routerLinkActive='active' (click)='start.toggle()'>
-        <div class='md-list-item'>
-          <div class='md-list-text'>
-            Register 
-          </div>
-        </div>
-      </a>
-      <a md-list-item [routerLink]=" ['/safetyteam/racers'] " routerLinkActive='active' (click)='start.toggle()'>
+      <a md-list-item [routerLink]=" ['/safetyteam', 'racers'] " routerLinkActive='active' (click)='start.toggle()'>
         <div class='md-list-item'>
           <div class='md-list-text'>
             Racers
           </div>
         </div>
       </a>
-      <a md-list-item [routerLink]=" ['/safetyteam/teams'] " routerLinkActive='active' (click)='start.toggle()'>
+      <a md-list-item [routerLink]=" ['/safetyteam', 'teams'] " routerLinkActive='active' (click)='start.toggle()'>
         <div class='md-list-item'>
           <div class='md-list-text'>
             Teams
           </div>
         </div>
       </a>
-      <a md-list-item [routerLink]=" ['/safetyteam/mass-text'] " routerLinkActive='active' (click)='start.toggle()'>
+      <a md-list-item [routerLink]=" ['/safetyteam', 'mass-text'] " routerLinkActive='active' (click)='start.toggle()'>
         <div class='md-list-item'>
           <div class='md-list-text'>
             Mass Text
@@ -61,14 +47,7 @@
   </md-sidenav>
 
   <div class='md-content'>
-    <md-toolbar class='toolbar not-logged-in' [ngClass]='toolbarClass()' *ngIf='!loggedIn()'>
-        <button md-icon-button (click)='start.toggle()'>
-          <md-icon>menu</md-icon>
-        </button>
-        <a md-button [routerLink]=" ['/'] ">{{ name }}</a>
-        <span class='fill'></span>
-    </md-toolbar>
-    <md-toolbar class='toolbar logged-in' [ngClass]='toolbarClass()' *ngIf='loggedIn()'>
+    <md-toolbar class='toolbar logged-in' [ngClass]='toolbarClass()' >
         <button md-icon-button (click)='start.toggle()'>
           <md-icon>menu</md-icon>
         </button>

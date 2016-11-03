@@ -23,72 +23,87 @@ import { LogoutComponent } from './user/logout';
 import { MeComponent } from './user/me';
 import { RegisterComponent } from './user/register';
 
+import { PrivateApp } from "./private-app";
+import { PublicApp } from "./public-app"
+
 import { UnauthenticatedGuard } from './unauthenticated.guard';
 import { AuthenticatedGuard } from './authenticated.guard';
 
 export const ROUTES: Routes = [
-  { path: 'login', component: LoginComponent, canActivate: [UnauthenticatedGuard] },
-  { path: 'register', component: RegisterComponent, canActivate: [UnauthenticatedGuard] },
-  { path: 'safetyteam', canActivate: [AuthenticatedGuard], children: [
-    { path: '', redirectTo: 'dashboard' },
-    {
-      path: 'texts',
-      component: TextsComponent,
-      children: [
-        { path: '', redirectTo: 'all', pathMatch: 'full'},
-        { 
-          path: 'all',
-          children: [
-            { path: '', component: AllTextsComponent },
-            { path: 'unread', component: AllTextsComponent }
-          ]
-        },
-        {
-          path: 'by-racer',
-          children: [
-            { path: '', component: RacerTextsComponent },
-            { path: ':id', component: RacerTextsComponent }
-          ]
-        },
-        { 
-          path: 'by-team',
-          children: [
-            { path: '', component: TeamTextsComponent },
-            { path: ':id', component: TeamTextsComponent }
-          ]
-        }
-      ]
-    },
-    {
-      path: 'racers',
-      component: RacersComponent,
-      children: [
-        { path: '', component: NoRacerComponent },
-        { path: ':id', component: RacerCardComponent },
-        { path: ':id/edit', component: RacerCardComponent }
-      ]
-    },
-    {
-      path: 'teams',
-      component: TeamsComponent,
-      children: [
-        { path: '', component: NoTeamComponent },
-        { path: ':id', component: TeamCardComponent },
-        { path: ':id/edit', component: TeamCardComponent }
-      ]
-    },
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'map', component: SafetyMapComponent },
-    {
-      path: 'user', children: [
-        { path: 'logout', component: LogoutComponent, canActivate: [AuthenticatedGuard] },
-        { path: 'me', component: MeComponent, canActivate: [AuthenticatedGuard] }
-      ]
-    },
-    {
-      path: 'mass-text', component: MassTextComponent
-    }
-  ] },
-  { path: 'team-progress/:id', component: PublicTeamProgressMapComponent },
-  { path: '**', component: PublicMapComponent },
+  {
+    path: 'safetyteam',
+    component: PrivateApp,
+    canActivate: [AuthenticatedGuard],
+    children: [
+      {
+        path: 'texts',
+        component: TextsComponent,
+        children: [
+          { path: '', redirectTo: 'all', pathMatch: 'full'},
+          { 
+            path: 'all',
+            children: [
+              { path: '', component: AllTextsComponent },
+              { path: 'unread', component: AllTextsComponent }
+            ]
+          },
+          {
+            path: 'by-racer',
+            children: [
+              { path: '', component: RacerTextsComponent },
+              { path: ':id', component: RacerTextsComponent }
+            ]
+          },
+          { 
+            path: 'by-team',
+            children: [
+              { path: '', component: TeamTextsComponent },
+              { path: ':id', component: TeamTextsComponent }
+            ]
+          }
+        ]
+      },
+      {
+        path: 'racers',
+        component: RacersComponent,
+        children: [
+          { path: '', component: NoRacerComponent },
+          { path: ':id', component: RacerCardComponent },
+          { path: ':id/edit', component: RacerCardComponent }
+        ]
+      },
+      {
+        path: 'teams',
+        component: TeamsComponent,
+        children: [
+          { path: '', component: NoTeamComponent },
+          { path: ':id', component: TeamCardComponent },
+          { path: ':id/edit', component: TeamCardComponent }
+        ]
+      },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'map', component: SafetyMapComponent },
+      {
+        path: 'user', children: [
+          { path: 'logout', component: LogoutComponent },
+          { path: 'me', component: MeComponent }
+        ]
+      },
+      {
+        path: 'mass-text', component: MassTextComponent
+      }
+      { path: '', redirectTo: '/safetyteam/dashboard' },
+    ]
+  },
+  {
+    path: '',
+    component: PublicApp,
+    canActivate: [UnauthenticatedGuard],
+    children: [
+      { path: 'login', component: LoginComponent,},
+      { path: 'register', component: RegisterComponent },
+      { path: 'team-progress/:id', component: PublicTeamProgressMapComponent },
+      { path: '**', component: PublicMapComponent }
+    ]
+  }
 ];

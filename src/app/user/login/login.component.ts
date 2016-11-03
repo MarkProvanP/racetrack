@@ -34,7 +34,7 @@ export class LoginComponent {
     this.userService.login(this.form.value)
       .then(data => {
         this.loginError = false;
-        this.router.navigate(['/']);
+        this.router.navigate(['/safetyteam']);
       })
       .catch(err => {
         this.loginError = true;

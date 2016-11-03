@@ -19,6 +19,9 @@ import { ROUTES } from './app.routes';
 import { App } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 
+import { PrivateApp } from "./private-app"
+import { PublicApp } from './public-app';
+
 import { AllTextsComponent } from './texts/all-texts';
 import { TeamTextsComponent } from './texts/team-texts';
 import { RacerTextsComponent } from './texts/racer-texts';
@@ -78,6 +81,8 @@ const APP_PROVIDERS = [
   bootstrap: [ App ],
   declarations: [
     App,
+    PublicApp,
+    PrivateApp,
     AllTextsComponent,
     TeamTextsComponent,
     RacerTextsComponent,
