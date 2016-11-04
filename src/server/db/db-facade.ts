@@ -1,7 +1,14 @@
-import { Racer, RacerId } from "../../common/racer";
-import { Team, TeamId } from "../../common/team";
-import { TeamUpdate, TeamUpdateId } from "../../common/update";
-import { Text, DbFormText, PhoneNumber, TwilioInboundText, TwilioOutboundText } from "../../common/text";
+import { Racer, DbFormRacer, RacerId } from "../../common/racer";
+import { Team, DbFormTeam, TeamId } from "../../common/team";
+import { TeamUpdate, DbFormTeamUpdate, TeamUpdateId } from "../../common/update";
+import {
+  Text,
+  TextId,
+  DbFormText,
+  PhoneNumber,
+  TwilioInboundText,
+  TwilioOutboundText
+} from "../../common/text";
 import { UserWithoutPassword } from '../../common/user';
 import { ThingEvent, ThingEventId } from "../../common/event";
 
@@ -10,27 +17,29 @@ import { User } from '../auth';
 var Promise = require("es6-promise").Promise;
 
 export interface DbFacadeInterface {
-  getRacers(): Promise<Racer[]>;
-  getRacer(id: RacerId): Promise<Racer>;
-  updateRacer(id: RacerId, newRacer: Racer): Promise<Racer>;
-  createRacer(properties): Promise<Racer>;
-  deleteRacer(id: RacerId): Promise<any>;
+  getRacers(query): Promise<DbFormRacer[]>;
+  getRacer(query): Promise<DbFormRacer>;
+  updateRacer(racer: DbFormRacer): Promise<void>;
+  createRacer(racer: DbFormRacer): Promise<void>;
+  deleteRacer(id: RacerId): Promise<void>;
 
-  getTeams() : Promise<Team[]>;
-  getTeam(id: TeamId): Promise<Team>;
-  updateTeam(id: TeamId, newTeam: Team) : Promise<Team>;
-  createTeam(properties): Promise<Team>;
-  deleteTeam(id: TeamId): Promise<any>;
+  getTeams(query) : Promise<DbFormTeam[]>;
+  getTeam(query): Promise<DbFormTeam>;
+  updateTeam(team: DbFormTeam) : Promise<void>;
+  createTeam(team: DbFormTeam): Promise<void>;
+  deleteTeam(id: TeamId): Promise<void>;
 
   getTexts(query): Promise<DbFormText[]>;
   getText(query): Promise<DbFormText>;
   updateText(query): Promise<void>;
   createText(text: DbFormText): Promise<void>;
-  deleteText(text: DbFormText): Promise<void>;
+  deleteText(id: TextId): Promise<void>;
 
-  createStatusUpdate(properties): Promise<TeamUpdate>;
-  getStatusUpdates(): Promise<TeamUpdate[]>;
-  getStatusUpdate(id: TeamUpdateId): Promise<TeamUpdate>;
+  getTeamUpdates(query): Promise<DbFormTeamUpdate[]>;
+  getTeamUpdate(query): Promise<DbFormTeamUpdate>;
+  updateTeamUpdate(update: DbFormTeamUpdate): Promise<void>;
+  createTeamUpdate(update: DbFormTeamUpdate): Promise<void>;
+  deleteTeamUpdate(id: TeamUpdateId): Promise<void>;
 
   getUser(username): Promise<User>;
   canAddUser(username): Promise<boolean>;

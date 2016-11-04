@@ -1,9 +1,26 @@
 const APP_TEXT_HEADER = "!AutoUpdate!";
 
-import { Racer, RacerId } from "../../common/racer";
-import { Team, TeamId, PopulatedTeam, UnpopulatedTeam } from "../../common/team";
-import { TeamStatus, TeamUpdate, TeamUpdateId, Location } from "../../common/update";
-import { Text, InboundText, OutboundText, AppText, PhoneNumber, TwilioInboundText, TwilioOutboundText, FullFormText, DbFormText } from "../../common/text";
+import { Racer, RacerId, DbFormRacer } from "../../common/racer";
+import { Team, TeamId, PopulatedTeam, UnpopulatedTeam, DbFormTeam } from "../../common/team";
+import {
+  TeamStatus,
+  TeamUpdate,
+  TeamUpdateId,
+  Location,
+  DbFormTeamUpdate
+} from "../../common/update";
+import {
+  Text,
+  TextId,
+  InboundText,
+  OutboundText,
+  AppText,
+  PhoneNumber,
+  TwilioInboundText,
+  TwilioOutboundText,
+  FullFormText,
+  DbFormText
+} from "../../common/text";
 import { ThingEvent, ThingEventId } from "../../common/event";
 import { DbFacadeInterface } from "./db-facade";
 import { MongoClient } from "mongodb";
@@ -29,6 +46,9 @@ export function setup(url): Promise<MongoDbFacade> {
 
 class MongoDbFacade implements DbFacadeInterface {
   textsCollection;
+  racersCollection;
+  teamsCollection;
+  updatesCollection;
 
   constructor(public db) {
     process.stdin.resume();//so the program will not close instantly
@@ -48,127 +68,61 @@ class MongoDbFacade implements DbFacadeInterface {
     //catches uncaught exceptions
     process.on('uncaughtException', exitHandler.bind(this, {exit:true}));
 
+    this.racersCollection = this.db.collection('racers');
     this.textsCollection = this.db.collection('texts');
+    this.teamsCollection = this.db.collection('teams');
+    this.updatesCollection = this.db.collection('updates');
   }
 
-  getRacers(): Promise<Racer[]> {
-    let collection = this.db.collection('racers');
-    return collection.find({}).toArray()
-      .then(docs => {
-        let racers = docs.map(racer => Racer.fromJSON(racer));
-        return Promise.resolve(racers);
-    });
+  getRacers(query): Promise<DbFormRacer[]> {
+    let r = this.racersCollection.find(query).toArray() as DbFormRacer[];
+    return Promise.resolve(r);
   }
 
-  getRacer(id: RacerId): Promise<Racer> {
-    let collection = this.db.collection('racers');
-    return collection.find({id: id}).toArray()
-      .then(docs => {
-        if (docs.length > 0) {
-          let racer = Racer.fromJSON(docs[0]);
-          return Promise.resolve(racer);
-        } else {
-          return Promise.resolve(undefined);
-        }
-    });
+  getRacer(query): Promise<DbFormRacer> {
+    return this.racersCollection.findOne(query)
+    .catch(err => {
+      console.error('mongoDbFacade getRacer() error', err)
+      return Promise.reject(err);
+    })
   }
 
-  updateRacer(id: RacerId, newRacer: Racer): Promise<Racer> {
-    let collection = this.db.collection('racers');
-    return collection.updateOne({id: id}, { $set: newRacer})
-      .then(result => {
-        return Promise.resolve(newRacer);
-    });
+  updateRacer(racer: DbFormRacer): Promise<void> {
+    return this.racersCollection.updateOne({id: racer.id}, { $set: racer});
   }
 
-  createRacer(name: string): Promise<Racer> {
-    let id = uuid.v4();
-    let newRacer = new Racer(id, name);
-    let collection = this.db.collection('racers');
-    return collection.insert(newRacer)
-      .then(result => {
-      return Promise.resolve(newRacer);
-    });
+  createRacer(racer: DbFormRacer): Promise<void> {
+    return this.racersCollection.insert(racer);
   }
 
-  deleteRacer(id: RacerId): Promise<any> {
-    let collection = this.db.collection('racers');
-    return collection.deleteOne({id: id})
-      .then(result => {
-        return Promise.resolve();
-      })
+  deleteRacer(id: RacerId): Promise<void> {
+    return this.racersCollection.deleteOne({id});
   }
 
 //================================================================
-
-  getTeams(): Promise<Team[]> {
-    let collection = this.db.collection('teams');
-    return collection.find({}).toArray()
-      .then(docs => {
-        let teams = docs as [UnpopulatedTeam];
-        let teamPromises = teams.map(team => this.populateTeam(team));
-        return Promise.all(teamPromises)
-          .then(teams => teams.map(team => Team.fromJSON(team)));
-      });
+  
+  getTeams(query): Promise<DbFormTeam[]> {
+    let t = this.teamsCollection.find(query).toArray() as DbFormTeam[];
+    return Promise.resolve(t);
   }
 
-  private populateTeam(team: UnpopulatedTeam): Promise<PopulatedTeam> {
-    let updatePromises = team.statusUpdates
-      .map(update => this.getStatusUpdate(update));
-    let racerPromises = team.racers
-      .map(racer => this.getRacer(racer));
-    let copy = JSON.parse(JSON.stringify(team));
-    return Promise.all(updatePromises)
-      .then((statuses: TeamUpdate[]) => {
-        copy.statusUpdates = statuses;
-        return Promise.all(racerPromises)
-          .then((racers: Racer[]) => {
-            copy.racers = racers;
-            return Promise.resolve(copy);
-          });
-      });
+  getTeam(query): Promise<DbFormTeam> {
+    let t = this.teamsCollection.findOne(query) as DbFormTeam;
+    return Promise.resolve(t);
   }
 
-  getTeam(id: TeamId): Promise<Team> {
-    let collection = this.db.collection('teams');
-    return collection.find({id: id}).toArray()
-      .then(docs => {
-        if (docs.length > 0) {
-          let unpopulatedTeam = docs[0];
-          return this.populateTeam(unpopulatedTeam)
-            .then(team => Promise.resolve(Team.fromJSON(team)));
-        } else {
-          return Promise.resolve(undefined);
-        }
-    });
+  updateTeam(team: DbFormTeam): Promise<void> {
+    return this.teamsCollection.updateOne({id: team.id}, { $set: team });
   }
 
-  updateTeam(id: TeamId, newTeam: Team) : Promise<Team> {
-    let collection = this.db.collection('teams');
-    let depopulatedTeam = newTeam.depopulate();
-    return collection.updateOne({id: id}, { $set: depopulatedTeam})
-      .then(result => {
-        return Promise.resolve(newTeam);
-    });
+  createTeam(team: DbFormTeam): Promise<void> {
+    return this.teamsCollection.insert(team);
   }
 
-  createTeam(name: string): Promise<Team> {
-    let collection = this.db.collection('teams');
-    let id = uuid.v4();
-    let newTeam = new Team(id, name);
-    return collection.insert(newTeam)
-      .then(result => {
-        return Promise.resolve(newTeam);
-      });
+  deleteTeam(id: TeamId): Promise<void> {
+    return this.teamsCollection.deleteOne({id});
   }
 
-  deleteTeam(id: TeamId): Promise<any> {
-    let collection = this.db.collection('teams');
-    return collection.deleteOne({id: id})
-      .then(result => {
-        return Promise.resolve();
-      });
-  }
 
 //================================================================
   getTexts(query): Promise<DbFormText[]> {
@@ -186,39 +140,31 @@ class MongoDbFacade implements DbFacadeInterface {
   createText(text: DbFormText): Promise<void> {
     return this.textsCollection.insert(text);
   }
-  deleteText(text: DbFormText): Promise<void> {
-    return this.textsCollection.deleteOne({id: text.id})
+  deleteText(id: TextId): Promise<void> {
+    return this.textsCollection.deleteOne({id});
   }
 
 //================================================================
-
-  createStatusUpdate(properties): Promise<TeamUpdate> {
-    let collection = this.db.collection('updates');
-    let id = uuid.v4();
-    let newStatusUpdate = new TeamUpdate(id, properties);
-    return collection.insert(newStatusUpdate)
-      .then(result => {
-        return Promise.resolve(newStatusUpdate);
-      });
+  getTeamUpdates(query): Promise<DbFormTeamUpdate[]> {
+    return this.updatesCollection.find(query).toArray();
   }
 
-  getStatusUpdates(): Promise<TeamUpdate[]> {
-    let collection = this.db.collection('updates');
-    return collection.find({}).toArray()
-      .then(docs => {
-        let updates = docs;
-        return Promise.resolve(updates);
-      });
+  getTeamUpdate(query): Promise<DbFormTeamUpdate> {
+    return this.updatesCollection.findOne(query);
   }
 
-  getStatusUpdate(id: TeamUpdateId): Promise<TeamUpdate> {
-    let collection = this.db.collection('updates');
-    return collection.find({id: id}).toArray()
-      .then(docs => {
-        let update = docs[0];
-        return Promise.resolve(update);
-      });
+  updateTeamUpdate(update: DbFormTeamUpdate): Promise<void> {
+    return this.updatesCollection.updateOne({id: update.id}, {$set: update})
   }
+
+  createTeamUpdate(update: DbFormTeamUpdate): Promise<void> {
+    return this.updatesCollection.insert(update);
+  }
+
+  deleteTeamUpdate(id: TeamUpdateId): Promise<void> {
+    return this.updatesCollection.deleteOne({id});
+  }
+
 
 //================================================================
 

@@ -58,7 +58,6 @@ import eventsRouterWithDb from "./routes/events.routes";
 
 import { GetDataIntermediary } from "./data-intermediate";
 import { DbFacadeInterface } from './db/db-facade';
-import { InMemoryDbFacade } from './db/in-memory-db-facade';
 import { setup } from './db/mongo-db-facade';
 
 function onAuthorizeSuccess(data, accept) {
@@ -169,10 +168,10 @@ setup(config.db_url)
     let authRouter = AuthWithDbFacade(db_facade);
     app.use('/auth', authRouter);
 
-    let teamsRouter = teamsRouterWithDb(db_facade);
+    let teamsRouter = teamsRouterWithDb(dataIntermediary);
     app.use('/teams', teamsRouter);
 
-    let racersRouter = racersRouterWithDb(db_facade);
+    let racersRouter = racersRouterWithDb(dataIntermediary);
     app.use("/racers", racersRouter);
 
     let twilioObj = {
@@ -182,13 +181,13 @@ setup(config.db_url)
     let textsRouter = textsRouterWithDb(dataIntermediary, twilioObj);
     app.use("/texts", textsRouter);
 
-    let updatesRouter = updatesRouterWithDb(db_facade);
+    let updatesRouter = updatesRouterWithDb(dataIntermediary);
     app.use("/updates", updatesRouter);
 
     let eventsRouter = eventsRouterWithDb(db_facade);
     app.use('/events', eventsRouter);
 
-    let publicRouter = publicRouterWithDb(db_facade);
+    let publicRouter = publicRouterWithDb(dataIntermediary);
     app.use('/public', publicRouter);
 
     http.listen(PORT, function() {

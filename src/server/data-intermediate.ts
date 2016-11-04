@@ -2,7 +2,25 @@ const APP_TEXT_HEADER = "!AutoUpdate!";
 
 import { DbFacadeInterface} from "./db/db-facade";
 import {
+  Racer,
+  DbFormRacer,
+  RacerId
+} from "../common/racer";
+import {
+  Team,
+  DbFormTeam,
+  TeamId,
+  UnpopulatedTeam,
+  PopulatedTeam
+} from "../common/team";
+import {
+  TeamUpdate,
+  TeamUpdateId,
+  DbFormTeamUpdate
+} from "../common/update";
+import {
   Text,
+  TextId,
   DbFormText,
   PhoneNumber,
   InboundText,
@@ -35,25 +53,147 @@ export function GetDataIntermediary(
   return singleton;
 }
 
+function trace(s, obj) {
+  console.log(s, obj);
+  return obj;
+}
+
 export class DataIntermediary {
   constructor(
     private dbFacade: DbFacadeInterface,
     private messageSender: MessageSender
   ) {}
 
+  public getRacers(): Promise<Racer[]> {
+    return this.dbFacade.getRacers({})
+    .then(racers => racers.map(racer => Racer.fromJSON(racer)));
+  }
+
+  public getRacer(id: RacerId): Promise<Racer> {
+    return this.dbFacade.getRacer({id})
+    .then(racer => Racer.fromJSON(racer))
+  }
+
+  public updateRacer(racer: Racer): Promise<Racer> {
+    return this.dbFacade.updateRacer(racer.toDbForm())
+      .then(() => racer);
+  }
+
+  public createRacer(name: string): Promise<Racer> {
+    let id = uuid.v4();
+    let newRacer = new Racer(id, name);
+    return this.dbFacade.createRacer(newRacer.toDbForm())
+      .then(r => newRacer);
+  }
+
+  public deleteRacer(id: RacerId) {
+    return this.dbFacade.deleteRacer(id);
+  }
+
+//================================================================
+
+  getTeams(): Promise<Team[]> {
+    return this.dbFacade.getTeams({})
+      .then(docs => {
+        let teams = docs as [UnpopulatedTeam];
+        let teamPromises = teams.map(team => this.populateTeam(team));
+        return Promise.all(teamPromises)
+          .then(teams => teams.map(team => Team.fromJSON(team)));
+      });
+  }
+
+  private populateTeam(team: UnpopulatedTeam): Promise<PopulatedTeam> {
+    let updatePromises = team.statusUpdates
+      .map(update => this.getStatusUpdate(update));
+    let racerPromises = team.racers
+      .map(racer => this.getRacer(racer));
+    let copy = JSON.parse(JSON.stringify(team));
+    return Promise.all(updatePromises)
+      .then((statuses: TeamUpdate[]) => {
+        copy.statusUpdates = statuses;
+        return Promise.all(racerPromises)
+          .then((racers: Racer[]) => {
+            copy.racers = racers;
+            return Promise.resolve(copy);
+          });
+      });
+  }
+
+  getTeam(id: TeamId): Promise<Team> {
+    return this.dbFacade.getTeams({id})
+      .then(docs => {
+        if (docs.length > 0) {
+          let unpopulatedTeam = docs[0];
+          return this.populateTeam(unpopulatedTeam)
+            .then(team => Promise.resolve(Team.fromJSON(team)));
+        } else {
+          return Promise.resolve(undefined);
+        }
+    });
+  }
+
+  updateTeam(newTeam: Team) : Promise<Team> {
+    let depopulatedTeam = newTeam.depopulate();
+    return this.dbFacade.updateTeam(depopulatedTeam)
+      .then(result => {
+        return Promise.resolve(newTeam);
+    });
+  }
+
+  createTeam(name: string): Promise<Team> {
+    let id = uuid.v4();
+    let newTeam = new Team(id, name);
+    return this.dbFacade.createTeam(newTeam.depopulate())
+      .then(result => {
+        return Promise.resolve(newTeam);
+      });
+  }
+
+  deleteTeam(id: TeamId): Promise<any> {
+    return this.dbFacade.deleteTeam(id)
+      .then(result => {
+        return Promise.resolve();
+      });
+  }
+
+//================================================================
+  
+  private shortDebugText(text: Text | DbFormText) {
+    return `{id: ${text.id}, body: ${text.body}}`;
+  }
+  private shortDebugTwilioInboundText(text: TwilioInboundText) {
+    return `{SmsSid: ${text.SmsSid}, Body: ${text.Body}}`;
+  }
+
   public getTexts(): Promise<Text[]> {
     return this.dbFacade.getTexts({})
-    .then(texts => this.getTextsReady(texts));
+    .then(texts => this.getTextsReady(texts))
+    .catch(err => {
+      console.error('getTexts()', err);
+      return Promise.reject(err);
+    });
   }
 
   public getTextsByNumber(phone: PhoneNumber): Promise<Text[]> {
     return this.dbFacade.getTexts({from: phone})
-    .then(texts => this.getTextsReady(texts));
+    .then(texts => this.getTextsReady(texts))
+    .catch(err => {
+      console.error(`getTextsByNumber(${phone})`, err);
+      return Promise.reject(err);
+    })
   }
 
   private populateText(text: DbFormText): Promise<FullFormText> {
     return this.addRacerToText(text)
+    .catch(err => {
+      console.error(`addracertotext failed`);
+      return Promise.reject(err);
+    })
       .then(textWithRacer => this.addTeamToText(textWithRacer))
+      .catch(err => {
+        console.error(`addTeamToText failed populateText(${this.shortDebugText(text)})`, err);
+        return Promise.reject(err);
+      })
   }
 
   private getTextsReady(texts: DbFormText[]): Promise<Text[]> {
@@ -67,7 +207,6 @@ export class DataIntermediary {
     return this.dbFacade.updateText(textInDbForm)
     .then(t => {
       let newMessage = new TextUpdatedMessage(text);
-      console.log(newMessage);
       this.messageSender.sendMessageToWebClients(newMessage);
       return text;
     });
@@ -84,7 +223,7 @@ export class DataIntermediary {
     }
 
     let fromNumber = createdText.from;
-    return this.dbFacade.getRacers()
+    return this.getRacers()
       .then(racers => {
         let matchingRacers = racers.filter(
           racer => racer.phones.filter(contact => contact.number == fromNumber).length);
@@ -92,7 +231,7 @@ export class DataIntermediary {
           createdText.racer = matchingRacers[0];
         } else {
         }
-        return this.dbFacade.getTeams()
+        return this.getTeams()
       })
       .then(teams => {
         let matchingTeams = teams
@@ -109,7 +248,11 @@ export class DataIntermediary {
         let newMessage = new TextReceivedMessage(createdText);
         this.messageSender.sendMessageToWebClients(newMessage);
         return Promise.resolve(createdText)
-      });
+      })
+      .catch(err => {
+        console.error(`addTextFromTwilio(${this.shortDebugTwilioInboundText(text)})`, err);
+        return Promise.reject(err);
+      })
   }
 
   public addNewSentText(text: TwilioOutboundText, user: UserWithoutPassword): Promise<Text> {
@@ -120,7 +263,7 @@ export class DataIntermediary {
       timestamp: new Date()
     }
     let toNumber = createdText.to;
-    return this.dbFacade.getRacers()
+    return this.getRacers()
       .then(racers => {
         let matchingRacers = racers.filter(
           racer => racer.phones.filter(contact => contact.number == toNumber).length);
@@ -128,7 +271,7 @@ export class DataIntermediary {
           createdText.racer = matchingRacers[0];
         } else {
         }
-        return this.dbFacade.getTeams()
+        return this.getTeams()
       })
       .then(teams => {
         let matchingTeams = teams
@@ -148,59 +291,70 @@ export class DataIntermediary {
       });
   }
 
-  private addRacerToText(text): Promise<any> {
+  private addRacerToText(text: DbFormText): Promise<any> {
     let copy = JSON.parse(JSON.stringify(text));
-    if (text.racer) {
-      return this.dbFacade.getRacer(text.racer)
-        .then(racer => {copy.racer = racer; return copy});
-    } else {
-      let inbound = text.text_subclass == "InboundText";
-      if (inbound) {
-      } else {
-      }
-      return this.dbFacade.getRacers()
-        .then(racers => {
-          let possibleRacers = racers
-            .filter(racer => {
-              return racer.phones.filter(contact => {
-                if (inbound) {
-                  return contact.number == text.from;
-                } else {
-                  return contact.number == text.to;
-                }
-              }).length
-            });
-          if (possibleRacers.length > 0) {
-            copy.racer = possibleRacers[0];
-          }
-          return copy;
-        })
-    }
+    let inbound = text.text_subclass == "InboundText" || text.text_subclass == "AppText";
+    return this.getRacers()
+      .then(racers => {
+        let possibleRacers = racers
+          .filter(racer => {
+            return racer.phones.filter(contact => {
+              if (inbound) {
+                return contact.number == text.from;
+              } else {
+                return contact.number == text.to;
+              }
+            }).length
+          });
+        if (possibleRacers.length > 0) {
+          copy.racer = possibleRacers[0];
+        }
+        return copy;
+      })
+      .catch(err => {
+        console.error(`addRacerToText(${this.shortDebugText(text)})`, err);
+        return Promise.reject(err);
+      })
   }
 
   private addTeamToText(text): Promise<any> {
     let copy = JSON.parse(JSON.stringify(text));
-    if (text.team) {
-      return this.dbFacade.getTeam(text.team)
-        .then(team => {
-          copy.team = team;
-          return Promise.resolve(copy);
-        })
-        .catch(err => {
-          return err;
-        });
-    } else {
-      return this.dbFacade.getTeams()
-        .then(teams => {
-          copy.team = teams.filter(team => team.racers.filter(racer => text.racer && racer.id == text.racer.id).length)[0];
-          return Promise.resolve(copy);
-        })
-        .catch(err => {
-          console.error('error', err);
-          return err;
-        });
-    }
+    return this.getTeams()
+      .then(teams => {
+        copy.team = teams.filter(team => team.racers.filter(racer => text.racer && racer.id == text.racer.id).length)[0];
+        return Promise.resolve(copy);
+      })
+      .catch(err => {
+        console.error(`addTeamToText(${this.shortDebugText(text)})`, err);
+        return Promise.reject(err);
+      });
   }
 
+//================================================================
+
+  createStatusUpdate(properties): Promise<TeamUpdate> {
+    let id = uuid.v4();
+    let newStatusUpdate = new TeamUpdate(id, properties);
+    return this.dbFacade.createTeamUpdate(newStatusUpdate)
+      .then(result => {
+        return Promise.resolve(newStatusUpdate);
+      });
+  }
+
+  getStatusUpdates(): Promise<TeamUpdate[]> {
+    return this.dbFacade.getTeamUpdates({})
+      .then(docs => {
+        let updates = docs;
+        return Promise.resolve(updates);
+      });
+  }
+
+  getStatusUpdate(id: TeamUpdateId): Promise<TeamUpdate> {
+    return this.dbFacade.getTeamUpdates({id})
+      .then(docs => {
+        let update = docs[0];
+        return Promise.resolve(update);
+      });
+  }
 }
 

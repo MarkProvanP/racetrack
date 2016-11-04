@@ -1,9 +1,9 @@
 import * as express from "express";
-import { DbFacadeInterface } from "../db/db-facade";
 import { Team } from "../../common/team";
 import * as winston from "winston";
+import { DataIntermediary } from "../data-intermediate";
 
-export default function publicRouterWithDb(db_facade: DbFacadeInterface) {
+export default function publicRouterWithDb(dataIntermediary: DataIntermediary) {
   let publicRouter = express.Router();
 
   publicRouter.use(function(req, res, next) {
@@ -12,7 +12,7 @@ export default function publicRouterWithDb(db_facade: DbFacadeInterface) {
   });
 
   publicRouter.get('/teams', function(req, res) {
-    db_facade.getTeams()
+    dataIntermediary.getTeams()
       .then(teams => {
         res.type('application/json');
         res.send(JSON.stringify(teams.map(team => team.stripPrivateData())));
@@ -20,7 +20,7 @@ export default function publicRouterWithDb(db_facade: DbFacadeInterface) {
   })
   publicRouter.get('/teams/:id', (req, res) => {
     let id = req.params.id;
-    db_facade.getTeam(id)
+    dataIntermediary.getTeam(id)
       .then(team => {
         res.type('application/json');
         res.send(JSON.stringify(team.stripPrivateData()));

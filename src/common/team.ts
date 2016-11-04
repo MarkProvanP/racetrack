@@ -20,6 +20,12 @@ function checkinMigrate(obj) {
 }
 
 export type TeamId = string;
+export interface DbFormTeam {
+  id: TeamId;
+  name: string;
+  statusUpdates: [TeamUpdateId];
+  racers: [RacerId];
+}
 export interface UnpopulatedTeam {
   id: TeamId;
   name: string;

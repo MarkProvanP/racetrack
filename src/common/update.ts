@@ -33,6 +33,16 @@ export function MakeCoordsNumbers(location: Location) {
   return location;
 }
 
+export interface DbFormTeamUpdate {
+  id: TeamUpdateId;
+  notes: string;
+  timestamp: Date;
+  status: TeamStatus;
+  location: Location;
+  isPublic: boolean;
+  byUser: UserActionInfo;
+}
+
 export class TeamUpdate {
   id: TeamUpdateId;
   notes: string;

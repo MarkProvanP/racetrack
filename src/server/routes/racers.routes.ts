@@ -2,8 +2,9 @@ import * as express from "express";
 import { DbFacadeInterface } from "../db/db-facade";
 import { Racer } from "../../common/racer";
 import * as winston from "winston";
+import { DataIntermediary } from "../data-intermediate";
 
-export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
+export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
   let racersRouter = express.Router();
 
   racersRouter.use(function(req, res, next) {
@@ -18,7 +19,7 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
 
   racersRouter.get('/', function(req, res) {
     winston.log('verbose', 'GET /racers'); 
-    db_facade.getRacers()
+    dataIntermediary.getRacers()
       .then(racers => {
         res.type('application/json');
         res.send(JSON.stringify(racers));
@@ -27,7 +28,7 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
 
   racersRouter.get('/:id', (req, res) => {
     let id = req.params.id;
-    db_facade.getRacer(id)
+    dataIntermediary.getRacer(id)
       .then(racer => {
         res.type('application/json');
         res.send(JSON.stringify(racer));
@@ -37,7 +38,7 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
   racersRouter.post('/', function(req, res) {
     winston.log('verbose', 'POST /racers')
     let body = req.body;
-    db_facade.createRacer(body)
+    dataIntermediary.createRacer(body)
       .then(newRacer => {
         res.type('application/json');
         res.send(JSON.stringify(newRacer));
@@ -50,7 +51,7 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
     winston.log('verbose', body);
     let newDetailsRacer = Racer.fromJSON(body);
 
-    db_facade.updateRacer(req.params.id, newDetailsRacer)
+    dataIntermediary.updateRacer(newDetailsRacer)
       .then(changedRacer => {
         res.type('application/json');
         res.send(JSON.stringify(changedRacer));
@@ -62,7 +63,7 @@ export default function racersRouterWithDb(db_facade: DbFacadeInterface) {
     let body = req.body;
     let deletedRacerId = req.params.id;
 
-    db_facade.deleteRacer(deletedRacerId)
+    dataIntermediary.deleteRacer(deletedRacerId)
       .then(() => {
         res.send('successfully deleted racer');
       });

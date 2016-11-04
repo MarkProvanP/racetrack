@@ -1,8 +1,9 @@
 import * as express from "express";
-import { DbFacadeInterface } from "../db/db-facade";
 import * as winston from "winston";
 
-export default function updatesRouterWithDb(db_facade: DbFacadeInterface) {
+import { DataIntermediary } from "../data-intermediate";
+
+export default function updatesRouterWithDb(dataIntermediary: DataIntermediary) {
 let updatesRouter = express.Router();
 
   updatesRouter.use(function(req, res, next) {
@@ -16,7 +17,7 @@ let updatesRouter = express.Router();
   });
 
   updatesRouter.get('/', function(req, res) {
-    db_facade.getStatusUpdates()
+    dataIntermediary.getStatusUpdates()
       .then(updates => {
         res.type("application/json");
         res.send(JSON.stringify(updates));
@@ -25,7 +26,7 @@ let updatesRouter = express.Router();
 
   updatesRouter.get('/:id', (req, res) => {
     let id = req.params.id;
-    db_facade.getStatusUpdate(id)
+    dataIntermediary.getStatusUpdate(id)
       .then(update => {
         res.type('application/json');
         res.send(JSON.stringify(update));
@@ -34,7 +35,7 @@ let updatesRouter = express.Router();
 
   updatesRouter.post('/', (req, res) => {
     let newUpdateProperties = req.body;
-    db_facade.createStatusUpdate(newUpdateProperties)
+    dataIntermediary.createStatusUpdate(newUpdateProperties)
       .then(update => {
         res.type("application/json");
         res.send(JSON.stringify(update));

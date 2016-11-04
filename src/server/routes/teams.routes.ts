@@ -1,9 +1,10 @@
 import * as express from "express";
-import { DbFacadeInterface } from "../db/db-facade";
-import { Team } from "../../common/team";
 import * as winston from "winston";
 
-export default function teamsRouterWithDb(db_facade: DbFacadeInterface) {
+import { Team } from "../../common/team";
+import { DataIntermediary } from "../data-intermediate";
+
+export default function teamsRouterWithDb(dataIntermediary: DataIntermediary) {
   let teamsRouter = express.Router();
 
   teamsRouter.use(function(req, res, next) {
@@ -17,7 +18,7 @@ export default function teamsRouterWithDb(db_facade: DbFacadeInterface) {
   });
 
   teamsRouter.get('/', function(req, res) {
-    db_facade.getTeams()
+    dataIntermediary.getTeams()
       .then(teams => {
         res.type('application/json');
         res.send(JSON.stringify(teams));
@@ -25,31 +26,31 @@ export default function teamsRouterWithDb(db_facade: DbFacadeInterface) {
   })
   teamsRouter.get('/:id', (req, res) => {
     let id = req.params.id;
-    db_facade.getTeam(id)
+    dataIntermediary.getTeam(id)
       .then(team => {
         res.type('application/json');
         res.send(JSON.stringify(team));
       });
   })
-  teamsRouter.post('/', function(req, res) {
+  teamsRouter.post('/', (req, res) => {
     let body = req.body;
-    db_facade.createTeam(body)
+    dataIntermediary.createTeam(body)
       .then(newTeam => {
         res.type('application/json');
         res.send(JSON.stringify(newTeam));
       });
   });
-  teamsRouter.put('/:id', function(req, res) {
+  teamsRouter.put('/:id', (req, res) => {
     let newDetailsTeam = Team.fromJSON(req.body);
-    db_facade.updateTeam(req.params.id, newDetailsTeam)
+    dataIntermediary.updateTeam(newDetailsTeam)
       .then(changedTeam => {
         res.type('application/json');
         res.send(JSON.stringify(changedTeam));
       });
   })
-  teamsRouter.delete('/:id', function(req, res) {
+  teamsRouter.delete('/:id', (req, res) => {
     let deletedTeamId = req.params.id;
-    db_facade.deleteTeam(deletedTeamId)
+    dataIntermediary.deleteTeam(deletedTeamId)
       .then(() => {
         res.send('successfully deleted team');
       });
