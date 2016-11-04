@@ -51,6 +51,7 @@
       <div class='new-update-wrapper' *ngIf='inCreateUpdateMode && text == selectedText'>
         <new-update
           [team]='text.team'
+          [text]='text'
           (onStatusCreated)='onStatusCreated()'>
         </new-update>
       </div>

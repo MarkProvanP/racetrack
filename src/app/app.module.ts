@@ -52,6 +52,7 @@ import { MeComponent } from './user/me';
 import { RegisterComponent } from './user/register';
 
 import { TimeWidget } from "./widgets/time";
+import { LocationWidget } from "./widgets/location";
 
 import { DataService } from './data.service';
 import { TextService } from './text.service';
@@ -111,6 +112,7 @@ const APP_PROVIDERS = [
     MeComponent,
     RegisterComponent,
     TimeWidget,
+    LocationWidget,
     OrderBy,
     TeamHasUpdatePipe,
     KeysPipe

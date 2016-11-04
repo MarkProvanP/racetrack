@@ -25,6 +25,14 @@ export class Location {
   latitude: number;
   longitude: number;
   place: string;
+  source: string;
+  accuracy: string;
+}
+
+export const LOCATION_SOURCES = {
+  GPS: "gps",
+  NETWORK: "network",
+  MANUAL: "manual"
 }
 
 export function MakeCoordsNumbers(location: Location) {

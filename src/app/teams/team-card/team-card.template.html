@@ -17,8 +17,7 @@
             <time-widget md-line [time]='update.timestamp'></time-widget>
             <div md-line>
               <span><i>Status:</i> {{update.prettyStatusName()}}</span>
-              <span><i>Place:</i> {{update.location.place}}</span>
-              <span *ngIf="update.location.latitude"><i>Co-ords</i> {{update.location.latitude}}, {{update.location.longitude}}</span>
+              <location-widget [location]='update.location'></location-widget>
             </div>
             <div md-line><i>Notes:</i> {{update.notes}}</div>
           </md-list-item>

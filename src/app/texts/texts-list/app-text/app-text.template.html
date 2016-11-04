@@ -11,19 +11,13 @@
       </div>
       <div>
         <time-widget [time]='text.timestamp'></time-widget>
-        {{text.location.latitude}}
-        {{text.location.longitude}}
-        {{text.location.source}}
-        {{text.location.accuracy}}
+        <location-widget [location]='text.location'></location-widget>
       </div>
       <div class='text-title' *ngIf='!display.oneline'>
         <div *ngIf="display.number">{{text.from}}</div>
         <div *ngIf="display.time">
           <time-widget [time]='text.timestamp'></time-widget>
-          {{text.location.latitude}}
-          {{text.location.longitude}}
-          {{text.location.source}}
-          {{text.location.accuracy}}
+          <location-widget [location]='text.location'></location-widget>
         </div>
       </div>
     </md-card-title>

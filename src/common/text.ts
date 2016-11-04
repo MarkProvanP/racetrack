@@ -10,6 +10,7 @@ export type TextId = string;
 
 import { Racer, RacerId } from './racer';
 import { Team, TeamId } from './team';
+import { Location } from "./update";
 import { UserActionInfo, UserWithoutPassword } from './user';
 
 export interface DbFormText {
@@ -171,17 +172,10 @@ export class InboundText extends Text {
   }
 }
 
-export interface AppTextLocation {
-  latitude: string;
-  longitude: string;
-  accuracy: string;
-  source: string;
-}
-
 export class AppText extends InboundText {
   text_subclass: string = 'AppText';
 
-  location: AppTextLocation;
+  location: Location;
 
   constructor(id, obj) {
     super(id, obj);

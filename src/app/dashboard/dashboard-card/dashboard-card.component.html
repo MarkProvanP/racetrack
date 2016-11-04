@@ -32,12 +32,9 @@
         </td>
       </tr>
       <tr>
-        <th>Place:</th>
+        <th>Location:</th>
         <td>
-          <span>
-            {{team.getLastUpdate().location.place}}
-          </span>
-          <button md-button (click)='openMap()'>See map</button>
+          <location-widget [location]='team.getLastUpdate().location'></location-widget>
         </td>
       </tr>
       <tr>

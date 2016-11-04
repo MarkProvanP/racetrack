@@ -1,0 +1,19 @@
+<div class='location-widget'>
+  <div class='if-gps' *ngIf='ifGPS()'>
+    GPS
+  </div>
+  <div class='if-network' *ngIf='ifNetwork()'>
+    Network
+  </div>
+  <div class='if-manual' *ngIf='ifManual()'>
+    Manual
+  </div>
+  <div class='co-ords'>
+    <span class='latitude'>{{location.latitude}}</span>
+    <span class='longitude'>{{location.longitude}}</span>
+    <span class='accuracy'>{{location.accuracy}}</span>
+  </div>
+  <div class='place'>
+    {{location.place}}
+  </div>
+</div>

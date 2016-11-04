@@ -14,8 +14,7 @@
           <th>Place:</th>
           <td>
             <md-input class='place-input' [(ngModel)]='newStatusObj.location.place'></md-input>
-            <i>{{newStatusObj.location.latitude}}</i>,
-            <i>{{newStatusObj.location.longitude}}</i>
+            <location-widget [location]='newStatusObj.location'></location-widget>
           </td>
         </tr>
         <tr>

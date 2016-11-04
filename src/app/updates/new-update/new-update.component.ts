@@ -1,7 +1,13 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 
 import { Team } from "../../../common/team";
-import { TeamStatus, Location, prettyStatusName } from "../../../common/update";
+import {
+  TeamStatus,
+  Location,
+  LOCATION_SOURCE,
+  prettyStatusName
+} from "../../../common/update";
+import { Text, AppText } from "../../../common/text";
 
 import { DataService } from '../../data.service';
 import { UserService } from '../../user.service';
@@ -13,13 +19,16 @@ import { UserService } from '../../user.service';
 })
 export class NewUpdateComponent implements OnInit {
   @Input() team: Team;
+  @Input() text: Text;
   @Output() onStatusCreated = new EventEmitter();
   newStatusObj = {
     status: TeamStatus.ON_START_BUS,
     location: {
       place: 'St Andrews',
       latitude: 56.3397753,
-      longitude: -2.7967214
+      longitude: -2.7967214,
+      accuracy: 0,
+      source: LOCATION_SOURCE.MANUAL
     },
     notes: "Default starting status",
     isPublic: false,
@@ -43,6 +52,9 @@ export class NewUpdateComponent implements OnInit {
     if (lastUpdate) {
       this.newStatusObj.status = lastUpdate.status;
       this.newStatusObj.location = lastUpdate.location;
+    }
+    if (this.text instanceof AppText) {
+      this.newStatusObj.location = this.text.location;
     }
   }
 
