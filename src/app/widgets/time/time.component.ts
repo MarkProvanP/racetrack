@@ -1,6 +1,11 @@
 import { Component, Input } from "@angular/core";
 
-import * as moment from "moment";
+import * as moment from "moment-timezone";
+
+const TIMEZONES = {
+  UK: "Europe/London",
+  EU: "Europe/Prague"
+}
 
 @Component({
   selector: 'time-widget',
@@ -10,9 +15,10 @@ import * as moment from "moment";
 export class TimeWidget {
   @Input() fromNow: boolean;
   moment: any;
+  timezone: string = TIMEZONES.UK;
 
   @Input() set time(date: Date) {
-    this.moment = moment(date);
+    this.moment = moment(date).tz(this.timezone);
   }
 
   isDateValid() {
@@ -27,5 +33,18 @@ export class TimeWidget {
     let now = moment();
     let duration = moment.duration(this.moment.diff(now));
     return duration.humanize(true);
+  }
+
+  toggleTimezone() {
+    if (this.timezone == TIMEZONES.UK) {
+      this.timezone = TIMEZONES.EU;
+    } else {
+      this.timezone = TIMEZONES.UK;
+    }
+    this.moment.tz(this.timezone);
+  }
+
+  getTimezone() {
+    return this.timezone;
   }
 }
