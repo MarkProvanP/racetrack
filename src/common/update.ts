@@ -5,6 +5,7 @@ export enum TeamStatus {
 }
 
 export function prettyStatusName(status: TeamStatus) {
+  status = Number(status);
   switch (status) {
     case TeamStatus.ON_START_BUS: return "On start bus";
     case TeamStatus.OKAY: return "OK"

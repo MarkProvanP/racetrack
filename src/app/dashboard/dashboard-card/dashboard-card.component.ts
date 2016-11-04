@@ -41,6 +41,10 @@ export class DashboardCardComponent {
     this.router.navigate(['/safetyteam', 'texts', 'by-team', this.team.id]);
   }
 
+  goToTeamUpdates() {
+    this.router.navigate(['/safetyteam', 'updates', this.team.id]);
+  }
+
   checkinTimeoutClass() {
 
   }

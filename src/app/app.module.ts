@@ -45,6 +45,7 @@ import { AppTextComponent } from './texts/texts-list/app-text';
 import { SentTextComponent } from './texts/texts-list/sent-text';
 import { UnknownTextComponent } from './texts/texts-list/unknown-text';
 import { MassTextComponent } from './mass-text';
+import { UpdatesComponent } from "./updates";
 
 import { LoginComponent } from './user/login';
 import { LogoutComponent } from './user/logout';
@@ -111,6 +112,7 @@ const APP_PROVIDERS = [
     SentTextComponent,
     UnknownTextComponent,
     MassTextComponent,
+    UpdatesComponent,
     LoginComponent,
     LogoutComponent,
     MeComponent,

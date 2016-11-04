@@ -1,0 +1,104 @@
+<div class='updates-by-team master-detail'>
+  <div class='teams-list master'>
+    <md-list>
+      <md-list-item *ngFor="let team of teams" (click)='routeToTeam(team)' [ngClass]="'selected'">
+        <img md-list-avatar src="http://blogs-images.forbes.com/kristintablang/files/2016/02/Uber-Puppies.jpg">
+        <h3 md-line>{{team.name}}</h3>
+        <p md-line>{{team.getPrettyRacersList()}}</p>
+      </md-list-item>
+    </md-list>
+  </div>
+  <div class='no-team-container' *ngIf='!selectedTeam'>
+    <div class='inner'>
+      <h3>No team selected</h3>
+    </div>
+  </div>
+  <div class='update-list-wrapper'>
+    <div class="updates-list" *ngIf='selectedTeam'>
+      <div class='add-button-wrapper'>
+        <button *ngIf='!inCreateUpdateMode' md-fab color='primary' (click)='createNewUpdate()'>
+          <md-icon class='md-24'>add</md-icon>
+        </button>
+      </div>
+      <div class='new-update-wrapper' *ngIf='inCreateUpdateMode'>
+        <new-update
+          [team]='selectedTeam'
+          (onStatusCreated)='onUpdateCreated()'>
+        </new-update>
+      </div>
+      <div class='update-card-wrapper' *ngFor="let update of selectedTeam.statusUpdates | orderBy: '-timestamp'">
+        <md-card class='update-card'>
+          <div class='info-table'>
+            <table>
+              <tr>
+                <th>Time</th>
+                <td>
+                  <time-widget [time]='update.timestamp'></time-widget>
+                </td>
+              </tr>
+              <tr>
+                <th>Place</th>
+                <td *ngIf='!isEditing(update)'>
+                  {{update.location.place}}
+                </td>
+                <td *ngIf='isEditing(update)'>
+                  <md-input class='place-input' [(ngModel)]='update.location.place'></md-input>
+                  <location-widget [location]='update.location'></location-widget>
+                </td>
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td *ngIf='!isEditing(update)'>
+                  {{update.prettyStatusName()}}
+                </td>
+                <td *ngIf='isEditing(update)'>
+                  <select [(ngModel)]="update.status">
+                    <option *ngFor="let item of statusEnum | keys" [value]="item.key">{{getPrettyStatusName(item)}}</option>
+                  </select>
+ 
+                </td>
+              </tr>
+              <tr>
+                <th>Notes</th>
+                <td *ngIf='!isEditing(update)'>
+                  {{update.notes}}
+                </td>
+                <td *ngIf='isEditing(update)'>
+                  <md-input class='notes-input' [(ngModel)]='update.notes'></md-input>
+                </td>
+              </tr>
+              <tr *ngIf='update.byUser'>
+                <th>By User</th>
+                <td>
+                  {{update.byUser.user.name}} at
+                  <time-widget [time]='update.byUser.timestamp'></time-widget>
+                </td>
+              </tr>
+            </table>
+            <md-checkbox [disabled]='!isEditing(update)' [(ngModel)]='update.isPublic'>Is Public</md-checkbox>
+            <button md-icon-button *ngIf='!isEditing(update)'(click)='editUpdate(update)'>
+              <md-icon>mode_edit</md-icon>
+            </button>
+            <button md-icon-button *ngIf='isEditing(update)'(click)='saveUpdate(update)'>
+              <md-icon>save</md-icon>
+            </button>
+          </div>
+          <div class='location-map'>
+            <sebm-google-map
+              [latitude]='update.location.latitude'
+              [longitude]='update.location.longitude'
+              [disableDefaultUI]='default.ui'
+              [zoom]='default.zoom'>
+              <sebm-google-map-marker
+                [latitude]="update.location.latitude"
+                [longitude]="update.location.longitude"
+                [markerDraggable]='isEditing(update)'
+                (dragEnd)='onMarkerDragEnd($event)'>
+              </sebm-google-map-marker>
+            </sebm-google-map>
+          </div>
+        </md-card>
+      </div>
+    </div>
+  </div>
+</div>

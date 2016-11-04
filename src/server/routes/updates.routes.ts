@@ -42,6 +42,22 @@ let updatesRouter = express.Router();
       });
   });
 
+  updatesRouter.put('/:id', (req, res) => {
+    let newDetailsUpdate = req.body;
+    dataIntermediary.updateTeamUpdate(newDetailsUpdate)
+    .then(changedUpdate => {
+      res.json(changedUpdate);
+    })
+  })
+
+  updatesRouter.delete('/:id', (req, res) => {
+    let id = req.params.id;
+    dataIntermediary.deleteTeamUpdate(id)
+    .then(() => {
+      res.send('successfully deleted update');
+    })
+  })
+
   return updatesRouter;
 }
 

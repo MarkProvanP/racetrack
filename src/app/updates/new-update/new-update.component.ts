@@ -59,8 +59,7 @@ export class NewUpdateComponent implements OnInit {
   }
 
   getPrettyStatusName(item) {
-    let enumVal = TeamStatus[item.value];
-    return prettyStatusName(enumVal);
+    return prettyStatusName(item.key);
   }
 
   cancelNewUpdate() {

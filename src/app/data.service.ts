@@ -189,6 +189,14 @@ export class DataService {
       .then(teams => teams.filter(team => team.hasRacer(racer))[0]);
   }
 
+  updateTeamUpdate(update: TeamUpdate): Promise<TeamUpdate> {
+    let url = `${this.updatesUrl}/${update.id}`
+    return this.http.put(url, JSON.stringify(update), this.httpExtras)
+    .toPromise()
+    .then(res => TeamUpdate.fromJSON(res.json()))
+    .catch(this.handleError);
+  }
+
   getEvents(): Promise<ThingEvent[]> {
     return this.http.get(this.eventsUrl, this.httpNoBodyExtras)
       .toPromise()

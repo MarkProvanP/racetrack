@@ -17,6 +17,7 @@ import { PublicTeamProgressMapComponent } from './public-team-progress-map';
 import { MassTextComponent } from './mass-text';
 import { SafetyMapComponent } from './safety-map';
 import { DataResolver } from './app.resolver';
+import { UpdatesComponent } from './updates';
 
 import { LoginComponent } from './user/login';
 import { LogoutComponent } from './user/logout';
@@ -78,6 +79,13 @@ export const ROUTES: Routes = [
           { path: '', component: NoTeamComponent },
           { path: ':id', component: TeamCardComponent },
           { path: ':id/edit', component: TeamCardComponent }
+        ]
+      },
+      {
+        path: 'updates',
+        children: [
+          { path: '', component: UpdatesComponent },
+          { path: ':id', component: UpdatesComponent }
         ]
       },
       { path: 'dashboard', component: DashboardComponent },

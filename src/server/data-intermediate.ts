@@ -356,5 +356,16 @@ export class DataIntermediary {
         return Promise.resolve(update);
       });
   }
+
+  updateTeamUpdate(update: TeamUpdate): Promise<TeamUpdate> {
+    return this.dbFacade.updateTeamUpdate(update)
+    .then(r => {
+      return Promise.resolve(update);
+    })
+  }
+  
+  deleteTeamUpdate(id: TeamUpdateId): Promise<void> {
+    return this.dbFacade.deleteTeamUpdate(id);
+  }
 }
 
