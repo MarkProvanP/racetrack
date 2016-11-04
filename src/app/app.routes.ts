@@ -26,8 +26,7 @@ import { RegisterComponent } from './user/register';
 import { PrivateApp } from "./private-app";
 import { PublicApp } from "./public-app"
 
-import { UnauthenticatedGuard } from './unauthenticated.guard';
-import { AuthenticatedGuard } from './authenticated.guard';
+import { AuthenticatedGuard, UnauthenticatedGuard } from './guards';
 
 export const ROUTES: Routes = [
   {

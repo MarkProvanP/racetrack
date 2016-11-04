@@ -6,9 +6,6 @@ import { Location, TeamUpdate, TeamStatus } from '../../../common/update';
 import { Racer } from '../../../common/racer';
 import { DataService } from '../../data.service';
 
-import { OrderBy } from '../../orderBy.pipe.ts';
-import { KeysPipe } from '../../keys.pipe';
-
 @Component({
   selector: 'team-card',
   templateUrl: './team-card.template.html',

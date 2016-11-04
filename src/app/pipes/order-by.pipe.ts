@@ -7,7 +7,7 @@ import { Pipe, PipeTransform } from "@angular/core";
   name: 'orderBy',
   pure: false
 })
-export class OrderBy implements PipeTransform {
+export class OrderByPipe implements PipeTransform {
   static _orderByComparator(a: any, b: any): number {
     let test = (isNaN(parseFloat(a)) || !isFinite(a))
       || (isNaN(parseFloat(b)) || !isFinite(b));

@@ -58,11 +58,13 @@ import { DataService } from './data.service';
 import { TextService } from './text.service';
 import { UserService } from './user.service';
 
-import { OrderBy } from './orderBy.pipe';
-import { KeysPipe } from './keys.pipe';
-import { TeamHasUpdatePipe } from "./pipes/team-has-update.pipe";
-import { UnauthenticatedGuard } from './unauthenticated.guard';
-import { AuthenticatedGuard } from './authenticated.guard';
+import {
+  OrderByPipe,
+  KeysPipe,
+  TeamHasUpdatePipe
+} from "./pipes";
+
+import { AuthenticatedGuard, UnauthenticatedGuard } from './guards';
 
 import * as config from "../../app-config";
 
@@ -113,9 +115,11 @@ const APP_PROVIDERS = [
     LogoutComponent,
     MeComponent,
     RegisterComponent,
+    // WIDGETS
     TimeWidget,
     LocationWidget,
-    OrderBy,
+    // PIPES
+    OrderByPipe,
     TeamHasUpdatePipe,
     KeysPipe
   ],
