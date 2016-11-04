@@ -106,15 +106,6 @@ export class OutboundText extends Text {
     return new OutboundText(id, p);
   }
 
-  getPrettySentStatus() {
-    if (this.sentBy) {
-      let name = this.sentBy.user.name;
-      return "Sent by " + name;
-    } else {
-      return "Unknown sent info";
-    }
-  }
-
   constructor(id: TextId, properties) {
     super();
     this.id = id;

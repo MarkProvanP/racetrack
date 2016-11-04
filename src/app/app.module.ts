@@ -54,6 +54,7 @@ import { RegisterComponent } from './user/register';
 
 import { TimeWidget } from "./widgets/time";
 import { LocationWidget } from "./widgets/location";
+import { UserWidget } from "./widgets/user";
 
 import { DataService } from './data.service';
 import { TextService } from './text.service';
@@ -120,6 +121,7 @@ const APP_PROVIDERS = [
     // WIDGETS
     TimeWidget,
     LocationWidget,
+    UserWidget,
     // PIPES
     OrderByPipe,
     TeamHasUpdatePipe,

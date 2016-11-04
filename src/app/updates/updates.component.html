@@ -70,7 +70,8 @@
               <tr *ngIf='update.byUser'>
                 <th>By User</th>
                 <td>
-                  {{update.byUser.user.name}} at
+                  <user-widget [user]='update.byUser.user'></user-widget>
+                  at
                   <time-widget [time]='update.byUser.timestamp'></time-widget>
                 </td>
               </tr>

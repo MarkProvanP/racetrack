@@ -22,7 +22,9 @@
     </div>
   </md-card-content>
   <div class='text-read' *ngIf='text.readBy'>
-    Read by {{text.readBy.user.name}} at
+    Read by
+    <user-widget [user]='text.readBy.user'></user-widget>
+    at
     <time-widget [time]='text.readBy.timestamp'></time-widget>
   </div>
   <md-card-actions>

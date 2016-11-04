@@ -20,7 +20,8 @@
     {{text.body}}
   </md-card-content>
   <div class='text-sent' *ngIf='text.sentBy'>
-    Sent by {{text.sentBy.user.name}}
+    Sent by
+    <user-widget [user]='text.sentBy.user'></user-widget>
   </div>
   <md-card-actions>
   </md-card-actions>

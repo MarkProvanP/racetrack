@@ -84,7 +84,9 @@
       <table>
         <tr>
           <th>Started by</th>
-          <td>{{oldMassText.byUser.user.name}}</td>
+          <td>
+            <user-widget [user]='oldMassText.byUser.user'></user-widget>
+          </td>
         </tr>
         <tr>
           <th>At time</th>
@@ -106,7 +108,9 @@
         </tr>
         <tr>
           <th>Marked as completed by</th>
-          <td>{{oldMassText.endedBy.user.name}}</td>
+          <td>
+            <user-widget [user]='oldMassText.endedBy.user'></user-widget>
+          </td>
         </tr>
         <tr>
           <th>At time</th>
