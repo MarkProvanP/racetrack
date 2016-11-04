@@ -189,6 +189,9 @@ export class AppText extends InboundText {
   }
 
   static fromJSON(obj) {
+    if (!obj) {
+      throw new Error('AppText fromJSON on invalid object!');
+    }
     let racer = obj.racer ? Racer.fromJSON(obj.racer) : undefined;
     let team = obj.team ? Team.fromJSON(obj.team) : undefined;
     let clone = JSON.parse(JSON.stringify(obj));
@@ -201,8 +204,10 @@ export class AppText extends InboundText {
     let p = {};
 
     let messageWithoutHeader = twilio.Body.substring(APP_TEXT_HEADER.length + 1);
-    let parsedAppMessage = JSON.parse(messageWithoutHeader);
-
+    let deEscaped1 = messageWithoutHeader.replace(/\\/g, "");
+    let deEscaped2 = deEscaped1.replace(/\"\{/g, "{");
+    let deEscaped3 = deEscaped2.replace(/\}\"/g, "}");
+    let parsedAppMessage = JSON.parse(deEscaped3);
     
     p['body'] = parsedAppMessage.message;
     p['location'] = parsedAppMessage.location;
