@@ -53,7 +53,7 @@ export class TeamTextsComponent implements OnInit {
   }
 
   markTextAsRead(text) {
-    this.textService.updateText(text)
+    this.textService.updateTextAndWriteToBackend(text)
   }
 
   numberUnreadMessagesForTeam(team: Team) {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from "@angular/router";
 import { DataService } from "../../data.service";
 import { UserService } from "../../user.service";
@@ -11,7 +11,7 @@ import { TeamStatus } from '../../../common/update';
   templateUrl: './dashboard-card.component.html',
   styleUrls: ['./dashboard-card.component.scss']
 })
-export class DashboardCardComponent implements OnInit {
+export class DashboardCardComponent {
   @Input() team: Team;
   constructor(
     private router: Router,
@@ -22,8 +22,7 @@ export class DashboardCardComponent implements OnInit {
   getCardClass() {
     switch (this.team.getCurrentStatus()) {
       case TeamStatus.ON_START_BUS: return "team-on-bus";
-      case TeamStatus.IN_UK: return "team-in-uk";
-      case TeamStatus.IN_EUROPE: return "team-in-europe";
+      case TeamStatus.OKAY: return "team-ok";
       case TeamStatus.IN_HOSTEL: return "team-in-hostel";
       case TeamStatus.DROPPED_OUT: return "team-dropped-out";
       case TeamStatus.ASLEEP: return "team-asleep";

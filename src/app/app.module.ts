@@ -36,7 +36,7 @@ import { NoTeamComponent } from './teams/no-team';
 import { DashboardComponent } from './dashboard';
 import { DashboardCardComponent } from './dashboard/dashboard-card';
 import { SafetyMapComponent } from './safety-map';
-import { PublicMapComponent, TeamHasUpdatePipe } from './public-map';
+import { PublicMapComponent } from './public-map';
 import { PublicTeamProgressMapComponent } from './public-team-progress-map';
 import { NewUpdateComponent } from './updates/new-update';
 import { TextSendComponent } from './texts/text-send';
@@ -57,8 +57,10 @@ import { LocationWidget } from "./widgets/location";
 import { DataService } from './data.service';
 import { TextService } from './text.service';
 import { UserService } from './user.service';
+
 import { OrderBy } from './orderBy.pipe';
 import { KeysPipe } from './keys.pipe';
+import { TeamHasUpdatePipe } from "./pipes/team-has-update.pipe";
 import { UnauthenticatedGuard } from './unauthenticated.guard';
 import { AuthenticatedGuard } from './authenticated.guard';
 

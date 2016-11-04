@@ -4,14 +4,10 @@ import { Router }            from '@angular/router';
 import { Racer }                from '../../common/racer';
 import { DataService }         from '../data.service';
 
-import { MdIcon, MdIconRegistry } from "@angular2-material/icon";
-
 @Component({
   selector: 'my-racers',
   templateUrl: './racers.template.html',
-  styleUrls:  ['./racers.styles.scss'],
-  directives: [MdIcon],
-  viewProviders: [MdIconRegistry]
+  styleUrls:  ['./racers.styles.scss']
 })
 export class RacersComponent implements OnInit {
   racers: Racer[];

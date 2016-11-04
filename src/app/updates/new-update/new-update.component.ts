@@ -4,7 +4,7 @@ import { Team } from "../../../common/team";
 import {
   TeamStatus,
   Location,
-  LOCATION_SOURCE,
+  LOCATION_SOURCES,
   prettyStatusName
 } from "../../../common/update";
 import { Text, AppText } from "../../../common/text";
@@ -28,7 +28,7 @@ export class NewUpdateComponent implements OnInit {
       latitude: 56.3397753,
       longitude: -2.7967214,
       accuracy: 0,
-      source: LOCATION_SOURCE.MANUAL
+      source: LOCATION_SOURCES.MANUAL
     },
     notes: "Default starting status",
     isPublic: false,

@@ -1,8 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
-import { MdUniqueSelectionDispatcher } from "@angular2-material/core";
-
 import { Racer } from "../../../common/racer";
 import { Team, CheckinInfo } from "../../../common/team";
 import { Text, InboundText, OutboundText, AppText } from '../../../common/text';
@@ -10,14 +8,10 @@ import { DataService } from '../../data.service';
 import { TextService } from '../../text.service';
 import { UserService } from '../../user.service';
 
-import { OrderBy } from '../../orderBy.pipe.ts';
-
 @Component({
   selector: "texts-list",
   templateUrl: "./texts-list.template.html",
-  styleUrls: ["./texts-list.styles.scss"],
-  pipes: [OrderBy],
-  providers: [MdUniqueSelectionDispatcher]
+  styleUrls: ["./texts-list.styles.scss"]
 })
 export class TextsListComponent {
   actuallyAllTexts: Text[];

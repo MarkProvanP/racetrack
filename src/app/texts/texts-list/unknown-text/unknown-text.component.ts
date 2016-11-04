@@ -3,7 +3,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { DataService } from '../../../data.service';
 import { UserService } from '../../../user.service';
 
-import { Text, InboundText, OutboundText, ContactNumber, UserActionInfo } from '../../../../common/text';
+import { Text, InboundText, OutboundText, ContactNumber } from '../../../../common/text';
+import { UserActionInfo } from "../../../../common/user";
 import { Racer } from '../../../../common/racer';
 
 @Component({

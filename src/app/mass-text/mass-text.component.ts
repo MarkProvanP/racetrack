@@ -122,7 +122,7 @@ export class MassTextComponent implements OnInit {
     };
     let filterOptions = new TextFilterOptions(opts);
     let matchingTexts = this.textService.getTextsFiltered(filterOptions);
-    let sorted = matchingTexts.sort((t1, t2) => moment(t2.timestamp).diff(t1.timestamp));
+    let sorted = matchingTexts.sort((t1, t2) => moment(t2.timestamp).diff(moment(t1.timestamp)));
     if (matchingTexts.length) {
       return sorted[0];
     }

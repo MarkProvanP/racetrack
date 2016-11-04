@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl, Validators } from "@angular/forms";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 
 import { UserService } from '../../user.service';
@@ -7,8 +7,7 @@ import { UserService } from '../../user.service';
 @Component({
   selector: 'register',
   styleUrls: ['./register.style.scss'],
-  templateUrl: './register.template.html',
-  directives: [REACTIVE_FORM_DIRECTIVES]
+  templateUrl: './register.template.html'
 })
 export class RegisterComponent implements OnInit {
   username: FormControl;

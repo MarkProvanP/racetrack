@@ -26,7 +26,7 @@ export class Location {
   longitude: number;
   place: string;
   source: string;
-  accuracy: string;
+  accuracy: any;
 }
 
 export const LOCATION_SOURCES = {

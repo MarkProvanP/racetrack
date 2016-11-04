@@ -12,8 +12,7 @@ import { KeysPipe } from '../../keys.pipe';
 @Component({
   selector: 'team-card',
   templateUrl: './team-card.template.html',
-  styleUrls: ['./team-card.styles.scss'],
-  pipes: [OrderBy, KeysPipe]
+  styleUrls: ['./team-card.styles.scss']
 })
 export class TeamCardComponent implements OnInit, OnDestroy {
   team: Team;

@@ -4,21 +4,10 @@ import { DataService } from '../data.service';
 
 import { Team } from '../../common/team';
 
-@Pipe({
-  name: 'teamHasUpdate',
-  pure: true
-})
-class TeamHasUpdate implements PipeTransform {
-  transform(input: any) {
-    return input.filter(team => team.getLastUpdate())
-  }
-}
-
 @Component({
   selector: 'safety-map',
   templateUrl: './safety-map.template.html',
   styleUrls: ['./safety-map.styles.scss'],
-  pipes: [TeamHasUpdate]
 })
 export class SafetyMapComponent implements OnInit {
   teams: Team[] = [];

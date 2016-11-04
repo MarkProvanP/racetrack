@@ -89,10 +89,8 @@ export const ROUTES: Routes = [
           { path: 'me', component: MeComponent }
         ]
       },
-      {
-        path: 'mass-text', component: MassTextComponent
-      }
-      { path: '', redirectTo: '/safetyteam/dashboard' },
+      { path: 'mass-text', component: MassTextComponent },
+      { path: '', redirectTo: '/safetyteam/dashboard' }
     ]
   },
   {

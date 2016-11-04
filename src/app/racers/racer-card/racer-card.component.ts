@@ -11,8 +11,7 @@ import { OrderBy } from '../../orderBy.pipe.ts';
 @Component({
   selector: 'racer-card',
   templateUrl: './racer-card.template.html',
-  styleUrls: ['./racer-card.styles.scss'],
-  pipes: [OrderBy]
+  styleUrls: ['./racer-card.styles.scss']
 })
 export class RacerCardComponent implements OnInit, OnDestroy {
   racer: Racer;

@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
   }
 
   filterTeams() {
-    let check = () => true;
+    let check = (team) => true;
     if (this.teamsFilterOption == 'uk') {
       check = (team) => !team.inEurope;
     } else if (this.teamsFilterOption == 'europe') {

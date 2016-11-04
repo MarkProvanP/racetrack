@@ -1,25 +1,14 @@
-import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 
 import { Router, ActivatedRoute } from "@angular/router";
 import { DataService } from '../data.service';
 
 import { Team } from '../../common/team';
 
-@Pipe({
-  name: 'teamHasUpdate',
-  pure: true
-})
-class TeamHasUpdate implements PipeTransform {
-  transform(input: any) {
-    return input.filter(team => team.getLastUpdate())
-  }
-}
-
 @Component({
   selector: 'public-team-progress-map',
   templateUrl: './public-team-progress-map.template.html',
-  styleUrls: ['./public-team-progress-map.styles.scss'],
-  pipes: [TeamHasUpdate]
+  styleUrls: ['./public-team-progress-map.styles.scss']
 })
 export class PublicTeamProgressMapComponent implements OnInit {
   team: Team;
