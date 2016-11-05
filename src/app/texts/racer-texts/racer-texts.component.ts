@@ -29,17 +29,18 @@ export class RacerTextsComponent implements OnInit {
     private textService: TextService,
     private activatedRoute: ActivatedRoute,
     private router: Router
-  ) {};
+  ) {
+    this.dataService.addRacersChangedListener(racers => {
+      this.racers = racers;
+    })
+  }
 
   routeToRacer(racer: Racer) {
     this.router.navigate(['/safetyteam', 'texts', 'by-racer', racer.id]);
   }
 
   getRacers() {
-    return this.dataService.getRacers()
-      .then(racers => {
-        this.racers = racers;
-      });
+    this.racers = this.dataService.getRacers()
   }
 
   selectTextsByRacer(racer: Racer) {
@@ -71,12 +72,10 @@ export class RacerTextsComponent implements OnInit {
       this.onTextsChanged();
     });
     this.texts = this.textService.getAllTexts();
-    this.getRacers()
-      .then(racers => {
-        this.paramsSub = this.activatedRoute.params.subscribe(params => {
-          let racer = this.racers.filter(racer => racer.id == params['id'])[0]
-          this.selectTextsByRacer(racer);
-        });
-      });
+    this.getRacers();
+    this.paramsSub = this.activatedRoute.params.subscribe(params => {
+      let racer = this.racers.filter(racer => racer.id == params['id'])[0]
+      this.selectTextsByRacer(racer);
+    });
   }
 }

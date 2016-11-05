@@ -14,12 +14,15 @@ export class RacersComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
-    private router: Router) { }
+    private router: Router
+  ) {
+    this.dataService.addRacersChangedListener(racers => {
+      this.racers = racers;
+    })
+  }
 
   getRacers(): void {
-    this.dataService
-        .getRacers()
-        .then(racers => this.racers = racers);
+    this.racers = this.dataService.getRacers();
   }
 
   ngOnInit(): void {

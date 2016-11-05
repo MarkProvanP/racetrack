@@ -41,6 +41,7 @@ export class DataService {
   private racers: Racer[] = [];
 
   private teamsChangedListeners = [];
+  private racersChangedListeners = [];
 
   constructor(
     private http: Http,
@@ -61,10 +62,17 @@ export class DataService {
       this.teams = teams;
       this.broadcastTeamsChanged();
     })
+    this.getRacersFromBackend()
+    .then(racers => {
+      this.racers = racers;
+      this.broadcastRacersChanged();
+    })
 
     this.userService.addSocketEventListener(RacerUpdatedMessage.event, (message) => {
       let racerUpdatedMessage = RacerUpdatedMessage.fromJSON(message);
-      console.log(racerUpdatedMessage);
+      let racer = racerUpdatedMessage.racer;
+      this.updateRacer(racer);
+      this.broadcastRacersChanged();
     });
     this.userService.addSocketEventListener(TeamUpdatedMessage.event, (message) => {
       let teamUpdatedMessage = TeamUpdatedMessage.fromJSON(message);
@@ -86,8 +94,16 @@ export class DataService {
     this.teamsChangedListeners.push(callback);
   }
 
+  addRacersChangedListener(callback) {
+    this.racersChangedListeners.push(callback);
+  }
+
   private broadcastTeamsChanged() {
     this.teamsChangedListeners.forEach(listener => listener(this.teams));
+  }
+
+  private broadcastRacersChanged() {
+    this.racersChangedListeners.forEach(listener => listener(this.racers));
   }
 
 //----------------------------------------------------------------------//
@@ -185,20 +201,33 @@ export class DataService {
   }
 
 //----------------------------------------------------------------------//
+  
+  getRacers(): Racer[] {
+    return this.racers;
+  }
 
-  getRacers(): Promise<Racer[]> {
+  getRacersFromBackend(): Promise<Racer[]> {
     return this.http.get(this.racersUrl, this.httpNoBodyExtras)
                .toPromise()
                .then(response => response.json().map(Racer.fromJSON))
                .catch(this.handleError);
   }
 
-  getRacer(id: RacerId): Promise<Racer> {
+  getRacerFromBackend(id: RacerId): Promise<Racer> {
     let url = `${this.racersUrl}/${id}`;
     return this.http.get(url, this.httpNoBodyExtras)
       .toPromise()
       .then(response => Racer.fromJSON(response.json()))
       .catch(this.handleError)
+  }
+
+  getRacer(id: RacerId): Racer {
+    for (let i = 0; i < this.racers.length; i++) {
+      let r = this.racers[i];
+      if (r.id == id) {
+        return r;
+      }
+    }
   }
 
   deleteRacer(id: RacerId): Promise<void> {
@@ -217,7 +246,21 @@ export class DataService {
       .catch(this.handleError);
   }
 
-  updateRacer(racer: Racer): Promise<Racer> {
+  updateRacerAndWriteToBackend(racer: Racer): Promise<Racer> {
+    this.updateRacer(racer);
+    return this.writeRacerToBackend(racer);
+  }
+
+  updateRacer(racer: Racer) {
+    for (let i = 0; i < this.racers.length; i++) {
+      let r = this.racers[i];
+      if (r.id == racer.id) {
+        this.racers[i] = racer;
+      }
+    }
+  }
+
+  writeRacerToBackend(racer: Racer): Promise<Racer> {
     const url = `${this.racersUrl}/${racer.id}`;
     return this.http
       .put(url, JSON.stringify(racer), this.httpExtras)
@@ -237,7 +280,7 @@ export class DataService {
       .then(response => {
         let statusUpdate = TeamUpdate.fromJSON(response.json());
         team.statusUpdates.push(statusUpdate);
-        this.updateTeam(team);
+        this.updateTeamAndWriteToBackend(team);
         return team;
       });
   }

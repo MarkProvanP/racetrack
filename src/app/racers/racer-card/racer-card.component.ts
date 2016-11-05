@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 
 import { Team } from '../../../common/team';
 import { Location, TeamUpdate, TeamStatus } from '../../../common/update';
-import { Racer } from '../../../common/racer';
+import { Racer, RacerId } from '../../../common/racer';
 import { DataService } from '../../data.service';
 
 @Component({
@@ -12,6 +12,7 @@ import { DataService } from '../../data.service';
   styleUrls: ['./racer-card.styles.scss']
 })
 export class RacerCardComponent implements OnInit, OnDestroy {
+  id: RacerId;
   racer: Racer;
   paramsSub: any;
   routeSub: any;
@@ -21,12 +22,20 @@ export class RacerCardComponent implements OnInit, OnDestroy {
     private dataService: DataService,
     private activatedRoute: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+    this.dataService.addRacersChangedListener(racers => {
+      this.getRacer();
+    })
+  }
+
+  getRacer() {
+    this.racer = this.dataService.getRacer(this.id);
+  }
 
   ngOnInit() {
     this.paramsSub = this.activatedRoute.params.subscribe(params => {
-      this.dataService.getRacer(params['id'])
-        .then(racer => this.racer = racer)
+      this.id = params['id'];
+      this.getRacer();
     });
     this.routeSub = this.activatedRoute.url.subscribe(urlSegments => {
       this.inEditMode = (urlSegments[urlSegments.length - 1].path == 'edit');
@@ -42,10 +51,8 @@ export class RacerCardComponent implements OnInit, OnDestroy {
   }
 
   exitEditMode() {
-    this.dataService.updateRacer(this.racer)
-      .then(racer =>  {
-        this.router.navigate(['/safetyteam', 'racers', racer.id]);
-      });
+    this.dataService.updateRacerAndWriteToBackend(this.racer)
+    this.router.navigate(['/safetyteam', 'racers', this.racer.id]);
   }
 
   deleteRacer() {
