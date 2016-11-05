@@ -51,7 +51,7 @@ export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
     winston.log('verbose', body);
     let newDetailsRacer = Racer.fromJSON(body);
 
-    dataIntermediary.updateRacer(newDetailsRacer)
+    dataIntermediary.updateRacer(newDetailsRacer, req.user)
       .then(changedRacer => {
         res.type('application/json');
         res.send(JSON.stringify(changedRacer));

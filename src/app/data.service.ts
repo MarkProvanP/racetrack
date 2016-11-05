@@ -10,6 +10,12 @@ import { PhoneNumber } from '../common/text';
 import { ThingEvent, ThingEventId } from '../common/event';
 import { UserService } from './user.service';
 
+import {
+  RacerUpdatedMessage,
+  TeamUpdatedMessage,
+  TeamUpdateUpdatedMessage
+} from "../common/message";
+
 @Injectable()
 export class DataService {
 
@@ -46,7 +52,19 @@ export class DataService {
   }
 
   private whenAuthenticated() {
-
+    console.log('whenAuthenticated()');
+    this.userService.addSocketEventListener(RacerUpdatedMessage.event, (message) => {
+      let racerUpdatedMessage = RacerUpdatedMessage.fromJSON(message);
+      console.log(racerUpdatedMessage);
+    });
+    this.userService.addSocketEventListener(TeamUpdatedMessage.event, (message) => {
+      let teamUpdatedMessage = TeamUpdatedMessage.fromJSON(message);
+      console.log(teamUpdatedMessage);
+    });
+    this.userService.addSocketEventListener(TeamUpdateUpdatedMessage.event, (message) => {
+      let updateUpdatedMessage = TeamUpdateUpdatedMessage.fromJSON(message);
+      console.log(updateUpdatedMessage);
+    });
   }
 
   private notAuthenticated() {

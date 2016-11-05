@@ -34,7 +34,10 @@ import { UserWithoutPassword } from "../common/user";
 import {
   TextReceivedMessage,
   TextSentMessage,
-  TextUpdatedMessage
+  TextUpdatedMessage,
+  RacerUpdatedMessage,
+  TeamUpdatedMessage,
+  TeamUpdateUpdatedMessage
 } from "../common/message";
 import { MessageSender } from "./server";
 
@@ -74,9 +77,15 @@ export class DataIntermediary {
     .then(racer => Racer.fromJSON(racer))
   }
 
-  public updateRacer(racer: Racer): Promise<Racer> {
+  public updateRacer(racer: Racer, user?: UserWithoutPassword): Promise<Racer> {
     return this.dbFacade.updateRacer(racer.toDbForm())
-      .then(() => racer);
+    .then(() => {
+      if (user) {
+        let newMessage = new RacerUpdatedMessage(racer, user);
+        this.messageSender.sendMessageToWebClients(newMessage);
+      }
+      return racer;
+    });
   }
 
   public createRacer(name: string): Promise<Racer> {
@@ -132,11 +141,15 @@ export class DataIntermediary {
     });
   }
 
-  updateTeam(newTeam: Team) : Promise<Team> {
-    let depopulatedTeam = newTeam.depopulate();
+  updateTeam(team: Team, user?: UserWithoutPassword): Promise<Team> {
+    let depopulatedTeam = team.depopulate();
     return this.dbFacade.updateTeam(depopulatedTeam)
       .then(result => {
-        return Promise.resolve(newTeam);
+        if (user) {
+          let newMessage = new TeamUpdatedMessage(team, user);
+          this.messageSender.sendMessageToWebClients(newMessage);
+        }
+        return team;
     });
   }
 
@@ -202,7 +215,7 @@ export class DataIntermediary {
       .then(texts => texts.map(text => Text.fromJSON(text)));
   }
 
-  public updateText(text: Text): Promise<Text> {
+  public updateText(text: Text, user?: UserWithoutPassword): Promise<Text> {
     let textInDbForm = text.toDbForm();
     return this.dbFacade.updateText(textInDbForm)
     .then(t => {
@@ -357,10 +370,14 @@ export class DataIntermediary {
       });
   }
 
-  updateTeamUpdate(update: TeamUpdate): Promise<TeamUpdate> {
+  updateTeamUpdate(update: TeamUpdate, user?: UserWithoutPassword): Promise<TeamUpdate> {
     return this.dbFacade.updateTeamUpdate(update)
     .then(r => {
-      return Promise.resolve(update);
+      if (user) {
+        let newMessage = new TeamUpdateUpdatedMessage(update, user);
+        this.messageSender.sendMessageToWebClients(newMessage);
+      }
+      return update;
     })
   }
   

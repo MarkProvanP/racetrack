@@ -44,7 +44,7 @@ let updatesRouter = express.Router();
 
   updatesRouter.put('/:id', (req, res) => {
     let newDetailsUpdate = req.body;
-    dataIntermediary.updateTeamUpdate(newDetailsUpdate)
+    dataIntermediary.updateTeamUpdate(newDetailsUpdate, req.user)
     .then(changedUpdate => {
       res.json(changedUpdate);
     })

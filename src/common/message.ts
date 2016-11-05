@@ -1,5 +1,7 @@
 import { Text } from "./text";
-
+import { Team } from "./team";
+import { Racer } from "./racer";
+import { TeamUpdate } from "./update";
 import { UserWithoutPassword } from "./user";
 
 export const CLOSE_SOCKET = "close-socket";
@@ -20,6 +22,12 @@ export abstract class AbstractMessage {
       return UserLoggedInMessage.fromJSON(obj);
     } else if (obj.messageType == UserLoggedOutMessage.event) {
       return UserLoggedOutMessage.fromJSON(obj);
+    } else if (obj.messageType == TeamUpdatedMessage.event) {
+      return TeamUpdatedMessage.fromJSON(obj);
+    } else if (obj.messageType == RacerUpdatedMessage.event) {
+      return RacerUpdatedMessage.fromJSON(obj);
+    } else if (obj.messageType == TeamUpdateUpdatedMessage.event) {
+      return TeamUpdateUpdatedMessage.fromJSON(obj);
     }
   }
 
@@ -100,5 +108,38 @@ export class UserLoggedOutMessage extends AbstractMessage {
   }
   static fromJSON(obj) {
     return new UserLoggedOutMessage(obj.user);
+  }
+}
+
+export class TeamUpdatedMessage extends AbstractMessage {
+  static event: string = "team-updated";
+  messageType = TeamUpdatedMessage.event;
+  constructor(public team: Team, public user: UserWithoutPassword) {
+    super();
+  }
+  static fromJSON(obj) {
+    return new TeamUpdatedMessage(Team.fromJSON(obj.team), obj.user);
+  }
+}
+
+export class RacerUpdatedMessage extends AbstractMessage {
+  static event: string = "racer-updated";
+  messageType = RacerUpdatedMessage.event;
+  constructor(public racer: Racer, public user: UserWithoutPassword) {
+    super();
+  }
+  static fromJSON(obj) {
+    return new RacerUpdatedMessage(Racer.fromJSON(obj.racer), obj.user);
+  }
+}
+
+export class TeamUpdateUpdatedMessage extends AbstractMessage {
+  static event: string = "team-update-updated";
+  messageType = TeamUpdateUpdatedMessage.event;
+  constructor(public update: TeamUpdate, public user: UserWithoutPassword) {
+    super();
+  }
+  static fromJSON(obj) {
+    return new TeamUpdateUpdatedMessage(TeamUpdate.fromJSON(obj.update), obj.user);
   }
 }

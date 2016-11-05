@@ -42,7 +42,7 @@ export default function teamsRouterWithDb(dataIntermediary: DataIntermediary) {
   });
   teamsRouter.put('/:id', (req, res) => {
     let newDetailsTeam = Team.fromJSON(req.body);
-    dataIntermediary.updateTeam(newDetailsTeam)
+    dataIntermediary.updateTeam(newDetailsTeam, req.user)
       .then(changedTeam => {
         res.type('application/json');
         res.send(JSON.stringify(changedTeam));
