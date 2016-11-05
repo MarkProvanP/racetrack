@@ -15,20 +15,22 @@ export class TeamsComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
-    private router: Router) { }
+    private router: Router
+  ) {
+    this.dataService.addTeamsChangedListener(teams => this.teams = teams);
+  }
 
   onSelect(team: Team) {
     this.router.navigate(['/safetyteam', 'teams', team.id]);
   }
 
-  getTeams(): void {
-    this.dataService
-        .getTeams()
-        .then(teams => this.teams = teams);
+  getTeams() {
+    this.teams = this.dataService.getAllTeams();
   }
 
   ngOnInit(): void {
     this.getTeams();
+    console.log(this.teams);
   }
 
   createTeam() {

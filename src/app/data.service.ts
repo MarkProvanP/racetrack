@@ -35,8 +35,12 @@ export class DataService {
   private racersUrl = this.baseUrl + 'racers';
   private updatesUrl = this.baseUrl + "updates";
   private eventsUrl = this.baseUrl + "events";
-
   private publicTeamsUrl = this.baseUrl + 'public/teams';
+
+  private teams: Team[] = [];
+  private racers: Racer[] = [];
+
+  private teamsChangedListeners = [];
 
   constructor(
     private http: Http,
@@ -52,14 +56,21 @@ export class DataService {
   }
 
   private whenAuthenticated() {
-    console.log('whenAuthenticated()');
+    this.getAllTeamsFromBackend()
+    .then(teams => {
+      this.teams = teams;
+      this.broadcastTeamsChanged();
+    })
+
     this.userService.addSocketEventListener(RacerUpdatedMessage.event, (message) => {
       let racerUpdatedMessage = RacerUpdatedMessage.fromJSON(message);
       console.log(racerUpdatedMessage);
     });
     this.userService.addSocketEventListener(TeamUpdatedMessage.event, (message) => {
       let teamUpdatedMessage = TeamUpdatedMessage.fromJSON(message);
-      console.log(teamUpdatedMessage);
+      let team = teamUpdatedMessage.team;
+      this.updateTeam(team);
+      this.broadcastTeamsChanged();
     });
     this.userService.addSocketEventListener(TeamUpdateUpdatedMessage.event, (message) => {
       let updateUpdatedMessage = TeamUpdateUpdatedMessage.fromJSON(message);
@@ -70,6 +81,16 @@ export class DataService {
   private notAuthenticated() {
 
   }
+
+  addTeamsChangedListener(callback) {
+    this.teamsChangedListeners.push(callback);
+  }
+
+  private broadcastTeamsChanged() {
+    this.teamsChangedListeners.forEach(listener => listener(this.teams));
+  }
+
+//----------------------------------------------------------------------//
 
   getPublicTeams(): Promise<Team[]> {
     return this.http.get(this.publicTeamsUrl, this.httpNoBodyExtras)
@@ -86,19 +107,53 @@ export class DataService {
       .catch(this.handleError);
   }
 
+//----------------------------------------------------------------------//
+  
   getTeams(): Promise<Team[]> {
+    return this.getAllTeamsFromBackend();
+  }
+  
+  getAllTeams(): Team[] {
+    return this.teams;
+  }
+
+  updateTeam(team: Team) {
+    for (let i = 0; i < this.teams.length; i++) {
+      let t = this.teams[i];
+      if (t.id == team.id) {
+        this.teams[i] = team;
+        return;
+      }
+    }
+  }
+
+  updateTeamAndWriteToBackend(team: Team) {
+    this.updateTeam(team);
+    return this.writeTeamToBackend(team);
+  }
+
+  getAllTeamsFromBackend(): Promise<Team[]> {
     return this.http.get(this.teamsUrl, this.httpNoBodyExtras)
                .toPromise()
                .then(response => response.json().map(Team.fromJSON))
                .catch(this.handleError);
   }
 
-  getTeam(id: TeamId): Promise<Team> {
+  getTeamFromBackend(id: TeamId): Promise<Team> {
     let url = `${this.teamsUrl}/${id}`;
     return this.http.get(url, this.httpNoBodyExtras)
       .toPromise()
       .then(response => Team.fromJSON(response.json()))
       .catch(this.handleError);
+  }
+
+  getTeam(id: TeamId): Team {
+    for (let i = 0; i < this.teams.length; i++) {
+      let t = this.teams[i];
+      if (t.id == id) {
+        return t;
+      }
+    }
   }
 
   deleteTeam(id: TeamId): Promise<void> {
@@ -117,7 +172,7 @@ export class DataService {
       .catch(this.handleError);
   }
 
-  updateTeam(team: Team): Promise<Team> {
+  writeTeamToBackend(team: Team): Promise<Team> {
     const url = `${this.teamsUrl}/${team.id}`;
     return this.http
       .put(url, JSON.stringify(team), this.httpExtras)
@@ -128,6 +183,8 @@ export class DataService {
       })
       .catch(this.handleError);
   }
+
+//----------------------------------------------------------------------//
 
   getRacers(): Promise<Racer[]> {
     return this.http.get(this.racersUrl, this.httpNoBodyExtras)
@@ -172,13 +229,16 @@ export class DataService {
       .catch(this.handleError);
   }
 
+//----------------------------------------------------------------------//
+
   createStatusUpdateForTeam(statusObj, team: Team): Promise<Team> {
     return this.http.post(this.updatesUrl, JSON.stringify(statusObj), this.httpExtras)
       .toPromise()
       .then(response => {
         let statusUpdate = TeamUpdate.fromJSON(response.json());
         team.statusUpdates.push(statusUpdate);
-        return this.updateTeam(team);
+        this.updateTeam(team);
+        return team;
       });
   }
 
@@ -207,6 +267,8 @@ export class DataService {
       .then(teams => teams.filter(team => team.hasRacer(racer))[0]);
   }
 
+//----------------------------------------------------------------------//
+
   updateTeamUpdate(update: TeamUpdate): Promise<TeamUpdate> {
     let url = `${this.updatesUrl}/${update.id}`
     return this.http.put(url, JSON.stringify(update), this.httpExtras)
@@ -214,6 +276,8 @@ export class DataService {
     .then(res => TeamUpdate.fromJSON(res.json()))
     .catch(this.handleError);
   }
+
+//----------------------------------------------------------------------//
 
   getEvents(): Promise<ThingEvent[]> {
     return this.http.get(this.eventsUrl, this.httpNoBodyExtras)
@@ -254,6 +318,8 @@ export class DataService {
       .then(response => ThingEvent.fromJSON(response.json()))
       .catch(this.handleError);
   }
+
+//----------------------------------------------------------------------//
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only

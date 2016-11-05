@@ -13,47 +13,51 @@
     </md-card-subtitle>
   </md-card-header>
   <md-card-content>
-    <h3 *ngIf='team.lastCheckin'>Last checkin</h3>
-    <time-widget [time]='team.lastCheckin.checkinTime' [fromNow]='true'></time-widget>
-    by
-    <user-widget [user]='team.lastCheckin.byUser.user'></user-widget>
-    at
-    <time-widget [time]='team.lastCheckin.byUser.timestamp'></time-widget>
-    <h3>Last update</h3>
-    <table class='last-update' *ngIf="team.getLastUpdate()">
-      <tr>
-        <th>Time:</th>
-        <td>
-          <time-widget [time]='team.getLastUpdate().timestamp'></time-widget>
-        </td>
-      </tr>
-      <tr>
-        <th>Status:</th>
-        <td>
-          {{team.getLastUpdate().prettyStatusName()}}
-        </td>
-      </tr>
-      <tr>
-        <th>Location:</th>
-        <td>
-          <location-widget [location]='team.getLastUpdate().location'></location-widget>
-        </td>
-      </tr>
-      <tr>
-        <th>Notes:</th>
-        <td>
-          {{team.getLastUpdate().notes}}
-        </td>
-      </tr>
-      <tr *ngIf='team.getLastUpdate().byUser'>
-        <th>Added</th>
-        <td>
-          by
-          <user-widget [user]='team.getLastUpdate().byUser.user'></user-widget>
-          <time-widget [time]='team.getLastUpdate().byUser.timestamp'></time-widget>
-        </td>
-      </tr>
-    </table>
+    <div *ngIf='team.lastCheckin.byUser'>
+      <h3>Last checkin</h3>
+      <time-widget [time]='team.lastCheckin.checkinTime' [fromNow]='true'></time-widget>
+      by
+      <user-widget [user]='team.lastCheckin.byUser.user'></user-widget>
+      at
+      <time-widget [time]='team.lastCheckin.byUser.timestamp'></time-widget>
+    </div>
+    <div *ngIf='team.getLastUpdate()'>
+      <h3>Last update</h3>
+      <table class='last-update' *ngIf="team.getLastUpdate()">
+        <tr>
+          <th>Time:</th>
+          <td>
+            <time-widget [time]='team.getLastUpdate().timestamp'></time-widget>
+          </td>
+        </tr>
+        <tr>
+          <th>Status:</th>
+          <td>
+            {{team.getLastUpdate().prettyStatusName()}}
+          </td>
+        </tr>
+        <tr>
+          <th>Location:</th>
+          <td>
+            <location-widget [location]='team.getLastUpdate().location'></location-widget>
+          </td>
+        </tr>
+        <tr>
+          <th>Notes:</th>
+          <td>
+            {{team.getLastUpdate().notes}}
+          </td>
+        </tr>
+        <tr *ngIf='team.getLastUpdate().byUser'>
+          <th>Added</th>
+          <td>
+            by
+            <user-widget [user]='team.getLastUpdate().byUser.user'></user-widget>
+            <time-widget [time]='team.getLastUpdate().byUser.timestamp'></time-widget>
+          </td>
+        </tr>
+      </table>
+    </div>
     <div *ngIf="!team.getLastUpdate()">
       <b>Team has no updates</b>
     </div>
