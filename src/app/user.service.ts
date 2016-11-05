@@ -3,6 +3,8 @@ import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 
+import * as io from "socket.io-client";
+
 import {
   UserLoggedInMessage,
   UserLoggedOutMessage,
