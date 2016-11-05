@@ -47,6 +47,13 @@
           </div>
         </div>
       </a>
+      <a md-list-item [routerLink]=" ['/safetyteam', 'import'] " routerLinkActive='active' (click)='start.toggle()'>
+        <div class='md-list-item'>
+          <div class='md-list-text'>
+            Import
+          </div>
+        </div>
+      </a>
       <div *ngFor='let otherUser of getOtherUsers()'>
         {{otherUser.name}}
       </div>

@@ -15,6 +15,7 @@ import { NoTeamComponent } from './teams/no-team';
 import { PublicMapComponent } from './public-map';
 import { PublicTeamProgressMapComponent } from './public-team-progress-map';
 import { MassTextComponent } from './mass-text';
+import { ImportComponent } from "./import";
 import { SafetyMapComponent } from './safety-map';
 import { DataResolver } from './app.resolver';
 import { UpdatesComponent } from './updates';
@@ -97,6 +98,7 @@ export const ROUTES: Routes = [
         ]
       },
       { path: 'mass-text', component: MassTextComponent },
+      { path: 'import', component: ImportComponent },
       { path: '', redirectTo: '/safetyteam/dashboard' }
     ]
   },
