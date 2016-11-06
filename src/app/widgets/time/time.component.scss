@@ -3,6 +3,10 @@
   display: flex;
 }
 
+.not-global {
+  background-color: pink;
+}
+
 .time-widget > * {
   margin-left: 5px;
   margin-right: 5px;

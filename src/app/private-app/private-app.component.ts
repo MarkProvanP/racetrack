@@ -56,6 +56,14 @@ export class PrivateApp {
     }
   }
 
+  getTimezone() {
+    return this.userService.getTimezone();
+  }
+
+  toggleGlobalTimezone() {
+    this.userService.toggleGlobalTimezone();
+  }
+
   setTitle() {
     let unread = this.getNumberUnreadTexts()
     let normal = 'Race2 Dashboard';

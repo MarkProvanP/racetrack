@@ -1,4 +1,4 @@
-<div class='time-widget' *ngIf='isDateValid()'>
+<div class='time-widget' *ngIf='isDateValid()' [ngClass]='getClass()'>
   <div class='time'>
     {{getPrettyTimestamp()}}
   </div>
@@ -7,7 +7,7 @@
   </div>
   <div class='timezone'>
     <button (click)='toggleTimezone()'>
-      {{getTimezone()}}
+      {{getTimezone().short}}
     </button>
   </div>
 </div>

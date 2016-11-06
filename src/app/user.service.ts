@@ -22,6 +22,22 @@ function myIndexOf(array, element, check) {
   return -1;
 }
 
+export interface Timezone {
+  short: string,
+  long: string
+}
+
+export const TIMEZONES = {
+  UK: {
+    short: "GMT",
+    long: "Europe/London"
+  },
+  EU: {
+    short: "CET",
+    long: "Europe/Prague"
+  }
+}
+
 @Injectable()
 export class UserService {
   private headers = new Headers({'Content-Type': 'application/json'});
@@ -40,8 +56,11 @@ export class UserService {
   private user: UserWithoutPassword;
   private otherUsers: UserWithoutPassword[] = [];
 
+  private timezone: Timezone = TIMEZONES.UK;
+
   private authenticatedStatusListeners = [];
   private otherUsersListeners = [];
+  private timezoneChangedListeners = [];
 
   private socketIoHost = "";//"https://mrp4.host.cs.st-andrews.ac.uk";
   private socket;
@@ -121,12 +140,21 @@ export class UserService {
     callback(this.otherUsers);
   }
 
+  public addTimezoneChangedListener(callback) {
+    this.timezoneChangedListeners.push(callback);
+    callback(this.timezone);
+  }
+
   private broadcastAuthStatus() {
     this.authenticatedStatusListeners.forEach(listener => listener(this.authenticated));
   }
 
   private broadcastOtherUsers() {
     this.otherUsersListeners.forEach(listener => listener(this.otherUsers));
+  }
+
+  private broadcastTimezoneChanged() {
+    this.timezoneChangedListeners.forEach(listener => listener(this.timezone));
   }
 
   private setUser(user): Promise<any> {
@@ -222,6 +250,19 @@ export class UserService {
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);
+  }
+
+  getTimezone() {
+    return this.timezone;
+  }
+
+  toggleGlobalTimezone() {
+    if (this.timezone == TIMEZONES.UK) {
+      this.timezone = TIMEZONES.EU;
+    } else {
+      this.timezone = TIMEZONES.UK;
+    }
+    this.broadcastTimezoneChanged();
   }
 
   public getUserAction() {

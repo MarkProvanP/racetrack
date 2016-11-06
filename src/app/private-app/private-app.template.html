@@ -73,6 +73,9 @@
             </a>
           </div>
         </span>
+        <button md-button (click)='toggleGlobalTimezone()'>
+          {{this.getTimezone().short}} Times
+        </button>
         <a md-button [routerLink]=" ['/safetyteam/texts'] " routerLinkActive='active'>
           Texts
         </a>
