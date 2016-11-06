@@ -1,14 +1,14 @@
-<div class='time-widget' *ngIf='isDateValid()' [ngClass]='getClass()'>
-  <div class='time'>
+<div class='time-widget' *ngIf='isDateValid()' [ngClass]='getClass()' [title]='getTooltip()'>
+  <div class='time' *ngIf='!fromNow'>
     {{getPrettyTimestamp()}}
   </div>
-  <div class='from-now' *ngIf='fromNow'>
-    {{getPrettyTimeSinceNow()}}
-  </div>
-  <div class='timezone'>
+  <div class='timezone' *ngIf='!fromNow'>
     <button (click)='toggleTimezone()'>
       {{getTimezone().short}}
     </button>
+  </div>
+  <div class='from-now' *ngIf='fromNow'>
+    {{getPrettyTimeSinceNow()}}
   </div>
 </div>
 <div class='invalid-time' *ngIf='!isDateValid()'>

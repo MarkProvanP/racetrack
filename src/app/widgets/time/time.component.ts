@@ -52,6 +52,10 @@ export class TimeWidget {
     return duration.humanize(true);
   }
 
+  getTooltip() {
+    return this.getPrettyTimestamp() + " - " + this.getPrettyTimeSinceNow();
+  }
+
   toggleTimezone() {
     this.differentToGlobal = !this.differentToGlobal;
     if (this.timezone == TIMEZONES.UK) {
