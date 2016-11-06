@@ -23,17 +23,22 @@ export class SafetyMapComponent implements OnInit {
     iconUrl: 'http://localhost:3000/assets/map-pin/Map_marker-64.png'
   }
 
-  whut(team) {
-    console.log(team);
-    return JSON.stringify(team);
+  constructor(
+    private dataService: DataService
+  ) {
+    this.dataService.addTeamsChangedListener(teams => {
+      this.teams = teams;
+    })
+    this.dataService.addUpdatesChangedListener(updates => {
+      this.teams = this.dataService.getAllTeams();
+    })
   }
 
-  constructor(private dataService: DataService) {
+  highlightTeam(team: Team) {
 
   }
 
   ngOnInit() {
-    this.dataService.getTeams()
-      .then(teams => this.teams = teams);
+    this.teams = this.dataService.getAllTeams()
   }
 }

@@ -42,6 +42,7 @@ export class DataService {
 
   private teamsChangedListeners = [];
   private racersChangedListeners = [];
+  private updatesChangedListeners = [];
 
   constructor(
     private http: Http,
@@ -83,6 +84,7 @@ export class DataService {
     this.userService.addSocketEventListener(TeamUpdateUpdatedMessage.event, (message) => {
       let updateUpdatedMessage = TeamUpdateUpdatedMessage.fromJSON(message);
       console.log(updateUpdatedMessage);
+      this.broadcastUpdatesChanged();
     });
   }
 
@@ -98,12 +100,20 @@ export class DataService {
     this.racersChangedListeners.push(callback);
   }
 
+  addUpdatesChangedListener(callback) {
+    this.updatesChangedListeners.push(callback);
+  }
+
   private broadcastTeamsChanged() {
     this.teamsChangedListeners.forEach(listener => listener(this.teams));
   }
 
   private broadcastRacersChanged() {
     this.racersChangedListeners.forEach(listener => listener(this.racers));
+  }
+
+  private broadcastUpdatesChanged() {
+    this.updatesChangedListeners.forEach(listener => listener(this.updates));
   }
 
 //----------------------------------------------------------------------//
