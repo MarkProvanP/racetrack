@@ -38,15 +38,12 @@ export class UnknownTextComponent implements OnInit {
 
   linkUnknownTextToRacer() {
     this.inLinkingMode = true;
-    this.dataService.getRacers()
-      .then(racers => {
-        this.racersList = racers;
-      })
+    this.racersList = this.dataService.getRacers();
   }
 
   saveNumberToRacer() {
     this.selectedRacer.phones.push(this.newContact);
-    this.dataService.updateRacer(this.selectedRacer)
+    this.dataService.updateRacerAndWriteToBackend(this.selectedRacer)
       .then(racer => {
         this.selectedRacer = racer;
         this.finishLinking();

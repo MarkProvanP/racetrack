@@ -286,9 +286,9 @@ export class DataService {
   }
 
   getRacersWithoutTeams(): Promise<Racer[]> {
-    return this.getRacers()
+    return this.getRacersFromBackend()
       .then(racers => {
-        return this.getTeams()
+        return this.getAllTeamsFromBackend()
           .then(teams => {
             let racersInTeams = teams
               .map(team => team.racers)
@@ -301,7 +301,7 @@ export class DataService {
   }
 
   getRacerForPhoneNumber(phone: PhoneNumber): Promise<Racer> {
-    return this.getRacers()
+    return this.getRacersFromBackend()
       .then(racers => racers.filter(racer => racer.phones.filter(contact => contact.number === phone))[0]);
   }
 

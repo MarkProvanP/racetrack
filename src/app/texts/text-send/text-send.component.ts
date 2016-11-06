@@ -61,29 +61,27 @@ export class TextSendComponent {
   }
 
   ngOnInit() {
-    this.dataService.getRacers()
-      .then(racers => {
-        let allContacts = [];
-        racers.forEach(racer => {
-          let contacts = racer.phones.map(contact => {
-            console.log(racer, contact);
-            return {
-              name: racer.name,
-              numNote: contact.notes || "",
-              number: contact.number
-            }
-          });
-          allContacts = allContacts.concat(contacts);
-        });
-        this.allRecipients = allContacts;
-        this.recipients = this.allRecipients.filter(recipient => recipient.number == this.toNumber);
-        if (!this.recipients.length) {
-          this.recipients.push({
-            name: '?',
-            numNote: '?',
-            number: this.toNumber
-          })
+    let racers = this.dataService.getRacers()
+    let allContacts = [];
+    racers.forEach(racer => {
+      let contacts = racer.phones.map(contact => {
+        console.log(racer, contact);
+        return {
+          name: racer.name,
+          numNote: contact.notes || "",
+          number: contact.number
         }
       });
+      allContacts = allContacts.concat(contacts);
+    });
+    this.allRecipients = allContacts;
+    this.recipients = this.allRecipients.filter(recipient => recipient.number == this.toNumber);
+    if (!this.recipients.length) {
+      this.recipients.push({
+        name: '?',
+        numNote: '?',
+        number: this.toNumber
+      })
+    }
   }
 }
