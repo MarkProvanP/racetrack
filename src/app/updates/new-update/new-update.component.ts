@@ -11,6 +11,7 @@ import { Text, AppText } from "../../../common/text";
 
 import { DataService } from '../../data.service';
 import { UserService } from '../../user.service';
+import { NominatimService } from "../../nominatim.service";
 
 @Component({
   selector: 'new-update',
@@ -35,16 +36,19 @@ export class NewUpdateComponent implements OnInit {
     byUser: undefined
   }
   statusEnum = TeamStatus;
-  default = {
+  mapSettings = {
     lat: 53.612805,
     lng: 5.301865,
     zoom: 4,
     iconUrl: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
   }
 
+  placeSuggestion: string;
+
   constructor(
     private dataService: DataService,
-    private userService: UserService
+    private userService: UserService,
+    private nominatim: NominatimService
   ) {}
 
   ngOnInit() {
@@ -56,6 +60,7 @@ export class NewUpdateComponent implements OnInit {
     if (this.text instanceof AppText) {
       this.newStatusObj.location = this.text.location;
     }
+    this.reverseGeocodeLocation();
   }
 
   getPrettyStatusName(item) {
@@ -75,8 +80,33 @@ export class NewUpdateComponent implements OnInit {
       });
   }
 
+  searchForPlace() {
+    this.placeSuggestion = "";
+    this.nominatim.search(this.newStatusObj.location.place)
+    .then(res => {
+      if (res.length) {
+        let topResult = res[0];
+        let lat = (Number(topResult.boundingbox[0]) + Number(topResult.boundingbox[1]))/2;
+        let lon = (Number(topResult.boundingbox[2]) + Number(topResult.boundingbox[3]))/2;
+        this.newStatusObj.location.latitude = lat;
+        this.newStatusObj.location.longitude = lon;
+        this.newStatusObj.location.place = topResult.display_name;
+        this.mapSettings.latitude = lat;
+        this.mapSettings.longitude = lon;
+      }
+    })
+  }
+
+  reverseGeocodeLocation() {
+    this.nominatim.reverseGeocode(this.newStatusObj.location)
+    .then(res => {
+      this.placeSuggestion = res.display_name;
+    })
+  }
+
   onMarkerDragEnd(event) {
     this.newStatusObj.location.latitude = event.coords.lat;
     this.newStatusObj.location.longitude = event.coords.lng;
+    this.reverseGeocodeLocation();
   }
 }

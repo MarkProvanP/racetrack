@@ -60,6 +60,7 @@ import { UserWidget } from "./widgets/user";
 import { DataService } from './data.service';
 import { TextService } from './text.service';
 import { UserService } from './user.service';
+import { NominatimService } from "./nominatim.service";
 
 import {
   OrderByPipe,
@@ -77,6 +78,7 @@ const APP_PROVIDERS = [
   DataService,
   TextService,
   UserService,
+  NominatimService,
   AuthenticatedGuard,
   UnauthenticatedGuard,
   Title

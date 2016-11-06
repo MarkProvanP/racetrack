@@ -37,3 +37,11 @@
   background-color: #EEEEEE;
   padding: 0px;
 }
+
+.place-name {
+  display: flex;
+
+  .place-input {
+    flex: 1;
+  }
+}
