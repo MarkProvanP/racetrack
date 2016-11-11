@@ -52,13 +52,13 @@ export class NewUpdateComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    let lastUpdate = this.team.getLastUpdate();
+    let lastUpdate = this.team.getLastUpdate().makeClone();
     if (lastUpdate) {
       this.newStatusObj.status = lastUpdate.status;
       this.newStatusObj.location = lastUpdate.location;
     }
     if (this.text instanceof AppText) {
-      this.newStatusObj.location = this.text.location;
+      this.newStatusObj.location = JSON.parse(JSON.stringify(this.text.location));
     }
     this.reverseGeocodeLocation();
   }
@@ -91,8 +91,8 @@ export class NewUpdateComponent implements OnInit {
         this.newStatusObj.location.latitude = lat;
         this.newStatusObj.location.longitude = lon;
         this.newStatusObj.location.place = topResult.display_name;
-        this.mapSettings.latitude = lat;
-        this.mapSettings.longitude = lon;
+        this.mapSettings.lat = lat;
+        this.mapSettings.lng = lon;
       }
     })
   }

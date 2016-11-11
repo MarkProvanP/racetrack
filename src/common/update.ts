@@ -65,6 +65,11 @@ export class TeamUpdate {
     return new TeamUpdate(obj.id, obj)
   }
 
+  makeClone() {
+    let clone = JSON.parse(JSON.stringify(this));
+    return TeamUpdate.fromJSON(clone);
+  }
+
   toIdJSON() {
     return JSON.stringify(this);
   }

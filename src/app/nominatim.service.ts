@@ -5,8 +5,8 @@ import { Location } from "../common/update";
 
 @Injectable()
 export class NominatimService {
-  private searchUrl = "http://nominatim.openstreetmap.org/search"
-  private reverseUrl = "http://nominatim.openstreetmap.org/reverse"
+  private searchUrl = "https://nominatim.openstreetmap.org/search"
+  private reverseUrl = "https://nominatim.openstreetmap.org/reverse"
   constructor(private http: Http) {}
 
   reverseGeocode(location: Location) {
