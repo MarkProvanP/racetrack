@@ -18,21 +18,15 @@ import { TeamTextsComponent } from "./team-texts";
   styleUrls: ["./texts.styles.scss"]
 })
 export class TextsComponent {
-  tabs = ['all', 'by-team', 'by-racer'];
+  tabs = [
+    {link: 'all', label: 'All'},
+    {link: 'by-team', label: 'By Team'},
+    {link: 'by-racer', label: 'By Racer'}
+  ]
+  activeLinkIndex = 0;
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
-
-  goToTabIndex() {
-    let split = this.router.url.split(/\/|\;|\?/);
-    let tab = split[3];
-    return this.tabs.indexOf(tab);
-  }
-
-  onSelectChange(event) {
-    let selection = this.tabs[event.index];
-    this.router.navigate(['/safetyteam', 'texts', selection]);
-  }
 }

@@ -64,7 +64,7 @@
                   {{update.notes}}
                 </td>
                 <td *ngIf='isEditing(update)'>
-                  <md-input class='notes-input' [(ngModel)]='update.notes'></md-input>
+                  <md-textarea class='notes-input' [(ngModel)]='update.notes'></md-textarea>
                 </td>
               </tr>
               <tr *ngIf='update.byUser'>
