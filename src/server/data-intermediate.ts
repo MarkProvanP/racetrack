@@ -103,12 +103,19 @@ export class DataIntermediary {
 
   getTeams(): Promise<Team[]> {
     return this.dbFacade.getTeams({})
-      .then(docs => {
-        let teams = docs as [UnpopulatedTeam];
-        let teamPromises = teams.map(team => this.populateTeam(team));
-        return Promise.all(teamPromises)
-          .then(teams => teams.map(team => Team.fromJSON(team)));
-      });
+    .then(docs => {
+      let teams = docs as [UnpopulatedTeam];
+      let teamPromises = teams.map(team => this.populateTeam(team).catch(err => {
+        console.error(`error populating team ${team} in getTeams() teamPromises`, err);
+        throw err;
+      }));
+      return Promise.all(teamPromises)
+        .then(teams => teams.map(team => Team.fromJSON(team)));
+    })
+    .catch(err => {
+      console.error(`getTeams()`, err);
+      throw err;
+    })
   }
 
   private populateTeam(team: UnpopulatedTeam): Promise<PopulatedTeam> {
@@ -202,17 +209,21 @@ export class DataIntermediary {
       console.error(`addracertotext failed`);
       return Promise.reject(err);
     })
-      .then(textWithRacer => this.addTeamToText(textWithRacer))
-      .catch(err => {
-        console.error(`addTeamToText failed populateText(${this.shortDebugText(text)})`, err);
-        return Promise.reject(err);
-      })
+    .then(textWithRacer => this.addTeamToText(textWithRacer))
+    .catch(err => {
+      console.error(`addTeamToText failed populateText(${this.shortDebugText(text)})`, err);
+      return Promise.reject(err);
+    })
   }
 
   private getTextsReady(texts: DbFormText[]): Promise<Text[]> {
     let textPromises = texts.map(text => this.populateText(text));
     return Promise.all(textPromises)
-      .then(texts => texts.map(text => Text.fromJSON(text)));
+      .then(texts => texts.map(text => Text.fromJSON(text)))
+      .catch(err => {
+        console.error(`getTextsReady(${texts.map(text => this.shortDebugText(text))})`, err);
+        throw err;
+      })
   }
 
   public updateText(text: Text, user?: UserWithoutPassword): Promise<Text> {
@@ -222,7 +233,11 @@ export class DataIntermediary {
       let newMessage = new TextUpdatedMessage(text);
       this.messageSender.sendMessageToWebClients(newMessage);
       return text;
-    });
+    })
+    .catch(err => {
+      console.error(`updateText(${this.shortDebugText(text)}, ${user}})`, err);
+      throw err;
+    })
   }
 
   public addTextFromTwilio(text: TwilioInboundText): Promise<Text> {
@@ -333,14 +348,14 @@ export class DataIntermediary {
   private addTeamToText(text): Promise<any> {
     let copy = JSON.parse(JSON.stringify(text));
     return this.getTeams()
-      .then(teams => {
-        copy.team = teams.filter(team => team.racers.filter(racer => text.racer && racer.id == text.racer.id).length)[0];
-        return Promise.resolve(copy);
-      })
-      .catch(err => {
-        console.error(`addTeamToText(${this.shortDebugText(text)})`, err);
-        return Promise.reject(err);
-      });
+    .then(teams => {
+      copy.team = teams.filter(team => team.racers.filter(racer => text.racer && racer.id == text.racer.id).length)[0];
+      return Promise.resolve(copy);
+    })
+    .catch(err => {
+      console.error(`addTeamToText(${this.shortDebugText(text)}) after adding teams`, err);
+      return Promise.reject(err);
+    });
   }
 
 //================================================================
