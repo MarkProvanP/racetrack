@@ -8,7 +8,11 @@
     </md-button-toggle-group>
   </div>
   <div class="texts-list">
-    <div class='text-card-wrapper' *ngFor="let text of filteredTexts | orderBy: '-timestamp'">
+    <div *ngIf='textsBeforeFirst'>
+      <button md-raised-button color='primary' (click)='showMoreBefore()'>Show more</button>
+      of {{textsBeforeFirst}} previous texts
+    </div>
+    <div class='text-card-wrapper' *ngFor="let text of displayedTexts">
       <div class='text-send-wrapper' *ngIf='inTextSendMode && text == selectedText'>
         <text-send 
           [toRacer]='selectedText.racer'
@@ -55,6 +59,10 @@
           (onStatusCreated)='onStatusCreated()'>
         </new-update>
       </div>
+    </div>
+    <div *ngIf='textsAfterLast'>
+      <button md-raised-button color='primary' (click)='showMoreAfter()'>Show more</button>
+      of {{textsAfterLast}} remaining texts
     </div>
   </div>
 </div>

@@ -3,10 +3,14 @@ import { Router, ActivatedRoute } from "@angular/router";
 
 import { Racer } from "../../../common/racer";
 import { Team, CheckinInfo } from "../../../common/team";
-import { Text, InboundText, OutboundText, AppText } from '../../../common/text';
+import { Text, TextId, InboundText, OutboundText, AppText } from '../../../common/text';
 import { DataService } from '../../data.service';
 import { TextService } from '../../text.service';
 import { UserService } from '../../user.service';
+
+import * as moment from "moment";
+
+const NUM_TEXTS_DISPLAYED_SIMULTANEOUSLY = 10;
 
 @Component({
   selector: "texts-list",
@@ -17,11 +21,23 @@ export class TextsListComponent {
   actuallyAllTexts: Text[];
 
   @Input("texts") set allTexts(texts: Text[]) {
-    this.actuallyAllTexts = texts;
+    if (texts) {
+      this.actuallyAllTexts = texts.sort((t1, t2) => moment(t2.timestamp).diff(moment(t1.timestamp)));
+    }
     this.updateTextFilter();
+    this.setDefaultTextDisplay();
+    this.updateDisplayedTexts();
   }
 
   filteredTexts: Text[];
+  displayedTexts: Text[];
+  textsBeforeFirst = 0;
+  firstDisplayedText: TextId;
+  firstDisplayedTextIndex: number;
+  lastDisplayedText: TextId;
+  lastDisplayedTextIndex: number;
+  textsAfterLast = 0;
+
   @Input() display;
   inCreateUpdateMode = false;
   inTextSendMode = false;
@@ -83,6 +99,74 @@ export class TextsListComponent {
     this.selectedText = undefined;
   }
 
+  setDefaultTextDisplay() {
+    if (!this.filteredTexts) {
+      return;
+    }
+    let numTexts = this.filteredTexts.length;
+    if (numTexts) {
+      this.firstDisplayedText = this.filteredTexts[0].id;
+      this.firstDisplayedTextIndex = 0;
+      let lastTextIndex;
+      if (numTexts > NUM_TEXTS_DISPLAYED_SIMULTANEOUSLY) {
+        lastTextIndex = NUM_TEXTS_DISPLAYED_SIMULTANEOUSLY - 1;
+      } else {
+        lastTextIndex = numTexts - 1;
+      }
+      this.lastDisplayedText = this.filteredTexts[lastTextIndex].id;
+      this.lastDisplayedTextIndex = lastTextIndex;
+    }
+  }
+
+  showMoreBefore() {
+    let newIndex = this.firstDisplayedTextIndex - NUM_TEXTS_DISPLAYED_SIMULTANEOUSLY;
+    if (newIndex < 0) {
+      newIndex = 0;
+    }
+    let newFirstText = this.filteredTexts[newIndex];
+    this.firstDisplayedText = newFirstText.id;
+    this.firstDisplayedTextIndex = newIndex;
+    this.updateDisplayedTexts();
+  }
+
+  showMoreAfter() {
+    let newIndex = this.lastDisplayedTextIndex + NUM_TEXTS_DISPLAYED_SIMULTANEOUSLY;
+    if (newIndex > this.filteredTexts.length - 1) {
+      newIndex = this.filteredTexts.length - 1;
+    }
+    let newLastText = this.filteredTexts[newIndex];
+    this.lastDisplayedText = newLastText.id;
+    this.lastDisplayedTextIndex = newIndex;
+    this.updateDisplayedTexts();
+  }
+
+  updateDisplayedTexts() {
+    this.displayedTexts = [];
+    this.textsBeforeFirst = 0;
+    this.textsAfterLast = 0;
+    let foundFirst = false;
+    let foundLast = false;
+    if (!this.filteredTexts) {
+      return;
+    }
+    for (let i = 0; i < this.filteredTexts.length; i++) {
+      let text = this.filteredTexts[i];
+      if (!foundFirst) {
+        foundFirst = (text.id == this.firstDisplayedText);
+      }
+      if (foundFirst && !foundLast) {
+        this.displayedTexts.push(text);
+      } else if (!foundFirst) {
+        this.textsBeforeFirst++;
+      } else if (foundFirst && foundLast) {
+        this.textsAfterLast++;
+      }
+      if (text.id == this.lastDisplayedText) {
+        foundLast = true;
+      }
+    }
+  }
+
   updateTextFilter(show?) {
     if (show == 'unread') {
       this.filteredTexts = this.actuallyAllTexts.filter(text => !text.isRead());
@@ -91,6 +175,8 @@ export class TextsListComponent {
     } else {
       this.filteredTexts = this.actuallyAllTexts;
     }
+    this.setDefaultTextDisplay();
+    this.updateDisplayedTexts();
   }
 
   onFilterUpdate() {
@@ -102,6 +188,8 @@ export class TextsListComponent {
       let show = queryParams['show'];
       this.readFilterOption = show;
       this.updateTextFilter(show);
+      this.setDefaultTextDisplay();
+      this.updateDisplayedTexts();
     });
   }
 }

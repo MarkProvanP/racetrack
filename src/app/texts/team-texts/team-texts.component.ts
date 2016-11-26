@@ -58,7 +58,10 @@ export class TeamTextsComponent implements OnInit {
 
   numberUnreadMessagesForTeam(team: Team) {
     let filterOptions = new TextFilterOptions({team: team, read: false});
-    return this.textService.getTextsFiltered(filterOptions).length;
+    let matchingTexts = this.textService.getTextsFiltered(filterOptions)
+    if (matchingTexts) {
+      return matchingTexts.length;
+    }
   }
 
   private onTextsChanged() {
