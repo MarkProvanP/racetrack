@@ -52,8 +52,9 @@ export class NewUpdateComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    let lastUpdate = this.team.getLastUpdate().makeClone();
-    if (lastUpdate) {
+    let originalLastUpdate = this.team.getLastUpdate()
+    if (originalLastUpdate) {
+      let lastUpdate = originalLastUpdate.makeClone();
       this.newStatusObj.status = lastUpdate.status;
       this.newStatusObj.location = lastUpdate.location;
     }
