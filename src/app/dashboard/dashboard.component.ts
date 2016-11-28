@@ -5,6 +5,8 @@ import { DataService } from '../data.service';
 import { Team } from '../../common/team';
 import { TeamStatus } from '../../common/update';
 
+const DEFAULT_SHOW_OPTION = 'all';
+
 @Component({
   selector: 'dashboard',
   templateUrl: './dashboard.template.html',
@@ -43,13 +45,13 @@ export class DashboardComponent implements OnInit {
     let navigationExtras = {
       queryParams: { show: this.teamsFilterOption }
     }
-    this.router.navigate(['/safetyteam', 'dashboard'], navigationExtras);
+    this.router.navigate([], navigationExtras);
   }
 
   ngOnInit(): void {
     this.getTeams();
     this.queryParamsSub = this.activatedRoute.queryParams.subscribe(queryParams => {
-      let show = queryParams['show'];
+      let show = queryParams['show'] ? queryParams['show'] : DEFAULT_SHOW_OPTION;
       this.teamsFilterOption = show;
       this.filterTeams();
     });

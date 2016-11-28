@@ -11,6 +11,7 @@ import { UserService } from '../../user.service';
 import * as moment from "moment";
 
 const NUM_TEXTS_DISPLAYED_SIMULTANEOUSLY = 10;
+const DEFAULT_SHOW_OPTION = 'all';
 
 @Component({
   selector: "texts-list",
@@ -180,12 +181,15 @@ export class TextsListComponent {
   }
 
   onFilterUpdate() {
-    this.updateTextFilter(this.readFilterOption);
+    let navigationExtras = {
+      queryParams: { show: this.readFilterOption }
+    }
+    this.router.navigate([], navigationExtras);
   }
 
   ngOnInit() {
     this.queryParamsSub = this.activatedRoute.queryParams.subscribe(queryParams => {
-      let show = queryParams['show'];
+      let show = queryParams['show'] ? queryParams['show'] : DEFAULT_SHOW_OPTION;
       this.readFilterOption = show;
       this.updateTextFilter(show);
       this.setDefaultTextDisplay();
