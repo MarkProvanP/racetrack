@@ -11,7 +11,7 @@ export class OrderByPipe implements PipeTransform {
   static _orderByComparator(a: any, b: any): number {
     let test = (isNaN(parseFloat(a)) || !isFinite(a))
       || (isNaN(parseFloat(b)) || !isFinite(b));
-    if (test) {
+    if (test && a && b) {
       if (a.toLowerCase() < b.toLowerCase()) return -1;
       if (a.toLowerCase() > b.toLowerCase()) return 1;
     } else {

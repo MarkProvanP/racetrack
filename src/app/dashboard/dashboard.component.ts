@@ -7,6 +7,12 @@ import { TeamStatus } from '../../common/update';
 
 const DEFAULT_SHOW_OPTION = 'all';
 
+const SORT_OPTIONS = {
+  UPDATE_TIME: "lastCheckin.checkinTime",
+  TEAM_NAME: "name"
+}
+const DEFAULT_SORT_OPTION = SORT_OPTIONS.UPDATE_TIME;
+
 @Component({
   selector: 'dashboard',
   templateUrl: './dashboard.template.html',
@@ -18,11 +24,25 @@ export class DashboardComponent implements OnInit {
   queryParamsSub: any;
   teamsFilterOption: any;
 
+  sortOption = DEFAULT_SORT_OPTION;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private dataService: DataService,
     private router: Router
   ) {}
+
+  sortOptions = SORT_OPTIONS;
+  sortAscending: boolean = true;
+
+  toggleOrder() {
+    this.sortAscending = !this.sortAscending;
+  }
+
+  get ordering() {
+    let upDown = this.sortAscending ? "+" : "-";
+    return [upDown + this.sortOption]
+  }
 
   getTeams(): void {
     this.dataService
@@ -39,6 +59,7 @@ export class DashboardComponent implements OnInit {
       check = (team) => team.inEurope;
     }
     this.filteredTeams = this.allTeams.filter(check);
+    console.log(this.filteredTeams);
   }
 
   onFilterUpdate() {
@@ -48,11 +69,21 @@ export class DashboardComponent implements OnInit {
     this.router.navigate([], navigationExtras);
   }
 
+  onSortUpdate() {
+    console.log('onSortUpdate()', this.sortOption);
+    let navigationExtras = {
+      queryParams: { sort: this.sortOption }
+    }
+    this.router.navigate([], navigationExtras)
+  }
+
   ngOnInit(): void {
     this.getTeams();
     this.queryParamsSub = this.activatedRoute.queryParams.subscribe(queryParams => {
       let show = queryParams['show'] ? queryParams['show'] : DEFAULT_SHOW_OPTION;
+      let sort = queryParams['sort'] ? queryParams['sort'] : DEFAULT_SORT_OPTION;
       this.teamsFilterOption = show;
+      this.sortOption = sort;
       this.filterTeams();
     });
   }
