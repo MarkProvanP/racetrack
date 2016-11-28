@@ -1,12 +1,25 @@
-.card-container{
+.dashboard-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .filter-options {
+
+  }
+
+  .card-container{
+    flex: 1;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
-    margin: 15px;
 
     md-card {
       margin: 5px;
     }
+  }
+
 }
+
 .sample-content{
     flex: 1;
 }
@@ -14,6 +27,7 @@
 .status-card-container {
   display: flex;
   flex-wrap: wrap;
+  margin: 15px;
 
   dashboard-card {
     max-width: 400px;
