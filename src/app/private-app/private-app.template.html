@@ -65,7 +65,7 @@
         <button md-icon-button (click)='start.toggle()'>
           <md-icon>menu</md-icon>
         </button>
-        <a md-button [routerLink]=" ['/'] ">{{ name }}</a>
+        <button md-button [routerLink]=" ['/'] ">{{ name }}</button>
         <span class="fill">
           <div class='text-received-flash' *ngIf='getNumberUnreadTexts()'>
             <a [routerLink]="['safetyteam', 'texts', 'all']" [queryParams]="{show: 'unread'}" md-button>
@@ -76,15 +76,15 @@
         <button md-button (click)='toggleGlobalTimezone()'>
           {{this.getTimezone().short}} Times
         </button>
-        <a md-button [routerLink]=" ['/safetyteam/texts'] " routerLinkActive='active'>
+        <button md-button [routerLink]=" ['/safetyteam/texts'] " routerLinkActive='active'>
           Texts
-        </a>
-        <a md-button [routerLink]=" ['/safetyteam/map'] " routerLinkActive='active'>
+        </button>
+        <button md-button [routerLink]=" ['/safetyteam/map'] " routerLinkActive='active'>
           Safety Map
-        </a>
-        <a md-button [routerLink]=" ['/safetyteam/dashboard'] " routerLinkActive='active'>
+        </button>
+        <button md-button [routerLink]=" ['/safetyteam/dashboard'] " routerLinkActive='active'>
           Dashboard
-        </a>
+        </button>
     </md-toolbar>
 
     <md-progress-bar mode="indeterminate" color="primary" *ngIf="loading"></md-progress-bar>
