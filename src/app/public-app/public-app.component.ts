@@ -12,7 +12,7 @@ import { DataService } from '../data.service';
  */
 @Component({
   selector: 'public-app',
-  //encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None,
   styleUrls: [
     './public-app.style.scss'
   ],

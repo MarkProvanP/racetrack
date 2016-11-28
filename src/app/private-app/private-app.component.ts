@@ -13,7 +13,7 @@ import { DataService } from '../data.service';
  */
 @Component({
   selector: 'private-app',
-  //encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None,
   styleUrls: [
     './private-app.style.scss'
   ],
