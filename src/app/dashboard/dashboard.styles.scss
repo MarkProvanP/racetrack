@@ -20,6 +20,20 @@
 
 }
 
+.filter-options {
+  background-color: white;
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+  
+  .filter-options-name {
+    margin: 5px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+
 .sample-content{
     flex: 1;
 }
