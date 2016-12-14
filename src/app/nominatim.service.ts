@@ -10,14 +10,15 @@ export class NominatimService {
   constructor(private http: Http) {}
 
   reverseGeocode(location: Location) {
-    let lat = location.latitude;
-    let lon = location.longitude;
+    let lat = String(location.latitude);
+    let lon = String(location.longitude);
+    let zoom = String(13);
 
     let params = new URLSearchParams();
     params.set('lat', lat);
     params.set('lon', lon);
     params.set('format', 'json');
-    params.set('zoom', 13);
+    params.set('zoom', zoom);
 
     return this.http.get(this.reverseUrl, {
       search: params

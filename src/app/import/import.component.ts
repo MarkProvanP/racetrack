@@ -14,21 +14,22 @@ const AFFILIATION = "Hall/Society/Sport affiliation";
 export class ImportComponent {
   data: string[][];
 
-  fileChangeEvent(fileInput: any) {
-    let file = fileInput.target.files[0];
+  fileChangeEvent(fileInputEvent: any) {
+    let fileInput = fileInputEvent.srcElement;
+    let file = fileInput.files[0];
     let reader = new FileReader();
-    reader.onload = (event) => {
-      if (event.target.readyState != 2) {
-        return;
-      }
-      if (event.target.error) {
+    reader.onload = (event: ProgressEvent) => {
+      console.log('FileUpload onload', event);
+      let reader = <FileReader> event.target;
+      if (reader.error) {
         console.error('error reading file!');
         return;
       }
-      let textContent = event.target.result;
+      let textContent = reader.result;
       this.data = Papa.parse(textContent, {
         header: true
       });
+      console.log(reader, this.data);
     }
 
     reader.readAsText(file);

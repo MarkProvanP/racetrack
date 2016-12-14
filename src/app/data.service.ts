@@ -39,6 +39,7 @@ export class DataService {
 
   private teams: Team[] = [];
   private racers: Racer[] = [];
+  private updates: TeamUpdate[] = [];
 
   private teamsChangedListeners = [];
   private racersChangedListeners = [];
