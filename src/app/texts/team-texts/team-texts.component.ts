@@ -15,7 +15,7 @@ import { TextService, TextFilterOptions } from '../../text.service';
 export class TeamTextsComponent implements OnInit {
   @Input() texts: Text[];
   teams: Team[];
-  selectedTeam: Team = true;
+  selectedTeam: Team;
   selectedTeamTexts: Text[];
   displayOptions = {
     oneline: false,
@@ -45,7 +45,7 @@ export class TeamTextsComponent implements OnInit {
   selectTextsByTeam(team: Team) {
     this.selectedTeam = team;
     if (team) {
-      let filterOptions = new TextFilterOptions({team: this.selectedTeam});
+      let filterOptions = new TextFilterOptions({hasTeam: true, team: this.selectedTeam});
       this.selectedTeamTexts = this.textService.getTextsFiltered(filterOptions);
     } else {
       this.selectedTeamTexts = [];

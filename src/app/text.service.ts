@@ -11,8 +11,10 @@ import { UserService } from './user.service';
 import * as moment from "moment";
 
 export class TextFilterOptions {
-  racer: Racer | boolean;
-  team: Team | boolean;
+  hasRacer: boolean;
+  racer: Racer;
+  hasTeam: boolean;
+  team: Team;
   read: boolean
   inbound: boolean;
   outbound: boolean;
@@ -20,7 +22,9 @@ export class TextFilterOptions {
   beforeTime: Date;
 
   constructor(opts) {
+    this.hasRacer = opts.hasRacer;
     this.racer = opts.racer;
+    this.hasTeam = opts.hasTeam;
     this.team = opts.team;
     this.read = opts.read;
     this.inbound = opts.inbound;
@@ -31,11 +35,11 @@ export class TextFilterOptions {
 
   filter(text: Text): boolean {
     if (this.racer !== undefined) {
-      if (this.racer === true) { if (!text.racer) return false }
+      if (this.hasRacer) { if (!text.racer) return false }
       if (!text.racer || text.racer.id != this.racer.id) return false;
     }
     if (this.team !== undefined) {
-      if (this.team === true) { if (!text.team) return false }
+      if (this.hasTeam) { if (!text.team) return false }
       if (!text.team || text.team.id != this.team.id) return false;
     }
     if (text instanceof InboundText && this.read != undefined) {
