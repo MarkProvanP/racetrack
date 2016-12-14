@@ -52,9 +52,9 @@
                   {{update.prettyStatusName()}}
                 </td>
                 <td *ngIf='isEditing(update)'>
-                  <select [(ngModel)]="update.status">
-                    <option *ngFor="let item of statusEnum | keys" [value]="item.key">{{getPrettyStatusName(item)}}</option>
-                  </select>
+                  <md-select [(ngModel)]="update.status">
+                    <md-option *ngFor="let item of statusEnum | keys" [value]="item.key">{{getPrettyStatusName(item)}}</md-option>
+                  </md-select>
  
                 </td>
               </tr>

@@ -3,13 +3,16 @@
     <div class='info-table'>
       <div class='status-row'>
         <h3>New status update - {{team.name}}</h3>
-        <div class='status-select-wrapper'>
-          <select [(ngModel)]="newStatusObj.status">
-            <option *ngFor="let item of statusEnum | keys" [value]="item.key">{{getPrettyStatusName(item)}}</option>
-          </select>
-        </div>
       </div>
       <table>
+        <tr>
+          <th>Status</th>
+          <td>
+            <md-select [(ngModel)]="newStatusObj.status">
+              <md-option *ngFor="let item of statusEnum | keys" [value]="item.key">{{getPrettyStatusName(item)}}</md-option>
+            </md-select>
+          </td>
+        </tr>
         <tr>
           <th>Place:</th>
           <td>
