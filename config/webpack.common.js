@@ -128,7 +128,7 @@ module.exports = function (options) {
         {
           test: /\.scss$/,
           exclude: /node_modules/,
-          loaders: ['raw', 'sass']
+          loaders: ['raw-loader', 'sass-loader']
         },
 
         /* Raw loader support for *.html
@@ -146,7 +146,7 @@ module.exports = function (options) {
          */
         {
           test: /\.(jpg|png|gif)$/,
-          loader: 'file'
+          loader: 'file-loader'
         },
 
       ],

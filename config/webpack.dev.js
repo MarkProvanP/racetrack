@@ -156,7 +156,6 @@ module.exports = function (options) {
         aggregateTimeout: 300,
         poll: 1000
       },
-      outputPath: helpers.root('dist'),
       proxy: {
         "/r2bcknd": {
           target: "https://mrp4.host.cs.st-andrews.ac.uk",
