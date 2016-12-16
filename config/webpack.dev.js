@@ -158,7 +158,7 @@ module.exports = function (options) {
       },
       proxy: {
         "/r2bcknd": {
-          target: "https://mrp4.host.cs.st-andrews.ac.uk",
+          target: "https://mrp4.host.cs.st-andrews.ac.uk/r2bcknd",
           secure: true,
           changeOrigin: true
         }

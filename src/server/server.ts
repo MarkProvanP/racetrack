@@ -2,6 +2,8 @@
 import * as express from "express";
 var app = express();
 
+app.use(express.static('dist'));
+
 import * as winston from "winston";
 winston.add(winston.transports.File, { filename: 'logfile.log' })
 
@@ -167,30 +169,32 @@ setup(MONGODB_URI)
       });
     });
 
+    let apiRouter = express.Router();
+
     let authRouter = AuthWithDbFacade(db_facade);
-    app.use('/auth', authRouter);
+    apiRouter.use('/auth', authRouter);
 
     let teamsRouter = teamsRouterWithDb(dataIntermediary);
-    app.use('/teams', teamsRouter);
+    apiRouter.use('/teams', teamsRouter);
 
     let racersRouter = racersRouterWithDb(dataIntermediary);
-    app.use("/racers", racersRouter);
+    apiRouter.use("/racers", racersRouter);
 
     let twilioObj = {
       client: twilioClient,
       fromNumber: config.sendingNo
     }
     let textsRouter = textsRouterWithDb(dataIntermediary, twilioObj);
-    app.use("/texts", textsRouter);
+    apiRouter.use("/texts", textsRouter);
 
     let updatesRouter = updatesRouterWithDb(dataIntermediary);
-    app.use("/updates", updatesRouter);
+    apiRouter.use("/updates", updatesRouter);
 
     let eventsRouter = eventsRouterWithDb(db_facade);
-    app.use('/events', eventsRouter);
+    apiRouter.use('/events', eventsRouter);
 
     let publicRouter = publicRouterWithDb(dataIntermediary);
-    app.use('/public', publicRouter);
+    apiRouter.use('/public', publicRouter);
 
     http.listen(PORT, function() {
       winston.info(`App now listening on port: ${PORT}`);
@@ -209,6 +213,8 @@ setup(MONGODB_URI)
         res.status(403).send("Error, you're not twilio!");
       }
     });
+
+    app.use('/r2bcknd', apiRouter);
 }).catch(err => {
   console.error('error setting up server', err);
 });

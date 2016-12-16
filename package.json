@@ -50,11 +50,14 @@
     "test": "karma start",
     "ci": "npm run lint && npm test && npm run e2e",
     "docs": "npm run typedoc -- --options typedoc.json --exclude '**/*.spec.ts' ./src/",
-    "start": "npm run server:dev",
+    "start": "npm run backend",
     "start:hmr": "npm run server:dev:hmr",
     "preversion": "npm test",
     "version": "npm run build",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "backend": "node bin/src/server/server",
+    "backend:build": "tsc src/server/server.ts --outDir bin",
+    "postinstall": "npm run build:prod && npm run backend:build"
   },
   "dependencies": {
     "@angular/common": "2.1.1",

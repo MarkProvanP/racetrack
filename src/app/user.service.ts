@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Location } from "@angular/common";
 import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
@@ -26,6 +27,8 @@ export interface Timezone {
   short: string,
   long: string
 }
+
+const SOCKET_IO_OPTS = {};
 
 export const TIMEZONES = {
   UK: {
@@ -82,7 +85,7 @@ export class UserService {
     if (this.socket) {
       console.error("socket already exists!");
     }
-    this.socket = io(this.socketIoHost, {path: '/r2bcknd/socket.io'});
+    this.socket = io(this.socketIoHost, SOCKET_IO_OPTS);
     this.socket.on('connect', () => {
       console.log('Socket io connection established!');
     });
@@ -120,6 +123,7 @@ export class UserService {
 
   constructor(
     private http: Http,
+    private location: Location
   ) {
     this.auth()
       .toPromise()
@@ -128,6 +132,7 @@ export class UserService {
           this.getMe();
         }
       })
+    console.log(this.location);
   }
 
   public addOnAuthStatusChangedListener(callback) {
