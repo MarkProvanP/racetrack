@@ -23,6 +23,8 @@ var twilioClient = twilio(config.accountSid, config.authToken);
 
 const PORT = process.env.PORT || config.SERVER_PORT;
 
+const MONGODB_URI = process.env.MONGODB_URI || config.db_url;
+
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
 import { Text, TwilioInboundText } from "../common/text";
@@ -107,7 +109,7 @@ export class MessageSender {
 let messageSender = new MessageSender();
 
 //let db_facade : DbFacadeInterface = new InMemoryDbFacade();
-setup(config.db_url)
+setup(MONGODB_URI)
   .then(db_facade => {
     winston.info('MongoDB now ready for use');
 
