@@ -6,6 +6,7 @@
       <th>Name</th>
       <th>Email</th>
       <th>Phone</th>
+      <th>Privilege Level</th>
     </tr>
   </thead>
   <tbody>
@@ -14,6 +15,7 @@
       <td>{{user.name}}</td>
       <td>{{user.email}}</td>
       <td>{{user.phone}}</td>
+      <td>{{prettyLevelName(user.level)}}</td>
     </tr>
   </tbody>
 </table>
@@ -31,6 +33,9 @@
         <md-input formControlName='phone' required placeholder='Phone number'></md-input>
         <button md-raised-button color='primary' type='submit'>Register</button>
       </form>
+      <md-select [(ngModel)]='selectedLevel'>
+        <md-option *ngFor='let item of privilegesEnum | keys' [value]='item.key' [disabled]='isLevelDisabled(item.key)'>{{prettyLevelName(item.key)}}</md-option>
+      </md-select>
     </md-card-content>
   </md-card>
 </div>

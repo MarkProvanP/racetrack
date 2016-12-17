@@ -9,7 +9,7 @@ import * as winston from "winston";
 let router = express.Router();
 
 import { DataIntermediary } from "./data-intermediate";
-import { UserWithoutPassword, UserActionInfo } from "../common/user";
+import { UserId, UserPrivileges, UserWithoutPassword, UserActionInfo } from "../common/user";
 import { PhoneNumber } from '../common/text';
 
 import * as bcrypt from "bcrypt-nodejs";
@@ -18,7 +18,6 @@ import { NoSuchUserError } from '../common/error';
 
 const NO_USER_ERROR_CODE = 402;
 
-export type UserId = string;
 
 export class User {
   username: UserId;
@@ -26,6 +25,7 @@ export class User {
   name: string;
   email: string;
   phone: PhoneNumber;
+  level: UserPrivileges;
 
   validPassword(password) {
     return bcrypt.compareSync(password, this.password);
@@ -43,6 +43,7 @@ export class User {
     this.name = properties.name;
     this.email = properties.email;
     this.phone = properties.phone;
+    this.level = properties.level || UserPrivileges.VIEW_ONLY;
   }
 
   copyWithoutPassword(): UserWithoutPassword {

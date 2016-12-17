@@ -9,10 +9,10 @@ import {
   TwilioInboundText,
   TwilioOutboundText
 } from "../../common/text";
-import { UserWithoutPassword } from '../../common/user';
+import { UserWithoutPassword, UserId } from '../../common/user';
 import { ThingEvent, ThingEventId } from "../../common/event";
 
-import { User, UserId } from '../auth';
+import { User } from '../auth';
 
 var Promise = require("es6-promise").Promise;
 

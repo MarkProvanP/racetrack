@@ -30,7 +30,7 @@ import {
   TwilioOutboundText,
   FullFormText,
 } from "../common/text";
-import { UserWithoutPassword } from "../common/user";
+import { UserWithoutPassword, UserId } from "../common/user";
 import {
   TextReceivedMessage,
   TextSentMessage,
@@ -40,7 +40,7 @@ import {
   TeamUpdateUpdatedMessage
 } from "../common/message";
 import { MessageSender } from "./server";
-import { User, UserId } from "./auth";
+import { User } from "./auth";
 
 import * as winston from "winston";
 import * as uuid from "node-uuid";

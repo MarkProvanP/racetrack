@@ -26,14 +26,14 @@ import { DbFacadeInterface } from "./db-facade";
 import { MongoClient } from "mongodb";
 import { Promise } from "es6-promise";
 
-import { User, UserId } from '../auth';
+import { User } from '../auth';
 
 import * as uuid from "node-uuid";
 
 import * as winston from "winston";
 
 import { NoSuchUserError } from '../../common/error';
-import { UserWithoutPassword } from '../../common/user';
+import { UserWithoutPassword, UserId } from '../../common/user';
 
 export function setup(url): Promise<MongoDbFacade> {
 
