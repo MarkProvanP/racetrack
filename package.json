@@ -62,8 +62,8 @@
   "dependencies": {
     "@angular/common": "2.1.1",
     "@angular/compiler": "2.1.1",
-    "@angular/core": "^2.1.1",
-    "@angular/forms": "^2.1.1",
+    "@angular/core": "2.1.1",
+    "@angular/forms": "2.1.1",
     "@angular/http": "2.1.1",
     "@angular/material": "^2.0.0-alpha.11-3",
     "@angular/platform-browser": "2.1.1",
@@ -142,7 +142,7 @@
     "ts-helpers": "1.1.2",
     "ts-node": "^1.7.2",
     "twilio": "^2.11.0",
-    "typescript": "^2.0.0",
+    "typescript": "2.0.0",
     "webpack": "^2.1.0-beta.25",
     "webpack-md5-hash": "^0.0.5",
     "webpack-merge": "^0.15.0",
@@ -152,7 +152,6 @@
   "devDependencies": {
     "@types/hammerjs": "^2.0.33",
     "@types/jasmine": "^2.2.34",
-    "@types/protractor": "^1.5.20",
     "@types/selenium-webdriver": "^2.53.33",
     "@types/source-map": "^0.1.27",
     "@types/uglify-js": "^2.0.27",
