@@ -26,7 +26,7 @@ import { DbFacadeInterface } from "./db-facade";
 import { MongoClient } from "mongodb";
 import { Promise } from "es6-promise";
 
-import { User } from '../auth';
+import { User, UserId } from '../auth';
 
 import * as uuid from "node-uuid";
 
@@ -49,6 +49,7 @@ class MongoDbFacade implements DbFacadeInterface {
   racersCollection;
   teamsCollection;
   updatesCollection;
+  usersCollection;
 
   constructor(public db) {
     process.stdin.resume();//so the program will not close instantly
@@ -72,6 +73,7 @@ class MongoDbFacade implements DbFacadeInterface {
     this.textsCollection = this.db.collection('texts');
     this.teamsCollection = this.db.collection('teams');
     this.updatesCollection = this.db.collection('updates');
+    this.usersCollection = this.db.collection('users');
   }
 
   getRacers(query): Promise<DbFormRacer[]> {
@@ -168,37 +170,24 @@ class MongoDbFacade implements DbFacadeInterface {
 
 //================================================================
 
-  getUser(username): Promise<User> {
-    let collection = this.db.collection('users');
-    return collection.find({username: username}).toArray()
-      .then(docs => {
-        if (docs.length == 0) {
-          throw new NoSuchUserError(username);
-        }
-        let user = User.fromJSON(docs[0]);
-        return Promise.resolve(user);
-      });
+  getUser(query): Promise<User> {
+    return this.usersCollection.findOne(query);
   }
 
-  canAddUser(username): Promise<boolean> {
-    let collection = this.db.collection('users');
-    return collection.find({username: username}).toArray()
-      .then(docs => {
-        if (docs.length == 0) {
-          return Promise.resolve(true)
-        } else {
-          return Promise.resolve(false)
-        }
-      });
+  getUsers(query): Promise<User[]> {
+    return this.usersCollection.find(query).toArray();
   }
 
-  addUser(username, password, properties): Promise<User> {
-    let collection = this.db.collection('users');
-    let user = User.createWithPassword(username, password, properties);
-    return collection.insert(user)
-      .then(result => {
-        return Promise.resolve(user);
-      });
+  updateUser(user: User): Promise<void> {
+    return this.usersCollection.updateOne({username: user.username}, {$set: user});
+  }
+
+  createUser(user: User): Promise<void> {
+    return this.usersCollection.insert(user); 
+  }
+
+  deleteUser(id: UserId): Promise<void> {
+    return this.usersCollection.deleteOne({username: id});
   }
 
 //================================================================

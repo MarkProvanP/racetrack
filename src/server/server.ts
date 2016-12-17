@@ -60,7 +60,7 @@ app.get('/.well-known/acme-challenge/GTj1Lm1K6kyCkXTs_tWVlb5VRyPQG1cgCRPSQ3uSljM
 const SESSION_SECRET = 'kewbfklebhfrhaewbfabfjbhzsfkjbkasjbvhkjaswbhdrvfkashbfvhavfha';
 const SESSION_KEY = "express.sid";
 
-import { AuthWithDbFacade } from "./auth";
+import { AuthWithDataIntermediary } from "./auth";
 
 import teamsRouterWithDb from "./routes/teams.routes";
 import publicRouterWithDb from "./routes/public.routes";
@@ -180,7 +180,7 @@ setup(MONGODB_URI)
 
     let apiRouter = express.Router();
 
-    let authRouter = AuthWithDbFacade(db_facade);
+    let authRouter = AuthWithDataIntermediary(dataIntermediary);
     apiRouter.use('/auth', authRouter);
 
     let teamsRouter = teamsRouterWithDb(dataIntermediary);

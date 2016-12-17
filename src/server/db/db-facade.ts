@@ -12,7 +12,7 @@ import {
 import { UserWithoutPassword } from '../../common/user';
 import { ThingEvent, ThingEventId } from "../../common/event";
 
-import { User } from '../auth';
+import { User, UserId } from '../auth';
 
 var Promise = require("es6-promise").Promise;
 
@@ -41,9 +41,11 @@ export interface DbFacadeInterface {
   createTeamUpdate(update: DbFormTeamUpdate): Promise<void>;
   deleteTeamUpdate(id: TeamUpdateId): Promise<void>;
 
-  getUser(username): Promise<User>;
-  canAddUser(username): Promise<boolean>;
-  addUser(username, password, properties): Promise<User>;
+  getUser(query): Promise<User>;
+  getUsers(query): Promise<User[]>;
+  updateUser(user): Promise<void>
+  createUser(user): Promise<void>;
+  deleteUser(username: UserId): Promise<void>;
 
   getEvents(): Promise<ThingEvent[]>;
   getEvent(id: ThingEventId): Promise<ThingEvent>;

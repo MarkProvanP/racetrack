@@ -40,6 +40,7 @@ import {
   TeamUpdateUpdatedMessage
 } from "../common/message";
 import { MessageSender } from "./server";
+import { User, UserId } from "./auth";
 
 import * as winston from "winston";
 import * as uuid from "node-uuid";
@@ -398,6 +399,31 @@ export class DataIntermediary {
   
   deleteTeamUpdate(id: TeamUpdateId): Promise<void> {
     return this.dbFacade.deleteTeamUpdate(id);
+  }
+
+//================================================================
+  getUser(username): Promise<User> {
+    return this.dbFacade.getUser({username})
+      .then(user => User.fromJSON(user));
+  }
+
+  getUsers(): Promise<User[]> {
+    return this.dbFacade.getUsers({})
+      .then(users => users.map(user => User.fromJSON(user)));
+  }
+
+  canAddUser(username): Promise<boolean> {
+    return this.getUser(username)
+    .catch(doesntExist => Promise.resolve(null))
+    .then(user => Promise.resolve(user == null))
+  }
+
+  addUser(username, password, properties): Promise<User> {
+    let user = User.createWithPassword(username, password, properties);
+    return this.dbFacade.createUser(user)
+      .then(result => {
+        return Promise.resolve(user);
+      });
   }
 }
 

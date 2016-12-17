@@ -8,6 +8,7 @@ let LocalStrategy = localStrategy.Strategy;
 import * as winston from "winston";
 let router = express.Router();
 
+import { DataIntermediary } from "./data-intermediate";
 import { UserWithoutPassword, UserActionInfo } from "../common/user";
 import { PhoneNumber } from '../common/text';
 
@@ -17,8 +18,10 @@ import { NoSuchUserError } from '../common/error';
 
 const NO_USER_ERROR_CODE = 402;
 
+export type UserId = string;
+
 export class User {
-  username: string;
+  username: UserId;
   password: string;
   name: string;
   email: string;
@@ -56,10 +59,10 @@ export class User {
   }
 }
 
-export function AuthWithDbFacade(db_facade) {
+export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
   passport.use(new LocalStrategy((username, password, done) => {
     winston.log('info', `username: ${username} attempting login`);
-    db_facade.getUser(username)
+    dataIntermediate.getUser(username)
       .then(user => {
         winston.log('info', `username: ${username} exists`);
         if (!user.validPassword(password)) {
@@ -81,17 +84,20 @@ export function AuthWithDbFacade(db_facade) {
 
   passport.use('local-register', new LocalStrategy({passReqToCallback: true},
     (req, username, password, done) => {
-      db_facade.canAddUser(username)
-        .then(can => {
+      dataIntermediate.canAddUser(username)
+        .then((can: boolean) => {
           if (!can) {
-            return done(`already have user with username: ${username}`);
+            done(`already have user with username: ${username}`);
+            return Promise.resolve(null);
           } else {
             let properties = req.body;
-            return db_facade.addUser(username, password, properties)
+            return dataIntermediate.addUser(username, password, properties)
           }
         })
-        .then(user => {
-          return done(null, user);
+        .then((user: User) => {
+          if (user != null) {
+            return done(null, user);
+          }
         })
         .catch(err => {
           winston.info('Error registering user', {err});
@@ -108,7 +114,7 @@ export function AuthWithDbFacade(db_facade) {
   }
 
   function getPublicUser(username) {
-    return db_facade.getUser(username)
+    return dataIntermediate.getUser(username)
       .then(user => user.copyWithoutPassword());
   }
 
@@ -123,7 +129,7 @@ export function AuthWithDbFacade(db_facade) {
 
   router.post('/api/login', passport.authenticate('local'), (req, res) => {
     winston.log('info', '/api/login request');
-    db_facade.getUser(req.user.username)
+    dataIntermediate.getUser(req.user.username)
       .then(user => {
         res.json(user.copyWithoutPassword())
       })
@@ -141,7 +147,7 @@ export function AuthWithDbFacade(db_facade) {
 
   router.post('/api/register', passport.authenticate('local-register'), (req, res) => {
     winston.log('info', '/api/register request');
-    db_facade.getUser(req.user.username)
+    dataIntermediate.getUser(req.user.username)
       .then(user => {
         let withoutPassword = user.copyWithoutPassword();
         res.json(user.copyWithoutPassword());
@@ -167,9 +173,16 @@ export function AuthWithDbFacade(db_facade) {
     res.json({auth: true})
   });
 
+  router.get('/api/list-users', isLoggedIn, (req, res) => {
+    dataIntermediate.getUsers()
+    .catch(err => res.status(500).send())
+    .then(users => users.map(user => user.copyWithoutPassword()))
+    .then(users => res.json(users));
+  });
+
   router.get('/api/authenticated', isLoggedIn, (req, res) => {
     winston.log('info', '/api/authenticated request');
-    db_facade.getUser(req.user.username)
+    dataIntermediate.getUser(req.user.username)
       .then(user => {
         res.json(user.copyWithoutPassword())
       })
