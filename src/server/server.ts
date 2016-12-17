@@ -21,11 +21,15 @@ let LocalStrategy = require('passport-local').Strategy;
 import * as config from '../../app-config';
 
 var twilio = require('twilio');
-var twilioClient = twilio(config.accountSid, config.authToken);
 
 const PORT = process.env.PORT || config.SERVER_PORT;
-
 const MONGODB_URI = process.env.MONGODB_URI || config.db_url;
+const TWILIO_SID = process.env.TWILIO_SID || config.accountSid;
+const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN || config.authToken;
+const TWILIO_SENDING_NO = process.env.TWILIO_SENDING_NO || config.sendingNo;
+const TWILIO_SMS_WEBHOOK = process.env.TWILIO_SMS_WEBHOOK || config.twilioSMSWebHook;
+
+var twilioClient = twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
 
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
@@ -182,7 +186,7 @@ setup(MONGODB_URI)
 
     let twilioObj = {
       client: twilioClient,
-      fromNumber: config.sendingNo
+      fromNumber: TWILIO_SENDING_NO
     }
     let textsRouter = textsRouterWithDb(dataIntermediary, twilioObj);
     apiRouter.use("/texts", textsRouter);
@@ -201,7 +205,7 @@ setup(MONGODB_URI)
     });
 
     app.post('/twiml', function(req, res) {
-      if (twilio.validateExpressRequest(req, config.authToken, {url: config.twilioSMSWebHook})) {
+      if (twilio.validateExpressRequest(req, TWILIO_AUTH_TOKEN, {url: TWILIO_SMS_WEBHOOK})) {
         let text = req.body;
         winston.log('verbose', `Received text from Twilio`, {text});
         handleTextMessage(db_facade, text);
