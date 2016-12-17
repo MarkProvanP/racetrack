@@ -226,6 +226,7 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
     let updatedUser = req.body;
     dataIntermediate.updateUser(updatedUser)
     .catch(err => res.status(500).send())
+    .then(user => User.fromJSON(user))
     .then(user => user.copyWithoutPassword())
     .then(changedUser => res.json(changedUser));
   });

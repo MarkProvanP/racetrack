@@ -20,6 +20,7 @@ export class UserListComponent implements OnInit {
   form: FormGroup;
   privilegesEnum = UserPrivileges;
   selectedLevel: UserPrivileges = UserPrivileges.VIEW_ONLY;
+  currentlyEditingUser: UserWithoutPassword;
 
   constructor(
     private userService: UserService,
@@ -33,7 +34,7 @@ export class UserListComponent implements OnInit {
   }
 
   loadUsers() {
-    this.userService.listAllUsers()
+    this.userService.dataGetUsers()
     .then(users => this.users = users);
   }
 
@@ -61,6 +62,22 @@ export class UserListComponent implements OnInit {
   deleteUser(username) {
     this.userService.deleteUser(username)
     .then(() => this.loadUsers());
+  }
+
+  isEditingUser(user) {
+    return user == this.currentlyEditingUser;
+  }
+
+  editUser(user) {
+    this.currentlyEditingUser = user;
+  }
+
+  stopEditingUser() {
+    this.currentlyEditingUser = undefined;
+  }
+
+  saveUser() {
+    this.userService.updateUser(this.currentlyEditingUser)
   }
 
   onSubmit() {

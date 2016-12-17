@@ -245,8 +245,31 @@ export class UserService {
     return this.authenticated;
   }
 
-  public listAllUsers(): Promise<UserWithoutPassword[]> {
+  public dataGetUser(username: UserId): Promise<UserWithoutPassword> {
+    let url = `${this.usersUrl}/${username}`;
+    return this.http.get(url, {withCredentials: true})
+    .toPromise()
+    .catch(this.handleHttpError)
+    .then(response => response.json())
+  }
+
+  public dataGetUsers(): Promise<UserWithoutPassword[]> {
     return this.http.get(this.usersUrl, {withCredentials: true})
+    .toPromise()
+    .catch(this.handleHttpError)
+    .then(response => response.json())
+  }
+
+  public updateUser(user): Promise<UserWithoutPassword> {
+    let url = `${this.usersUrl}/${user.username}`;
+    return this.http.put(url, JSON.stringify(user), {withCredentials: true})
+    .toPromise()
+    .catch(this.handleHttpError)
+    .then(response => response.json())
+  }
+
+  public createUser(user): Promise<UserWithoutPassword> {
+    return this.http.post(this.usersUrl, JSON.stringify(user), {withCredentials: true})
     .toPromise()
     .catch(this.handleHttpError)
     .then(response => response.json())
