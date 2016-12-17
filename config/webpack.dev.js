@@ -161,6 +161,11 @@ module.exports = function (options) {
           target: "https://race2-app.herokuapp.com/",
           secure: true,
           changeOrigin: true
+        },
+        "/socket.io": {
+          target: "https://race2-app.herokuapp.com/",
+          secure: true,
+          changeOrigin: true
         }
       },
     },
