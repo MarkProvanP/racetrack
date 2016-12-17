@@ -52,6 +52,11 @@ app.use(bodyParser.json());
 
 app.use(cookieParser());
 
+// Let's Encrypt!
+app.get('/.well-known/acme-challenge/GTj1Lm1K6kyCkXTs_tWVlb5VRyPQG1cgCRPSQ3uSljM', (req, res) => {
+  res.send('GTj1Lm1K6kyCkXTs_tWVlb5VRyPQG1cgCRPSQ3uSljM.LBhOg_sQGhX4qrc11aSUEZWBaIcBTAt6Gqqy-BGmsFA');
+});
+
 const SESSION_SECRET = 'kewbfklebhfrhaewbfabfjbhzsfkjbkasjbvhkjaswbhdrvfkashbfvhavfha';
 const SESSION_KEY = "express.sid";
 
