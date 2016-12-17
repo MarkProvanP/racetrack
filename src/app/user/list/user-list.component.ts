@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 
-import { UserWithoutPassword } from '../../../common/user';
+import { UserWithoutPassword, prettyUserPrivilegesLevel, UserPrivileges } from '../../../common/user';
 import { UserService } from "../../user.service";
 
 @Component({
@@ -18,6 +18,8 @@ export class UserListComponent implements OnInit {
   email: FormControl;
   phone: FormControl;
   form: FormGroup;
+  privilegesEnum = UserPrivileges;
+  selectedLevel: UserPrivileges = UserPrivileges.VIEW_ONLY;
 
   constructor(
     private userService: UserService,
@@ -26,10 +28,13 @@ export class UserListComponent implements OnInit {
     this.loadUsers();
   }
 
+  prettyLevelName(level) {
+    return prettyUserPrivilegesLevel(Number(level));
+  }
+
   loadUsers() {
     this.userService.listAllUsers()
     .then(users => this.users = users);
-
   }
 
   ngOnInit() {
@@ -48,8 +53,15 @@ export class UserListComponent implements OnInit {
     });
   }
 
+  isLevelDisabled(level) {
+    let b = Number(level) == UserPrivileges.SUPERUSER;
+    return b ? true : null;
+  }
+
   onSubmit() {
-    this.userService.register(this.form.value)
+    let formValue = this.form.value;
+    formValue.level = this.selectedLevel;
+    this.userService.register(formValue)
     .then(res => this.loadUsers())
     .catch(err => {
       console.log(err);

@@ -28,9 +28,16 @@ const TWILIO_SID = process.env.TWILIO_SID || config.accountSid;
 const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN || config.authToken;
 const TWILIO_SENDING_NO = process.env.TWILIO_SENDING_NO || config.sendingNo;
 const TWILIO_SMS_WEBHOOK = process.env.TWILIO_SMS_WEBHOOK || config.twilioSMSWebHook;
+const RACE2_ADMIN_PASSWORD = process.env.RACE2_ADMIN_PASSWORD;
+
+if (!RACE2_ADMIN_PASSWORD) {
+  console.error("RACE2_ADMIN_PASSWORD environment variable must be set before use!");
+  process.exit(1);
+}
 
 var twilioClient = twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
 
+import { UserPrivileges, UserId } from "../common/user";
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
 import { Text, TwilioInboundText } from "../common/text";
@@ -125,6 +132,16 @@ setup(MONGODB_URI)
     winston.info('MongoDB now ready for use');
 
     dataIntermediary = GetDataIntermediary(db_facade, messageSender);
+
+    // Check to see if the admin user has been created yet. If not, create it.
+    if (dataIntermediary.canAddUser('admin')) {
+      dataIntermediary.addUser('admin', RACE2_ADMIN_PASSWORD, {
+        email: "N/A",
+        phone: "N/A",
+        name: "Administrator",
+        level: UserPrivileges.SUPERUSER
+      })
+    }
 
     let mongoSessionStore = new MongoStore({
       db: db_facade.db,
