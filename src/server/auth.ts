@@ -43,7 +43,7 @@ export class User {
     this.name = properties.name;
     this.email = properties.email;
     this.phone = properties.phone;
-    this.level = properties.level || UserPrivileges.VIEW_ONLY;
+    this.level = Number(properties.level);
   }
 
   copyWithoutPassword(): UserWithoutPassword {

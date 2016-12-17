@@ -415,7 +415,10 @@ export class DataIntermediary {
   canAddUser(username): Promise<boolean> {
     return this.getUser(username)
     .catch(doesntExist => Promise.resolve(null))
-    .then(user => Promise.resolve(user == null))
+    .then(user => {
+      console.log('result', user);
+      return Promise.resolve(user == null)
+    })
   }
 
   addUser(username, password, properties): Promise<User> {

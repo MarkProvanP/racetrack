@@ -12,7 +12,7 @@ import {
   OtherLoggedInUsersMessage,
   CLOSE_SOCKET
 } from "../common/message";
-import { UserWithoutPassword, UserActionInfo } from "../common/user";
+import { UserWithoutPassword, UserActionInfo, UserId } from "../common/user";
 
 function myIndexOf(array, element, check) {
   for (let i = 0; i < array.length; i++) {
@@ -45,15 +45,15 @@ export const TIMEZONES = {
 export class UserService {
   private headers = new Headers({'Content-Type': 'application/json'});
   private backendHost = "";
-  private baseUrl = this.backendHost + "/r2bcknd/auth/api/";
-  private loginUrl = this.baseUrl + "login";
-  private logoutUrl = this.baseUrl + "logout";
-  private registerUrl = this.baseUrl + "register";
-  private authenticatedUrl = this.baseUrl + "authenticated";
+  private baseUrl = this.backendHost + "/r2bcknd/auth/";
+  private loginUrl = this.baseUrl + "api/login";
+  private logoutUrl = this.baseUrl + "api/logout";
+  private registerUrl = this.baseUrl + "api/register";
+  private authenticatedUrl = this.baseUrl + "api/authenticated";
   private meUrl = this.authenticatedUrl//this.baseUrl + "me";
   private usersUrl = this.baseUrl + "users";
 
-  private authApi = this.baseUrl + "auth";
+  private authApi = this.baseUrl + "api/auth";
 
   private authenticated;
   private authenticateObservable = Observable.of(undefined);
@@ -250,6 +250,13 @@ export class UserService {
     .toPromise()
     .catch(this.handleHttpError)
     .then(response => response.json())
+  }
+
+  public deleteUser(username: UserId): Promise<any> {
+    let url = `${this.usersUrl}/${username}`;
+    return this.http.delete(url, {withCredentials: true})
+    .toPromise()
+    .catch(this.handleHttpError)
   }
 
   getUser(): UserWithoutPassword {

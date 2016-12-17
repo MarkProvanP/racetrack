@@ -58,6 +58,11 @@ export class UserListComponent implements OnInit {
     return b ? true : null;
   }
 
+  deleteUser(username) {
+    this.userService.deleteUser(username)
+    .then(() => this.loadUsers());
+  }
+
   onSubmit() {
     let formValue = this.form.value;
     formValue.level = this.selectedLevel;
