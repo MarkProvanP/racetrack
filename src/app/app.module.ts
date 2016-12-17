@@ -52,6 +52,7 @@ import { LoginComponent } from './user/login';
 import { LogoutComponent } from './user/logout';
 import { MeComponent } from './user/me';
 import { RegisterComponent } from './user/register';
+import { UserListComponent } from "./user/list";
 
 import { TimeWidget } from "./widgets/time";
 import { LocationWidget } from "./widgets/location";
@@ -122,6 +123,7 @@ const APP_PROVIDERS = [
     LogoutComponent,
     MeComponent,
     RegisterComponent,
+    UserListComponent,
     // WIDGETS
     TimeWidget,
     LocationWidget,

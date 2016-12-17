@@ -1,0 +1,36 @@
+<h1>User List</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor='let user of users'>
+      <td>{{user.username}}</td>
+      <td>{{user.name}}</td>
+      <td>{{user.email}}</td>
+      <td>{{user.phone}}</td>
+    </tr>
+  </tbody>
+</table>
+<div class='register-wrapper'>
+  <md-card class='register-card'>
+    <md-card-title>
+      Create new
+    </md-card-title>
+    <md-card-content>
+      <form [formGroup]='form' (ngSubmit)='onSubmit()' #registerForm='ngForm' class='form'>
+        <md-input formControlName='username' required placeholder='Username'></md-input>
+        <md-input formControlName='password' required placeholder='Password' type='password'></md-input>
+        <md-input formControlName='name' required placeholder='Name'></md-input>
+        <md-input formControlName='email' required placeholder='Email' type='email'></md-input>
+        <md-input formControlName='phone' required placeholder='Phone number'></md-input>
+        <button md-raised-button color='primary' type='submit'>Register</button>
+      </form>
+    </md-card-content>
+  </md-card>
+</div>

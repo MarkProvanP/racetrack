@@ -51,6 +51,7 @@ export class UserService {
   private registerUrl = this.baseUrl + "register";
   private authenticatedUrl = this.baseUrl + "authenticated";
   private meUrl = this.authenticatedUrl//this.baseUrl + "me";
+  private listUsersUrl = this.baseUrl + "list-users";
 
   private authApi = this.baseUrl + "auth";
 
@@ -242,6 +243,13 @@ export class UserService {
 
   public isAuthenticated() {
     return this.authenticated;
+  }
+
+  public listAllUsers(): Promise<UserWithoutPassword[]> {
+    return this.http.get(this.listUsersUrl, {withCredentials: true})
+    .toPromise()
+    .catch(this.handleHttpError)
+    .then(response => response.json())
   }
 
   getUser(): UserWithoutPassword {

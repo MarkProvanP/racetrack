@@ -24,6 +24,7 @@ import { LoginComponent } from './user/login';
 import { LogoutComponent } from './user/logout';
 import { MeComponent } from './user/me';
 import { RegisterComponent } from './user/register';
+import { UserListComponent } from "./user/list";
 
 import { PrivateApp } from "./private-app";
 import { PublicApp } from "./public-app"
@@ -94,7 +95,8 @@ export const ROUTES: Routes = [
       {
         path: 'user', children: [
           { path: 'logout', component: LogoutComponent },
-          { path: 'me', component: MeComponent }
+          { path: 'me', component: MeComponent },
+          { path: 'list', component: UserListComponent }
         ]
       },
       { path: 'mass-text', component: MassTextComponent },
