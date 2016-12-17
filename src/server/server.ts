@@ -134,7 +134,9 @@ setup(MONGODB_URI)
     dataIntermediary = GetDataIntermediary(db_facade, messageSender);
 
     // Check to see if the admin user has been created yet. If not, create it.
-    if (dataIntermediary.canAddUser('admin')) {
+    dataIntermediary.canAddUser('admin')
+    .then(can => {
+      if (!can) return;
       winston.info(`Creating admin user with password: ${RACE2_ADMIN_PASSWORD}`);
       dataIntermediary.addUser('admin', RACE2_ADMIN_PASSWORD, {
         email: "N/A",
@@ -142,7 +144,7 @@ setup(MONGODB_URI)
         name: "Administrator",
         level: UserPrivileges.SUPERUSER
       })
-    }
+    });
 
     let mongoSessionStore = new MongoStore({
       db: db_facade.db,
