@@ -15,7 +15,7 @@ export interface UserActionInfo {
 }
 
 export enum UserPrivileges {
-  SUPERUSER, MODIFY_ALL, BASIC, VIEW_ONLY
+  VIEW_ONLY, BASIC, MODIFY_ALL, SUPERUSER
 }
 
 
