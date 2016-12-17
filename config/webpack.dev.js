@@ -158,7 +158,7 @@ module.exports = function (options) {
       },
       proxy: {
         "/r2bcknd": {
-          target: "https://mrp4.host.cs.st-andrews.ac.uk/r2bcknd",
+          target: "https://race2-app.herokuapp.com/",
           secure: true,
           changeOrigin: true
         }
