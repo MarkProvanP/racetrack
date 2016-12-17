@@ -425,5 +425,14 @@ export class DataIntermediary {
         return Promise.resolve(user);
       });
   }
+
+  updateUser(user): Promise<User> {
+    return this.dbFacade.updateUser(user)
+    .then(res => user);
+  }
+
+  deleteUser(username: UserId): Promise<void> {
+    return this.dbFacade.deleteUser(username)
+  }
 }
 
