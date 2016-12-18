@@ -48,7 +48,6 @@ export class UserService {
   private baseUrl = this.backendHost + "/r2bcknd/auth/";
   private loginUrl = this.baseUrl + "api/login";
   private logoutUrl = this.baseUrl + "api/logout";
-  private registerUrl = this.baseUrl + "api/register";
   private authenticatedUrl = this.baseUrl + "api/authenticated";
   private meUrl = this.authenticatedUrl//this.baseUrl + "me";
   private usersUrl = this.baseUrl + "users";
@@ -216,19 +215,6 @@ export class UserService {
       })
   }
 
-  register(user): Promise<any> {
-    console.log('user service register user', user);
-    return this.http
-      .post(this.registerUrl, JSON.stringify(user), {headers: this.headers, withCredentials: true})
-      .toPromise()
-      .catch(this.handleHttpError)
-      .then(response => {
-        console.log('register response', response);
-        return response.json()
-      })
-      .then(user => this.setUser(user))
-  }
-
   getMe(): Promise<UserWithoutPassword> {
     return this.http
       .get(this.meUrl, {withCredentials: true})
@@ -248,43 +234,6 @@ export class UserService {
 
   public isAuthenticated() {
     return this.authenticated;
-  }
-
-  public dataGetUser(username: UserId): Promise<UserWithoutPassword> {
-    let url = `${this.usersUrl}/${username}`;
-    return this.http.get(url, {withCredentials: true})
-    .toPromise()
-    .catch(this.handleHttpError)
-    .then(response => response.json())
-  }
-
-  public dataGetUsers(): Promise<UserWithoutPassword[]> {
-    return this.http.get(this.usersUrl, {withCredentials: true})
-    .toPromise()
-    .catch(this.handleHttpError)
-    .then(response => response.json())
-  }
-
-  public updateUser(user): Promise<UserWithoutPassword> {
-    let url = `${this.usersUrl}/${user.username}`;
-    return this.http.put(url, JSON.stringify(user), this.jsonHttpExtras)
-    .toPromise()
-    .catch(this.handleHttpError)
-    .then(response => response.json())
-  }
-
-  public createUser(user): Promise<UserWithoutPassword> {
-    return this.http.post(this.usersUrl, JSON.stringify(user), this.jsonHttpExtras)
-    .toPromise()
-    .catch(this.handleHttpError)
-    .then(response => response.json())
-  }
-
-  public deleteUser(username: UserId): Promise<any> {
-    let url = `${this.usersUrl}/${username}`;
-    return this.http.delete(url, {withCredentials: true})
-    .toPromise()
-    .catch(this.handleHttpError)
   }
 
   getUser(): UserWithoutPassword {

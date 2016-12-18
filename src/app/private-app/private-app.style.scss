@@ -45,11 +45,6 @@ main > *:nth-child(2) {
   flex-direction: column;
 }
 
-
-.active {
-  background-color: gold;
-}
-
 /** remove when fixed in angular2-material **/
 /** The overlay-container is an invisible element which contains all individual overlays. */
 .md-overlay-container {
