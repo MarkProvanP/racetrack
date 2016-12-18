@@ -57,6 +57,7 @@
       <button md-button (click)='editUser(user)' *ngIf='!isEditingUser(user)'>Edit</button>
       <button md-button (click)='saveUser()' *ngIf='isEditingUser(user)'>Save</button>
       <button md-button (click)='stopEditingUser()' *ngIf='isEditingUser(user)'>Cancel</button>
+      <button md-button (click)='resetPassword(user)'>Change Password</button>
     </md-card-actions>
   </md-card>
 </div>

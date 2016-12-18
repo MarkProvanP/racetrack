@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 
-import { UserWithoutPassword, prettyUserPrivilegesLevel, UserPrivileges } from '../../../common/user';
+import { UserId, UserWithoutPassword, prettyUserPrivilegesLevel, UserPrivileges } from '../../../common/user';
 import { UserService } from "../../user.service";
 import { DataService } from "../../data.service";
 
@@ -40,6 +40,14 @@ export class UserListComponent implements OnInit {
     .then(users => this.users = users);
   }
 
+  resetPassword(user: UserWithoutPassword) {
+    let newPassword = prompt(`Enter new password for ${user.username}`);
+    if (newPassword) {
+      this.dataService.changeUserPassword(user, newPassword)
+      .then(res => console.log('Password updated!'));
+    }
+  }
+
   ngOnInit() {
     this.username = new FormControl('', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)]));
     this.password = new FormControl('', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(32)]));
@@ -61,7 +69,7 @@ export class UserListComponent implements OnInit {
     return b ? true : null;
   }
 
-  deleteUser(username) {
+  deleteUser(username: UserId) {
     this.dataService.deleteUser(username)
     .then(() => this.loadUsers());
   }
