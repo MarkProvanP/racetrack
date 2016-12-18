@@ -7,6 +7,7 @@ export interface UserWithoutPassword {
   email: string;
   phone: PhoneNumber;
   level: UserPrivileges;
+  role: string;
 }
 
 export interface UserActionInfo {

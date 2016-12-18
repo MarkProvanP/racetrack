@@ -43,6 +43,7 @@ export class User {
   email: string;
   phone: PhoneNumber;
   level: UserPrivileges;
+  role: string;
 
   validPassword(password) {
     return bcrypt.compareSync(password, this.password);
@@ -76,6 +77,7 @@ export class User {
     this.email = properties.email;
     this.phone = properties.phone;
     this.level = Number(properties.level);
+    this.role = properties.role;
   }
 
   copyWithoutPassword(): UserWithoutPassword {
@@ -85,6 +87,7 @@ export class User {
     copy.email = this.email;
     copy.phone = this.phone;
     copy.level = this.level;
+    copy.role = this.role;
     return copy;
   }
 
