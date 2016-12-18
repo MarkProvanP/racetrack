@@ -53,11 +53,11 @@
       </table>
     </div>
     <md-card-actions>
-      <button md-button (click)='deleteUser(user.username)'>Delete</button>
-      <button md-button (click)='editUser(user)' *ngIf='!isEditingUser(user)'>Edit</button>
-      <button md-button (click)='saveUser()' *ngIf='isEditingUser(user)'>Save</button>
-      <button md-button (click)='stopEditingUser()' *ngIf='isEditingUser(user)'>Cancel</button>
-      <button md-button (click)='resetPassword(user)'>Change Password</button>
+      <button md-button [disabled]='!canModify(user)' (click)='deleteUser(user.username)'>Delete</button>
+      <button md-button [disabled]='!canModify(user)' (click)='editUser(user)' *ngIf='!isEditingUser(user)'>Edit</button>
+      <button md-button [disabled]='!canModify(user)' (click)='saveUser()' *ngIf='isEditingUser(user)'>Save</button>
+      <button md-button [disabled]='!canModify(user)' (click)='stopEditingUser()' *ngIf='isEditingUser(user)'>Cancel</button>
+      <button md-button [disabled]='!canModify(user)' (click)='resetPassword(user)'>Change Password</button>
     </md-card-actions>
   </md-card>
 </div>

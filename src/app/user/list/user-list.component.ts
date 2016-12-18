@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 
-import { UserId, UserWithoutPassword, prettyUserPrivilegesLevel, UserPrivileges } from '../../../common/user';
+import { UserId, UserWithoutPassword, prettyUserPrivilegesLevel, isAboveMinimumPrivilege, UserPrivileges } from '../../../common/user';
 import { UserService } from "../../user.service";
 import { DataService } from "../../data.service";
 
@@ -92,6 +92,13 @@ export class UserListComponent implements OnInit {
       this.stopEditingUser()
       this.loadUsers();
     });
+  }
+
+  canModify(user: UserWithoutPassword) {
+    if (user.username == 'admin') return false;
+    let me = this.userService.getUser();
+    let check = isAboveMinimumPrivilege(UserPrivileges.MODIFY_ALL);
+    return check(me.level);
   }
 
   onSubmit() {
