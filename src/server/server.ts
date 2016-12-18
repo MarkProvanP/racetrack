@@ -75,6 +75,7 @@ import racersRouterWithDb from "./routes/racers.routes";
 import textsRouterWithDb from "./routes/texts.routes";
 import updatesRouterWithDb from "./routes/updates.routes";
 import eventsRouterWithDb from "./routes/events.routes";
+import usersRouterWithDb from "./routes/users.routes";
 
 import { GetDataIntermediary } from "./data-intermediate";
 import { DbFacadeInterface } from './db/db-facade';
@@ -221,6 +222,9 @@ setup(MONGODB_URI)
 
     let eventsRouter = eventsRouterWithDb(db_facade);
     apiRouter.use('/events', eventsRouter);
+
+    let usersRouter = usersRouterWithDb(dataIntermediary);
+    apiRouter.use('/users', usersRouter);
 
     let publicRouter = publicRouterWithDb(dataIntermediary);
     apiRouter.use('/public', publicRouter);

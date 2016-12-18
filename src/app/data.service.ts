@@ -8,6 +8,7 @@ import { Racer, RacerId } from '../common/racer';
 import { TeamUpdate } from '../common/update';
 import { PhoneNumber } from '../common/text';
 import { ThingEvent, ThingEventId } from '../common/event';
+import { UserWithoutPassword, UserId } from '../common/user';
 import { UserService } from './user.service';
 
 import {
@@ -35,6 +36,7 @@ export class DataService {
   private racersUrl = this.baseUrl + 'racers';
   private updatesUrl = this.baseUrl + "updates";
   private eventsUrl = this.baseUrl + "events";
+  private usersUrl = this.baseUrl + "users";
   private publicTeamsUrl = this.baseUrl + 'public/teams';
 
   private teams: Team[] = [];
@@ -371,6 +373,46 @@ export class DataService {
       .toPromise()
       .then(response => ThingEvent.fromJSON(response.json()))
       .catch(this.handleError);
+  }
+
+//----------------------------------------------------------------------//
+
+
+  public getUser(username: UserId): Promise<UserWithoutPassword> {
+    let url = `${this.usersUrl}/${username}`;
+    return this.http.get(url, {withCredentials: true})
+    .toPromise()
+    .catch(this.handleError)
+    .then(response => response.json())
+  }
+
+  public getUsers(): Promise<UserWithoutPassword[]> {
+    return this.http.get(this.usersUrl, {withCredentials: true})
+    .toPromise()
+    .catch(this.handleError)
+    .then(response => response.json())
+  }
+
+  public updateUser(user): Promise<UserWithoutPassword> {
+    let url = `${this.usersUrl}/${user.username}`;
+    return this.http.put(url, JSON.stringify(user), this.httpExtras)
+    .toPromise()
+    .catch(this.handleError)
+    .then(response => response.json())
+  }
+
+  public createUser(user): Promise<UserWithoutPassword> {
+    return this.http.post(this.usersUrl, JSON.stringify(user), this.httpExtras)
+    .toPromise()
+    .catch(this.handleError)
+    .then(response => response.json())
+  }
+
+  public deleteUser(username: UserId): Promise<any> {
+    let url = `${this.usersUrl}/${username}`;
+    return this.http.delete(url, {withCredentials: true})
+    .toPromise()
+    .catch(this.handleError)
   }
 
 //----------------------------------------------------------------------//

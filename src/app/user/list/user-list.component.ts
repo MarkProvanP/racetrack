@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 
 import { UserWithoutPassword, prettyUserPrivilegesLevel, UserPrivileges } from '../../../common/user';
 import { UserService } from "../../user.service";
+import { DataService } from "../../data.service";
 
 @Component({
   selector: 'user-list',
@@ -24,6 +25,7 @@ export class UserListComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private dataService: DataService,
     private router: Router
   ) {
     this.loadUsers();
@@ -34,7 +36,7 @@ export class UserListComponent implements OnInit {
   }
 
   loadUsers() {
-    this.userService.dataGetUsers()
+    this.dataService.getUsers()
     .then(users => this.users = users);
   }
 
@@ -60,7 +62,7 @@ export class UserListComponent implements OnInit {
   }
 
   deleteUser(username) {
-    this.userService.deleteUser(username)
+    this.dataService.deleteUser(username)
     .then(() => this.loadUsers());
   }
 
@@ -77,7 +79,7 @@ export class UserListComponent implements OnInit {
   }
 
   saveUser() {
-    this.userService.updateUser(this.currentlyEditingUser)
+    this.dataService.updateUser(this.currentlyEditingUser)
     .then(success => {
       this.stopEditingUser()
       this.loadUsers();
@@ -87,7 +89,7 @@ export class UserListComponent implements OnInit {
   onSubmit() {
     let formValue = this.form.value;
     formValue.level = this.selectedLevel;
-    this.userService.createUser(formValue)
+    this.dataService.createUser(formValue)
     .then(res => this.loadUsers())
     .catch(err => {
       console.log(err);
