@@ -37,6 +37,21 @@ export class User {
     return new User(username, hashed, properties);
   }
 
+  makeClone() {
+    let clone = JSON.parse(JSON.stringify(this));
+    let username = clone.username;
+    let password = clone.password;
+    return new User(username, password, clone);
+  }
+
+  changePassword(newPassword) {
+    let clone = this.makeClone();
+    let salt = bcrypt.genSaltSync(10);
+    let hashed = bcrypt.hashSync(newPassword, salt);
+    clone.password = hashed;
+    return clone;
+  }
+
   constructor(username: string, password: string, properties) {
     this.username = username;
     this.password = password;

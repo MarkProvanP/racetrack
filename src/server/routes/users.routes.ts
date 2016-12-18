@@ -51,6 +51,16 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
     .then(changedUser => res.json(changedUser));
   });
 
+  userDataRouter.put('/:username/change-password', (req, res) => {
+    let username = req.params.username;
+    let newPassword = req.body.password;
+    dataIntermediate.changeUserPassword(username, newPassword)
+    .catch(err => res.status(500).send())
+    .then(user => User.fromJSON(user))
+    .then(user => user.copyWithoutPassword())
+    .then(changedUser => res.json(changedUser));
+  });
+
   userDataRouter.delete('/:username', (req, res) => {
     let username = req.params.username;
     dataIntermediate.deleteUser(username)

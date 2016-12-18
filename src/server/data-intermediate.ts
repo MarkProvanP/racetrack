@@ -429,6 +429,12 @@ export class DataIntermediary {
       });
   }
 
+  changeUserPassword(username, newPassword): Promise<User> {
+    return this.getUser(username)
+    .then(user => user.changePassword(newPassword))
+    .then(changed => this.updateUser(changed))
+  }
+
   updateUser(user): Promise<User> {
     return this.dbFacade.updateUser(user)
     .then(res => user);
