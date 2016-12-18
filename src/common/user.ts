@@ -18,6 +18,16 @@ export enum UserPrivileges {
   VIEW_ONLY, BASIC, MODIFY_ALL, SUPERUSER
 }
 
+export function isAboveMinimumPrivilege(minimum: UserPrivileges) {
+  return (level: UserPrivileges) => {
+    switch (minimum) {
+      case UserPrivileges.SUPERUSER: return level == UserPrivileges.SUPERUSER;
+      case UserPrivileges.BASIC: return level == UserPrivileges.SUPERUSER || level == UserPrivileges.MODIFY_ALL || level == UserPrivileges.BASIC;
+      case UserPrivileges.MODIFY_ALL: return level == UserPrivileges.SUPERUSER || level == UserPrivileges.MODIFY_ALL;
+      case UserPrivileges.VIEW_ONLY: return true;
+    }
+  }
+}
 
 export function prettyUserPrivilegesLevel(level: UserPrivileges) {
   switch (level) {

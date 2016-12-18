@@ -2,7 +2,7 @@ import * as express from "express";
 import * as winston from "winston";
 
 import { DataIntermediary } from "../data-intermediate";
-import { User } from "../auth";
+import { User, restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 
 export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
   let userDataRouter = express.Router();
@@ -17,14 +17,14 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
     }
   });
 
-  userDataRouter.get('/', (req, res) => {
+  userDataRouter.get('/', restrictedViewOnly, (req, res) => {
     dataIntermediate.getUsers()
     .catch(err => res.status(500).send())
     .then(users => users.map(user => user.copyWithoutPassword()))
     .then(users => res.json(users));
   });
 
-  userDataRouter.get('/:username', (req, res) => {
+  userDataRouter.get('/:username', restrictedViewOnly, (req, res) => {
     let username = req.params.username;
     dataIntermediate.getUser(username)
     .catch(err => res.status(500).send())
@@ -32,17 +32,27 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
     .then(user => res.json(user));
   });
 
-  userDataRouter.post('/', (req, res) => {
+  userDataRouter.post('/', restrictedModifyAll, (req, res) => {
     let newUser = req.body;
     let username = newUser.username;
+    if (username == 'admin') {
+      res.status(403);
+      res.send();
+      return;
+    }
     let password = newUser.password;
     dataIntermediate.addUser(username, password, newUser)
     .catch(err => res.status(500).send())
     .then(newUser => res.json(newUser.copyWithoutPassword()));
   });
 
-  userDataRouter.put('/:username', (req, res) => {
+  userDataRouter.put('/:username', restrictedModifyAll, (req, res) => {
     let username = req.params.username;
+    if (username == 'admin') {
+      res.status(403);
+      res.send();
+      return;
+    }
     let updatedUser = req.body;
     dataIntermediate.updateUser(updatedUser)
     .catch(err => res.status(500).send())
@@ -51,8 +61,13 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
     .then(changedUser => res.json(changedUser));
   });
 
-  userDataRouter.put('/:username/change-password', (req, res) => {
+  userDataRouter.put('/:username/change-password', restrictedModifyAll, (req, res) => {
     let username = req.params.username;
+    if (username == 'admin') {
+      res.status(403);
+      res.send();
+      return;
+    }
     let newPassword = req.body.password;
     dataIntermediate.changeUserPassword(username, newPassword)
     .catch(err => res.status(500).send())
@@ -61,8 +76,13 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
     .then(changedUser => res.json(changedUser));
   });
 
-  userDataRouter.delete('/:username', (req, res) => {
+  userDataRouter.delete('/:username', restrictedModifyAll, (req, res) => {
     let username = req.params.username;
+    if (username == 'admin') {
+      res.status(403);
+      res.send();
+      return;
+    }
     dataIntermediate.deleteUser(username)
     .catch(err => res.status(500).send())
     .then(() => res.send('successfully deleted user'));

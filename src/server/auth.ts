@@ -9,7 +9,7 @@ import * as winston from "winston";
 let router = express.Router();
 
 import { DataIntermediary } from "./data-intermediate";
-import { UserId, UserPrivileges, UserWithoutPassword, UserActionInfo } from "../common/user";
+import { UserId, UserPrivileges, isAboveMinimumPrivilege, UserWithoutPassword, UserActionInfo } from "../common/user";
 import { PhoneNumber } from '../common/text';
 
 import * as bcrypt from "bcrypt-nodejs";
@@ -18,6 +18,23 @@ import { NoSuchUserError } from '../common/error';
 
 const NO_USER_ERROR_CODE = 402;
 
+function restrictedLevel(level) {
+  return (req, res, next) => {
+    let user = req.user;
+    let check = isAboveMinimumPrivilege(level);
+    if (check(user.level)) {
+      next();
+    } else {
+      res.status(403);
+      res.send();
+    }
+  }
+}
+
+export let restrictedViewOnly = restrictedLevel(UserPrivileges.VIEW_ONLY);
+export let restrictedBasic = restrictedLevel(UserPrivileges.BASIC);
+export let restrictedModifyAll = restrictedLevel(UserPrivileges.MODIFY_ALL);
+export let restrictedSuperuser = restrictedLevel(UserPrivileges.SUPERUSER);
 
 export class User {
   username: UserId;
