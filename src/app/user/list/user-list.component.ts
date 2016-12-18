@@ -78,12 +78,16 @@ export class UserListComponent implements OnInit {
 
   saveUser() {
     this.userService.updateUser(this.currentlyEditingUser)
+    .then(success => {
+      this.stopEditingUser()
+      this.loadUsers();
+    });
   }
 
   onSubmit() {
     let formValue = this.form.value;
     formValue.level = this.selectedLevel;
-    this.userService.register(formValue)
+    this.userService.createUser(formValue)
     .then(res => this.loadUsers())
     .catch(err => {
       console.log(err);

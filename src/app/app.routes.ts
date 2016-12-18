@@ -23,7 +23,6 @@ import { UpdatesComponent } from './updates';
 import { LoginComponent } from './user/login';
 import { LogoutComponent } from './user/logout';
 import { MeComponent } from './user/me';
-import { RegisterComponent } from './user/register';
 import { UserListComponent } from "./user/list";
 
 import { PrivateApp } from "./private-app";
@@ -110,7 +109,6 @@ export const ROUTES: Routes = [
     canActivate: [UnauthenticatedGuard],
     children: [
       { path: 'login', component: LoginComponent,},
-      { path: 'register', component: RegisterComponent },
       { path: 'team-progress/:id', component: PublicTeamProgressMapComponent },
       { path: '**', component: PublicMapComponent }
     ]

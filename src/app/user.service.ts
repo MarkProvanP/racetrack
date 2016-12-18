@@ -71,6 +71,11 @@ export class UserService {
 
   private socketEventListenerMap = {};
 
+  private jsonHttpExtras = {
+    headers: this.headers,
+    withCredentials: true
+  }
+
   addSocketEventListener(event, callback) {
     if (!this.socketEventListenerMap[event]) {
       this.socketEventListenerMap[event] = [];
@@ -262,14 +267,14 @@ export class UserService {
 
   public updateUser(user): Promise<UserWithoutPassword> {
     let url = `${this.usersUrl}/${user.username}`;
-    return this.http.put(url, JSON.stringify(user), {withCredentials: true})
+    return this.http.put(url, JSON.stringify(user), this.jsonHttpExtras)
     .toPromise()
     .catch(this.handleHttpError)
     .then(response => response.json())
   }
 
   public createUser(user): Promise<UserWithoutPassword> {
-    return this.http.post(this.usersUrl, JSON.stringify(user), {withCredentials: true})
+    return this.http.post(this.usersUrl, JSON.stringify(user), this.jsonHttpExtras)
     .toPromise()
     .catch(this.handleHttpError)
     .then(response => response.json())
