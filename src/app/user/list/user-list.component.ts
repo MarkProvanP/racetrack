@@ -18,6 +18,7 @@ export class UserListComponent implements OnInit {
   name: FormControl;
   email: FormControl;
   phone: FormControl;
+  role: FormControl;
   form: FormGroup;
   privilegesEnum = UserPrivileges;
   selectedLevel: UserPrivileges = UserPrivileges.VIEW_ONLY;
@@ -54,13 +55,15 @@ export class UserListComponent implements OnInit {
     this.name= new FormControl('', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)]));
     this.email= new FormControl('', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(32)]));
     this.phone= new FormControl('', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)]));
+    this.role = new FormControl('', Validators.maxLength(64));
 
     this.form = new FormGroup({
       'username': this.username,
       'password': this.password,
       'name': this.name,
       'email': this.email,
-      'phone': this.phone
+      'phone': this.phone,
+      'role': this.role
     });
   }
 

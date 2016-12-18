@@ -1,6 +1,8 @@
 import { Component } from "@angular/core";
 import { UserService } from "../../user.service";
 
+import { prettyUserPrivilegesLevel } from "../../../common/user";
+
 @Component({
   selector: 'me',
   styleUrls: ['./me.style.scss'],
@@ -9,6 +11,10 @@ import { UserService } from "../../user.service";
 export class MeComponent {
   constructor(private userService: UserService) {
     
+  }
+
+  prettyLevelName(level) {
+    return prettyUserPrivilegesLevel(Number(level));
   }
 
   getUser() {

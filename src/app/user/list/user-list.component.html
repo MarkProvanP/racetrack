@@ -19,6 +19,10 @@
           <td>{{user.phone}}</td>
         </tr>
         <tr>
+          <th>Role</th>
+          <td>{{user.role}}</td>
+        </tr>
+        <tr>
           <th>Privilege Level</th>
           <td>{{prettyLevelName(user.level)}}</td>
         </tr>
@@ -41,6 +45,10 @@
         <tr>
           <th>Phone</th>
           <td><md-input [(ngModel)]='user.phone'></md-input></td>
+        </tr>
+        <tr>
+          <th>Role</th>
+          <td><md-input [(ngModel)]='user.role'></md-input></td>
         </tr>
         <tr>
           <th>Privilege Level</th>
@@ -73,6 +81,7 @@
         <md-input formControlName='name' required placeholder='Name'></md-input>
         <md-input formControlName='email' required placeholder='Email' type='email'></md-input>
         <md-input formControlName='phone' required placeholder='Phone number'></md-input>
+        <md-input formControlName='role' required placeholder='Role'></md-input>
         <button md-raised-button color='primary' type='submit'>Register</button>
       </form>
       <md-select [(ngModel)]='selectedLevel'>

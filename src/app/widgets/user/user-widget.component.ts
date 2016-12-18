@@ -9,4 +9,8 @@ import { UserWithoutPassword } from "../../../common/user";
 })
 export class UserWidget {
   @Input() user: UserWithoutPassword
+
+  getTooltip() {
+    return `${this.user.name} - phone: ${this.user.phone}, role: ${this.user.role}`;
+  }
 }
