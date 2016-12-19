@@ -33,7 +33,8 @@ export class NewUpdateComponent implements OnInit {
     },
     notes: "Default starting status",
     isPublic: false,
-    byUser: undefined
+    byUser: undefined,
+    linkedTexts: []
   }
   statusEnum = TeamStatus;
   mapSettings = {
@@ -60,6 +61,9 @@ export class NewUpdateComponent implements OnInit {
     }
     if (this.text instanceof AppText) {
       this.newStatusObj.location = JSON.parse(JSON.stringify(this.text.location));
+    }
+    if (this.text) {
+      this.newStatusObj.linkedTexts = [this.text.id];
     }
     this.reverseGeocodeLocation();
   }

@@ -36,6 +36,12 @@
             <md-textarea class='notes-input'[(ngModel)]='newStatusObj.notes'></md-textarea>
           </td>
         </tr>
+        <tr>
+          <th>Linked texts:</th>
+          <td>
+            {{newStatusObj.linkedTexts}}
+          </td>
+        </tr>
       </table>
       <md-checkbox [(ngModel)]='newStatusObj.isPublic'>Make public</md-checkbox>
       <md-slide-toggle [(ngModel)]='team.inEurope'>In Europe?</md-slide-toggle>

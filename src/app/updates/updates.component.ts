@@ -5,6 +5,7 @@ import { UserService } from "../user.service";
 import { DataService } from "../data.service";
 
 import { Team } from "../../common/team";
+import { Text, TextId } from "../../common/text";
 import { TeamUpdate, TeamStatus, prettyStatusName } from "../../common/update";
 
 @Component({
@@ -87,5 +88,9 @@ export class UpdatesComponent implements OnInit {
   onMarkerDragEnd(event) {
     this.editingUpdate.location.latitude = event.coords.lat;
     this.editingUpdate.location.longitude = event.coords.lng;
+  }
+
+  loadTextsAsync(textIds: TextId[]) {
+    return [];
   }
 }

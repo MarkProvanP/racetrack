@@ -68,6 +68,12 @@
                 </td>
               </tr>
               <tr>
+                <th>Linked texts</th>
+                <td>
+                  <text-widget *ngFor='let text of loadTextsAsync(update.linkedTexts)' [text]='text'></text-widget>
+                </td>
+              </tr>
+              <tr>
                 <th>Notes</th>
                 <td *ngIf='!isEditing(update)'>
                   {{update.notes}}
