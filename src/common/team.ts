@@ -46,6 +46,7 @@ export class Team {
   racers: Racer[] = [];
   lastCheckin: CheckinInfo;
   inEurope: boolean = false;
+  notes: string;
 
   stripPrivateData(): Team {
     let strippedRacers = this.racers.map(racer => racer.stripPrivateData());
@@ -91,6 +92,7 @@ export class Team {
     }
     this.lastCheckin = checkinMigrate(properties.lastCheckin);
     this.inEurope = Boolean(properties.inEurope);
+    this.notes = properties.notes;
   }
 
   getCurrentStatus(): TeamStatus {
