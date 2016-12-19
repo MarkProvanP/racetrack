@@ -70,7 +70,10 @@
               <tr>
                 <th>Linked texts</th>
                 <td>
-                  <text-widget *ngFor='let text of loadTextsAsync(update.linkedTexts)' [text]='text'></text-widget>
+                  <button md-button *ngIf='!showingLinkedTextsForUpdate(update)' (click)='loadLinkedTextsForUpdate(update)'>Show</button>
+                  <div *ngIf='showingLinkedTextsForUpdate(update)'>
+                    <text-widget *ngFor='let text of loadedLinkedTexts' [text]='text'></text-widget>
+                  </div>
                 </td>
               </tr>
               <tr>

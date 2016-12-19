@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 
 import { UserService } from "../user.service";
 import { DataService } from "../data.service";
+import { TextService, TextFilterOptions } from "../text.service";
 
 import { Team } from "../../common/team";
 import { Text, TextId } from "../../common/text";
@@ -21,6 +22,8 @@ export class UpdatesComponent implements OnInit {
   paramsSub: any;
 
   editingUpdate: TeamUpdate;
+  linkedTextUpdate: TeamUpdate;
+  loadedLinkedTexts = [];
 
   default = {
     zoom: 6
@@ -29,6 +32,7 @@ export class UpdatesComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private userService: UserService,
+    private textService: TextService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {}
@@ -90,7 +94,14 @@ export class UpdatesComponent implements OnInit {
     this.editingUpdate.location.longitude = event.coords.lng;
   }
 
-  loadTextsAsync(textIds: TextId[]) {
-    return [];
+  showingLinkedTextsForUpdate(update: TeamUpdate) {
+    return update == this.linkedTextUpdate;
+  }
+
+  loadLinkedTextsForUpdate(update: TeamUpdate) {
+    this.loadedLinkedTexts = [];
+    this.linkedTextUpdate = update;
+    let options = new TextFilterOptions({textIds: this.linkedTextUpdate.linkedTexts});
+    this.loadedLinkedTexts = this.textService.getTextsFiltered(options)
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 
-import { Text, PhoneNumber, InboundText, OutboundText } from '../common/text';
+import { Text, TextId, PhoneNumber, InboundText, OutboundText } from '../common/text';
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
 import { TextReceivedMessage, TextUpdatedMessage, TextSentMessage } from "../common/message";
@@ -20,6 +20,7 @@ export class TextFilterOptions {
   outbound: boolean;
   afterTime: Date;
   beforeTime: Date;
+  textIds: TextId[];
 
   constructor(opts) {
     this.hasRacer = opts.hasRacer;
@@ -31,6 +32,7 @@ export class TextFilterOptions {
     this.outbound = opts.outbound;
     this.afterTime = opts.afterTime;
     this.beforeTime = opts.beforeTime;
+    this.textIds = opts.textIds || [];
   }
 
   filter(text: Text): boolean {
@@ -59,6 +61,9 @@ export class TextFilterOptions {
     }
     if (this.beforeTime !== undefined) {
       if (moment(text.timestamp).isAfter(this.beforeTime)) return false;
+    }
+    if (this.textIds !== undefined) {
+      if (this.textIds.indexOf(text.id) == -1) return false;
     }
     return true;
   }
