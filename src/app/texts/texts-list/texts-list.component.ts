@@ -1,5 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
+import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
 
 import { Racer } from "../../../common/racer";
 import { Team, CheckinInfo } from "../../../common/team";
@@ -52,11 +53,17 @@ export class TextsListComponent {
     private textService: TextService,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackBar: MdSnackBar
   ) {}
 
-  updateText(text: Text) {
+  updateText(text: Text, message?: string) {
     this.textService.updateTextAndWriteToBackend(text)
+    .then(res => {
+      let config = new MdSnackBarConfig();
+      config.duration = 5000;
+      this.snackBar.open(message || 'Updated text', undefined, config);
+    })
   }
 
   isOutboundText(text: Text) {
@@ -77,7 +84,12 @@ export class TextsListComponent {
       checkinTime: text.timestamp,
       byUser: this.userService.getUserAction()
     }
-    this.dataService.updateTeamAndWriteToBackend(team);
+    this.dataService.updateTeamAndWriteToBackend(team)
+    .then(res => {
+      let config = new MdSnackBarConfig();
+      config.duration = 5000;
+      this.snackBar.open("Checked in team from text", undefined, config);
+    })
   }
 
   createUpdateFromText(text: Text) {
