@@ -3,10 +3,11 @@
     <md-card-title>
       <i>Text from unknown number! {{text.from}}</i>
       <time-widget [time]='text.timestamp'></time-widget>
-      <button md-raised-button
+      <button md-icon-button
         (click)='linkUnknownTextToRacer(text)'
+        [title]='"Link number to racer"'
         [disabled]='inLinkingMode'>
-        Link number to racer
+        <md-icon>link</md-icon>
       </button>
     </md-card-title>
   </md-card-header>
