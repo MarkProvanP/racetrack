@@ -36,6 +36,10 @@ export class UpdatesComponent implements OnInit {
     this.router.navigate(['/safetyteam', 'updates', team.id]);
   }
 
+  saveNotes() {
+    this.dataService.updateTeamAndWriteToBackend(this.selectedTeam);
+  }
+
   selectUpdatesByTeam(team: Team) {
     this.selectedTeam = team;
     console.log(this.selectedTeam);

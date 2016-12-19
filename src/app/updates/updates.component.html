@@ -15,6 +15,15 @@
   </div>
   <div class='update-list-wrapper'>
     <div class="updates-list" *ngIf='selectedTeam'>
+      <md-card class='notes-card'>
+        <h4>Team Notes</h4>
+        <div>
+          <md-textarea [(ngModel)]='selectedTeam.notes'></md-textarea>
+        </div>
+        <md-card-actions>
+          <button md-button (click)='saveNotes()'>Save</button>
+        </md-card-actions>
+      </md-card>
       <div class='add-button-wrapper'>
         <button *ngIf='!inCreateUpdateMode' md-fab color='primary' (click)='createNewUpdate()'>
           <md-icon class='md-24'>add</md-icon>

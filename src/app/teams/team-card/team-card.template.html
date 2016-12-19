@@ -6,11 +6,15 @@
     </md-card-title>
     <md-card-content>
       <md-slide-toggle [(ngModel)]="team.inEurope" (change)='updateTeam()'>In Europe?</md-slide-toggle>
-
-      <label>Status updates</label>
+      <h4>Notes</h4>
+      <div>
+        <md-textarea [disabled]='!inEditMode' [(ngModel)]='team.notes'></md-textarea>
+      </div>
+      <h4>Status updates
       <button md-mini-fab color='accent' (click)='createNewUpdate()' *ngIf="!inNewUpdateMode">
         <md-icon class='md-24'>add</md-icon>
       </button>
+      </h4>
       <div class='status-update-list-wrapper'>
         <md-list>
           <md-list-item *ngFor="let update of team.statusUpdates | orderBy: '-timestamp' ">
@@ -24,7 +28,7 @@
         </md-list>
       </div>
       <new-update [team]='team' (onStatusCreated)='onStatusCreated()' *ngIf='inNewUpdateMode'></new-update>
-      <label>Racers</label>
+      <h4>Racers</h4>
       <div class='team-racers-list'>
         <md-card *ngFor="let racer of team.racers | orderBy: '+name' ">
           <md-card-content>{{racer.name}}</md-card-content>
