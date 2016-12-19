@@ -1,4 +1,5 @@
 import { UserActionInfo } from "./user";
+import { TextId } from "./text";
 
 export enum TeamStatus {
   ON_START_BUS, OKAY, CROSSING_CHANNEL, IN_HOSTEL, DROPPED_OUT, ASLEEP, OVERDUE, MAYBE_LATE, IN_CITY, UNKNOWN
@@ -60,6 +61,7 @@ export class TeamUpdate {
   location: Location;
   isPublic: boolean;
   byUser: UserActionInfo;
+  linkedTexts: TextId[];
 
   static fromJSON(obj) {
     return new TeamUpdate(obj.id, obj)
@@ -90,5 +92,6 @@ export class TeamUpdate {
     }
     this.isPublic = properties.isPublic;
     this.byUser = properties.byUser;
+    this.linkedTexts = properties.linkedTexts || [];
   }
 }
