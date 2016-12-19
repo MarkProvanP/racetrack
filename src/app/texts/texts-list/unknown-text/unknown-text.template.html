@@ -71,9 +71,11 @@
     <time-widget [time]='text.readBy.timestamp'></time-widget>
   </div>
   <md-card-actions>
-    <button md-button (click)='replyToText()'>RESPOND</button>
-    <button md-button (click)='markTextAsRead()' [disabled]='text.readBy'>
-      Mark as read
+    <button md-icon-button (click)='replyToText()' [title]='"Reply to text"'>
+      <md-icon>reply</md-icon>
+    </button>
+    <button md-icon-button (click)='markTextAsRead()' [disabled]='text.readBy' [title]='"Mark text as read"'>
+      <md-icon>done</md-icon>
     </button>
   </md-card-actions>
 </md-card>

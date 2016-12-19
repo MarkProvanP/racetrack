@@ -1,3 +1,6 @@
+import * as moment from "moment";
+import * as _ from "lodash";
+
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 import { Text, AppText } from '../../../../common/text';
@@ -42,5 +45,21 @@ export class AppTextComponent {
 
   createUpdate() {
     this.onCreateUpdate.emit(this.text);
+  }
+
+  canCheckinFromText(text: Text) {
+    if (!text.team) return false;
+    if (_.isEmpty(text.team.lastCheckin.checkinTime)) return true;
+    let lastCheckinMoment = moment(text.team.lastCheckin.checkinTime)
+    let textMoment = moment(text.timestamp);
+    return lastCheckinMoment.isBefore(textMoment);
+  }
+
+  canUpdateFromText(text: Text) {
+    if (!text.team) return false;
+    if (!text.team.statusUpdates.length) return true;
+    let lastUpdateMoment = moment(text.team.getLastUpdate().timestamp)
+    let textMoment = moment(text.timestamp);
+    return lastUpdateMoment.isBefore(textMoment);
   }
 }

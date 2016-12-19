@@ -77,7 +77,7 @@ export class TextsListComponent {
       checkinTime: text.timestamp,
       byUser: this.userService.getUserAction()
     }
-    this.dataService.updateTeam(team);
+    this.dataService.updateTeamAndWriteToBackend(team);
   }
 
   createUpdateFromText(text: Text) {
