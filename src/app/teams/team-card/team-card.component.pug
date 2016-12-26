@@ -6,6 +6,7 @@
         input(md-input, placeholder='Team name', [(ngModel)]='team.name')
     md-card-content
       md-slide-toggle([(ngModel)]='team.inEurope', (change)='updateTeam()') In Europe?
+      input(type='color', [(ngModel)]='team.color', [disabled]='!inEditMode')
       h4 Notes
       md-input-container(class='full-width')
         textarea(md-input, [disabled]='!inEditMode', [(ngModel)]='team.notes')
