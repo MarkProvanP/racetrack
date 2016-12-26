@@ -142,6 +142,15 @@ module.exports = function (options) {
           exclude: [helpers.root('src/index.html')]
         },
 
+        /*
+         * Pug loader for .jade and .pug files
+         * Converts to HTML
+         */
+        {
+          test: /\.pug$/,
+          loader: 'pug-html-loader'
+        },
+
         /* File loader for supporting images, for example, in CSS files.
          */
         {

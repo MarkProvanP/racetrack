@@ -6,7 +6,7 @@ import * as moment from "moment-timezone";
 
 @Component({
   selector: 'time-widget',
-  templateUrl: './time.component.html',
+  templateUrl: './time.component.pug',
   styleUrls: ['./time.component.scss']
 })
 export class TimeWidget {

@@ -1,0 +1,10 @@
+.time-widget(*ngIf='isDateValid()', [ngClass]='getClass()', [title]='getTooltip()')
+  .time(*ngIf='!fromNow')
+    | {{getPrettyTimestamp()}}
+  .timezone(*ngIf='!fromNow')
+    button((click)='toggleTimezone()')
+      | {{getTimezone().short}}
+  .from-now(*ngIf='fromNow')
+    | {{getPrettyTimeSinceNow()}}
+.invalid-time(*ngIf='!isDateValid()')
+  | ERROR! INVALID TIME
