@@ -7,8 +7,8 @@ import { DataService }         from '../data.service';
 
 @Component({
   selector: 'my-teams',
-  templateUrl: './teams.template.html',
-  styleUrls:  ['./teams.styles.scss']
+  templateUrl: './teams.component.pug',
+  styleUrls:  ['./teams.component.scss']
 })
 export class TeamsComponent implements OnInit {
   teams: Team[];
@@ -20,8 +20,8 @@ export class TeamsComponent implements OnInit {
     this.dataService.addTeamsChangedListener(teams => this.teams = teams);
   }
 
-  onSelect(team: Team) {
-    this.router.navigate(['/safetyteam', 'teams', team.id]);
+  getTeamLink(team: Team) {
+    return `/safetyteam/teams/${team.id}`;
   }
 
   getTeams() {
