@@ -39,6 +39,8 @@ export interface PopulatedTeam {
   racers: Racer[];
 }
 
+export type Color = string;
+
 export class Team {
   id: TeamId;
   name: string;
@@ -47,6 +49,7 @@ export class Team {
   lastCheckin: CheckinInfo;
   inEurope: boolean = false;
   notes: string;
+  color: Color;
 
   stripPrivateData(): Team {
     let strippedRacers = this.racers.map(racer => racer.stripPrivateData());
@@ -93,6 +96,7 @@ export class Team {
     this.lastCheckin = checkinMigrate(properties.lastCheckin);
     this.inEurope = Boolean(properties.inEurope);
     this.notes = properties.notes;
+    this.color = properties.color;
   }
 
   getCurrentStatus(): TeamStatus {
@@ -139,10 +143,3 @@ export class Team {
     return moment.duration(diff).humanize(true);
   }
 }
-
-
-/*
-Copyright 2016 Google Inc. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at http://angular.io/license
-*/

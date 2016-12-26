@@ -7,7 +7,7 @@
     md-card-content
       md-slide-toggle([(ngModel)]='team.inEurope', (change)='updateTeam()') In Europe?
       h4 Notes
-      md-input-container
+      md-input-container(class='full-width')
         textarea(md-input, [disabled]='!inEditMode', [(ngModel)]='team.notes')
       h4
         | Status updates 
