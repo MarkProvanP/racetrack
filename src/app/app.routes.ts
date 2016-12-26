@@ -100,7 +100,7 @@ export const ROUTES: Routes = [
       },
       { path: 'mass-text', component: MassTextComponent },
       { path: 'import', component: ImportComponent },
-      { path: '', redirectTo: '/safetyteam/dashboard' }
+      { path: '', redirectTo: '/safetyteam/dashboard', pathMatch: 'full' }
     ]
   },
   {
