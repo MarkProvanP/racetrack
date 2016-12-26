@@ -77,14 +77,13 @@ export class DashboardCardComponent {
     let lastCheckinTime = moment(this.team.lastCheckin.checkinTime);
     let duration = moment.duration(now.diff(lastCheckinTime));
     let overdue = duration.subtract(ALLOWED_CHECKIN_DURATION);
-    if overdue.asSeconds() > 0 return overdue;
+    if (overdue.asSeconds() > 0) return overdue;
   }
 
   checkinProgressBarTitle() {
     let now = moment();
     let lastCheckinTime = moment(this.team.lastCheckin.checkinTime);
     let duration = moment.duration(now.diff(lastCheckinTime));
-    let lastCheckinTime = moment(this.team.lastCheckin.checkinTime);
     return `Last checked in ${duration.humanize()} ago, allowed ${ALLOWED_CHECKIN_DURATION.humanize()}`
   }
 
@@ -94,7 +93,7 @@ export class DashboardCardComponent {
     let duration = moment.duration(now.diff(lastCheckinTime));
     let durationSeconds = duration.asSeconds();
     let allowedSeconds = ALLOWED_CHECKIN_DURATION.asSeconds();
-    let ratio = durationSeconds/allowedSeconds);
+    let ratio = durationSeconds/allowedSeconds;
     return Math.round(ratio * 100);
   }
 

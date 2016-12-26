@@ -59,7 +59,6 @@ export class DashboardComponent implements OnInit {
       check = (team) => team.inEurope;
     }
     this.filteredTeams = this.allTeams.filter(check);
-    console.log(this.filteredTeams);
   }
 
   onFilterUpdate() {
@@ -70,7 +69,6 @@ export class DashboardComponent implements OnInit {
   }
 
   onSortUpdate() {
-    console.log('onSortUpdate()', this.sortOption);
     let navigationExtras = {
       queryParams: { sort: this.sortOption }
     }

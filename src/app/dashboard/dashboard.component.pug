@@ -8,12 +8,12 @@
     |  
     span.filter-options-name Sort by
     md-radio-group([(ngModel)]='sortOption', (change)='onSortUpdate()')
-      md-radio-button([value]='sortOptions.UPDATE_TIME') Name
-      md-radio-button([value]='sortOptions.TEAM_NAME') Update Time
+      md-radio-button([value]='sortOptions.UPDATE_TIME') Checkin Time
+      md-radio-button([value]='sortOptions.TEAM_NAME') Team Name
     |  
     button(md-icon-button, (click)='toggleOrder()')
-      md-icon(*ngIf='sortAscending') arrow_upward
-      md-icon(*ngIf='!sortAscending') arrow_downward
+      md-icon(*ngIf='sortAscending', [title]='Switch to sort descending order') arrow_upward
+      md-icon(*ngIf='!sortAscending', [title]='Switch to sort in ascending order') arrow_downward
   .card-container
     .status-card-container
       dashboard-card(*ngFor='let team of filteredTeams | orderBy: ordering', [team]='team')
