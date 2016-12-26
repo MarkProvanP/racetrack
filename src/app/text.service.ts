@@ -62,7 +62,7 @@ export class TextFilterOptions {
     if (this.beforeTime !== undefined) {
       if (moment(text.timestamp).isAfter(this.beforeTime)) return false;
     }
-    if (this.textIds !== undefined) {
+    if (this.textIds !== undefined && this.textIds.length) {
       if (this.textIds.indexOf(text.id) == -1) return false;
     }
     return true;
