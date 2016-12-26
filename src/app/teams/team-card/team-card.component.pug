@@ -1,0 +1,53 @@
+.team-card(*ngIf='team')
+  md-card
+    md-card-title
+      h3(*ngIf='!inEditMode') {{team.name}}
+      md-input-container(*ngIf='inEditMode')
+        input(md-input, placeholder='Team name', [(ngModel)]='team.name')
+    md-card-content
+      md-slide-toggle([(ngModel)]='team.inEurope', (change)='updateTeam()') In Europe?
+      h4 Notes
+      md-input-container
+        textarea(md-input, [disabled]='!inEditMode', [(ngModel)]='team.notes')
+      h4
+        | Status updates 
+        button(md-mini-fab, color='accent', (click)='createNewUpdate()', *ngIf='!inNewUpdateMode')
+          md-icon.md-24 add
+      .status-update-list-wrapper
+        md-list
+          md-list-item(*ngFor="let update of team.statusUpdates | orderBy: '-timestamp' ")
+            time-widget(md-line, [time]='update.timestamp')
+            div(md-line)
+              span
+                i Status:
+                |  {{update.prettyStatusName()}}
+              location-widget([location]='update.location')
+            div(md-line)
+              i Notes:
+              |  {{update.notes}}
+      new-update([team]='team', (onstatuscreated)='onStatusCreated()', *ngIf='inNewUpdateMode')
+      h4 Racers
+      .team-racers-list
+        md-card(*ngFor="let racer of team.racers | orderBy: '+name' ")
+          md-card-content {{racer.name}}
+          |  
+          button(*ngIf='inEditMode', md-icon-button, (click)='removeRacer(racer)', color='warn')
+            md-icon.md-24 delete
+        md-card(*ngIf='inAddingRacerMode')
+          md-input-container
+            input(md-input, [(ngModel)]='addRacerFilterName', (input)='filterAddRacers()', placeholder='Racer name')
+          md-card#filter-names-list.filter-names-list
+            md-list
+              md-list-item(*ngFor='let newRacer of unteamedMatchingRacers', (click)='addSpecificRacer(newRacer)')  {{newRacer.name}}
+        |  
+        button(md-mini-fab, *ngIf='inEditMode', (click)='addRacer()', color='primary', [disabled]='noUnteamedRacers()')
+          md-icon.md-24 add
+      |  
+      button(md-raised-button, color='primary', (click)='editTeam()', *ngIf='!inEditMode') Edit
+      |  
+      button(md-raised-button, color='primary', (click)='saveTeam()', *ngIf='inEditMode') Finish
+      |  
+      button(md-raised-button, color='warn', (click)='deleteTeam()') Delete
+      |  
+      button(md-raised-button, color='primary', (click)='goToTeamTexts(team)') See Texts
+

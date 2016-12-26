@@ -8,8 +8,8 @@ import { DataService } from '../../data.service';
 
 @Component({
   selector: 'team-card',
-  templateUrl: './team-card.template.html',
-  styleUrls: ['./team-card.styles.scss']
+  templateUrl: './team-card.component.pug',
+  styleUrls: ['./team-card.component.scss']
 })
 export class TeamCardComponent implements OnInit, OnDestroy {
   id: TeamId;
