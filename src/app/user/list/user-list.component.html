@@ -32,23 +32,43 @@
       <table>
         <tr>
           <th>Username</th>
-          <td><md-input [(ngModel)]='user.username'></md-input></td>
+          <td>
+            <md-input-container>
+              <input md-input [(ngModel)]='user.username'>
+            </md-input-container>
+          </td>
         </tr>
         <tr>
           <th>Name</th>
-          <td><md-input [(ngModel)]='user.name'></md-input></td>
+          <td>
+            <md-input-container>
+              <input md-input [(ngModel)]='user.name'>
+            </md-input-container>
+          </td>
         </tr>
         <tr>
           <th>Email</th>
-          <td><md-input type='email' [(ngModel)]='user.email'></md-input></td>
+          <td>
+            <md-input-container>
+              <input md-input type='email' [(ngModel)]='user.email'>
+            </md-input-container>
+          </td>
         </tr>
         <tr>
           <th>Phone</th>
-          <td><md-input [(ngModel)]='user.phone'></md-input></td>
+          <td>
+            <md-input-container>
+            <input md-input [(ngModel)]='user.phone'>
+            </md-input-container>
+          </td>
         </tr>
         <tr>
           <th>Role</th>
-          <td><md-input [(ngModel)]='user.role'></md-input></td>
+          <td>
+            <md-input-container>
+              <input md-input [(ngModel)]='user.role'>
+            </md-input-container>
+          </td>
         </tr>
         <tr>
           <th>Privilege Level</th>
@@ -76,12 +96,24 @@
     </md-card-title>
     <md-card-content>
       <form [formGroup]='form' (ngSubmit)='onSubmit()' #registerForm='ngForm' class='form'>
-        <md-input formControlName='username' required placeholder='Username'></md-input>
-        <md-input formControlName='password' required placeholder='Password' type='password'></md-input>
-        <md-input formControlName='name' required placeholder='Name'></md-input>
-        <md-input formControlName='email' required placeholder='Email' type='email'></md-input>
-        <md-input formControlName='phone' required placeholder='Phone number'></md-input>
-        <md-input formControlName='role' required placeholder='Role'></md-input>
+        <md-input-container>
+          <input md-input formControlName='username' required placeholder='Username'>
+        </md-input-container>
+        <md-input-container>
+          <input md-input formControlName='password' required placeholder='Password' type='password'>
+        </md-input-container>
+        <md-input-container>
+          <input md-input formControlName='name' required placeholder='Name'>
+        </md-input-container>
+        <md-input-container>
+          <input md-input formControlName='email' required placeholder='Email' type='email'>
+        </md-input-container>
+        <md-input-container>
+          <input md-input formControlName='phone' required placeholder='Phone number'>
+        </md-input-container>
+        <md-input-container>
+          <input md-input formControlName='role' required placeholder='Role'>
+        </md-input-container>
         <button md-raised-button color='primary' type='submit'>Register</button>
       </form>
       <md-select [(ngModel)]='selectedLevel'>

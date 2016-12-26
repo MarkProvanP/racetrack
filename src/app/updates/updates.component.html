@@ -17,9 +17,9 @@
     <div class="updates-list" *ngIf='selectedTeam'>
       <md-card class='notes-card'>
         <h4>Team Notes</h4>
-        <div>
-          <md-textarea [(ngModel)]='selectedTeam.notes'></md-textarea>
-        </div>
+        <md-input-container>
+          <textarea md-input [(ngModel)]='selectedTeam.notes'></textarea>
+        </md-input-container>
         <md-card-actions>
           <button md-button (click)='saveNotes()'>Save</button>
         </md-card-actions>
@@ -51,7 +51,9 @@
                   <location-widget [location]='update.location'></location-widget>
                 </td>
                 <td *ngIf='isEditing(update)'>
-                  <md-input class='place-input' [(ngModel)]='update.location.place'></md-input>
+                  <md-input-container>
+                    <input md-input class='place-input' [(ngModel)]='update.location.place'>
+                  </md-input-container>
                   <location-widget [location]='update.location' showCoords='true' hidePlace='true'></location-widget>
                 </td>
               </tr>
@@ -82,7 +84,9 @@
                   {{update.notes}}
                 </td>
                 <td *ngIf='isEditing(update)'>
-                  <md-textarea class='notes-input' [(ngModel)]='update.notes'></md-textarea>
+                  <md-input-container>
+                    <textarea md-input class='notes-input' [(ngModel)]='update.notes'></textarea>
+                  </md-input-container>
                 </td>
               </tr>
               <tr *ngIf='update.byUser'>

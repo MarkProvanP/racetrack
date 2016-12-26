@@ -17,7 +17,9 @@
           <th>Place:</th>
           <td>
             <div class='place-name'>
-              <md-input class='place-input' [(ngModel)]='newStatusObj.location.place'></md-input>
+              <md-input-container>
+                <input md-input class='place-input' [(ngModel)]='newStatusObj.location.place'>
+              </md-input-container>
               <button md-icon-button class='search-button' (click)='searchForPlace()'>
                 <md-icon>search</md-icon>
               </button>
@@ -33,7 +35,9 @@
         <tr>
           <th>Notes:</th>
           <td>
-            <md-textarea class='notes-input'[(ngModel)]='newStatusObj.notes'></md-textarea>
+            <md-input-container>
+              <textarea md-input class='notes-input'[(ngModel)]='newStatusObj.notes'></textarea>
+            </md-input-container>
           </td>
         </tr>
         <tr>

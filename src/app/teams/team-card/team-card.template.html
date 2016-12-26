@@ -2,14 +2,16 @@
   <md-card>
     <md-card-title>
       <h3 *ngIf="!inEditMode">{{team.name}}</h3>
-      <md-input *ngIf="inEditMode" placeholder="Team name" [(ngModel)]="team.name"></md-input>
+      <md-input-container *ngIf='inEditMode'>
+        <input md-input placeholder="Team name" [(ngModel)]="team.name">
+      </md-input-container>
     </md-card-title>
     <md-card-content>
       <md-slide-toggle [(ngModel)]="team.inEurope" (change)='updateTeam()'>In Europe?</md-slide-toggle>
       <h4>Notes</h4>
-      <div>
-        <md-textarea [disabled]='!inEditMode' [(ngModel)]='team.notes'></md-textarea>
-      </div>
+      <md-input-container>
+        <textarea md-input [disabled]='!inEditMode' [(ngModel)]='team.notes'></textarea>
+      </md-input-container>
       <h4>Status updates
       <button md-mini-fab color='accent' (click)='createNewUpdate()' *ngIf="!inNewUpdateMode">
         <md-icon class='md-24'>add</md-icon>
@@ -37,7 +39,9 @@
           </button>
         </md-card>
         <md-card *ngIf="inAddingRacerMode">
-          <md-input [(ngModel)]="addRacerFilterName" (input)="filterAddRacers()" placeholder="Racer name"></md-input>
+          <md-input-container>
+            <input md-input [(ngModel)]="addRacerFilterName" (input)="filterAddRacers()" placeholder="Racer name">
+          </md-input-container>
           <md-card id='filter-names-list' class='filter-names-list'>
             <md-list>
               <md-list-item

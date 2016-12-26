@@ -11,7 +11,9 @@
           </md-card-content>
         </md-card>
         <div class='next-recipient'>
-          <md-input [(ngModel)]='newRecipient' (input)='filterRecipients()' placeholder='Recipients'></md-input>
+          <md-input-container>
+            <input md-input [(ngModel)]='newRecipient' (input)='filterRecipients()' placeholder='Recipients'>
+          </md-input-container>
           <md-card id='filter-recipients-list' class='filter-recipients-list'>
             <md-list>
               <md-list-item *ngFor='let recipient of matchingRecipients' (click)='addRecipient(recipient)'>
@@ -26,7 +28,11 @@
           <th>Message:</th>
         </tr>
         <tr>
-          <td><md-textarea style='width: 100%'[(ngModel)]='message'></md-textarea></td>
+          <td>
+            <md-input-container>
+              <textarea md-input style='width: 100%'[(ngModel)]='message'></textarea>
+            </md-input-container>
+          </td>
         </tr>
       </table>
       <button md-raised-button color='accent' (click)='sendNewText()'>Send</button>

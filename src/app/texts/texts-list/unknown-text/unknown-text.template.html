@@ -47,8 +47,12 @@
           </table>
           <h3>New contact number details</h3>
           <div class='new-contact'>
-            <md-input class='number-input' placeholder='Phone number' [(ngModel)]='newContact.number'></md-input>
-            <md-input class='shrink' placeholder='Notes' [(ngModel)]='newContact.notes'></md-input>
+            <md-input-container>
+              <input md-input class='number-input' placeholder='Phone number' [(ngModel)]='newContact.number'>
+            </md-input-container>
+            <md-input-container>
+              <input md-input class='shrink' placeholder='Notes' [(ngModel)]='newContact.notes'>
+            </md-input-container>
             <md-checkbox [(ngModel)]='newContact.preferred'>Preferred</md-checkbox>
           </div>
         </div>

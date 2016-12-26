@@ -2,7 +2,9 @@
   <md-card>
     <md-card-title>
       <h3 *ngIf='!inEditMode'>{{racer.name}}</h3>
-      <md-input *ngIf='inEditMode' placeholder='Racer name' [(ngModel)]='racer.name'></md-input>
+      <md-input-container *ngIf='inEditMode'>
+        <input md-input placeholder='Racer name' [(ngModel)]='racer.name'>
+      </md-input-container>
     </md-card-title>
     <md-card-content>
       <table>
@@ -10,7 +12,9 @@
           <th>Nationality:</th>
           <td>
             <p *ngIf='!inEditMode'>{{racer.nationality}}</p>
-            <md-input *ngIf='inEditMode' placeholder='Nationality' [(ngModel)]='racer.nationality'></md-input>
+            <md-input-container *ngIf='inEditMode'> 
+              <input md-input placeholder='Nationality' [(ngModel)]='racer.nationality'>
+            </md-input-container>
           </td>
         </tr>
         <tr>
@@ -24,8 +28,12 @@
                   <md-checkbox [(ngModel)]='contact.preferred' disabled>Preferred</md-checkbox>
                 </div>
                 <div *ngIf='inEditMode' class='contact-edit contact-row'>
-                  <md-input placeholder='Phone number' [(ngModel)]='contact.number'></md-input>
-                  <md-input placeholder='Notes' [(ngModel)]='contact.notes'></md-input>
+                  <md-input-container>
+                    <input md-input placeholder='Phone number' [(ngModel)]='contact.number'>
+                  </md-input-container>
+                  <md-input-container>
+                    <input md-input placeholder='Notes' [(ngModel)]='contact.notes'>
+                  </md-input-container>
                   <md-checkbox [(ngModel)]='contact.preferred'>Preferred</md-checkbox>
                   <button md-mini-fab color='warn' (click)='removeContactFromRacer(contact)'>
                     <md-icon class='md-24'>remove</md-icon>
