@@ -8,8 +8,8 @@ import { DataService } from '../../data.service';
 
 @Component({
   selector: 'racer-card',
-  templateUrl: './racer-card.template.html',
-  styleUrls: ['./racer-card.styles.scss']
+  templateUrl: './racer-card.component.pug',
+  styleUrls: ['./racer-card.component.scss']
 })
 export class RacerCardComponent implements OnInit, OnDestroy {
   id: RacerId;
