@@ -1,3 +1,5 @@
+import * as moment from "moment";
+
 import { Component, Input } from '@angular/core';
 import { Router } from "@angular/router";
 import { DataService } from "../../data.service";
@@ -6,9 +8,11 @@ import { UserService } from "../../user.service";
 import { Team } from '../../../common/team';
 import { TeamStatus } from '../../../common/update';
 
+const ALLOWED_CHECKIN_DURATION = moment.duration(3, 'hours');
+
 @Component({
   selector: 'dashboard-card',
-  templateUrl: './dashboard-card.component.html',
+  templateUrl: './dashboard-card.component.pug',
   styleUrls: ['./dashboard-card.component.scss']
 })
 export class DashboardCardComponent {
@@ -35,6 +39,41 @@ export class DashboardCardComponent {
   
   openMap() {
 
+  }
+
+  checkinProgressBarColor() {
+    let ratio = this.checkinProgressBarValue();
+    if (ratio < 100) {
+      return 'accent'
+    } else {
+      return 'warn'
+    }
+  }
+
+  getOverdueTime() {
+    let now = moment();
+    let lastCheckinTime = moment(this.team.lastCheckin.checkinTime);
+    let duration = moment.duration(now.diff(lastCheckinTime));
+    let overdue = duration.subtract(ALLOWED_CHECKIN_DURATION);
+    if overdue.asSeconds() > 0 return overdue;
+  }
+
+  checkinProgressBarTitle() {
+    let now = moment();
+    let lastCheckinTime = moment(this.team.lastCheckin.checkinTime);
+    let duration = moment.duration(now.diff(lastCheckinTime));
+    let lastCheckinTime = moment(this.team.lastCheckin.checkinTime);
+    return `Last checked in ${duration.humanize()} ago, allowed ${ALLOWED_CHECKIN_DURATION.humanize()}`
+  }
+
+  checkinProgressBarValue() {
+    let now = moment();
+    let lastCheckinTime = moment(this.team.lastCheckin.checkinTime);
+    let duration = moment.duration(now.diff(lastCheckinTime));
+    let durationSeconds = duration.asSeconds();
+    let allowedSeconds = ALLOWED_CHECKIN_DURATION.asSeconds();
+    let ratio = durationSeconds/allowedSeconds);
+    return Math.round(ratio * 100);
   }
 
   goToTeamTexts() {

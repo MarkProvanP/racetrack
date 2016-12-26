@@ -15,8 +15,8 @@ const DEFAULT_SORT_OPTION = SORT_OPTIONS.UPDATE_TIME;
 
 @Component({
   selector: 'dashboard',
-  templateUrl: './dashboard.template.html',
-  styleUrls: ['./dashboard.styles.scss']
+  templateUrl: './dashboard.component.pug',
+  styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
   allTeams: Team[] = [];

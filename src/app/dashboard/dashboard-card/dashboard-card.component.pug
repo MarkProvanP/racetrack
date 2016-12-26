@@ -1,0 +1,57 @@
+md-card([ngClass]='getCardClass()')
+  md-card-header
+    img(md-card-avatar, src='http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg')
+    md-card-title
+      b(md-row) {{team.name}}
+      .safety-team-flag
+        img(src='/assets/img/EU.svg', *ngIf='team.inEurope' title='Team is in the UK')
+        |  
+        img(src='/assets/img/UK.svg', *ngIf='!team.inEurope' title='Team is in Europe')
+    md-card-subtitle
+      i {{team.getPrettyRacersList()}}
+  md-card-content
+    h3 Notes
+    div
+      | {{team.notes}}
+    div(*ngIf='team.lastCheckin.byUser')
+      h3 Last checkin
+      time-widget([time]='team.lastCheckin.checkinTime', [fromNow]='true')
+      |  by
+      user-widget([user]='team.lastCheckin.byUser.user')
+      |  at
+      time-widget([time]='team.lastCheckin.byUser.timestamp')
+      md-progress-bar(mode='determinate', [color]='checkinProgressBarColor()', [title]='checkinProgressBarTitle()', [value]='checkinProgressBarValue()')
+      div(*ngIf='getOverdueTime()')
+        b {{getOverdueTime().humanize()}} overdue!
+    div(*ngIf='!team.lastCheckin.byUser')
+      h3 Team has not checked in!
+    div(*ngIf='team.getLastUpdate()')
+      h3 Last update
+      table.last-update(*ngIf='team.getLastUpdate()')
+        tr
+          th Time:
+          td
+            time-widget([time]='team.getLastUpdate().timestamp')
+        tr
+          th Status:
+          td  {{team.getLastUpdate().prettyStatusName()}}
+        tr
+          th Location:
+          td
+            location-widget([location]='team.getLastUpdate().location')
+        tr
+          th Notes:
+          td  {{team.getLastUpdate().notes}}
+        tr(*ngIf='team.getLastUpdate().byUser')
+          th Added
+          td
+            | by 
+            user-widget([user]='team.getLastUpdate().byUser.user')
+            time-widget([time]='team.getLastUpdate().byUser.timestamp')
+    div(*ngIf='!team.getLastUpdate()')
+      b Team has no updates
+  md-card-actions
+    button(md-button, (click)='goToTeamTexts()') Texts
+    |  
+    button(md-button, (click)='goToTeamUpdates()') Updates
+

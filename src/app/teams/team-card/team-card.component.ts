@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { Team, TeamId } from '../../../common/team';
 import { Location, TeamUpdate, TeamStatus } from '../../../common/update';
 import { Racer } from '../../../common/racer';
+import { UserService } from "../../user.service";
 import { DataService } from '../../data.service';
 
 @Component({
@@ -26,6 +27,7 @@ export class TeamCardComponent implements OnInit, OnDestroy {
   newStatusObj = {};
 
   constructor(
+    private userService: UserService,
     private dataService: DataService,
     private activatedRoute: ActivatedRoute,
     private router: Router
@@ -126,5 +128,13 @@ export class TeamCardComponent implements OnInit, OnDestroy {
 
   goToTeamTexts(team: Team) {
     this.router.navigate(['/safetyteam', 'texts', 'by-team', team.id]);
+  }
+
+  addCheckin() {
+    this.team.lastCheckin = {
+      checkinTime: new Date(),
+      byUser: this.userService.getUserAction()
+    }
+    this.dataService.updateTeamAndWriteToBackend(this.team)
   }
 }

@@ -1,0 +1,19 @@
+.dashboard-container
+  .filter-options
+    span.filter-options-name Showing
+    md-button-toggle-group(name='show', [(ngModel)]='teamsFilterOption', (change)='onFilterUpdate()')
+      md-button-toggle(value='uk') UK
+      md-button-toggle(value='europe') Europe
+      md-button-toggle(value='all', checked) All
+    |  
+    span.filter-options-name Sort by
+    md-radio-group([(ngModel)]='sortOption', (change)='onSortUpdate()')
+      md-radio-button([value]='sortOptions.UPDATE_TIME') Name
+      md-radio-button([value]='sortOptions.TEAM_NAME') Update Time
+    |  
+    button(md-icon-button, (click)='toggleOrder()')
+      md-icon(*ngIf='sortAscending') arrow_upward
+      md-icon(*ngIf='!sortAscending') arrow_downward
+  .card-container
+    .status-card-container
+      dashboard-card(*ngFor='let team of filteredTeams | orderBy: ordering', [team]='team')
