@@ -17,6 +17,8 @@ const ALLOWED_CHECKIN_DURATION = moment.duration(3, 'hours');
 })
 export class DashboardCardComponent {
   @Input() team: Team;
+  isBig: boolean = false;
+
   constructor(
     private router: Router,
     private dataService: DataService,
@@ -106,6 +108,10 @@ export class DashboardCardComponent {
 
   checkinTimeoutClass() {
 
+  }
+
+  toggleBig() {
+    this.isBig = !this.isBig;
   }
 
   checkInTeam() {

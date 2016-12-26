@@ -1,6 +1,8 @@
-md-card([ngClass]='getCardClass()')
+md-card(class='dashboard-card', [ngClass]='getCardClass()')
   md-card-header
-    img(md-card-avatar, src='http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg')
+    button(md-icon-button, (click)='toggleBig()')
+      md-icon(*ngIf='isBig') expand_less
+      md-icon(*ngIf='!isBig') expand_more
     md-card-title
       b(md-row) {{team.name}}
       .safety-team-flag
@@ -11,22 +13,23 @@ md-card([ngClass]='getCardClass()')
     md-card-subtitle
       i {{team.getPrettyRacersList()}}
   md-card-content
-    h3 Notes
-    div
+    h3(*ngIf='isBig') Notes
+    div(*ngIf='isBig')
       | {{team.notes}}
-    div(*ngIf='team.lastCheckin.byUser')
+    div(*ngIf='isBig && team.lastCheckin.byUser')
       h3 Last checkin
       time-widget([time]='team.lastCheckin.checkinTime', [fromNow]='true')
       |  by
       user-widget([user]='team.lastCheckin.byUser.user')
       |  at
       time-widget([time]='team.lastCheckin.byUser.timestamp')
+    div(*ngIf='team.lastCheckin.byUser')
       md-progress-bar(mode='determinate', [color]='checkinProgressBarColor()', [title]='checkinProgressBarTitle()', [value]='checkinProgressBarValue()')
       div(*ngIf='getOverdueTime()')
         b {{getOverdueTime().humanize()}} overdue!
     div(*ngIf='!team.lastCheckin.byUser')
       h3 Team has not checked in!
-    div(*ngIf='team.getLastUpdate()')
+    div(*ngIf='isBig && team.getLastUpdate()')
       h3 Last update
       table.last-update(*ngIf='team.getLastUpdate()')
         tr
@@ -49,10 +52,9 @@ md-card([ngClass]='getCardClass()')
             | by 
             user-widget([user]='team.getLastUpdate().byUser.user')
             time-widget([time]='team.getLastUpdate().byUser.timestamp')
-    div(*ngIf='!team.getLastUpdate()')
+    div(*ngIf='isBig && !team.getLastUpdate()')
       b Team has no updates
-  md-card-actions
+  md-card-actions(*ngIf='isBig')
     button(md-button, (click)='goToTeamTexts()') Texts
     |  
     button(md-button, (click)='goToTeamUpdates()') Updates
-
