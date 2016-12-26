@@ -7,6 +7,7 @@ md-card([ngClass]='getCardClass()')
         img(src='/assets/img/EU.svg', *ngIf='team.inEurope' title='Team is in the UK')
         |  
         img(src='/assets/img/UK.svg', *ngIf='!team.inEurope' title='Team is in Europe')
+      md-icon([title]='getStatusName()') {{getStatusIcon()}}
     md-card-subtitle
       i {{team.getPrettyRacersList()}}
   md-card-content
