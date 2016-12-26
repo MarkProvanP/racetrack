@@ -1,0 +1,21 @@
+.safety-map-container {
+  display: flex;
+  flex: 1;
+}
+
+.team-sidebar{
+  overflow-y: scroll;
+}
+
+.map-pane {
+  position: relative;
+  flex: 1;
+}
+
+.sebm-google-map-container {
+  height: calc(100vh - 64px);
+}
+
+.team-row td {
+  margin: 0px;
+}

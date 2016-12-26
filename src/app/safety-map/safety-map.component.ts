@@ -6,8 +6,8 @@ import { Team } from '../../common/team';
 
 @Component({
   selector: 'safety-map',
-  templateUrl: './safety-map.template.html',
-  styleUrls: ['./safety-map.styles.scss'],
+  templateUrl: './safety-map.component.pug',
+  styleUrls: ['./safety-map.component.scss'],
 })
 export class SafetyMapComponent implements OnInit {
   teams: Team[] = [];

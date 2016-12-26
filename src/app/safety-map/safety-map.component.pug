@@ -1,0 +1,34 @@
+.safety-map-container
+  .team-sidebar
+    table
+      thead
+        tr
+          th Team
+          th
+            md-icon place
+          th Last update
+          th Status
+      tbody(class='vert-scroll')
+        tr(*ngFor='let team of teams | teamHasUpdate' class='team-row')
+          td {{team.name}}
+          td
+            button(md-icon-button (click)='highlightTeam(team)')
+              md-icon place
+          td
+            time-widget([fromNow]='true', [time]='team.getLastUpdate().timestamp')
+          td {{team.getLastUpdate().prettyStatusName()}}
+  .map-pane
+    sebm-google-map([latitude]='default.lat', [longitude]='default.lng', [zoom]='default.zoom')
+      sebm-google-map-marker([latitude]='hostel.lat', [longitude]='hostel.lng', [iconUrl]='hostel.iconUrl')
+      sebm-google-map-marker(*ngFor='let team of teams | teamHasUpdate ', [latitude]='(team.getLastUpdate().location.latitude)', [longitude]='(team.getLastUpdate().location.longitude)', [title]='team.name')
+        sebm-google-map-info-window
+          table
+            tr
+              th Team name:
+              td  {{team.name}}
+            tr
+              th Racers:
+              td  {{team.getPrettyRacersList()}}
+            tr
+              th Current place:
+              td  {{team.getLastUpdate().location.place}}
