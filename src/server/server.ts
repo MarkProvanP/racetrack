@@ -294,6 +294,35 @@ setup(MONGODB_URI)
         }
       });
 
+      process.on('unhandledRejection', (reason, promise) => {
+        console.error('Unhandled rejection!', reason, promise);
+        let newlineReplace = (str) => str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        let stacktrace = newlineReplace(String(reason.stack));
+        let promiseString = newlineReplace(String(promise));
+        let mailOptions = {
+          from: GMAIL_USER,
+          to: [GMAIL_USER, "markprovanp@gmail.com"],
+          subject: "Race2App - Unhandled rejection!",
+          generateTextFromHTML: true,
+          html: `
+          <h1>Race2App - Unhandled rejection</h1>
+          <p>At ${new Date()}</p>
+          <h2>Promise</h2>
+          <p>${promiseString}</p>
+          <h2>Stacktrace</h2>
+          <p>${stacktrace}</p>
+          `
+        };
+
+        smtpTransport.sendMail(mailOptions, (err, res) => {
+          if (err) {
+            console.error(err);
+          } else {
+            console.log(res);
+          }
+        })
+      })
+
       process.on('uncaughtException', (exception) => {
         console.error('Uncaught exception!', exception);
         let stacktrace = String(exception.stack).replace(/(?:\r\n|\r|\n)/g, '<br />');
@@ -331,10 +360,6 @@ setup(MONGODB_URI)
             res.send(messageInfo);
           }
         })
-      })
-
-      apiRouter.get("/exception", (req, res) => {
-        throw new Error('Oh dear!')
       })
 
       let mailOptions = {

@@ -26,8 +26,4 @@ export class DebugComponent {
     this.dataService.sendEmail(this.email.to, this.email.subject, this.email.body)
     .then(res => console.log(res))
   }
-
-  causeCrash() {
-    this.dataService.causeError();
-  }
 }
