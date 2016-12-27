@@ -294,6 +294,31 @@ setup(MONGODB_URI)
         }
       });
 
+      process.on('uncaughtException', (exception) => {
+        console.error('Uncaught exception!', exception);
+        let stacktrace = String(exception.stack).replace(/(?:\r\n|\r|\n)/g, '<br />');
+        let mailOptions = {
+          from: GMAIL_USER,
+          to: [GMAIL_USER, "markprovanp@gmail.com"],
+          subject: "Race2App - Uncaught Exception!",
+          generateTextFromHTML: true,
+          html: `
+          <h1>Race2App - Uncaught Exception</h1>
+          <p>At ${new Date()}</p>
+          <h2>Stacktrace</h2>
+          <p>${stacktrace}</p>
+          `
+        };
+
+        smtpTransport.sendMail(mailOptions, (err, res) => {
+          if (err) {
+            console.error(err);
+          } else {
+            console.log(res);
+          }
+        })
+      })
+
       apiRouter.post("/email", (req, res) => {
         let mailOptions = req.body;
         mailOptions.from = GMAIL_USER;
@@ -306,6 +331,10 @@ setup(MONGODB_URI)
             res.send(messageInfo);
           }
         })
+      })
+
+      apiRouter.get("/exception", (req, res) => {
+        throw new Error('Oh dear!')
       })
 
       let mailOptions = {

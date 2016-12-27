@@ -9,3 +9,6 @@ div
     md-input-container
       textarea(md-input, [(ngModel)]='email.body', placeholder='Body:')
     button(md-raised-button, color='primary', (click)='sendEmail()') Send
+  h2 Uncaught backend exception
+  div
+    button(md-raised-button, color='warn', (click)='causeCrash()') Crash!

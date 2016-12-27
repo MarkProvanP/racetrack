@@ -39,6 +39,7 @@ export class DataService {
   private usersUrl = this.baseUrl + "users";
   private publicTeamsUrl = this.baseUrl + 'public/teams';
   private emailUrl = this.baseUrl + "email";
+  private errorUrl = this.baseUrl + "exception";
 
   private teams: Team[] = [];
   private racers: Racer[] = [];
@@ -437,6 +438,10 @@ export class DataService {
     .toPromise()
     .then(res => res.json())
     .catch(this.handleError)
+  }
+
+  public causeError() {
+    return this.http.get(this.errorUrl, this.httpNoBodyExtras)
   }
 
   private handleError(error: any): Promise<any> {
