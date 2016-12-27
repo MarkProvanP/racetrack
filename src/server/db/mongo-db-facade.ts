@@ -27,6 +27,7 @@ import { MongoClient } from "mongodb";
 import { Promise } from "es6-promise";
 
 import { User } from '../auth';
+import { SavedConfig } from "../data-intermediate";
 
 import * as uuid from "node-uuid";
 
@@ -45,6 +46,7 @@ export function setup(url): Promise<MongoDbFacade> {
 }
 
 class MongoDbFacade implements DbFacadeInterface {
+  configCollection;
   textsCollection;
   racersCollection;
   teamsCollection;
@@ -69,12 +71,29 @@ class MongoDbFacade implements DbFacadeInterface {
     //catches uncaught exceptions
     process.on('uncaughtException', exitHandler.bind(this, {exit:true}));
 
+    this.configCollection = this.db.collection('config');
     this.racersCollection = this.db.collection('racers');
     this.textsCollection = this.db.collection('texts');
     this.teamsCollection = this.db.collection('teams');
     this.updatesCollection = this.db.collection('updates');
     this.usersCollection = this.db.collection('users');
   }
+
+//================================================================
+
+  getSavedConfig(): Promise<SavedConfig> {
+    return this.configCollection.findOne({})
+  }
+
+  createSavedConfig(savedConfig: SavedConfig): Promise<void> {
+    return this.configCollection.insert(savedConfig);
+  }
+
+  updateSavedConfig(savedConfig: SavedConfig): Promise<void> {
+    return this.configCollection.updateOne({}, { $set: savedConfig })
+  }
+
+//================================================================
 
   getRacers(query): Promise<DbFormRacer[]> {
     let r = this.racersCollection.find(query).toArray() as DbFormRacer[];

@@ -11,12 +11,17 @@ import {
 } from "../../common/text";
 import { UserWithoutPassword, UserId } from '../../common/user';
 import { ThingEvent, ThingEventId } from "../../common/event";
+import { SavedConfig } from "../data-intermediate";
 
 import { User } from '../auth';
 
 var Promise = require("es6-promise").Promise;
 
 export interface DbFacadeInterface {
+  getSavedConfig(): Promise<SavedConfig>;
+  createSavedConfig(savedConfig: SavedConfig): Promise<void>;
+  updateSavedConfig(savedConfig: SavedConfig): Promise<void>;
+
   getRacers(query): Promise<DbFormRacer[]>;
   getRacer(query): Promise<DbFormRacer>;
   updateRacer(racer: DbFormRacer): Promise<void>;

@@ -77,7 +77,7 @@ import updatesRouterWithDb from "./routes/updates.routes";
 import eventsRouterWithDb from "./routes/events.routes";
 import usersRouterWithDb from "./routes/users.routes";
 
-import { GetDataIntermediary } from "./data-intermediate";
+import { SavedConfig, GetDataIntermediary } from "./data-intermediate";
 import { DbFacadeInterface } from './db/db-facade';
 import { setup } from './db/mongo-db-facade';
 
@@ -93,6 +93,13 @@ function onAuthorizeFail(data, message, error, accept) {
 
 let dataIntermediary;
 
+import * as nodemailer from "nodemailer";
+let xoauth2 = require("xoauth2");
+
+const GMAIL_USER = process.env.GMAIL_USER;
+const GMAIL_CLIENT_ID = process.env.GMAIL_CLIENT_ID;
+const GMAIL_CLIENT_SECRET = process.env.GMAIL_CLIENT_SECRET;
+const GMAIL_REFRESH_TOKEN = process.env.GMAIL_REFRESH_TOKEN
 
 export class MessageSender {
   sockets = [];
@@ -133,6 +140,7 @@ setup(MONGODB_URI)
     winston.info('MongoDB now ready for use');
 
     dataIntermediary = GetDataIntermediary(db_facade, messageSender);
+
 
     // Check to see if the admin user has been created yet. If not, create it.
     dataIntermediary.canAddUser('admin')
@@ -248,6 +256,78 @@ setup(MONGODB_URI)
     });
 
     app.use('/r2bcknd', apiRouter);
+
+    /*
+     * Set up nodemailer for sending emails
+     * Use the access token saved in the DB
+     */
+    dataIntermediary.getSavedConfig()
+    .then(retrieved => {
+      if (!retrieved) {
+        return dataIntermediary.createSavedConfig()
+      } else {
+        return retrieved;
+      }
+    })
+    .then(savedConfig => {
+      const XOAUTH2_SETTINGS = {
+        user: GMAIL_USER,
+        clientId: GMAIL_CLIENT_ID,
+        clientSecret: GMAIL_CLIENT_SECRET,
+        refreshToken: GMAIL_REFRESH_TOKEN,
+        accessToken: savedConfig.nodemailer.accessToken
+      }
+
+      let generator = xoauth2.createXOAuth2Generator(XOAUTH2_SETTINGS);
+
+      generator.on('token', (token) => {
+        console.log(`New token for ${token.user}: ${token.accessToken}`)
+        let newConfig = JSON.parse(JSON.stringify(savedConfig));
+        newConfig.nodemailer.accessToken = token.accessToken;
+        dataIntermediary.updateSavedConfig(newConfig);
+      })
+
+      let smtpTransport = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          xoauth2: generator
+        }
+      });
+
+
+      apiRouter.post("/email", (req, res) => {
+        let mailOptions = req.body;
+        mailOptions.from = GMAIL_USER;
+        smtpTransport.sendMail(mailOptions, (err, messageInfo) => {
+          if (err) {
+            console.error(err);
+            res.status(500).send(err);
+          } else {
+            console.log(res);
+            res.send(messageInfo);
+          }
+        })
+      })
+
+      let mailOptions = {
+        from: GMAIL_USER,
+        to: "markprovanp@gmail.com",
+        subject: "Hello World!",
+        generateTextFromHTML: true,
+        html: "<b>Hello World!</b>"
+      };
+
+      smtpTransport.sendMail(mailOptions, (err, res) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log(res);
+        }
+        smtpTransport.close();
+      })
+    })
+    
+
 }).catch(err => {
   console.error('error setting up server', err);
 });

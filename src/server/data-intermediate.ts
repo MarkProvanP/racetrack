@@ -45,6 +45,12 @@ import { User } from "./auth";
 import * as winston from "winston";
 import * as uuid from "node-uuid";
 
+export interface SavedConfig {
+  nodemailer: {
+    accessToken: string;
+  }
+}
+
 let singleton;
 
 export function GetDataIntermediary(
@@ -67,6 +73,25 @@ export class DataIntermediary {
     private dbFacade: DbFacadeInterface,
     private messageSender: MessageSender
   ) {}
+
+  getSavedConfig(): Promise<SavedConfig> {
+    return this.dbFacade.getSavedConfig()
+  }
+
+  createSavedConfig(): Promise<SavedConfig> {
+    let savedConfig = {
+      nodemailer: {
+        accessToken: ""
+      }
+    }
+    return this.dbFacade.createSavedConfig(savedConfig)
+    .then(res => savedConfig);
+  }
+
+  updateSavedConfig(newConfig: SavedConfig): Promise<void> {
+    return this.dbFacade.updateSavedConfig(newConfig)
+  }
+//================================================================
 
   public getRacers(): Promise<Racer[]> {
     return this.dbFacade.getRacers({})
