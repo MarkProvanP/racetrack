@@ -47,6 +47,7 @@ import { UnknownTextComponent } from './texts/texts-list/unknown-text';
 import { MassTextComponent } from './mass-text';
 import { ImportComponent } from "./import";
 import { UpdatesComponent } from "./updates";
+import { DebugComponent } from "./misc/debug";
 
 import { LoginComponent } from './user/login';
 import { LogoutComponent } from './user/logout';
@@ -119,6 +120,7 @@ const APP_PROVIDERS = [
     MassTextComponent,
     ImportComponent,
     UpdatesComponent,
+    DebugComponent,
     LoginComponent,
     LogoutComponent,
     MeComponent,

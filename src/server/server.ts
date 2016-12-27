@@ -294,7 +294,6 @@ setup(MONGODB_URI)
         }
       });
 
-
       apiRouter.post("/email", (req, res) => {
         let mailOptions = req.body;
         mailOptions.from = GMAIL_USER;
@@ -311,10 +310,13 @@ setup(MONGODB_URI)
 
       let mailOptions = {
         from: GMAIL_USER,
-        to: "markprovanp@gmail.com",
-        subject: "Hello World!",
+        to: [GMAIL_USER, "markprovanp@gmail.com"],
+        subject: "Server Started!",
         generateTextFromHTML: true,
-        html: "<b>Hello World!</b>"
+        html: `
+        <h1>Server started!</h1>
+        <p>Server started at ${new Date()}</p>
+        `
       };
 
       smtpTransport.sendMail(mailOptions, (err, res) => {
@@ -323,7 +325,6 @@ setup(MONGODB_URI)
         } else {
           console.log(res);
         }
-        smtpTransport.close();
       })
     })
     

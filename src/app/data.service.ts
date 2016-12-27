@@ -38,6 +38,7 @@ export class DataService {
   private eventsUrl = this.baseUrl + "events";
   private usersUrl = this.baseUrl + "users";
   private publicTeamsUrl = this.baseUrl + 'public/teams';
+  private emailUrl = this.baseUrl + "email";
 
   private teams: Team[] = [];
   private racers: Racer[] = [];
@@ -424,6 +425,19 @@ export class DataService {
   }
 
 //----------------------------------------------------------------------//
+  //
+  public sendEmail(to: string, subject: string, html: string) {
+    let mailOptions = {
+      to: to,
+      subject: subject,
+      generateTextFromHTML: true,
+      html: html
+    }
+    return this.http.post(this.emailUrl, JSON.stringify(mailOptions), this.httpExtras)
+    .toPromise()
+    .then(res => res.json())
+    .catch(this.handleError)
+  }
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only
@@ -431,10 +445,3 @@ export class DataService {
   }
 }
 
-
-
-/*
-Copyright 2016 Google Inc. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at http://angular.io/license
-*/

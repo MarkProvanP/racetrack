@@ -19,6 +19,7 @@ import { ImportComponent } from "./import";
 import { SafetyMapComponent } from './safety-map';
 import { DataResolver } from './app.resolver';
 import { UpdatesComponent } from './updates';
+import { DebugComponent } from "./misc/debug";
 
 import { LoginComponent } from './user/login';
 import { LogoutComponent } from './user/logout';
@@ -99,6 +100,7 @@ export const ROUTES: Routes = [
         ]
       },
       { path: 'mass-text', component: MassTextComponent },
+      { path: 'debug', component: DebugComponent },
       { path: 'import', component: ImportComponent },
       { path: '', redirectTo: '/safetyteam/dashboard', pathMatch: 'full' }
     ]

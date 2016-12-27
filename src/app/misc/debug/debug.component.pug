@@ -1,0 +1,11 @@
+h1 Debug Things
+div
+  h2 Email
+  div
+    md-input-container
+      input(md-input, type='email', [(ngModel)]='email.to', placeholder='To:')
+    md-input-container
+      input(md-input, [(ngModel)]='email.subject', placeholder='Re:')
+    md-input-container
+      textarea(md-input, [(ngModel)]='email.body', placeholder='Body:')
+    button(md-raised-button, color='primary', (click)='sendEmail()') Send
