@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 
+import * as Papa from "papaparse";
+
 import { UserId, UserWithoutPassword, prettyUserPrivilegesLevel, isAboveMinimumPrivilege, UserPrivileges } from '../../../common/user';
 import { UserService } from "../../user.service";
 import { DataService } from "../../data.service";
@@ -22,6 +24,8 @@ export class UserListComponent implements OnInit {
   privilegesEnum = UserPrivileges;
   selectedLevel: UserPrivileges = UserPrivileges.VIEW_ONLY;
   currentlyEditingUser: UserWithoutPassword;
+
+  bulkUsers: UserWithoutPassword[];
 
   constructor(
     private userService: UserService,
@@ -98,13 +102,54 @@ export class UserListComponent implements OnInit {
     return check(me.level);
   }
 
-  onSubmit() {
-    let formValue = this.form.value;
-    formValue.level = this.selectedLevel;
-    this.dataService.createUser(formValue)
+  createUser(user: UserWithoutPassword) {
+    console.log('createUser(', user, ')')
+    return this.dataService.createUser(user)
     .then(res => this.loadUsers())
     .catch(err => {
       console.log(err);
     });
+  }
+
+  onSubmit() {
+    let formValue = this.form.value;
+    formValue.level = this.selectedLevel;
+    return this.createUser(formValue);
+  }
+
+  bulkRegisterFileEvent(fileInputEvent: any) {
+    let fileInput = fileInputEvent.srcElement;
+    let file = fileInput.files[0];
+    let reader = new FileReader();
+    reader.onload = (event: ProgressEvent) => {
+      console.log('FileUpload onload', event);
+      let reader = <FileReader> event.target;
+      if (reader.error) {
+        console.error('error reading file!');
+        return;
+      }
+      let textContent = reader.result;
+      let bulkData = Papa.parse(textContent, {
+        header: true
+      });
+      this.bulkUsers = [];
+      console.log(bulkData)
+      bulkData.data.forEach(row => {
+        this.bulkUsers.push({
+          username: row.Username,
+          name: row.Name,
+          email: row.Email,
+          phone: row.Phone,
+          role: row.Role,
+          level: UserPrivileges.VIEW_ONLY
+        })
+      })
+    }
+
+    reader.readAsText(file);
+  }
+
+  usernameExists(username: string) {
+    return !!this.users.filter(user => user.username === username).length;
   }
 }

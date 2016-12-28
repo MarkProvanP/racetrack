@@ -82,3 +82,31 @@
       md-select([(ngModel)]='selectedLevel')
         md-option(*ngFor='let item of privilegesEnum | keys', [value]='item.key', [disabled]='isLevelDisabled(item.key)') {{prettyLevelName(item.key)}}
 
+.bulk-register-wrapper
+  md-card.bulk-register-card
+    md-card-title Bulk registration
+    md-card-content
+      h3 Import
+      input(type='file', (change)='bulkRegisterFileEvent($event)')
+      table(*ngIf='bulkUsers')
+        thead
+          tr
+            th Username
+            th Name
+            th Email
+            th Phone
+            th Role
+            th Privilege Level
+            th Create?
+        tbody
+          tr(*ngFor='let user of bulkUsers') 
+            td {{user.username}}
+            td {{user.name}}
+            td {{user.email}}
+            td {{user.phone}}
+            td {{user.role}}
+            td
+              md-select([(ngModel)]='user.level')
+                md-option(*ngFor='let item of privilegesEnum | keys', [value]='item.key', [disabled]='isLevelDisabled(item.key)') {{prettyLevelName(item.key)}}
+            td
+              button(md-raised-button, color='primary', (click)='createUser(user)', [disabled]='usernameExists(user.username)') Create
