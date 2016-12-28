@@ -131,6 +131,7 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "passport.socketio": "^3.6.2",
+    "password-generator": "^2.1.0",
     "protractor": "^4.0.13",
     "pug": "^2.0.0-beta6",
     "pug-html-loader": "^1.0.9",

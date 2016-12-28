@@ -96,10 +96,93 @@ let dataIntermediary;
 import * as nodemailer from "nodemailer";
 let xoauth2 = require("xoauth2");
 
-const GMAIL_USER = process.env.GMAIL_USER;
+const GMAIL_USER: string = process.env.GMAIL_USER;
 const GMAIL_CLIENT_ID = process.env.GMAIL_CLIENT_ID;
 const GMAIL_CLIENT_SECRET = process.env.GMAIL_CLIENT_SECRET;
 const GMAIL_REFRESH_TOKEN = process.env.GMAIL_REFRESH_TOKEN
+
+export class Emailer {
+  private smtpTransport;
+
+  constructor(xoauth2Settings) {
+    let generator = xoauth2.createXOAuth2Generator(xoauth2Settings);
+
+    generator.on('token', (token) => {
+      console.log(`New token for ${token.user}: ${token.accessToken}`)
+    })
+
+    this.smtpTransport = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        xoauth2: generator
+      }
+    });
+  }
+
+  sendEmail(to: string[] | string, subject: string, bodyHtml: string) {
+    let mailOptions = {
+      from: GMAIL_USER,
+      to: to,
+      subject: subject,
+      generateTextFromHTML: true,
+      html: bodyHtml
+    };
+    return new Promise((resolve, reject) => {
+      this.smtpTransport.sendMail(mailOptions, (err, res) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          console.log(res);
+          resolve(res);
+        }
+      })
+    });
+  }
+}
+const ERROR_EMAIL_RECIPIENTS = [GMAIL_USER, "markprovanp@gmail.com"];
+const STATUS_EMAIL_RECIPIENTS = [GMAIL_USER, "markprovanp@gmail.com"];
+const XOAUTH2_SETTINGS = {
+  user: GMAIL_USER,
+  clientId: GMAIL_CLIENT_ID,
+  clientSecret: GMAIL_CLIENT_SECRET,
+  refreshToken: GMAIL_REFRESH_TOKEN,
+}
+let emailer = new Emailer(XOAUTH2_SETTINGS);
+
+let newlineReplace = (str) => str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled rejection!', reason, promise);
+  let stacktrace = newlineReplace(String(reason.stack));
+  let promiseString = newlineReplace(String(promise));
+  emailer.sendEmail(
+    ERROR_EMAIL_RECIPIENTS,
+    "Race2App - Unhandled rejection!",
+    `
+    <h1>Race2App - Unhandled rejection</h1>
+    <p>At ${new Date()}</p>
+    <h2>Promise</h2>
+    <p>${promiseString}</p>
+    <h2>Stacktrace</h2>
+    <p>${stacktrace}</p>
+    `
+  )
+});
+
+process.on('uncaughtException', (exception) => {
+  console.error('Uncaught exception!', exception);
+  let stacktrace = newlineReplace(exception.stack);
+  emailer.sendEmail(
+    ERROR_EMAIL_RECIPIENTS,
+    "Race2App - Uncaught Exception!",
+    `
+    <h1>Race2App - Uncaught Exception</h1>
+    <p>At ${new Date()}</p>
+    <h2>Stacktrace</h2>
+    <p>${stacktrace}</p>
+    `
+  )
+});
 
 export class MessageSender {
   sockets = [];
@@ -139,7 +222,7 @@ setup(MONGODB_URI)
   .then(db_facade => {
     winston.info('MongoDB now ready for use');
 
-    dataIntermediary = GetDataIntermediary(db_facade, messageSender);
+    dataIntermediary = GetDataIntermediary(db_facade, messageSender, emailer);
 
 
     // Check to see if the admin user has been created yet. If not, create it.
@@ -270,115 +353,37 @@ setup(MONGODB_URI)
       }
     })
     .then(savedConfig => {
-      const XOAUTH2_SETTINGS = {
-        user: GMAIL_USER,
-        clientId: GMAIL_CLIENT_ID,
-        clientSecret: GMAIL_CLIENT_SECRET,
-        refreshToken: GMAIL_REFRESH_TOKEN,
-        accessToken: savedConfig.nodemailer.accessToken
-      }
-
-      let generator = xoauth2.createXOAuth2Generator(XOAUTH2_SETTINGS);
-
-      generator.on('token', (token) => {
-        console.log(`New token for ${token.user}: ${token.accessToken}`)
-        let newConfig = JSON.parse(JSON.stringify(savedConfig));
-        newConfig.nodemailer.accessToken = token.accessToken;
-        dataIntermediary.updateSavedConfig(newConfig);
-      })
-
-      let smtpTransport = nodemailer.createTransport({
-        service: "Gmail",
-        auth: {
-          xoauth2: generator
-        }
-      });
-
-      process.on('unhandledRejection', (reason, promise) => {
-        console.error('Unhandled rejection!', reason, promise);
-        let newlineReplace = (str) => str.replace(/(?:\r\n|\r|\n)/g, '<br />');
-        let stacktrace = newlineReplace(String(reason.stack));
-        let promiseString = newlineReplace(String(promise));
-        let mailOptions = {
-          from: GMAIL_USER,
-          to: [GMAIL_USER, "markprovanp@gmail.com"],
-          subject: "Race2App - Unhandled rejection!",
-          generateTextFromHTML: true,
-          html: `
-          <h1>Race2App - Unhandled rejection</h1>
-          <p>At ${new Date()}</p>
-          <h2>Promise</h2>
-          <p>${promiseString}</p>
-          <h2>Stacktrace</h2>
-          <p>${stacktrace}</p>
-          `
-        };
-
-        smtpTransport.sendMail(mailOptions, (err, res) => {
-          if (err) {
-            console.error(err);
-          } else {
-            console.log(res);
-          }
-        })
-      })
-
-      process.on('uncaughtException', (exception) => {
-        console.error('Uncaught exception!', exception);
-        let stacktrace = String(exception.stack).replace(/(?:\r\n|\r|\n)/g, '<br />');
-        let mailOptions = {
-          from: GMAIL_USER,
-          to: [GMAIL_USER, "markprovanp@gmail.com"],
-          subject: "Race2App - Uncaught Exception!",
-          generateTextFromHTML: true,
-          html: `
-          <h1>Race2App - Uncaught Exception</h1>
-          <p>At ${new Date()}</p>
-          <h2>Stacktrace</h2>
-          <p>${stacktrace}</p>
-          `
-        };
-
-        smtpTransport.sendMail(mailOptions, (err, res) => {
-          if (err) {
-            console.error(err);
-          } else {
-            console.log(res);
-          }
-        })
-      })
 
       apiRouter.post("/email", (req, res) => {
         let mailOptions = req.body;
-        mailOptions.from = GMAIL_USER;
-        smtpTransport.sendMail(mailOptions, (err, messageInfo) => {
-          if (err) {
-            console.error(err);
-            res.status(500).send(err);
-          } else {
-            console.log(res);
-            res.send(messageInfo);
-          }
+        emailer.sendEmail(
+          mailOptions.to,
+          mailOptions.subject,
+          mailOptions.html
+        )
+        .then(messageInfo => {
+          console.log(messageInfo);
+          res.send(messageInfo);
+        })
+        .catch(err => {
+          console.error(err);
+          res.status(500).send(err);
         })
       })
 
-      let mailOptions = {
-        from: GMAIL_USER,
-        to: [GMAIL_USER, "markprovanp@gmail.com"],
-        subject: "Server Started!",
-        generateTextFromHTML: true,
-        html: `
+      emailer.sendEmail(
+        STATUS_EMAIL_RECIPIENTS,
+        "Server started!",
+        `
         <h1>Server started!</h1>
         <p>Server started at ${new Date()}</p>
         `
-      };
-
-      smtpTransport.sendMail(mailOptions, (err, res) => {
-        if (err) {
-          console.error(err);
-        } else {
-          console.log(res);
-        }
+      )
+      .then((messageInfo) => {
+        console.log(messageInfo);
+      })
+      .catch(err => {
+        console.error(err);
       })
     })
     

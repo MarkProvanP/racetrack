@@ -1,5 +1,7 @@
 const APP_TEXT_HEADER = "!AutoUpdate!";
 
+let generatePassword = require("password-generator");
+
 import { DbFacadeInterface} from "./db/db-facade";
 import {
   Racer,
@@ -39,7 +41,7 @@ import {
   TeamUpdatedMessage,
   TeamUpdateUpdatedMessage
 } from "../common/message";
-import { MessageSender } from "./server";
+import { Emailer, MessageSender } from "./server";
 import { User } from "./auth";
 
 import * as winston from "winston";
@@ -55,10 +57,11 @@ let singleton;
 
 export function GetDataIntermediary(
   dbFacade: DbFacadeInterface,
-  messageSender: MessageSender
+  messageSender: MessageSender,
+  emailer: Emailer
 ) {
   if (!singleton) {
-    singleton = new DataIntermediary(dbFacade, messageSender);
+    singleton = new DataIntermediary(dbFacade, messageSender, emailer);
   }
   return singleton;
 }
@@ -71,7 +74,8 @@ function trace(s, obj) {
 export class DataIntermediary {
   constructor(
     private dbFacade: DbFacadeInterface,
-    private messageSender: MessageSender
+    private messageSender: MessageSender,
+    private emailer: Emailer
   ) {}
 
   getSavedConfig(): Promise<SavedConfig> {
@@ -452,6 +456,27 @@ export class DataIntermediary {
       .then(result => {
         return Promise.resolve(user);
       });
+  }
+
+  resetUserPassword(username): Promise<User> {
+    let newPassword = generatePassword();
+    let user;
+    return this.getUser(username)
+    .then(user => user.changePassword(newPassword))
+    .then(changed => this.updateUser(changed))
+    .then(changed => {
+      user = changed;
+      let userEmail = user.email;
+      this.emailer.sendEmail(
+        userEmail,
+        'Race2App Password Reset',
+        `
+        <h1>Race2App Password Reset</h1>
+        <p>Password reset to <b>${newPassword}</b></p>
+        `
+      )
+    })
+    .then(messageInfo => user)
   }
 
   changeUserPassword(username, newPassword): Promise<User> {

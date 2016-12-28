@@ -206,6 +206,22 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
     });
   });
 
+  router.put('/api/change-password', isLoggedIn, (req, res) => {
+    winston.log('info', '/api/change-password request');
+    let username = req.user.username;
+    if (username == 'admin') {
+      res.status(403);
+      res.send();
+      return;
+    }
+    let newPassword = req.body.password;
+    dataIntermediate.changeUserPassword(username, newPassword)
+    .catch(err => res.status(500).send())
+    .then(user => User.fromJSON(user))
+    .then(user => user.copyWithoutPassword())
+    .then(changedUser => res.json(changedUser));
+  });
+
   router.get('/api/auth', isLoggedIn, (req, res) => {
     res.json({auth: true})
   });
