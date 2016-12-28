@@ -230,9 +230,9 @@ export class Emailer {
     )
   }
 }
-const ERROR_EMAIL_RECIPIENTS = [GMAIL_USER] + process.env.ERROR_EMAIL_RECIPIENTS.split(",");
-const STATUS_EMAIL_RECIPIENTS = [GMAIL_USER] + process.env.STATUS_EMAIL_RECIPIENTS.split(",");
-const DATA_EMAIL_RECIPIENTS = [GMAIL_USER] + process.env.DATA_EMAIL_RECIPIENTS.split(",");
+const ERROR_EMAIL_RECIPIENTS = [GMAIL_USER].concat(process.env.ERROR_EMAIL_RECIPIENTS.split(","));
+const STATUS_EMAIL_RECIPIENTS = [GMAIL_USER].concat(process.env.STATUS_EMAIL_RECIPIENTS.split(","));
+const DATA_EMAIL_RECIPIENTS = [GMAIL_USER].concat(process.env.DATA_EMAIL_RECIPIENTS.split(","));
 console.log(`Will send error emails to ${ERROR_EMAIL_RECIPIENTS}`);
 console.log(`Will send status emails to ${STATUS_EMAIL_RECIPIENTS}`);
 console.log(`Will send data emails to ${DATA_EMAIL_RECIPIENTS}`);
@@ -247,22 +247,20 @@ let emailer = new Emailer(XOAUTH2_SETTINGS);
 let newlineReplace = (str) => str.replace(/(?:\r\n|\r|\n)/g, '<br />');
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled rejection!', reason, promise);
-  try {
-    emailer.sendUnhandledRejectionEmail(reason, promise);
-  } catch (err) {
+  emailer.sendUnhandledRejectionEmail(reason, promise)
+  .catch(err => {
     console.error('Oh noes! An error occured while trying to handle an error! This is absolutely awful!')
     console.error('New error', err);
-  }
+  });
 });
 
 process.on('uncaughtException', (exception) => {
   console.error('Uncaught exception!', exception);
-  try {
-    emailer.sendUncaughtExceptionEmail(exception);
-  } catch (err) {
+  emailer.sendUncaughtExceptionEmail(exception)
+  .catch(err => {
     console.error('Oh noes! An error occured while trying to handle an error! This is absolutely awful!')
     console.error('New error', err);
-  }
+  });
 });
 
 export class MessageSender {

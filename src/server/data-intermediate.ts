@@ -447,7 +447,6 @@ export class DataIntermediary {
     return this.getUser(username)
     .catch(doesntExist => Promise.resolve(null))
     .then(user => {
-      console.log('result', user);
       return Promise.resolve(user == null)
     })
   }
