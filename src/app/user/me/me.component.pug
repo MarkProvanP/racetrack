@@ -1,0 +1,34 @@
+.me-wrapper
+  md-card
+    md-card-title  My user details
+    md-card-content
+      table(*ngIf='getUser()')
+        tr
+          th Username:
+          td {{getUser().username}}
+        tr
+          th Name:
+          td {{getUser().name}}
+        tr
+          th Email:
+          td {{getUser().email}}
+        tr
+          th Phone:
+          td {{getUser().phone}}
+        tr
+          th Role:
+          td {{getUser().role}}
+        tr
+          th Privilege Level:
+          td {{prettyLevelName(getUser().level)}}
+  md-card
+    md-card-title Change Password
+    md-card-content
+      form([formGroup]='changePassword', (ngSubmit)='onChangePasswordSubmit()', class='form')
+        md-input-container
+          input(md-input, type='password', formControlName='newPassword', required, placeholder='New password')
+        md-input-container
+          input(md-input, type='password', formControlName='newPasswordAgain', required, placeholder='New password (again)')
+        p(*ngIf='changePasswordError', class='change-password-error')
+          | {{getChangePasswordErrorMessage()}}
+        button(md-raised-button, color='primary', type='submit') Change Password
