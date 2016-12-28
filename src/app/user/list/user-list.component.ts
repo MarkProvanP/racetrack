@@ -8,7 +8,7 @@ import { DataService } from "../../data.service";
 
 @Component({
   selector: 'user-list',
-  templateUrl: './user-list.component.html',
+  templateUrl: './user-list.component.pug',
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
@@ -42,11 +42,8 @@ export class UserListComponent implements OnInit {
   }
 
   resetPassword(user: UserWithoutPassword) {
-    let newPassword = prompt(`Enter new password for ${user.username}`);
-    if (newPassword) {
-      this.dataService.changeUserPassword(user, newPassword)
-      .then(res => console.log('Password updated!'));
-    }
+    this.dataService.resetUserPassword(user)
+    .then(res => console.log('Password updated!'));
   }
 
   ngOnInit() {

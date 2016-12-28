@@ -402,9 +402,9 @@ export class DataService {
     .then(response => response.json())
   }
 
-  public changeUserPassword(user: UserWithoutPassword, password): Promise<UserWithoutPassword> {
-    let url = `${this.usersUrl}/${user.username}/change-password`;
-    return this.http.put(url, JSON.stringify({password}), this.httpExtras)
+  public resetUserPassword(user: UserWithoutPassword): Promise<UserWithoutPassword> {
+    let url = `${this.usersUrl}/${user.username}/reset-password`;
+    return this.http.put(url, {}, this.httpExtras)
     .toPromise()
     .catch(this.handleError)
     .then(response => response.json())

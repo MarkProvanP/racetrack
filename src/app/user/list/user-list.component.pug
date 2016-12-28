@@ -1,0 +1,86 @@
+.user-cards
+  md-card.user-card(*ngFor='let user of users')
+    div(*ngIf='!isEditingUser(user)')
+      table
+        tr
+          th Username
+          td {{user.username}}
+        tr
+          th Name
+          td {{user.name}}
+        tr
+          th Email
+          td {{user.email}}
+        tr
+          th Phone
+          td {{user.phone}}
+        tr
+          th Role
+          td {{user.role}}
+        tr
+          th Privilege Level
+          td {{prettyLevelName(user.level)}}
+    div(*ngIf='isEditingUser(user)')
+      table
+        tr
+          th Username
+          td
+            md-input-container
+              input(md-input, [(ngModel)]='user.username')
+        tr
+          th Name
+          td
+            md-input-container
+              input(md-input, [(ngModel)]='user.name')
+        tr
+          th Email
+          td
+            md-input-container
+              input(md-input, type='email', [(ngModel)]='user.email')
+        tr
+          th Phone
+          td
+            md-input-container
+              input(md-input, [(ngModel)]='user.phone')
+        tr
+          th Role
+          td
+            md-input-container
+              input(md-input, [(ngModel)]='user.role')
+        tr
+          th Privilege Level
+          td
+            md-select([(ngModel)]='user.level')
+              md-option(*ngFor='let item of privilegesEnum | keys', [value]='item.key', [disabled]='isLevelDisabled(item.key)') {{prettyLevelName(item.key)}}
+    md-card-actions
+      button(md-button, [disabled]='!canModify(user)', (click)='deleteUser(user.username)') Delete
+      |  
+      button(md-button, [disabled]='!canModify(user)', (click)='editUser(user)', *ngIf='!isEditingUser(user)') Edit
+      |  
+      button(md-button, [disabled]='!canModify(user)', (click)='saveUser()', *ngIf='isEditingUser(user)') Save
+      |  
+      button(md-button, [disabled]='!canModify(user)', (click)='stopEditingUser()', *ngIf='isEditingUser(user)') Cancel
+      |  
+      button(md-button, [disabled]='!canModify(user)', (click)='resetPassword(user)') Reset Password
+.register-wrapper
+  md-card.register-card
+    md-card-title  Create new
+    md-card-content
+      form.form([formGroup]='form', (ngsubmit)='onSubmit()', #registerform='ngForm')
+        md-input-container
+          input(md-input, formcontrolname='username', required, placeholder='Username')
+        md-input-container
+          input(md-input, formcontrolname='password', required, placeholder='Password', type='password')
+        md-input-container
+          input(md-input, formcontrolname='name', required, placeholder='Name')
+        md-input-container
+          input(md-input, formcontrolname='email', required, placeholder='Email', type='email')
+        md-input-container
+          input(md-input, formcontrolname='phone', required, placeholder='Phone number')
+        md-input-container
+          input(md-input, formcontrolname='role', required, placeholder='Role')
+        |  
+        button(md-raised-button, color='primary', type='submit') Register
+      md-select([(ngModel)]='selectedLevel')
+        md-option(*ngFor='let item of privilegesEnum | keys', [value]='item.key', [disabled]='isLevelDisabled(item.key)') {{prettyLevelName(item.key)}}
+

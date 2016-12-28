@@ -64,8 +64,7 @@ export class MeComponent implements OnInit {
   onChangePasswordSubmit() {
     if (this.changePassword.valid) {
       this.changePasswordError = false;
-      this.dataService.changeUserPassword(
-        this.getUser(),
+      this.userService.changePassword(
         this.changePassword.value.newPassword
       )
       .then(success => {

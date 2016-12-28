@@ -51,6 +51,7 @@ export class UserService {
   private authenticatedUrl = this.baseUrl + "api/authenticated";
   private meUrl = this.authenticatedUrl//this.baseUrl + "me";
   private usersUrl = this.baseUrl + "users";
+  private changePasswordUrl = this.baseUrl + "api/change-password"
 
   private authApi = this.baseUrl + "api/auth";
 
@@ -213,6 +214,13 @@ export class UserService {
         this.setNotAuthenticated();
         return response.json()
       })
+  }
+
+  changePassword(password: string): Promise<any> {
+    return this.http
+    .put(this.changePasswordUrl, JSON.stringify({password}), {headers: this.headers, withCredentials: true})
+    .toPromise()
+    .catch(this.handleError)
   }
 
   getMe(): Promise<UserWithoutPassword> {

@@ -68,23 +68,7 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
       res.send();
       return;
     }
-    let newPassword = req.body.password;
     dataIntermediate.resetUserPassword(username)
-    .catch(err => res.status(500).send())
-    .then(user => User.fromJSON(user))
-    .then(user => user.copyWithoutPassword())
-    .then(changedUser => res.json(changedUser));
-  });
-
-  userDataRouter.put('/:username/change-password', restrictedModifyAll, (req, res) => {
-    let username = req.params.username;
-    if (username == 'admin') {
-      res.status(403);
-      res.send();
-      return;
-    }
-    let newPassword = req.body.password;
-    dataIntermediate.changeUserPassword(username, newPassword)
     .catch(err => res.status(500).send())
     .then(user => User.fromJSON(user))
     .then(user => user.copyWithoutPassword())
