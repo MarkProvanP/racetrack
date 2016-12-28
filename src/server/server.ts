@@ -2,6 +2,9 @@
 import * as express from "express";
 var app = express();
 
+const APP_NAME = "Race2App";
+const APP_URL = "http://www.race2.org.uk/"
+
 app.use(express.static('dist'));
 
 import * as winston from "winston";
@@ -67,6 +70,7 @@ app.get('/.well-known/acme-challenge/GTj1Lm1K6kyCkXTs_tWVlb5VRyPQG1cgCRPSQ3uSljM
 const SESSION_SECRET = 'kewbfklebhfrhaewbfabfjbhzsfkjbkasjbvhkjaswbhdrvfkashbfvhavfha';
 const SESSION_KEY = "express.sid";
 
+import { UserWithoutPassword } from "../common/user";
 import { AuthWithDataIntermediary } from "./auth";
 
 import teamsRouterWithDb from "./routes/teams.routes";
@@ -139,6 +143,60 @@ export class Emailer {
       })
     });
   }
+
+  sendUserCreatedEmail(user: UserWithoutPassword, password: string) {
+    return this.sendEmail(
+      user.email,
+      `Welcome to ${APP_NAME}, ${user.name}`,
+      `
+      <h1>Hello, ${user.name}</h1>
+      <p>An account has been created for you on <a href='${APP_URL}'>${APP_NAME}</a></p>
+      <p>Your temporary password is <b>${password}</b></p>
+      `
+    )
+  }
+
+  sendPasswordResetEmail(to: string, password: string) {
+    return this.sendEmail(
+      to,
+      `${APP_NAME} Password Reset`,
+      `
+      <h1>${APP_NAME} Password Reset</h1>
+      <p>Password reset to <b>${password}</b></p>
+      `
+    )
+  }
+
+  sendUnhandledRejectionEmail(reason, promise) {
+    let stacktrace = newlineReplace(String(reason.stack));
+    let promiseString = newlineReplace(String(promise));
+    return this.sendEmail(
+      ERROR_EMAIL_RECIPIENTS,
+      `${APP_NAME} - Unhandled rejection!`,
+      `
+      <h1>${APP_NAME}- Unhandled rejection</h1>
+      <p>At ${new Date()}</p>
+      <h2>Promise</h2>
+      <p>${promiseString}</p>
+      <h2>Stacktrace</h2>
+      <p>${stacktrace}</p>
+      `
+    )
+  }
+
+  sendUncaughtExceptionEmail(exception) {
+    let stacktrace = newlineReplace(exception.stack);
+    return this.sendEmail(
+      ERROR_EMAIL_RECIPIENTS,
+      `${APP_NAME} - Uncaught Exception!`,
+      `
+      <h1>${APP_NAME}- Uncaught Exception</h1>
+      <p>At ${new Date()}</p>
+      <h2>Stacktrace</h2>
+      <p>${stacktrace}</p>
+      `
+    )
+  }
 }
 const ERROR_EMAIL_RECIPIENTS = [GMAIL_USER, "markprovanp@gmail.com"];
 const STATUS_EMAIL_RECIPIENTS = [GMAIL_USER, "markprovanp@gmail.com"];
@@ -153,35 +211,12 @@ let emailer = new Emailer(XOAUTH2_SETTINGS);
 let newlineReplace = (str) => str.replace(/(?:\r\n|\r|\n)/g, '<br />');
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled rejection!', reason, promise);
-  let stacktrace = newlineReplace(String(reason.stack));
-  let promiseString = newlineReplace(String(promise));
-  emailer.sendEmail(
-    ERROR_EMAIL_RECIPIENTS,
-    "Race2App - Unhandled rejection!",
-    `
-    <h1>Race2App - Unhandled rejection</h1>
-    <p>At ${new Date()}</p>
-    <h2>Promise</h2>
-    <p>${promiseString}</p>
-    <h2>Stacktrace</h2>
-    <p>${stacktrace}</p>
-    `
-  )
+  emailer.sendUnhandledRejectionEmail(reason, promise);
 });
 
 process.on('uncaughtException', (exception) => {
   console.error('Uncaught exception!', exception);
-  let stacktrace = newlineReplace(exception.stack);
-  emailer.sendEmail(
-    ERROR_EMAIL_RECIPIENTS,
-    "Race2App - Uncaught Exception!",
-    `
-    <h1>Race2App - Uncaught Exception</h1>
-    <p>At ${new Date()}</p>
-    <h2>Stacktrace</h2>
-    <p>${stacktrace}</p>
-    `
-  )
+  emailer.sendUncaughtExceptionEmail(exception);
 });
 
 export class MessageSender {

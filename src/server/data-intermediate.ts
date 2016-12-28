@@ -450,12 +450,12 @@ export class DataIntermediary {
     })
   }
 
-  addUser(username, password, properties): Promise<User> {
-    let user = User.createWithPassword(username, password, properties);
+  addUser(username, properties): Promise<User> {
+    let newPassword = generatePassword();
+    let user = User.createWithPassword(username, newPassword, properties);
     return this.dbFacade.createUser(user)
-      .then(result => {
-        return Promise.resolve(user);
-      });
+    .then(res => user)
+    .then(res => this.emailer.sendUserCreatedEmail(user, newPassword))
   }
 
   resetUserPassword(username): Promise<User> {
@@ -467,14 +467,7 @@ export class DataIntermediary {
     .then(changed => {
       user = changed;
       let userEmail = user.email;
-      this.emailer.sendEmail(
-        userEmail,
-        'Race2App Password Reset',
-        `
-        <h1>Race2App Password Reset</h1>
-        <p>Password reset to <b>${newPassword}</b></p>
-        `
-      )
+      return this.emailer.sendPasswordResetEmail(userEmail, newPassword);
     })
     .then(messageInfo => user)
   }

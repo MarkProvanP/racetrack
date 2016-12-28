@@ -14,7 +14,6 @@ import { DataService } from "../../data.service";
 export class UserListComponent implements OnInit {
   users: UserWithoutPassword[];
   username: FormControl;
-  password: FormControl;
   name: FormControl;
   email: FormControl;
   phone: FormControl;
@@ -48,7 +47,6 @@ export class UserListComponent implements OnInit {
 
   ngOnInit() {
     this.username = new FormControl('', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)]));
-    this.password = new FormControl('', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(32)]));
     this.name= new FormControl('', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)]));
     this.email= new FormControl('', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(32)]));
     this.phone= new FormControl('', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)]));
@@ -56,7 +54,6 @@ export class UserListComponent implements OnInit {
 
     this.form = new FormGroup({
       'username': this.username,
-      'password': this.password,
       'name': this.name,
       'email': this.email,
       'phone': this.phone,

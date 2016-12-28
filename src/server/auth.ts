@@ -119,29 +119,6 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
       });
   }));
 
-  passport.use('local-register', new LocalStrategy({passReqToCallback: true},
-    (req, username, password, done) => {
-      dataIntermediate.canAddUser(username)
-        .then((can: boolean) => {
-          if (!can) {
-            done(`already have user with username: ${username}`);
-            return Promise.resolve(null);
-          } else {
-            let properties = req.body;
-            return dataIntermediate.addUser(username, password, properties)
-          }
-        })
-        .then((user: User) => {
-          if (user != null) {
-            return done(null, user);
-          }
-        })
-        .catch(err => {
-          winston.info('Error registering user', {err});
-          return done(err);
-        })
-    }));
-
   function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
@@ -180,19 +157,6 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
           res.json({error: err})
         }
       })
-  });
-
-  router.post('/api/register', passport.authenticate('local-register'), (req, res) => {
-    winston.log('info', '/api/register request');
-    dataIntermediate.getUser(req.user.username)
-      .then(user => {
-        let withoutPassword = user.copyWithoutPassword();
-        res.json(user.copyWithoutPassword());
-      })
-      .catch(err => {
-        winston.log('error','/api/login error!', {err});
-        res.status(500).send(err);
-      });
   });
 
   router.get('/api/logout', isLoggedIn, (req, res) => {

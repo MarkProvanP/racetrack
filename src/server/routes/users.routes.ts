@@ -40,8 +40,7 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
       res.send();
       return;
     }
-    let password = newUser.password;
-    dataIntermediate.addUser(username, password, newUser)
+    dataIntermediate.addUser(username, newUser)
     .catch(err => res.status(500).send())
     .then(newUser => res.json(newUser.copyWithoutPassword()));
   });
