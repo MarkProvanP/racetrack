@@ -239,12 +239,22 @@ let emailer = new Emailer(XOAUTH2_SETTINGS);
 let newlineReplace = (str) => str.replace(/(?:\r\n|\r|\n)/g, '<br />');
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled rejection!', reason, promise);
-  emailer.sendUnhandledRejectionEmail(reason, promise);
+  try {
+    emailer.sendUnhandledRejectionEmail(reason, promise);
+  } catch (err) {
+    console.error('Oh noes! An error occured while trying to handle an error! This is absolutely awful!')
+    console.error('New error', err);
+  }
 });
 
 process.on('uncaughtException', (exception) => {
   console.error('Uncaught exception!', exception);
-  emailer.sendUncaughtExceptionEmail(exception);
+  try {
+    emailer.sendUncaughtExceptionEmail(exception);
+  } catch (err) {
+    console.error('Oh noes! An error occured while trying to handle an error! This is absolutely awful!')
+    console.error('New error', err);
+  }
 });
 
 export class MessageSender {
