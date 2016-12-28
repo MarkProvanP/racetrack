@@ -24,6 +24,7 @@ import { DebugComponent } from "./misc/debug";
 import { LoginComponent } from './user/login';
 import { LogoutComponent } from './user/logout';
 import { MeComponent } from './user/me';
+import { SetPasswordComponent } from "./user/set-password";
 import { UserListComponent } from "./user/list";
 
 import { PrivateApp } from "./private-app";
@@ -96,7 +97,8 @@ export const ROUTES: Routes = [
         path: 'user', children: [
           { path: 'logout', component: LogoutComponent },
           { path: 'me', component: MeComponent },
-          { path: 'list', component: UserListComponent }
+          { path: 'list', component: UserListComponent },
+          { path: 'set-password', component: SetPasswordComponent }
         ]
       },
       { path: 'mass-text', component: MassTextComponent },

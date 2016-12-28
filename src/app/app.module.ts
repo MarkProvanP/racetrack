@@ -52,6 +52,7 @@ import { DebugComponent } from "./misc/debug";
 import { LoginComponent } from './user/login';
 import { LogoutComponent } from './user/logout';
 import { MeComponent } from './user/me';
+import { SetPasswordComponent } from "./user/set-password";
 import { UserListComponent } from "./user/list";
 
 import { TimeWidget } from "./widgets/time";
@@ -124,6 +125,7 @@ const APP_PROVIDERS = [
     LoginComponent,
     LogoutComponent,
     MeComponent,
+    SetPasswordComponent,
     UserListComponent,
     // WIDGETS
     TimeWidget,

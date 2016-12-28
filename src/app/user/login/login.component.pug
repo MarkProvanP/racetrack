@@ -1,0 +1,13 @@
+.login-wrapper
+  md-card.login-card
+    md-card-title  Login
+    md-card-content
+      form.form([formGroup]='form', (ngSubmit)='onSubmit()')
+        md-input-container
+          input(md-input, formControlName='username', required, placeholder='Username')
+        md-input-container
+          input(md-input, formControlName='password', required, placeholder='Password', type='password')
+        p.login-error(*ngIf='loginError') {{getLoginErrorMessage()}}
+        |  
+        button(md-raised-button, color='primary', type='submit') Login
+

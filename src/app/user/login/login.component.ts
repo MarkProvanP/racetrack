@@ -6,8 +6,8 @@ import { UserService } from '../../user.service';
 
 @Component({
   selector: 'login',
-  styleUrls: ['./login.style.scss'],
-  templateUrl: './login.template.html'
+  styleUrls: ['./login.component.scss'],
+  templateUrl: './login.component.pug'
 })
 export class LoginComponent {
   username: FormControl;
@@ -15,9 +15,10 @@ export class LoginComponent {
   form: FormGroup;
   loginError: boolean;
 
-  constructor(private userService: UserService, private router: Router) {
-
-  }
+  constructor(
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.username = new FormControl('', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)]));
