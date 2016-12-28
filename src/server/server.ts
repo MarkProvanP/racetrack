@@ -121,6 +121,14 @@ export class Emailer {
         xoauth2: generator
       }
     });
+
+    this.smtpTransport.verify((err, success) => {
+      if (err) {
+        console.error('Error with SMTP transport!', err)
+      } else {
+        console.log('SMTP transport ready!')
+      }
+    })
   }
 
   sendEmail(to: string[] | string, subject: string, bodyHtml: string) {
