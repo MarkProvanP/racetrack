@@ -43,7 +43,7 @@ var twilioClient = twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
 import { UserPrivileges, UserId } from "../common/user";
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
-import { Text, TwilioInboundText } from "../common/text";
+import { Text, TwilioInboundText, TwilioOutboundText } from "../common/text";
 import { 
   AbstractMessage,
   TextReceivedMessage,
@@ -197,9 +197,37 @@ export class Emailer {
       `
     )
   }
+
+  sendTextSentEmail(text: TwilioOutboundText) {
+    return this.sendEmail(
+      DATA_EMAIL_RECIPIENTS,
+      `${APP_NAME} - Text sent to ${text.to}`,
+      `
+      <h1>${APP_NAME} - Text Sent!</h1>
+      <p>To: ${text.to}</p>
+      <p>Body: ${text.body}</p>
+      `
+    )
+  }
+
+  sendTextReceivedEmail(text: TwilioInboundText) {
+    return this.sendEmail(
+      DATA_EMAIL_RECIPIENTS,
+      `${APP_NAME} - Text Received from ${text.From}`,
+      `
+      <h1>${APP_NAME} - Text Received!</h1>
+      <p>From: ${text.From}</p>
+      <p>Body: ${text.Body}</p>
+      `
+    )
+  }
 }
-const ERROR_EMAIL_RECIPIENTS = [GMAIL_USER, "markprovanp@gmail.com"];
-const STATUS_EMAIL_RECIPIENTS = [GMAIL_USER, "markprovanp@gmail.com"];
+const ERROR_EMAIL_RECIPIENTS = [GMAIL_USER] + process.env.ERROR_EMAIL_RECIPIENTS.split(",");
+const STATUS_EMAIL_RECIPIENTS = [GMAIL_USER] + process.env.STATUS_EMAIL_RECIPIENTS.split(",");
+const DATA_EMAIL_RECIPIENTS = [GMAIL_USER] + process.env.DATA_EMAIL_RECIPIENTS.split(",");
+console.log(`Will send error emails to ${ERROR_EMAIL_RECIPIENTS}`);
+console.log(`Will send status emails to ${STATUS_EMAIL_RECIPIENTS}`);
+console.log(`Will send data emails to ${DATA_EMAIL_RECIPIENTS}`);
 const XOAUTH2_SETTINGS = {
   user: GMAIL_USER,
   clientId: GMAIL_CLIENT_ID,
@@ -363,10 +391,8 @@ setup(MONGODB_URI)
       if (twilio.validateExpressRequest(req, TWILIO_AUTH_TOKEN, {url: TWILIO_SMS_WEBHOOK})) {
         let text = req.body;
         winston.log('verbose', `Received text from Twilio`, {text});
-        handleTextMessage(db_facade, text);
-        let response = new twilio.TwimlResponse();
-        response.message("Working");
-        res.send(response.toString());
+        handleTextMessage(text);
+        res.send();
       } else {
         winston.warn('Invalid Twilio request received!');
         res.status(403).send("Error, you're not twilio!");
@@ -428,7 +454,7 @@ setup(MONGODB_URI)
 });
 
 
-function handleTextMessage(db_facade, twilioText: TwilioInboundText) {
+function handleTextMessage(twilioText: TwilioInboundText) {
   dataIntermediary.addTextFromTwilio(twilioText)
     .catch(err => {
       winston.error('Could not add inbound Twilio text to database!', {text: twilioText, err: err});

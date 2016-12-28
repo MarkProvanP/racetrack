@@ -271,6 +271,7 @@ export class DataIntermediary {
   }
 
   public addTextFromTwilio(text: TwilioInboundText): Promise<Text> {
+    this.emailer.sendTextReceivedEmail(text);
     let id = uuid.v4();
     let createdText;
 
@@ -314,6 +315,7 @@ export class DataIntermediary {
   }
 
   public addNewSentText(text: TwilioOutboundText, user: UserWithoutPassword): Promise<Text> {
+    this.emailer.sendTextSentEmail(text);
     let id = uuid.v4();
     let createdText = OutboundText.fromTwilio(id, text);
     createdText.sentBy = {
