@@ -66,17 +66,17 @@
   md-card.register-card
     md-card-title  Create new
     md-card-content
-      form.form([formGroup]='form', (ngsubmit)='onSubmit()', #registerform='ngForm')
+      form.form([formGroup]='form', (ngSubmit)='onSubmit()', #registerForm='ngForm')
         md-input-container
-          input(md-input, formcontrolname='username', required, placeholder='Username')
+          input(md-input, formControlName='username', required, placeholder='Username')
         md-input-container
-          input(md-input, formcontrolname='name', required, placeholder='Name')
+          input(md-input, formControlName='name', required, placeholder='Name')
         md-input-container
-          input(md-input, formcontrolname='email', required, placeholder='Email', type='email')
+          input(md-input, formControlName='email', required, placeholder='Email', type='email')
         md-input-container
-          input(md-input, formcontrolname='phone', required, placeholder='Phone number')
+          input(md-input, formControlName='phone', required, placeholder='Phone number')
         md-input-container
-          input(md-input, formcontrolname='role', required, placeholder='Role')
+          input(md-input, formControlName='role', required, placeholder='Role')
         |  
         button(md-raised-button, color='primary', type='submit') Register
       md-select([(ngModel)]='selectedLevel')

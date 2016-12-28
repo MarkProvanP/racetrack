@@ -456,6 +456,7 @@ export class DataIntermediary {
     return this.dbFacade.createUser(user)
     .then(res => user)
     .then(res => this.emailer.sendUserCreatedEmail(user, newPassword))
+    .then(mailResult => user);
   }
 
   resetUserPassword(username): Promise<User> {
