@@ -6,9 +6,9 @@ md-card(class='dashboard-card', [ngClass]='getCardClass()')
     md-card-title
       b(md-row) {{team.name}}
       .safety-team-flag
-        img(src='/assets/img/EU.svg', *ngIf='team.inEurope' title='Team is in the UK')
+        img(src='/assets/img/EU.svg', *ngIf='team.inEurope' title='Team is in Europe')
         |  
-        img(src='/assets/img/UK.svg', *ngIf='!team.inEurope' title='Team is in Europe')
+        img(src='/assets/img/UK.svg', *ngIf='!team.inEurope' title='Team is in the UK')
       md-icon([title]='getStatusName()') {{getStatusIcon()}}
     md-card-subtitle
       i {{team.getPrettyRacersList()}}
