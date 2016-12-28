@@ -408,7 +408,8 @@ setup(MONGODB_URI)
         let text = req.body;
         winston.log('verbose', `Received text from Twilio`, {text});
         handleTextMessage(text);
-        res.send();
+        let response = new twilio.TwimlResponse();
+        res.send(response.toString());
       } else {
         winston.warn('Invalid Twilio request received!');
         res.status(403).send("Error, you're not twilio!");
