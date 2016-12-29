@@ -20,11 +20,13 @@ const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV,
-  HMR: HMR
+  HMR: HMR,
+  GOOGLE_MAPS_API_KEY: GOOGLE_MAPS_API_KEY
 });
 
 /**
@@ -99,10 +101,12 @@ module.exports = function (options) {
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
+        'GOOGLE_MAPS_API_KEY': JSON.stringify(METADATA.GOOGLE_MAPS_API_KEY),
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
+          'GOOGLE_MAPS_API_KEY': JSON.stringify(METADATA.GOOGLE_MAPS_API_KEY)
         }
       }),
 

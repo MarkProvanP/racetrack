@@ -74,6 +74,7 @@ import {
 import { AuthenticatedGuard, UnauthenticatedGuard } from './guards';
 
 import * as config from "../../app-config";
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -145,7 +146,7 @@ const APP_PROVIDERS = [
     RouterModule.forRoot(ROUTES, { useHash: true }),
     MaterialModule.forRoot(),
     AgmCoreModule.forRoot({
-      apiKey: config.GoogleMapsAPIKey
+      apiKey: GOOGLE_MAPS_API_KEY
     })
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
