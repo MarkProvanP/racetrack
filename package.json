@@ -18,7 +18,7 @@
     "webpack-dev-server": "webpack-dev-server",
     "webdriver-manager": "webdriver-manager",
     "protractor": "protractor",
-    "clean": "npm cache clean && npm run rimraf -- node_modules doc coverage dist",
+    "clean": "npm cache clean && npm run rimraf -- node_modules doc coverage dist bin",
     "clean:dist": "npm run rimraf -- dist",
     "preclean:install": "npm run clean",
     "clean:install": "npm set progress=false && npm install",
@@ -33,7 +33,7 @@
     "prebuild:dev": "npm run clean:dist",
     "build:dev": "webpack --config config/webpack.dev.js --progress --profile",
     "prebuild:prod": "npm run clean:dist",
-    "build:prod": "webpack --config config/webpack.prod.js  --progress --profile --bail --display-error-details --display-reasons --display-chunks",
+    "build:prod": "npm run backend:build && webpack --config config/webpack.prod.js  --progress --profile --bail --display-error-details --display-reasons --display-chunks",
     "github-deploy": "npm run github-deploy:dev",
     "github-deploy:dev": "webpack --config config/webpack.github-deploy.js --progress --profile --github-dev",
     "github-deploy:prod": "webpack --config config/webpack.github-deploy.js --progress --profile --github-prod",
@@ -55,8 +55,9 @@
     "preversion": "npm test",
     "version": "npm run build",
     "postversion": "git push && git push --tags",
-    "backend": "node bin/src/server/server",
+    "backend": "node bin/server/server",
     "backend:build": "tsc src/server/server.ts --outDir bin",
+    "backend:clean": "npm run rimraf -- bin",
     "postinstall": "npm run build:prod && npm run backend:build"
   },
   "dependencies": {
