@@ -1,4 +1,0 @@
-db("admi
-db.createUser({user: "admin_user", pwd: "admin_password", roles:["readWrite", "dbAdmin", "userAdmin"]})
-use race2
-db.createUser({user: "race2user", pwd:"race2dbpassword", roles:["readWrite"]})
