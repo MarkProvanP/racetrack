@@ -134,8 +134,8 @@ module.exports = function (env) {
           'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
           'GOOGLE_MAPS_API_KEY': JSON.stringify(METADATA.GOOGLE_MAPS_API_KEY),
-          'APP_NAME': METADATA.APP_NAME,
-          'APP_URL': METADATA.APP_URL
+          'APP_NAME': JSON.stringify(METADATA.APP_NAME),
+          'APP_URL': JSON.stringify(METADATA.APP_URL)
         }
       }),
 
