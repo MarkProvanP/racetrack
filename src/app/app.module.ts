@@ -73,7 +73,6 @@ import {
 
 import { AuthenticatedGuard, UnauthenticatedGuard } from './guards';
 
-import * as config from "../../app-config";
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 // Application wide providers

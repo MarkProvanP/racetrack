@@ -1,44 +1,54 @@
-"use strict";
 import * as express from "express";
-var app = express();
-
-const APP_NAME = "Race2App";
-const APP_URL = "http://www.race2.org.uk/"
+let app = express();
 
 app.use(express.static('dist'));
 
 import * as winston from "winston";
 winston.add(winston.transports.File, { filename: 'logfile.log' })
 
-var http = require('http').Server(app);
-
-var io = require('socket.io')(http);
+let http = require('http').Server(app);
+let io = require('socket.io')(http);
 let passportSocketIo = require('passport.socketio');
-var bodyParser = require('body-parser');
+let bodyParser = require('body-parser');
 let cookieParser = require('cookie-parser');
 let expressSession = require('express-session');
 const MongoStore = require('connect-mongo')(expressSession);
 let passport = require('passport');
 let LocalStrategy = require('passport-local').Strategy;
+let twilio = require('twilio');
 
-import * as config from '../../app-config';
-
-var twilio = require('twilio');
-
-const PORT = process.env.PORT || config.SERVER_PORT;
-const MONGODB_URI = process.env.MONGODB_URI || config.db_url;
-const TWILIO_SID = process.env.TWILIO_SID || config.accountSid;
-const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN || config.authToken;
-const TWILIO_SENDING_NO = process.env.TWILIO_SENDING_NO || config.sendingNo;
-const TWILIO_SMS_WEBHOOK = process.env.TWILIO_SMS_WEBHOOK || config.twilioSMSWebHook;
+const APP_NAME = process.env.APP_NAME;
+const APP_URL = process.env.APP_URL;
+const PORT = process.env.PORT;
+const MONGODB_URI = process.env.MONGODB_URI;
+const TWILIO_SID = process.env.TWILIO_SID;
+const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+const TWILIO_SENDING_NO = process.env.TWILIO_SENDING_NO;
+const TWILIO_SMS_WEBHOOK = process.env.TWILIO_SMS_WEBHOOK;
 const RACE2_ADMIN_PASSWORD = process.env.RACE2_ADMIN_PASSWORD;
+const GMAIL_USER = process.env.GMAIL_USER;
+const GMAIL_CLIENT_ID = process.env.GMAIL_CLIENT_ID;
+const GMAIL_CLIENT_SECRET = process.env.GMAIL_CLIENT_SECRET;
+const GMAIL_REFRESH_TOKEN = process.env.GMAIL_REFRESH_TOKEN;
+const ERROR_EMAIL_RECIPIENTS = [GMAIL_USER].concat(process.env.ERROR_EMAIL_RECIPIENTS.split(","));
+const STATUS_EMAIL_RECIPIENTS = [GMAIL_USER].concat(process.env.STATUS_EMAIL_RECIPIENTS.split(","));
+const DATA_EMAIL_RECIPIENTS = [GMAIL_USER].concat(process.env.DATA_EMAIL_RECIPIENTS.split(","));
+console.log(`Will send error emails to ${ERROR_EMAIL_RECIPIENTS}`);
+console.log(`Will send status emails to ${STATUS_EMAIL_RECIPIENTS}`);
+console.log(`Will send data emails to ${DATA_EMAIL_RECIPIENTS}`);
 
+const XOAUTH2_SETTINGS = {
+  user: GMAIL_USER,
+  clientId: GMAIL_CLIENT_ID,
+  clientSecret: GMAIL_CLIENT_SECRET,
+  refreshToken: GMAIL_REFRESH_TOKEN,
+}
 if (!RACE2_ADMIN_PASSWORD) {
   console.error("RACE2_ADMIN_PASSWORD environment variable must be set before use!");
   process.exit(1);
 }
 
-var twilioClient = twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
+let twilioClient = twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
 
 import { UserPrivileges, UserId } from "../common/user";
 import { Racer } from '../common/racer';
@@ -100,10 +110,6 @@ let dataIntermediary;
 import * as nodemailer from "nodemailer";
 let xoauth2 = require("xoauth2");
 
-const GMAIL_USER: string = process.env.GMAIL_USER;
-const GMAIL_CLIENT_ID = process.env.GMAIL_CLIENT_ID;
-const GMAIL_CLIENT_SECRET = process.env.GMAIL_CLIENT_SECRET;
-const GMAIL_REFRESH_TOKEN = process.env.GMAIL_REFRESH_TOKEN
 
 export class Emailer {
   private smtpTransport;
@@ -133,7 +139,10 @@ export class Emailer {
 
   sendEmail(to: string[] | string, subject: string, bodyHtml: string) {
     let mailOptions = {
-      from: GMAIL_USER,
+      from: {
+        name: APP_NAME,
+        address: GMAIL_USER
+      },
       to: to,
       subject: subject,
       generateTextFromHTML: true,
@@ -229,18 +238,6 @@ export class Emailer {
       `
     )
   }
-}
-const ERROR_EMAIL_RECIPIENTS = [GMAIL_USER].concat(process.env.ERROR_EMAIL_RECIPIENTS.split(","));
-const STATUS_EMAIL_RECIPIENTS = [GMAIL_USER].concat(process.env.STATUS_EMAIL_RECIPIENTS.split(","));
-const DATA_EMAIL_RECIPIENTS = [GMAIL_USER].concat(process.env.DATA_EMAIL_RECIPIENTS.split(","));
-console.log(`Will send error emails to ${ERROR_EMAIL_RECIPIENTS}`);
-console.log(`Will send status emails to ${STATUS_EMAIL_RECIPIENTS}`);
-console.log(`Will send data emails to ${DATA_EMAIL_RECIPIENTS}`);
-const XOAUTH2_SETTINGS = {
-  user: GMAIL_USER,
-  clientId: GMAIL_CLIENT_ID,
-  clientSecret: GMAIL_CLIENT_SECRET,
-  refreshToken: GMAIL_REFRESH_TOKEN,
 }
 let emailer = new Emailer(XOAUTH2_SETTINGS);
 

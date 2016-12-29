@@ -22,7 +22,7 @@ import { DataService } from '../data.service';
 export class PrivateApp {
   angularclassLogo = 'assets/img/angularclass-avatar.png';
   loading = false;
-  name = 'Race 2 Prague';
+  name = process.env.APP_NAME;
   url = 'https://twitter.com/AngularClass';
   recentTextsReceived = [];
 

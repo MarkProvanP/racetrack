@@ -16,7 +16,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
   template: '<router-outlet></router-outlet>'
 })
 export class App {
-  name = 'Race 2 Prague';
+  name = process.env.APP_NAME;
   constructor(
   ) {}
 }

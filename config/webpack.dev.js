@@ -21,12 +21,16 @@ const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+const APP_NAME = process.env.APP_NAME;
+const APP_URL = process.env.APP_URL;
 const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV,
   HMR: HMR,
-  GOOGLE_MAPS_API_KEY: GOOGLE_MAPS_API_KEY
+  GOOGLE_MAPS_API_KEY: GOOGLE_MAPS_API_KEY,
+  APP_NAME: APP_NAME,
+  APP_URL: APP_URL
 });
 
 /**
@@ -102,11 +106,15 @@ module.exports = function (options) {
         'ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
         'GOOGLE_MAPS_API_KEY': JSON.stringify(METADATA.GOOGLE_MAPS_API_KEY),
+        'APP_NAME': JSON.stringify(METADATA.APP_NAME),
+        'APP_URL': JSON.stringify(METADATA.APP_URL),
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
-          'GOOGLE_MAPS_API_KEY': JSON.stringify(METADATA.GOOGLE_MAPS_API_KEY)
+          'GOOGLE_MAPS_API_KEY': JSON.stringify(METADATA.GOOGLE_MAPS_API_KEY),
+          'APP_NAME': METADATA.APP_NAME,
+          'APP_URL': METADATA.APP_URL
         }
       }),
 
