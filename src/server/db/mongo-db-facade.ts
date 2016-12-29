@@ -29,7 +29,7 @@ import { Promise } from "es6-promise";
 import { User } from '../auth';
 import { SavedConfig } from "../data-intermediate";
 
-import * as uuid from "node-uuid";
+import * as uuid from "uuid";
 
 import * as winston from "winston";
 

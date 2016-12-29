@@ -45,7 +45,7 @@ import { Emailer, MessageSender } from "./server";
 import { User } from "./auth";
 
 import * as winston from "winston";
-import * as uuid from "node-uuid";
+import * as uuid from "uuid";
 
 export interface SavedConfig {
   nodemailer: {

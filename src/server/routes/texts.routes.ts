@@ -13,7 +13,6 @@ import {
 } from "../../common/text";
 import { UserWithoutPassword } from "../../common/user";
 import * as winston from "winston";
-import * as uuid from "node-uuid";
 
 import { DataIntermediary } from "../data-intermediate";
 
