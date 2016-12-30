@@ -13,7 +13,6 @@ import { NoRacerComponent } from './racers/no-racer';
 import { TeamCardComponent } from './teams/team-card';
 import { NoTeamComponent } from './teams/no-team';
 import { PublicMapComponent } from './public-map';
-import { PublicTeamProgressMapComponent } from './public-team-progress-map';
 import { MassTextComponent } from './mass-text';
 import { ImportComponent } from "./import";
 import { SafetyMapComponent } from './safety-map';
@@ -113,8 +112,11 @@ export const ROUTES: Routes = [
     canActivate: [UnauthenticatedGuard],
     children: [
       { path: 'login', component: LoginComponent,},
-      { path: 'team-progress/:id', component: PublicTeamProgressMapComponent },
-      { path: '**', component: PublicMapComponent }
+      { path: '', children: [
+        { path: '', component: PublicMapComponent },
+        { path: 'track/:id', component: PublicMapComponent }
+      ] },
+      { path: '**', redirectTo: '/', pathMatch: 'full' }
     ]
   }
 ];

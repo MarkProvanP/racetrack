@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 
 import { DataService } from '../data.service';
 
-import { Team } from '../../common/team';
+import { Team, TeamId } from '../../common/team';
 
 @Component({
   selector: 'public-map',
@@ -31,9 +31,12 @@ export class PublicMapComponent implements OnInit {
 
   expandedTeam: Team;
   teamShowingProgress: Team;
+  showingTeamId: TeamId;
+  paramsSub: any;
 
   constructor(
     private dataService: DataService,
+    private activatedRoute: ActivatedRoute,
     private router: Router
   ) {}
 
@@ -46,20 +49,31 @@ export class PublicMapComponent implements OnInit {
   }
 
   showTeamProgress(team: Team) {
-    this.teamShowingProgress = team;
+    this.router.navigate(['/track', team.id])
   }
 
   backToAllTeams() {
-    this.teamShowingProgress = undefined;
+    this.router.navigate(['/'])
   }
 
-  goToTeamProgress(team: Team) {
-    this.router.navigate(['/team-progress', team.id]);
+  private loadShowingTeam() {
+    if (!this.showingTeamId) {
+      this.teamShowingProgress = undefined;
+    }
+    let matchingTeams = this.teams.filter(team => team.id == this.showingTeamId);
+    if (matchingTeams.length) {
+      this.teamShowingProgress = matchingTeams[0];
+    }
   }
 
   ngOnInit() {
+    this.paramsSub = this.activatedRoute.params.subscribe(params => {
+      this.showingTeamId = params['id'];
+      this.loadShowingTeam();
+    })
     this.dataService.getPublicTeams()
-      .then(teams => this.teams = teams);
+    .then(teams => this.teams = teams)
+    .then(() => this.loadShowingTeam())
   }
 
   isTeamExpanded(team: Team) {

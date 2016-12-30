@@ -19,7 +19,7 @@
             td  {{team.getLastUpdate().location.place}}
           tr
             td(colspan='2')
-              button(md-button, (click)='goToTeamProgress(team)') See Team Progress
+              button(md-button, (click)='showTeamProgress(team)') Track 
     sebm-google-map-polyline(
       *ngIf='teamShowingProgress',
       [strokeColor]='polylineSettings.strokeColor',
@@ -71,8 +71,7 @@
               span.label Last location
               span.value {{team.getLastPlaceName()}}
           .no-expand
-            button(md-button, (click)='goToTeamProgress(team)') Old
-            button(md-button, (click)='showTeamProgress(team)') New
+            button(md-button, (click)='showTeamProgress(team)') Track
       .list-item.expanded.flex-container(*ngFor='let update of teamStatusUpdates()')
         .no-expand
           button(md-icon-button)
