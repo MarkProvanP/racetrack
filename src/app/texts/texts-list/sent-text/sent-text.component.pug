@@ -1,7 +1,9 @@
-md-card.text-card.text-outbound
+md-card.text-card.text-outbound([ngClass]='{"unknown-text": !text.racer}')
   md-card-header
     md-card-title
-      .inline-text-title(*ngIf='display.oneline')
+      i(*ngIf='!text.racer') Text from unknown number!
+        phone-widget([number]='text.from')
+      .inline-text-title(*ngIf='text.racer && display.oneline')
         phone-widget([number]='text.to')
         |  - 
         span(*ngIf='text.racer') {{text.racer.name}}

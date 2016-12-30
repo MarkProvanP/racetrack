@@ -13,6 +13,10 @@ export class PhoneNumber {
   }
 
   equals(other: PhoneNumber) {
+    if (typeof other == 'string') {
+      let otherString = other as string;
+      return this.toE164() == otherString;
+    }
     return this.countryCode == other.countryCode && this.nationalNumber == other.nationalNumber;
   }
 
