@@ -14,7 +14,8 @@
           td {{getUser().email}}
         tr
           th Phone:
-          td {{getUser().phone}}
+          td
+            phone-widget([number]='getUser().phone')
         tr
           th Role:
           td {{getUser().role}}

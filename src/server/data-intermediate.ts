@@ -285,7 +285,7 @@ export class DataIntermediary {
     return this.getRacers()
       .then(racers => {
         let matchingRacers = racers.filter(
-          racer => racer.phones.filter(contact => contact.number == fromNumber).length);
+          racer => racer.phones.filter(contact => contact.number.equals(fromNumber)).length);
         if (matchingRacers.length > 0) {
           createdText.racer = matchingRacers[0];
         } else {
@@ -326,7 +326,7 @@ export class DataIntermediary {
     return this.getRacers()
       .then(racers => {
         let matchingRacers = racers.filter(
-          racer => racer.phones.filter(contact => contact.number == toNumber).length);
+          racer => racer.phones.filter(contact => contact.number.equals(toNumber)).length);
         if (matchingRacers.length > 0) {
           createdText.racer = matchingRacers[0];
         } else {
@@ -360,9 +360,9 @@ export class DataIntermediary {
           .filter(racer => {
             return racer.phones.filter(contact => {
               if (inbound) {
-                return contact.number == text.from;
+                return contact.number.equals(text.from)
               } else {
-                return contact.number == text.to;
+                return contact.number.equals(text.to);
               }
             }).length
           });

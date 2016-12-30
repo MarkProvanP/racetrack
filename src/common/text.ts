@@ -12,6 +12,10 @@ export class PhoneNumber {
     return `+${this.countryCode}${this.nationalNumber}`
   }
 
+  equals(other: PhoneNumber) {
+    return this.countryCode == other.countryCode && this.nationalNumber == other.nationalNumber;
+  }
+
   static parse(thing): PhoneNumber {
     if (!thing) {
       return undefined;

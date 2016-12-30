@@ -1,7 +1,8 @@
 md-card.text-card.unknown-text([ngClass]='{"linking": inLinkingMode}')
   md-card-header
     md-card-title
-      i Text from unknown number! {{text.from}}
+      i Text from unknown number!
+        phone-widget([number]='text.from')
       time-widget([time]='text.timestamp')
       |  
       button(md-icon-button, (click)='linkUnknownTextToRacer(text)', [title]='"Link number to racer"', [disabled]='inLinkingMode')

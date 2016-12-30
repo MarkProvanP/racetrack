@@ -103,7 +103,8 @@
             td {{user.username}}
             td {{user.name}}
             td {{user.email}}
-            td {{user.phone}}
+            td
+              phone-widget([number]='user.phone')
             td {{user.role}}
             td
               md-select([(ngModel)]='user.level')
