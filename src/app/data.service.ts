@@ -385,6 +385,7 @@ export class DataService {
     .toPromise()
     .catch(this.handleError)
     .then(response => response.json())
+    .then(user => UserWithoutPassword.fromJSON(user))
   }
 
   public getUsers(): Promise<UserWithoutPassword[]> {
@@ -392,6 +393,7 @@ export class DataService {
     .toPromise()
     .catch(this.handleError)
     .then(response => response.json())
+    .then(users => users.map(user => UserWithoutPassword.fromJSON(user)));
   }
 
   public updateUser(user): Promise<UserWithoutPassword> {
@@ -400,6 +402,7 @@ export class DataService {
     .toPromise()
     .catch(this.handleError)
     .then(response => response.json())
+    .then(user => UserWithoutPassword.fromJSON(user))
   }
 
   public resetUserPassword(user: UserWithoutPassword): Promise<UserWithoutPassword> {
@@ -408,6 +411,7 @@ export class DataService {
     .toPromise()
     .catch(this.handleError)
     .then(response => response.json())
+    .then(user => UserWithoutPassword.fromJSON(user))
   }
 
   public createUser(user): Promise<UserWithoutPassword> {
@@ -415,6 +419,7 @@ export class DataService {
     .toPromise()
     .catch(this.handleError)
     .then(response => response.json())
+    .then(user => UserWithoutPassword.fromJSON(user))
   }
 
   public deleteUser(username: UserId): Promise<any> {

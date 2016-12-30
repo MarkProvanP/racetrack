@@ -197,6 +197,7 @@ export class UserService {
       .then(response => {
         return response.json()
       })
+      .then(user => UserWithoutPassword.fromJSON(user))
       .then(user => this.setUser(user))
   }
 
@@ -224,6 +225,7 @@ export class UserService {
       .toPromise()
       .catch(this.handleHttpError)
       .then(response => response.json())
+      .then(user => UserWithoutPassword.fromJSON(user))
       .then(user => {
         this.setUser(user);
         return user;

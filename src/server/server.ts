@@ -308,6 +308,8 @@ setup(MONGODB_URI)
       winston.info(`Creating admin user with password: ${RACE2_ADMIN_PASSWORD}`);
       dataIntermediary.addUser('admin', RACE2_ADMIN_PASSWORD, {
         name: "Administrator",
+        email: GMAIL_USER,
+        phone: "",
         level: UserPrivileges.SUPERUSER
       })
     });

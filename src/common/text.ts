@@ -13,6 +13,9 @@ export class PhoneNumber {
   }
 
   static parse(thing): PhoneNumber {
+    if (!thing) {
+      return undefined;
+    }
     if (typeof thing == "string") {
       try {
         let phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
