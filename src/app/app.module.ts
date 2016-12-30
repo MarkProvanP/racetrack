@@ -58,6 +58,7 @@ import { TimeWidget } from "./widgets/time";
 import { LocationWidget } from "./widgets/location";
 import { UserWidget } from "./widgets/user";
 import { TextWidget } from "./widgets/text";
+import { PhoneWidget } from "./widgets/phone";
 
 import { DataService } from './data.service';
 import { TextService } from './text.service';
@@ -130,6 +131,7 @@ const APP_PROVIDERS = [
     LocationWidget,
     UserWidget,
     TextWidget,
+    PhoneWidget,
     // PIPES
     OrderByPipe,
     TeamHasUpdatePipe,

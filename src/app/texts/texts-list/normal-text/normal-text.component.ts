@@ -11,8 +11,8 @@ import { UserService } from '../../../user.service';
 
 @Component({
   selector: 'normal-text',
-  templateUrl: './normal-text.template.html',
-  styleUrls: ['./normal-text.style.scss']
+  templateUrl: './normal-text.component.pug',
+  styleUrls: ['./normal-text.component.scss']
 })
 export class NormalTextComponent {
   @Input() text: InboundText;

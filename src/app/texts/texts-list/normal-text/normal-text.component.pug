@@ -1,0 +1,37 @@
+md-card.text-card.text-card-normal
+  md-card-header
+    md-card-title
+      .inline-text-title(*ngIf='display.oneline')
+        span
+          phone-widget([number]='text.from')
+        |  - 
+        span(*ngIf='text.racer') {{text.racer.name}}
+        |  - 
+        span(*ngIf='text.team') {{text.team.name}}
+        |  
+        span.error(*ngIf='!text.team') ERROR: No Team for Racer!
+      time-widget([time]='text.timestamp')
+      .text-title(*ngIf='!display.oneline')
+        div(*ngIf='display.number')
+          phone-widget([number]='text.from')
+        div(*ngIf='display.time') {{text.getPrettyTimestamp()}}
+  md-card-content
+    .text-body  {{text.body}}
+  .text-read(*ngIf='text.readBy')
+    | Read by
+    user-widget([user]='text.readBy.user')
+    |  at
+    time-widget([time]='text.readBy.timestamp')
+  md-card-actions
+    button(md-icon-button, (click)='replyToText()', [title]='"Reply to text"')
+      md-icon reply
+    |  
+    button(md-icon-button, (click)='markTextAsRead()', [disabled]='text.readBy', [title]='"Mark text as read"')
+      md-icon done
+    |  
+    button(md-icon-button, [disabled]='!canCheckinFromText(text)', (click)='addCheckIn()', [title]='"Add checkin for team"')
+      md-icon update
+    |  
+    button(md-icon-button, [disabled]='!canUpdateFromText(text)', (click)='createUpdate()', [title]='"Create team update from this text"')
+      md-icon add
+
