@@ -1,18 +1,48 @@
 import { Component } from "@angular/core";
 
+import { Team, TeamId } from "../../common/team";
+import { Racer, RacerId } from "../../common/racer";
+import { PhoneNumber } from "../../common/text";
+
 import * as Papa from "papaparse";
+import * as _ from "lodash";
+
 const TEAM_NAME = "Team name";
 const RACER_NAME = "Racer name";
-const MOBILE = "Mobile";
+const RACER_MOBILE = "Mobile";
 const AFFILIATION = "Hall/Society/Sport affiliation";
+const TEAM_NUMBER = "Team Number";
+const RACER_ID = "St Andrews Email";
+
+interface DataRow {
+  teamNumber: TeamId,
+  teamName: string,
+  affiliation: string,
+  racerName: string,
+  racerId: RacerId,
+  mobile: PhoneNumber,
+}
+
+interface ParseTeam {
+  id: TeamId,
+  name: string,
+  racers: ParseRacer[]
+}
+
+interface ParseRacer {
+  id: RacerId,
+  name: string,
+  mobile: PhoneNumber
+}
 
 @Component({
   selector: 'import',
-  templateUrl: './import.component.html',
+  templateUrl: './import.component.pug',
   styleUrls: ['./import.component.scss']
 })
 export class ImportComponent {
-  data: string[][];
+  parsedData: DataRow[];
+  parsedTeams: Team[];
 
   fileChangeEvent(fileInputEvent: any) {
     let fileInput = fileInputEvent.srcElement;
@@ -26,45 +56,46 @@ export class ImportComponent {
         return;
       }
       let textContent = reader.result;
-      this.data = Papa.parse(textContent, {
+      let data = Papa.parse(textContent, {
         header: true
       });
-      console.log(reader, this.data);
+      console.log(data);
+      this.parsedData = data.data.map(row => this.parseRow(row))
     }
 
     reader.readAsText(file);
   }
 
-
-  sortTeamsThenRacers(data) {
-    return data.sort((r1, r2) => {
-      let r1team = r1[TEAM_NAME].toLowerCase();
-      let r2team = r2[TEAM_NAME].toLowerCase();
-      let r1racer = r1[RACER_NAME].toLowerCase();
-      let r2racer = r2[RACER_NAME].toLowerCase();
-
-      if (r1team < r2team) return -1;
-      if (r2team > r1team) return 1;
-      if (r1racer < r2racer) return -1;
-      if (r2racer > r1racer) return 1;
-      return 0;
-    })
-  }
-
-  relevantFields(fields) {
-    return fields.filter(field => {
-      switch (field) {
-        case TEAM_NAME:
-        case RACER_NAME:
-        case MOBILE:
-        case AFFILIATION:
-        return true;
+  process() {
+    this.parsedTeams = [];
+    let teamsObj = {};
+    this.parsedData.forEach(row => {
+      if (!teamsObj[row.teamNumber]) {
+        teamsObj[row.teamNumber] = {
+          id: row.teamNumber,
+          name: row.teamName,
+          racers: []
+        }
       }
-      return false;
+      let team = teamsObj[row.teamNumber];
+      team.racers.push({
+        id: row.racerId,
+        name: row.racerName,
+        mobile: row.mobile
+      })
     })
+    this.parsedTeams = Object.keys(teamsObj).map(teamId => teamsObj[teamId]);
   }
 
-  toList(obj) {
-    return this.relevantFields(Object.keys(obj)).map(key => obj[key]);
+  parseRow(row) {
+    let parsed = {
+      teamNumber: row[TEAM_NUMBER],
+      teamName: row[TEAM_NAME],
+      affiliation: row[AFFILIATION],
+      racerName: row[RACER_NAME],
+      racerId: row[RACER_ID],
+      mobile: row[RACER_MOBILE]
+    }
+    return parsed;
   }
 }

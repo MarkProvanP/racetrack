@@ -1,0 +1,30 @@
+md-card
+  h3 Import
+  |  
+  input(type='file', (change)='fileChangeEvent($event)')
+  table(*ngIf='parsedData')
+    thead
+      tr
+        th Team Number
+        th Team Name
+        th Affiliation
+        th Racer Name
+        th Racer ID
+        th Mobile
+    tbody
+      tr(*ngFor='let row of parsedData')
+        td {{row.teamNumber}}
+        td {{row.teamName}}
+        td {{row.affiliation}}
+        td {{row.racerName}}
+        td {{row.racerId}}
+        td {{row.mobile}}
+  button(md-raised-button, (click)='process()') Process
+  .team-list
+    .team(*ngFor='let team of parsedTeams')
+      | Team Name: {{team.name}}
+      | Team Number {{team.id}}
+      .racer-list
+        .racer(*ngFor='let racer of team.racers')
+          | Racer Name: {{racer.name}}
+          | Racer ID: {{racer.id}}
