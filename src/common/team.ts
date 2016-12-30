@@ -50,6 +50,7 @@ export class Team {
   inEurope: boolean = false;
   notes: string;
   color: Color;
+  affiliation: string;
 
   stripPrivateData(): Team {
     let strippedRacers = this.racers.map(racer => racer.stripPrivateData());
@@ -97,6 +98,7 @@ export class Team {
     this.inEurope = Boolean(properties.inEurope);
     this.notes = properties.notes;
     this.color = properties.color;
+    this.affiliation = properties.affiliation;
   }
 
   getCurrentStatus(): TeamStatus {

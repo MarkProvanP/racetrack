@@ -9,6 +9,9 @@
       input(type='color', [(ngModel)]='team.color', [disabled]='!inEditMode')
       h4 Team number
       p {{team.id}}
+      h4 Affiliation
+      md-input-container(class='full-width')
+        input(md-input, [disabled]='!inEditMode', [(ngModel)]='team.affiliation')
       h4 Notes
       md-input-container(class='full-width')
         textarea(md-input, [disabled]='!inEditMode', [(ngModel)]='team.notes')

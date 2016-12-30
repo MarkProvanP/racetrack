@@ -12,6 +12,9 @@
             th Team name:
             td  {{team.name}}
           tr
+            th Affiliation:
+            td  {{team.affiliation}}
+          tr
             th Racers:
             td  {{team.getPrettyRacersList()}}
           tr
@@ -70,6 +73,9 @@
             .detail-row
               span.label Last location
               span.value {{team.getLastPlaceName()}}
+            .detail-row
+              span.label Affiliation
+              span.value {{team.affiliation}}
           .no-expand
             button(md-button, (click)='showTeamProgress(team)') Track
       .list-item.expanded.flex-container(*ngFor='let update of teamStatusUpdates()')
