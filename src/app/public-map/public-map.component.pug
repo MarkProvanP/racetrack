@@ -1,7 +1,11 @@
 .public-map-container
   sebm-google-map([latitude]='default.lat', [longitude]='default.lng', [zoom]='default.zoom')
     sebm-google-map-marker([latitude]='hostel.lat', [longitude]='hostel.lng', [iconUrl]='hostel.iconUrl')
-    sebm-google-map-marker(*ngFor='let team of teams | teamHasUpdate ', [latitude]='(team.getLastUpdate().location.latitude)', [longitude]='(team.getLastUpdate().location.longitude)', [title]='team.name')
+    sebm-google-map-marker(
+      *ngFor='let team of showingAllTeams() | teamHasUpdate ',
+      [latitude]='(team.getLastUpdate().location.latitude)',
+      [longitude]='(team.getLastUpdate().location.longitude)',
+      [title]='team.name')
       sebm-google-map-info-window
         table
           tr
@@ -16,25 +20,68 @@
           tr
             td(colspan='2')
               button(md-button, (click)='goToTeamProgress(team)') See Team Progress
+    sebm-google-map-polyline(
+      *ngIf='teamShowingProgress',
+      [strokeColor]='polylineSettings.strokeColor',
+      [strokeWeight]='polylineSettings.strokeWeight',
+      [strokeOpacity]='polylineSettings.strokeOpacity'
+    )
+      sebm-google-map-polyline-point(
+        *ngFor='let update of teamStatusUpdates()',
+        [latitude]='update.location.latitude',
+        [longitude]='update.location.longitude'
+      )
+    sebm-google-map-marker(
+      *ngFor='let update of teamStatusUpdates()',
+      [latitude]='update.location.latitude',
+      [longitude]='update.location.longitude'
+    )
+      sebm-google-map-info-window
+        table
+          tr
+            th Time:
+            td
+              time-widget([time]='update.timestamp')
+          tr
+            th Current place:
+            td  {{update.location.place}}
+      
   md-card.public-map-guide
     .md-card-top-padded
       img.race-logo(src='/assets/img/race2_prague.jpg')
-    .list-title
+    .list-title(*ngIf='!teamShowingProgress')
       h3 Teams
-    .teams-list
-      .list-item(*ngFor='let team of teams', [ngClass]='{"expanded": isTeamExpanded(team)}')
+    .list-title(*ngIf='teamShowingProgress')
+      .small-button-icon((click)='backToAllTeams()')
+        md-icon keyboard_backspace
+      h3 Progress for {{teamShowingProgress.name}}
+    .list
+      .list-item(*ngFor='let team of showingAllTeams()', [ngClass]='{"expanded": isTeamExpanded(team)}')
         .list-item-title
           .text {{team.name}}
           .button((click)='toggleTeamExpand(team)')
             md-icon.small-button-icon(*ngIf='!isTeamExpanded(team)') expand_more
             md-icon.small-button-icon(*ngIf='isTeamExpanded(team)') expand_less
-        .list-item-detail
-          .left
+        .list-item-detail.flex-container
+          .expand
             .detail-row
               span.label Racers
               span.value {{team.getPrettyRacersList()}}
             .detail-row
               span.label Last location
               span.value {{team.getLastPlaceName()}}
-          .right
-            button(md-button, (click)='goToTeamProgress(team)') Progress
+          .no-expand
+            button(md-button, (click)='goToTeamProgress(team)') Old
+            button(md-button, (click)='showTeamProgress(team)') New
+      .list-item.expanded.flex-container(*ngFor='let update of teamStatusUpdates()')
+        .no-expand
+          button(md-icon-button)
+            md-icon place
+        .expand
+          .list-item-title
+            .text {{update.location.place}}
+          .list-item-detail
+            .detail-row
+              span.label Time
+              span.value
+                time-widget([time]='update.timestamp')

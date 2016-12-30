@@ -5,8 +5,6 @@ import { DataService } from '../data.service';
 
 import { Team } from '../../common/team';
 
-const ICON_FILENAME = "/assets/map-pin/Map_marker-64.png";
-
 @Component({
   selector: 'public-map',
   templateUrl: './public-map.component.pug',
@@ -17,30 +15,42 @@ export class PublicMapComponent implements OnInit {
   default = {
     lat: 53.612805,
     lng: 5.301865,
-    zoom: 6,
-    iconUrl: '/assets/icon/favicon-16x16.png'
+    zoom: 6
   }
   hostel = {
     lat: 50.0718908,
     lng: 14.4462584,
-    iconUrl: ''
+    iconUrl: '/assets/map-pin/Map_marker-64.png'
+  }
+
+  polylineSettings = {
+    strokeColor: 'red',
+    strokeWeight: 5,
+    strokeOpacity: 1.0
   }
 
   expandedTeam: Team;
-
-  whut(team) {
-    console.log(team);
-    return JSON.stringify(team);
-  }
-
-  //50.0718908,14.4462584
-  //53.612805,5.301865,
+  teamShowingProgress: Team;
 
   constructor(
     private dataService: DataService,
     private router: Router
-  ) {
+  ) {}
 
+  showingAllTeams() {
+    if (this.teamShowingProgress) {
+      return []
+    } else {
+      return this.teams;
+    }
+  }
+
+  showTeamProgress(team: Team) {
+    this.teamShowingProgress = team;
+  }
+
+  backToAllTeams() {
+    this.teamShowingProgress = undefined;
   }
 
   goToTeamProgress(team: Team) {
@@ -48,13 +58,19 @@ export class PublicMapComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.hostel.iconUrl = window.location.origin + ICON_FILENAME;
     this.dataService.getPublicTeams()
       .then(teams => this.teams = teams);
   }
 
   isTeamExpanded(team: Team) {
     return this.expandedTeam == team;
+  }
+
+  teamStatusUpdates() {
+    if (!this.teamShowingProgress) {
+      return [];
+    }
+    return this.teamShowingProgress.statusUpdates;
   }
 
   toggleTeamExpand(team: Team) {
