@@ -1,0 +1,40 @@
+.public-map-container
+  sebm-google-map([latitude]='default.lat', [longitude]='default.lng', [zoom]='default.zoom')
+    sebm-google-map-marker([latitude]='hostel.lat', [longitude]='hostel.lng', [iconUrl]='hostel.iconUrl')
+    sebm-google-map-marker(*ngFor='let team of teams | teamHasUpdate ', [latitude]='(team.getLastUpdate().location.latitude)', [longitude]='(team.getLastUpdate().location.longitude)', [title]='team.name')
+      sebm-google-map-info-window
+        table
+          tr
+            th Team name:
+            td  {{team.name}}
+          tr
+            th Racers:
+            td  {{team.getPrettyRacersList()}}
+          tr
+            th Current place:
+            td  {{team.getLastUpdate().location.place}}
+          tr
+            td(colspan='2')
+              button(md-button, (click)='goToTeamProgress(team)') See Team Progress
+  md-card.public-map-guide
+    .md-card-top-padded
+      img.race-logo(src='/assets/img/race2_prague.jpg')
+    .list-title
+      h3 Teams
+    .teams-list
+      .list-item(*ngFor='let team of teams', [ngClass]='{"expanded": isTeamExpanded(team)}')
+        .list-item-title
+          .text {{team.name}}
+          .button((click)='toggleTeamExpand(team)')
+            md-icon.small-button-icon(*ngIf='!isTeamExpanded(team)') expand_more
+            md-icon.small-button-icon(*ngIf='isTeamExpanded(team)') expand_less
+        .list-item-detail
+          .left
+            .detail-row
+              span.label Racers
+              span.value {{team.getPrettyRacersList()}}
+            .detail-row
+              span.label Last location
+              span.value {{team.getLastPlaceName()}}
+          .right
+            button(md-button, (click)='goToTeamProgress(team)') Progress

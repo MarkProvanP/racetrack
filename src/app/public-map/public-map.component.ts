@@ -9,8 +9,8 @@ const ICON_FILENAME = "/assets/map-pin/Map_marker-64.png";
 
 @Component({
   selector: 'public-map',
-  templateUrl: './public-map.template.html',
-  styleUrls: ['./public-map.styles.scss']
+  templateUrl: './public-map.component.pug',
+  styleUrls: ['./public-map.component.scss']
 })
 export class PublicMapComponent implements OnInit {
   teams: Team[] = [];
@@ -25,6 +25,8 @@ export class PublicMapComponent implements OnInit {
     lng: 14.4462584,
     iconUrl: ''
   }
+
+  expandedTeam: Team;
 
   whut(team) {
     console.log(team);
@@ -49,5 +51,17 @@ export class PublicMapComponent implements OnInit {
     this.hostel.iconUrl = window.location.origin + ICON_FILENAME;
     this.dataService.getPublicTeams()
       .then(teams => this.teams = teams);
+  }
+
+  isTeamExpanded(team: Team) {
+    return this.expandedTeam == team;
+  }
+
+  toggleTeamExpand(team: Team) {
+    if (this.expandedTeam == team) {
+      this.expandedTeam = undefined;
+    } else {
+      this.expandedTeam = team;
+    }
   }
 }

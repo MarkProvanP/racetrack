@@ -14,9 +14,9 @@ import { DataService } from '../data.service';
   selector: 'public-app',
   encapsulation: ViewEncapsulation.None,
   styleUrls: [
-    './public-app.style.scss'
+    './public-app.component.scss'
   ],
-  templateUrl: './public-app.template.html'
+  templateUrl: './public-app.component.pug'
 })
 export class PublicApp {
   angularclassLogo = 'assets/img/angularclass-avatar.png';

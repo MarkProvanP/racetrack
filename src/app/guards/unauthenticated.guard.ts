@@ -10,10 +10,8 @@ export class UnauthenticatedGuard implements CanActivate {
   constructor(private router: Router, private userService: UserService) {}
 
   canActivate(): Observable<boolean> | boolean {
-    console.log('unauthenticatedGuard canActivate');
     return this.userService.auth()
       .map(authenticated => {
-        console.log('authenticated?', authenticated);
         if (!authenticated) {
           return true;
         } else {

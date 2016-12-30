@@ -79,7 +79,6 @@ export class UserService {
   addSocketEventListener(event, callback) {
     if (!this.socketEventListenerMap[event]) {
       this.socketEventListenerMap[event] = [];
-      console.log('Adding socket event listener', event, callback);
       this.socket.on(event, (m) => {
         this.socketEventListenerMap[event].forEach(callback => callback(m));
       })
@@ -93,10 +92,9 @@ export class UserService {
     }
     this.socket = io(this.socketIoHost, SOCKET_IO_OPTS);
     this.socket.on('connect', () => {
-      console.log('Socket io connection established!');
     });
     this.socket.on('connect_error', () => {
-      console.log('Socket io connection error!');
+      console.error('Socket io connection error!');
     });
     // I don't know why, but the socket.emit() call in the server upon-login code
     // results in this message being pre-parsed as an object
@@ -138,7 +136,6 @@ export class UserService {
           this.getMe();
         }
       })
-    console.log(this.location);
   }
 
   public addOnAuthStatusChangedListener(callback) {
@@ -173,7 +170,6 @@ export class UserService {
       return Promise.resolve(user);
     }
     this.authenticated = true;
-    console.log('setting authenticated to true');
     this.whenAuthenticated();
     this.broadcastAuthStatus();
     this.user = user;
@@ -199,7 +195,6 @@ export class UserService {
       .toPromise()
       .catch(this.handleHttpError)
       .then(response => {
-        console.log('login response', response);
         return response.json()
       })
       .then(user => this.setUser(user))
@@ -236,7 +231,7 @@ export class UserService {
   }
 
   private handleHttpError(error: any): Promise<any> {
-    console.log('UserService handleHttpError', error);
+    console.error('UserService handleHttpError', error);
     return Promise.reject(error);
   }
 

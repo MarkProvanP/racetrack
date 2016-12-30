@@ -1,0 +1,113 @@
+.sebm-google-map-container {
+  height: 100vh;
+}
+
+$padding-amount: 12px;
+$reduced-padding-amount: 6px;
+
+.public-map-guide {
+  position: absolute;
+  left: 50px;
+  top: 50px;
+  width: 350px;
+  padding: 0;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+
+  .race-logo {
+    height: 50px;
+  }
+}
+
+.md-card-top-padded {
+  padding: $padding-amount;
+}
+
+.md-card-no-pad {
+
+}
+
+.list-title {
+  padding-left: $padding-amount;
+  padding-right: $padding-amount;
+  padding-top: $reduced-padding-amount;
+  padding-bottom: $reduced-padding-amount;
+  background-color: #f1f1f1;
+
+  h3 {
+    margin: 0px;
+  }
+}
+
+
+
+.public-map-container {
+  flex: 1;
+  position: relative;
+}
+
+.teams-list {
+  overflow-y: scroll;
+  padding-top: $reduced-padding-amount;
+  padding-bottom: $reduced-padding-amount;
+  flex: 1;
+}
+
+.list-item {
+  padding-top: $reduced-padding-amount;
+  padding-left: $reduced-padding-amount;
+  padding-right: $reduced-padding-amount;
+  margin-left: $reduced-padding-amount;
+  margin-right: $reduced-padding-amount;
+  .list-item-title {
+    display: flex;
+    .text {
+      flex: 1;
+    }
+    .button {
+
+    }
+  }
+
+  .list-item-detail {
+    display: none;
+  }
+}
+
+.list-item:hover {
+  background-color: #f1f1f1;
+}
+
+.list-item.expanded {
+  background-color: #f1f1f1;
+  .list-item-detail {
+    display: flex;
+    
+    .left {
+      flex: 1;
+    }
+  }
+}
+
+.detail-row {
+  font-size: smaller;
+
+  .label {
+    font-style: italic;
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  .value {
+  }
+}
+
+.small-button-icon {
+  border-radius: 100%;
+  cursor: pointer;
+  user-select: none;
+}
+
+.small-button-icon:hover {
+  background-color: #EEE;
+}
