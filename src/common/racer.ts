@@ -39,7 +39,7 @@ export class Racer {
     this.id = id;
     this.name = properties.name;
     if (properties.phones) {
-      this.phones = properties.phones;
+      this.phones = properties.phones.map(contactNumber => ContactNumber.fromJSON(contactNumber));
     }
   }
 

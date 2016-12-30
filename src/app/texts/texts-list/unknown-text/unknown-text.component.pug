@@ -1,0 +1,54 @@
+md-card.text-card.unknown-text([ngClass]='{"linking": inLinkingMode}')
+  md-card-header
+    md-card-title
+      i Text from unknown number! {{text.from}}
+      time-widget([time]='text.timestamp')
+      |  
+      button(md-icon-button, (click)='linkUnknownTextToRacer(text)', [title]='"Link number to racer"', [disabled]='inLinkingMode')
+        md-icon link
+  md-card.linking-card(*ngIf='inLinkingMode')
+    .master-detail
+      .racers-list.master
+        md-list
+          md-list-item(*ngFor='let racer of racersList', (click)='pickRacer(racer)')
+            | {{racer.name}} 
+            i(*ngIf='selectedRacer == racer') - Selected
+      .detail
+        div(*ngIf='selectedRacer')
+          h3 Existing numbers for {{selectedRacer.name}}
+          table.existing-racer-contacts
+            thead
+              tr
+                th Number
+                th Notes
+                th Preferred
+            tbody
+              tr(*ngFor='let contact of selectedRacer.phones')
+                td
+                  phone-widget([number]='contact.number')
+                td {{contact.notes}}
+                td
+                  md-checkbox([(ngModel)]='contact.preferred', [disabled]='true')
+          h3 New contact number details
+          .new-contact
+            phone-widget([number]='contact.number', [edit]=true)
+            md-input-container
+              input.shrink(md-input, placeholder='Notes', [(ngModel)]='newContact.notes')
+            md-checkbox([(ngModel)]='newContact.preferred') Preferred
+    |  
+    button(md-raised-button, color='primary', (click)='saveNumberToRacer()', [disabled]='!selectedRacer')  Save
+    |  
+    button(md-raised-button, color='warn', (click)='finishLinking()')  Cancel
+  md-card-content  {{text.body}}
+  .text-read(*ngIf='text.readBy')
+    | Read by
+    user-widget([user]='text.readBy.user')
+    |  at
+    time-widget([time]='text.readBy.timestamp')
+  md-card-actions
+    button(md-icon-button, (click)='replyToText()', [title]='"Reply to text"')
+      md-icon reply
+    |  
+    button(md-icon-button, (click)='markTextAsRead()', [disabled]='text.readBy', [title]='"Mark text as read"')
+      md-icon done
+

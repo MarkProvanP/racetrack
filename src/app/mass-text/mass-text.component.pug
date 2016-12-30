@@ -1,0 +1,86 @@
+.mass-text-wrapper(*ngIf='ready')
+  md-card.mass-text-component(*ngIf='!currentEvent || isSending')
+    md-card-title  Mass Text
+    md-card-content
+      .response-safeword
+        label Keyword
+        md-input-container
+          input(md-input, [(ngModel)]='newMassTextKeyword')
+      .response-timeout
+        label Reply time (mins)
+        |  
+        label 0
+        md-slider(min='1', max='60', tickinterval='auto', thumblabel, [(ngModel)]='newMassTextTimeout')
+        |  
+        label 60
+      .message-body
+        label Message body
+        md-input-container
+          textarea(md-input, [(ngModel)]='newMassTextBody')
+      .message-preview
+        b Message preview:
+        |  
+        i {{getMessagePreview()}}
+    md-card-actions
+      md-checkbox([(ngModel)]='confirmSend') Confirm sending
+      |  
+      button(md-raised-button, color='primary', [disabled]='!confirmSend', (click)='massSend()') Mass send
+    md-progress-bar(mode='determinate', *ngIf='isSending', value='getProgressBarValue()')
+  md-card.mass-text-component(*ngIf='currentEvent && !isSending')
+    md-card-title  Sent Text
+    md-card-content
+      .message-preview
+        i {{getSentMessage()}}
+    md-card-actions
+      button(md-raised-button, color='warn', (click)='endMassTextEvent()') Mark as Complete
+  md-card.mass-text-component(*ngIf='currentEvent')
+    md-card-title  Responses
+    md-card-content
+      .response-table
+      table.response-table
+        thead
+          tr
+            th Team
+            th Racer name
+            th Primary number
+            th Response time
+            th Response text
+        tbody
+          tr(*ngFor='let racer of racers', [ngClass]='getRacerRowClass(racer)')
+            td {{getTeamForRacer(racer).name}}
+            td {{racer.name}}
+            td
+              phone-widget([number]='racer.getPrimaryContactNumber().number')
+            td
+              time-widget([time]='getTextResponseTimeForRacer(racer)')
+            td {{getTextResponseTextForRacer(racer)}}
+  h3.mass-text-component Previous Mass Texts
+  md-card.old-mass-texts.mass-text-component(*ngFor='let oldMassText of oldMassTexts')
+    md-card-content
+      table
+        tr
+          th Started by
+          td
+            user-widget([user]='oldMassText.byUser.user')
+        tr
+          th At time
+          td
+            time-widget([time]='oldMassText.byUser.timestamp')
+        tr
+          th Keyword
+          td {{oldMassText.keyword}}
+        tr
+          th Timeout (mins)
+          td {{oldMassText.timeout}}
+        tr
+          th Message body
+          td {{oldMassText.body}}
+        tr
+          th Marked as completed by
+          td
+            user-widget([user]='oldMassText.endedBy.user')
+        tr
+          th At time
+          td
+            time-widget([time]='oldMassText.endedBy.timestamp')
+

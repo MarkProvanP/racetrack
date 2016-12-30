@@ -12,10 +12,13 @@ export class ThingEvent {
   }
 
   static fromJSON(obj): ThingEvent {
+    let clone = JSON.parse(JSON.stringify(obj));
+    let byUser = UserActionInfo.fromJSON(obj.byUser)
+    clone.byUser = byUser;
     if (obj.eventType == MassTextEvent.EVENT_TYPE) {
-      return MassTextEvent.fromJSON(obj);
+      return MassTextEvent.fromJSON(clone);
     }
-    return new ThingEvent(obj.id, obj)
+    return new ThingEvent(obj.id, clone);
   }
 
   static create(id, properties) {
@@ -42,6 +45,9 @@ export class MassTextEvent extends ThingEvent {
   }
 
   static fromJSON(obj): MassTextEvent {
-    return new MassTextEvent(obj.id, obj);
+    let clone = JSON.parse(JSON.stringify(obj));
+    let endedBy = UserActionInfo.fromJSON(obj.endedBy)
+    clone.endedBy = endedBy;
+    return new MassTextEvent(obj.id, clone);
   }
 }

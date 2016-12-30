@@ -16,14 +16,13 @@
             .racer-phone-numbers-list
               div(*ngFor='let contact of racer.phones')
                 .contact-view.contact-row(*ngIf='!inEditMode')
-                  p {{contact.number}}
+                  phone-widget([number]='contact.number')
                   p
                     i Notes:
                     |  {{contact.notes || &quot;No notes&quot;}}
                   md-checkbox([(ngModel)]='contact.preferred', disabled) Preferred
                 .contact-edit.contact-row(*ngIf='inEditMode')
-                  md-input-container
-                    input(md-input, placeholder='Phone number', [(ngModel)]='contact.number')
+                  phone-widget([number]='contact.number', [edit]=true)
                   md-input-container
                     input(md-input, placeholder='Notes', [(ngModel)]='contact.notes')
                   md-checkbox([(ngModel)]='contact.preferred') Preferred

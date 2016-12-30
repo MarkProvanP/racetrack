@@ -4,8 +4,8 @@ import { Text } from '../../../../common/text';
 
 @Component({
   selector: 'sent-text',
-  templateUrl: './sent-text.template.html',
-  styleUrls: ['./sent-text.style.scss']
+  templateUrl: './sent-text.component.pug',
+  styleUrls: ['./sent-text.component.scss']
 })
 export class SentTextComponent {
   @Input() text: Text;

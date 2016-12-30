@@ -9,8 +9,8 @@ import { Racer } from '../../../../common/racer';
 
 @Component({
   selector: 'unknown-text',
-  templateUrl: './unknown-text.template.html',
-  styleUrls: ['./unknown-text.style.scss']
+  templateUrl: './unknown-text.component.pug',
+  styleUrls: ['./unknown-text.component.scss']
 })
 export class UnknownTextComponent implements OnInit {
   @Input() text: Text;

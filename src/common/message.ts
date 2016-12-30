@@ -85,7 +85,8 @@ export class OtherLoggedInUsersMessage extends AbstractMessage {
     super();
   }
   static fromJSON(obj) {
-    return new OtherLoggedInUsersMessage(obj.users);
+    let users = obj.users.map(user => UserWithoutPassword.fromJSON(user));
+    return new OtherLoggedInUsersMessage(users);
   }
 }
 
@@ -96,7 +97,8 @@ export class UserLoggedInMessage extends AbstractMessage {
     super();
   }
   static fromJSON(obj) {
-    return new UserLoggedInMessage(obj.user);
+    let user = UserWithoutPassword.fromJSON(obj.user);
+    return new UserLoggedInMessage(user);
   }
 }
 
@@ -107,7 +109,8 @@ export class UserLoggedOutMessage extends AbstractMessage {
     super();
   }
   static fromJSON(obj) {
-    return new UserLoggedOutMessage(obj.user);
+    let user = UserWithoutPassword.fromJSON(obj.user);
+    return new UserLoggedOutMessage(user);
   }
 }
 
@@ -118,7 +121,8 @@ export class TeamUpdatedMessage extends AbstractMessage {
     super();
   }
   static fromJSON(obj) {
-    return new TeamUpdatedMessage(Team.fromJSON(obj.team), obj.user);
+    let user = UserWithoutPassword.fromJSON(obj.user);
+    return new TeamUpdatedMessage(Team.fromJSON(obj.team), user);
   }
 }
 
@@ -129,7 +133,8 @@ export class RacerUpdatedMessage extends AbstractMessage {
     super();
   }
   static fromJSON(obj) {
-    return new RacerUpdatedMessage(Racer.fromJSON(obj.racer), obj.user);
+    let user = UserWithoutPassword.fromJSON(obj.user);
+    return new RacerUpdatedMessage(Racer.fromJSON(obj.racer), user);
   }
 }
 
@@ -140,6 +145,7 @@ export class TeamUpdateUpdatedMessage extends AbstractMessage {
     super();
   }
   static fromJSON(obj) {
-    return new TeamUpdateUpdatedMessage(TeamUpdate.fromJSON(obj.update), obj.user);
+    let user = UserWithoutPassword.fromJSON(obj.user);
+    return new TeamUpdateUpdatedMessage(TeamUpdate.fromJSON(obj.update), user);
   }
 }

@@ -13,7 +13,7 @@ import * as moment from "moment";
 
 @Component({
   selector: 'mass-text',
-  templateUrl: './mass-text.component.html',
+  templateUrl: './mass-text.component.pug',
   styleUrls: ['./mass-text.component.scss']
 })
 export class MassTextComponent implements OnInit {

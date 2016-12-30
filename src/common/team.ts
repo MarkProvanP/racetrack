@@ -9,34 +9,27 @@ export interface CheckinInfo {
   byUser: UserActionInfo;
 }
 
-function checkinMigrate(obj) {
-  if (obj && obj.checkinTime) {
-    return obj;
-  } else {
-    return {
-      checkinTime: obj,
-    }
-  }
-}
-
 export type TeamId = string;
 export interface DbFormTeam {
   id: TeamId;
   name: string;
   statusUpdates: [TeamUpdateId];
   racers: [RacerId];
+  lastCheckin: CheckinInfo;
 }
 export interface UnpopulatedTeam {
   id: TeamId;
   name: string;
   statusUpdates: [TeamUpdateId];
   racers: [RacerId];
+  lastCheckin: CheckinInfo;
 }
 export interface PopulatedTeam {
   id: TeamId;
   name: string;
   statusUpdates: TeamUpdate[];
   racers: Racer[];
+  lastCheckin: CheckinInfo;
 }
 
 export type Color = string;
@@ -72,9 +65,14 @@ export class Team {
       .map(team => TeamUpdate.fromJSON(team));
     let racers = obj.racers
       .map(racer => Racer.fromJSON(racer));
+    let lastCheckin = obj.lastCheckin ? {
+      checkinTime: obj.lastCheckin.checkinTime,
+      byUser: UserActionInfo.fromJSON(obj.lastCheckin.byUser)
+    } : undefined;
     let clone = JSON.parse(JSON.stringify(obj));
     clone.statusUpdates = updates;
     clone.racers = racers;
+    clone.lastCheckin = lastCheckin;
     return new Team(clone.id, clone);
   }
 
@@ -94,7 +92,7 @@ export class Team {
     if (properties.statusUpdates) {
       this.statusUpdates = properties.statusUpdates;
     }
-    this.lastCheckin = checkinMigrate(properties.lastCheckin);
+    this.lastCheckin = properties.lastCheckin;
     this.inEurope = Boolean(properties.inEurope);
     this.notes = properties.notes;
     this.color = properties.color;

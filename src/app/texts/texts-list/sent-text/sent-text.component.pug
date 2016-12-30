@@ -1,0 +1,22 @@
+md-card.text-card.text-outbound
+  md-card-header
+    md-card-title
+      .inline-text-title(*ngIf='display.oneline')
+        phone-widget([number]='text.to')
+        |  - 
+        span(*ngIf='text.racer') {{text.racer.name}}
+        |  - 
+        span(*ngIf='text.team') {{text.team.name}}
+        |  
+        span.error(*ngIf='!text.team') ERROR: No Team for Racer!
+      time-widget([time]='text.timestamp')
+      .text-title(*ngIf='!display.oneline')
+        div(*ngIf='display.number')
+          phone-widget([number]='text.from')
+        div(*ngIf='display.time') {{text.getPrettyTimestamp()}}
+  md-card-content  {{text.body}}
+  .text-sent(*ngIf='text.sentBy')
+    | Sent by
+    user-widget([user]='text.sentBy.user')
+  md-card-actions
+

@@ -1,18 +1,41 @@
 import { PhoneNumber } from "./text";
 export type UserId = string;
 
-export interface UserWithoutPassword {
-  username: UserId;
-  name: string;
-  email: string;
-  phone: PhoneNumber;
-  level: UserPrivileges;
-  role: string;
+export class UserWithoutPassword {
+  constructor(
+    public username: UserId,
+    public name: string,
+    public email: string,
+    public phone: PhoneNumber,
+    public level: UserPrivileges,
+    public role: string
+  ) {}
+
+  static fromJSON(obj) {
+    return new UserWithoutPassword(
+      obj.username,
+      obj.name,
+      obj.email,
+      PhoneNumber.parse(obj.phone),
+      obj.level,
+      obj.role
+    )
+  }
 }
 
-export interface UserActionInfo {
-  timestamp: Date,
-  user: UserWithoutPassword
+export class UserActionInfo {
+  constructor(
+    public timestamp: Date,
+    public user: UserWithoutPassword
+  ) {}
+
+  static fromJSON(obj) {
+    if (!obj) return undefined;
+    return new UserActionInfo(
+      obj.timestamp,
+      UserWithoutPassword.fromJSON(obj.user)
+    )
+  }
 }
 
 export enum UserPrivileges {

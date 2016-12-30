@@ -64,7 +64,10 @@ export class TeamUpdate {
   linkedTexts: TextId[];
 
   static fromJSON(obj) {
-    return new TeamUpdate(obj.id, obj)
+    let clone = JSON.parse(JSON.stringify(obj));
+    let byUser = UserActionInfo.fromJSON(obj.byUser);
+    clone.byUser = byUser;
+    return new TeamUpdate(obj.id, clone)
   }
 
   makeClone() {

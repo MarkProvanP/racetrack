@@ -208,7 +208,7 @@ export class TextService {
   sendText(to: PhoneNumber, message: string): Promise<OutboundText> {
     let user = this.userService.getUser();
     let text = {
-      to: to,
+      to: to.toE164(),
       message: message,
       user: user
     };

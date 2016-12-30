@@ -1,5 +1,19 @@
 .phone-widget {
   display: inline-block;
+  border-radius: 2px;
+  background-color: rgba(0.3, 0.3, 0.3, 0.1);
+}
+
+.phone-widget.edit {
+  display: inline-flex;
+
+  .countryCode {
+    width: 40px;
+  }
+
+  .nationalNumber {
+    flex: 1;
+  }
 }
 
 .country-code {

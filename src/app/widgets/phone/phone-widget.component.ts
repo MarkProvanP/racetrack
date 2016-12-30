@@ -9,12 +9,5 @@ import { PhoneNumber } from "../../../common/text";
 })
 export class PhoneWidget {
   @Input() number: PhoneNumber;
-
-  getCountryCode() {
-    return this.number.substring(0, 3);
-  }
-
-  getNumber() {
-    return this.number.substring(3);
-  }
+  @Input() edit: boolean;
 }

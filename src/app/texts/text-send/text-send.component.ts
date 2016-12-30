@@ -8,8 +8,8 @@ import { DataService } from '../../data.service';
 
 @Component({
   selector: 'text-send',
-  templateUrl: './text-send.template.html',
-  styleUrls: ['./text-send.styles.scss']
+  templateUrl: './text-send.component.pug',
+  styleUrls: ['./text-send.component.scss']
 })
 export class TextSendComponent {
   @Input() toRacer: Racer;

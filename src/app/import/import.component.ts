@@ -6,6 +6,8 @@ import { PhoneNumber } from "../../common/text";
 
 import * as Papa from "papaparse";
 import * as _ from "lodash";
+import * as libphonenumber from "google-libphonenumber";
+const PNF = require('google-libphonenumber').PhoneNumberFormat;
 
 const TEAM_NAME = "Team name";
 const RACER_NAME = "Racer name";
@@ -88,13 +90,24 @@ export class ImportComponent {
   }
 
   parseRow(row) {
+    let phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
+    let rawNumber = row[RACER_MOBILE];
+    let formatted;
+    try {
+      let parsedMobile = phoneUtil.parse(rawNumber, 'GB');
+      console.log(parsedMobile);
+      formatted = phoneUtil.format(parsedMobile, PNF.E164);
+      console.log(formatted);
+    } catch (err) {
+      console.error(`Phone number ${rawNumber} parse error`, err);
+    }
     let parsed = {
       teamNumber: row[TEAM_NUMBER],
       teamName: row[TEAM_NAME],
       affiliation: row[AFFILIATION],
       racerName: row[RACER_NAME],
       racerId: row[RACER_ID],
-      mobile: row[RACER_MOBILE]
+      mobile: formatted
     }
     return parsed;
   }
