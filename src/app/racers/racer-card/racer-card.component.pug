@@ -7,11 +7,9 @@
     md-card-content
       table
         tr
-          th Nationality:
+          th Id:
           td
-            p(*ngIf='!inEditMode') {{racer.nationality}}
-            md-input-container(*ngIf='inEditMode')
-              input(md-input, placeholder='Nationality', [(ngModel)]='racer.nationality')
+            p {{racer.id}}
         tr
           th Phone:
           td

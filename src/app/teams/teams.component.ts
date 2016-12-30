@@ -30,21 +30,22 @@ export class TeamsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTeams();
-    console.log(this.teams);
   }
 
   createTeam() {
-    this.dataService.createTeam({})
+    let id = prompt("Enter ID");
+    if (!id) {
+      return;
+    }
+    let name = prompt("Enter name");
+    if (!name) {
+      return;
+    }
+    let properties = { id, name };
+    this.dataService.createTeam(properties)
       .then(team => {
         this.getTeams();
         this.router.navigate(['/safetyteam', 'teams', team.id, 'edit']);
       })
   }
 }
-
-
-/*
-Copyright 2016 Google Inc. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at http://angular.io/license
-*/

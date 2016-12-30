@@ -1,0 +1,10 @@
+.racers.master-detail
+  .master
+    md-nav-list
+      a(md-list-item, *ngFor='let racer of racers', routerLink="{{getRacerLink(racer)}}" routerLinkActive='selected')
+        h3(md-line) {{racer.name}}
+    |  
+    button(md-fab, (click)='createRacer()')
+      md-icon.md-24 add
+  .detail
+    router-outlet

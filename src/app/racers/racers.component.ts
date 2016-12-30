@@ -6,8 +6,8 @@ import { DataService }         from '../data.service';
 
 @Component({
   selector: 'my-racers',
-  templateUrl: './racers.template.html',
-  styleUrls:  ['./racers.styles.scss']
+  templateUrl: './racers.component.pug',
+  styleUrls:  ['./racers.component.scss']
 })
 export class RacersComponent implements OnInit {
   racers: Racer[];
@@ -21,6 +21,10 @@ export class RacersComponent implements OnInit {
     })
   }
 
+  getRacerLink(racer: Racer) {
+    return `/safetyteam/racers/${racer.id}`;
+  }
+
   getRacers(): void {
     this.racers = this.dataService.getRacers();
   }
@@ -29,22 +33,20 @@ export class RacersComponent implements OnInit {
     this.getRacers();
   }
 
-  onSelect(racer: Racer): void {
-    this.router.navigate(['/safetyteam', 'racers', racer.id]);
-  }
-
   createRacer() {
-    this.dataService.createRacer({})
+    let id = prompt("Enter ID");
+    if (!id) {
+      return;
+    }
+    let name = prompt("Enter name");
+    if (!name) {
+      return;
+    }
+    let properties = { id, name };
+    this.dataService.createRacer(properties)
       .then(racer => {
         this.getRacers();
         this.router.navigate(['/safetyteam', 'racers', racer.id, 'edit']);
       });
   }
 }
-
-
-/*
-Copyright 2016 Google Inc. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at http://angular.io/license
-*/

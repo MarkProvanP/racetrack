@@ -5,14 +5,12 @@ export type RacerId = string;
 export interface DbFormRacer {
   id: RacerId;
   name: string;
-  nationality: string;
   phones: ContactNumber[]
 }
 
 export class Racer {
   id: RacerId;
   name: string;
-  nationality: string;
   phones: ContactNumber[] = [];
 
   makeClone() {
@@ -22,7 +20,6 @@ export class Racer {
 
   stripPrivateData(): Racer {
     let stripped = this.makeClone();
-    stripped.nationality = undefined;
     stripped.phones = [];
     return stripped;
   }
@@ -41,7 +38,6 @@ export class Racer {
   constructor(id: RacerId, properties) {
     this.id = id;
     this.name = properties.name;
-    this.nationality = properties.nationality;
     if (properties.phones) {
       this.phones = properties.phones;
     }

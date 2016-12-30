@@ -1,0 +1,24 @@
+.selected {
+  background-color: #EEE !important;
+}
+.master-detail.racers {
+  flex: 1;
+}
+
+.master-detail {
+  display: flex;
+  .master {
+    width: 300px;
+    overflow-y: scroll;
+    background-color: white;
+  }
+
+  .detail {
+    flex: 1;
+    overflow-y: scroll;
+  }
+}
+
+/deep/ .md-list-item:hover {
+  background-color: lightgrey;
+}

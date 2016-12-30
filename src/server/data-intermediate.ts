@@ -118,9 +118,9 @@ export class DataIntermediary {
     });
   }
 
-  public createRacer(name: string): Promise<Racer> {
-    let id = uuid.v4();
-    let newRacer = new Racer(id, name);
+  public createRacer(properties): Promise<Racer> {
+    let id = properties.id ? properties.id : uuid.v4();
+    let newRacer = new Racer(id, properties);
     return this.dbFacade.createRacer(newRacer.toDbForm())
       .then(r => newRacer);
   }
@@ -190,9 +190,9 @@ export class DataIntermediary {
     });
   }
 
-  createTeam(name: string): Promise<Team> {
-    let id = uuid.v4();
-    let newTeam = new Team(id, name);
+  createTeam(properties): Promise<Team> {
+    let id = properties.id ? properties.id : uuid.v4();
+    let newTeam = new Team(id, properties);
     return this.dbFacade.createTeam(newTeam.depopulate())
       .then(result => {
         return Promise.resolve(newTeam);
