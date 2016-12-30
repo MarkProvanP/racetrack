@@ -306,7 +306,7 @@ setup(MONGODB_URI)
     .then(can => {
       if (!can) return;
       winston.info(`Creating admin user with password: ${RACE2_ADMIN_PASSWORD}`);
-      dataIntermediary.addUser('admin', RACE2_ADMIN_PASSWORD, {
+      dataIntermediary.addUserWithPassword('admin', RACE2_ADMIN_PASSWORD, {
         name: "Administrator",
         email: GMAIL_USER,
         phone: "",

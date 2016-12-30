@@ -451,13 +451,17 @@ export class DataIntermediary {
     })
   }
 
-  addUser(username, properties): Promise<User> {
-    let newPassword = generatePassword();
-    let user = User.createWithPassword(username, newPassword, properties);
+  addUserWithPassword(username, password, properties): Promise<User> {
+    let user = User.createWithPassword(username, password, properties);
     return this.dbFacade.createUser(user)
     .then(res => user)
-    .then(res => this.emailer.sendUserCreatedEmail(user, newPassword))
+    .then(res => this.emailer.sendUserCreatedEmail(user, password))
     .then(mailResult => user);
+  }
+
+  addUser(username, properties): Promise<User> {
+    let newPassword = generatePassword();
+    return this.addUserWithPassword(username, newPassword, properties);
   }
 
   resetUserPassword(username): Promise<User> {
