@@ -11,7 +11,7 @@ export interface DbFormRacer {
 export class Racer {
   id: RacerId;
   name: string;
-  phones: ContactNumber[] = [];
+  phones: ContactNumber[];
 
   makeClone() {
     let copy = JSON.parse(JSON.stringify(this));

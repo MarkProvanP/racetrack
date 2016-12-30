@@ -289,6 +289,7 @@ export class DataIntermediary {
         if (matchingRacers.length > 0) {
           createdText.racer = matchingRacers[0];
         } else {
+          createdText.racer = undefined;
         }
         return this.getTeams()
       })
@@ -298,6 +299,8 @@ export class DataIntermediary {
             team.racers.filter(racer => createdText.racer && racer.id == createdText.racer.id).length > 0);
         if (matchingTeams.length > 0) {
           createdText.team = matchingTeams[0];
+        } else {
+          createdText.team = undefined;
         }
       })
       .then(result => {
@@ -330,6 +333,7 @@ export class DataIntermediary {
         if (matchingRacers.length > 0) {
           createdText.racer = matchingRacers[0];
         } else {
+          createdText.racer = undefined;
         }
         return this.getTeams()
       })
@@ -339,6 +343,8 @@ export class DataIntermediary {
             team.racers.filter(racer => createdText.racer && racer.id == createdText.racer.id).length);
         if (matchingTeams.length) {
           createdText.team = matchingTeams[0];
+        } else {
+          createdText.team = undefined;
         }
       })
       .then(result => {
@@ -368,6 +374,8 @@ export class DataIntermediary {
           });
         if (possibleRacers.length > 0) {
           copy.racer = possibleRacers[0];
+        } else {
+          copy.racer = undefined;
         }
         return copy;
       })
@@ -381,7 +389,12 @@ export class DataIntermediary {
     let copy = JSON.parse(JSON.stringify(text));
     return this.getTeams()
     .then(teams => {
-      copy.team = teams.filter(team => team.racers.filter(racer => text.racer && racer.id == text.racer.id).length)[0];
+      let possibleTeams = teams.filter(team => team.racers.filter(racer => text.racer && racer.id == text.racer.id).length);
+      if (possibleTeams.length) {
+        copy.team = possibleTeams[0];
+      } else {
+        copy.team = undefined;
+      }
       return Promise.resolve(copy);
     })
     .catch(err => {
