@@ -76,8 +76,10 @@ export class User {
   }
 
   constructor(username: string, password: string, properties) {
-    this.username = username;
     this.password = password;
+    this.recentlyReset = !!properties.recentlyReset;
+
+    this.username = username;
     this.name = properties.name;
     this.email = properties.email;
     this.phone = properties.phone;

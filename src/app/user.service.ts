@@ -130,12 +130,12 @@ export class UserService {
     private location: Location
   ) {
     this.auth()
-      .toPromise()
-      .then(isAuthenticated => {
-        if (isAuthenticated) {
-          this.getMe();
-        }
-      })
+    .toPromise()
+    .then(response => {
+      if (response.auth) {
+        this.getMe();
+      }
+    })
   }
 
   public addOnAuthStatusChangedListener(callback) {
