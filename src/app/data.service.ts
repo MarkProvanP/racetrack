@@ -21,11 +21,6 @@ import {
 export class DataService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
-  private httpNoBodyExtras = {
-    headers: this.headers,
-    withCredentials: true,
-    body: ''
-  };
   private httpExtras = {
     headers: this.headers,
     withCredentials: true
@@ -123,7 +118,7 @@ export class DataService {
 //----------------------------------------------------------------------//
 
   getPublicTeams(): Promise<Team[]> {
-    return this.http.get(this.publicTeamsUrl, this.httpNoBodyExtras)
+    return this.http.get(this.publicTeamsUrl, this.httpExtras)
                .toPromise()
                .then(response => response.json().map(Team.fromJSON))
                .catch(this.handleError);
@@ -131,7 +126,7 @@ export class DataService {
 
   getPublicTeam(id: TeamId): Promise<Team> {
     let url = `${this.publicTeamsUrl}/${id}`;
-    return this.http.get(url, this.httpNoBodyExtras)
+    return this.http.get(url, this.httpExtras)
       .toPromise()
       .then(response => Team.fromJSON(response.json()))
       .catch(this.handleError);
@@ -159,7 +154,7 @@ export class DataService {
   }
 
   getTeamsFromBackend(): Promise<Team[]> {
-    return this.http.get(this.teamsUrl, this.httpNoBodyExtras)
+    return this.http.get(this.teamsUrl, this.httpExtras)
                .toPromise()
                .then(response => response.json().map(Team.fromJSON))
                .catch(this.handleError);
@@ -167,7 +162,7 @@ export class DataService {
 
   getTeamFromBackend(id: TeamId): Promise<Team> {
     let url = `${this.teamsUrl}/${id}`;
-    return this.http.get(url, this.httpNoBodyExtras)
+    return this.http.get(url, this.httpExtras)
       .toPromise()
       .then(response => Team.fromJSON(response.json()))
       .catch(this.handleError);
@@ -184,7 +179,7 @@ export class DataService {
 
   deleteTeam(id: TeamId): Promise<void> {
     let url = `${this.teamsUrl}/${id}`;
-    return this.http.delete(url, this.httpNoBodyExtras)
+    return this.http.delete(url, this.httpExtras)
       .toPromise()
       .then(() => null)
       .catch(this.handleError);
@@ -217,7 +212,7 @@ export class DataService {
   }
 
   getRacersFromBackend(): Promise<Racer[]> {
-    return this.http.get(this.racersUrl, this.httpNoBodyExtras)
+    return this.http.get(this.racersUrl, this.httpExtras)
                .toPromise()
                .then(response => response.json().map(Racer.fromJSON))
                .catch(this.handleError);
@@ -225,7 +220,7 @@ export class DataService {
 
   getRacerFromBackend(id: RacerId): Promise<Racer> {
     let url = `${this.racersUrl}/${id}`;
-    return this.http.get(url, this.httpNoBodyExtras)
+    return this.http.get(url, this.httpExtras)
       .toPromise()
       .then(response => Racer.fromJSON(response.json()))
       .catch(this.handleError)
@@ -242,7 +237,7 @@ export class DataService {
 
   deleteRacer(id: RacerId): Promise<void> {
     let url = `${this.racersUrl}/${id}`;
-    return this.http.delete(url, this.httpNoBodyExtras)
+    return this.http.delete(url, this.httpExtras)
       .toPromise()
       .then(() => null)
       .catch(this.handleError);
@@ -331,7 +326,7 @@ export class DataService {
 //----------------------------------------------------------------------//
 
   getEvents(): Promise<ThingEvent[]> {
-    return this.http.get(this.eventsUrl, this.httpNoBodyExtras)
+    return this.http.get(this.eventsUrl, this.httpExtras)
       .toPromise()
       .then(response => response.json().map(ThingEvent.fromJSON))
       .catch(this.handleError);
@@ -339,7 +334,7 @@ export class DataService {
 
   getEvent(id: ThingEventId): Promise<ThingEvent> {
     let url = `${this.eventsUrl}/${id}`
-    return this.http.get(url, this.httpNoBodyExtras)
+    return this.http.get(url, this.httpExtras)
       .toPromise()
       .then(response => ThingEvent.fromJSON(response.json()))
       .catch(this.handleError);
@@ -347,7 +342,7 @@ export class DataService {
 
   deleteEvent(event: ThingEvent): Promise<ThingEvent> {
     let url = `${this.eventsUrl}/${event.id}`;
-    return this.http.delete(url, this.httpNoBodyExtras)
+    return this.http.delete(url, this.httpExtras)
       .toPromise()
       .then(() => null)
       .catch(this.handleError);

@@ -72,21 +72,15 @@ export class TextFilterOptions {
 type textCallback = (Text) => void;
 @Injectable()
 export class TextService {
-  
   private headers = new Headers({'Content-Type': 'application/json'});
-  private backendHost = "";
-  private baseUrl = this.backendHost + "/r2bcknd/";
-  private textsUrl = this.baseUrl + "texts";
-
-  private httpNoBodyExtras = {
-    headers: this.headers,
-    withCredentials: true,
-    body: ''
-  };
   private httpExtras = {
     headers: this.headers,
     withCredentials: true
   }
+
+  private backendHost = "";
+  private baseUrl = this.backendHost + "/r2bcknd/";
+  private textsUrl = this.baseUrl + "texts";
 
   private texts: Text[] = [];
 
@@ -186,10 +180,10 @@ export class TextService {
   }
 
   private getAllTextsFromBackend(): Promise<Text[]> {
-    return this.http.get(this.textsUrl, this.httpNoBodyExtras)
+    return this.http.get(this.textsUrl, this.httpExtras)
       .toPromise()
       .then(response => response.json()
-            .map(text => Text.fromJSON(text)))
+      .map(text => Text.fromJSON(text)))
       .catch(this.handleError);
   }
 

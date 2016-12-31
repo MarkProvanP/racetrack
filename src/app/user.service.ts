@@ -44,6 +44,11 @@ export const TIMEZONES = {
 @Injectable()
 export class UserService {
   private headers = new Headers({'Content-Type': 'application/json'});
+  private httpExtras = {
+    headers: this.headers,
+    withCredentials: true
+  }
+
   private backendHost = "";
   private baseUrl = this.backendHost + "/r2bcknd/auth/";
   private loginUrl = this.baseUrl + "api/login";
@@ -52,7 +57,6 @@ export class UserService {
   private meUrl = this.authenticatedUrl//this.baseUrl + "me";
   private usersUrl = this.baseUrl + "users";
   private changePasswordUrl = this.baseUrl + "api/change-password"
-
   private authApi = this.baseUrl + "api/auth";
 
   private authenticated;
@@ -70,11 +74,6 @@ export class UserService {
   private socket;
 
   private socketEventListenerMap = {};
-
-  private jsonHttpExtras = {
-    headers: this.headers,
-    withCredentials: true
-  }
 
   addSocketEventListener(event, callback) {
     if (!this.socketEventListenerMap[event]) {
@@ -184,14 +183,14 @@ export class UserService {
   }
 
   auth() {
-    return this.http.get(this.authApi, {withCredentials: true})
+    return this.http.get(this.authApi, this.httpExtras)
       .map(res => res.json())
       .catch(this.handleError)
   }
 
   login(user): Promise<any> {
     return this.http
-      .post(this.loginUrl, JSON.stringify(user), {headers: this.headers, withCredentials: true})
+      .post(this.loginUrl, JSON.stringify(user), this.httpExtras)
       .toPromise()
       .catch(this.handleHttpError)
       .then(response => {
@@ -203,7 +202,7 @@ export class UserService {
 
   logout(): Promise<any> {
     return this.http
-      .get(this.logoutUrl, {withCredentials: true})
+      .get(this.logoutUrl, this.httpExtras)
       .toPromise()
       .catch(this.handleHttpError)
       .then(response => {
@@ -214,14 +213,14 @@ export class UserService {
 
   changePassword(password: string): Promise<any> {
     return this.http
-    .put(this.changePasswordUrl, JSON.stringify({password}), {headers: this.headers, withCredentials: true})
+    .put(this.changePasswordUrl, JSON.stringify({password}), this.httpExtras)
     .toPromise()
     .catch(this.handleError)
   }
 
   getMe(): Promise<UserWithoutPassword> {
     return this.http
-      .get(this.meUrl, {withCredentials: true})
+      .get(this.meUrl, this.httpExtras)
       .toPromise()
       .catch(this.handleHttpError)
       .then(response => response.json())
