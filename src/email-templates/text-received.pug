@@ -1,6 +1,8 @@
 extends basic.pug
 
-block content
+block title
   h1 #{APP_NAME} - Text received from #{TEXT_SENDER}
-  h2 Body
+
+block content
+  h2 Text contents:
   p #{TEXT_BODY}

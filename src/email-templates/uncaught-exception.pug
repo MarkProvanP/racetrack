@@ -1,8 +1,10 @@
 extends basic.pug
 
-block content
+block title
   h1 #{APP_NAME}- Uncaught Exception
-  p At #{DATE}
+
+block content
+  p Uncaught exception at #{DATE} on #{HOSTNAME}
   h2 Stacktrace
   p #{STACKTRACE}
 

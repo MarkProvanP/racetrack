@@ -205,7 +205,8 @@ export class Emailer {
       APP_NAME: APP_NAME,
       DATE: new Date(),
       PROMISE_STRING: promiseString,
-      STACKTRACE: stacktrace
+      STACKTRACE: stacktrace,
+      HOSTNAME: os.hostname()
     })
     return this.sendEmail(
       ERROR_EMAIL_RECIPIENTS,
@@ -219,7 +220,8 @@ export class Emailer {
     let emailHTMLString = EMAIL_TEMPLATES.uncaughtException({
       APP_NAME: APP_NAME,
       DATE: new Date(),
-      STACKTRACE: stacktrace
+      STACKTRACE: stacktrace,
+      HOSTNAME: os.hostname()
     })
     return this.sendEmail(
       ERROR_EMAIL_RECIPIENTS,
@@ -257,7 +259,8 @@ export class Emailer {
   sendServerStartedEmail() {
     let emailHTMLString = EMAIL_TEMPLATES.serverStarted({
       APP_NAME: APP_NAME,
-      DATE: new Date()
+      DATE: new Date(),
+      HOSTNAME: os.hostname()
     })
     return this.sendEmail(
       STATUS_EMAIL_RECIPIENTS,

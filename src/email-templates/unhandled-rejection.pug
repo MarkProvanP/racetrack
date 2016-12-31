@@ -1,8 +1,10 @@
 extends basic.pug
 
-block content
+block title
   h1 #{APP_NAME}- Unhandled rejection
-  p At #{DATE}
+
+block content
+  p Unhandled rejection at #{DATE} on #{HOSTNAME}
   h2 Promise
   p #{PROMISE_STRING}
   h2 Stacktrace

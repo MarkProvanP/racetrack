@@ -1,5 +1,7 @@
 extends basic.pug
 
-block content
+block title
   h1 #{APP_NAME} - Server started!
-  p At #{DATE}
+
+block content
+  p Server started at #{DATE} on #{HOSTNAME}
