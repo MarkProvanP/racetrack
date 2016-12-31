@@ -76,13 +76,14 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 // Let's Encrypt!
-const ACME_CHALLENGE_REQUEST = process.env.ACME_CHALLENGE_REQUEST;
-const ACME_CHALLENGE_RESPONSE = process.env.ACME_CHALLENGE_RESPONSE;
-
-if (ACME_CHALLENGE_REQUEST && ACME_CHALLENGE_RESPONSE) {
-  app.get(ACME_CHALLENGE_REQUEST, (req, res) => {
-    res.send(ACME_CHALLENGE_RESPONSE);
-  })
+const ACME_CHALLENGES = process.env.ACME_CHALLENGES;
+if (ACME_CHALLENGES) {
+  let challenges = JSON.parse(ACME_CHALLENGES);
+  challenges.forEach(({request, response}) => {
+    app.get(request, (req, res) => {
+      res.send(response);
+    })
+  });
 }
 
 const SESSION_SECRET = 'kewbfklebhfrhaewbfabfjbhzsfkjbkasjbvhkjaswbhdrvfkashbfvhavfha';
