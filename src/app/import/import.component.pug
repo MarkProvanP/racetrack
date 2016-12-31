@@ -2,7 +2,8 @@ md-card
   h3 Import
   |  
   input(type='file', (change)='fileChangeEvent($event)')
-  table(*ngIf='parsedData')
+  button(md-raised-button, *ngIf='parsedData && !parsedTeams', (click)='process()') Process
+  table(*ngIf='parsedData && !parsedTeams')
     thead
       tr
         th Team Number
@@ -18,14 +19,27 @@ md-card
         td {{row.affiliation}}
         td {{row.racerName}}
         td {{row.racerId}}
-        td {{row.mobile}}
-  button(md-raised-button, (click)='process()') Process
+        td
+          phone-widget([number]='row.mobile')
   .team-list
-    .team(*ngFor='let team of parsedTeams')
-      | Team Name: {{team.name}}
-      | Team Number {{team.id}}
-      .racer-list
-        .racer(*ngFor='let racer of team.racers')
-          | Racer Name: {{racer.name}}
-          | Racer ID: {{racer.id}}
-          | Racer Mobile: {{racer.mobile}}
+    md-card.team(*ngFor='let team of parsedTeams')
+      md-card-header
+        div(md-card-avatar)
+          h1.team-number {{team.id}}
+        md-card-title {{team.name}}
+        md-card-subtitle
+          span.label Affiliation:
+          | {{team.affiliation}}
+      md-card-content
+        .racer-list
+          md-card.racer(*ngFor='let racer of team.racers')
+            .racer-detail
+              span.label Name
+              span.value {{racer.name}}
+            .racer-detail
+              span.label ID
+              span.value {{racer.id}}
+            .racer-detail
+              span.label Mobile
+              span.value
+                phone-widget([number]='racer.mobile')

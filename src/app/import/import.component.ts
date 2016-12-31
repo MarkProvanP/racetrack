@@ -28,6 +28,7 @@ interface DataRow {
 interface ParseTeam {
   id: TeamId,
   name: string,
+  affiliation: string,
   racers: ParseRacer[]
 }
 
@@ -63,6 +64,7 @@ export class ImportComponent {
       });
       console.log(data);
       this.parsedData = data.data.map(row => this.parseRow(row))
+      this.parsedTeams = undefined;
     }
 
     reader.readAsText(file);
@@ -76,7 +78,8 @@ export class ImportComponent {
         teamsObj[row.teamNumber] = {
           id: row.teamNumber,
           name: row.teamName,
-          racers: []
+          racers: [],
+          affiliation: row.affiliation ? row.affiliation : "None"
         }
       }
       let team = teamsObj[row.teamNumber];
@@ -90,24 +93,14 @@ export class ImportComponent {
   }
 
   parseRow(row) {
-    let phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
-    let rawNumber = row[RACER_MOBILE];
-    let formatted;
-    try {
-      let parsedMobile = phoneUtil.parse(rawNumber, 'GB');
-      console.log(parsedMobile);
-      formatted = phoneUtil.format(parsedMobile, PNF.E164);
-      console.log(formatted);
-    } catch (err) {
-      console.error(`Phone number ${rawNumber} parse error`, err);
-    }
+    let mobile = PhoneNumber.parse(row[RACER_MOBILE]);
     let parsed = {
       teamNumber: row[TEAM_NUMBER],
       teamName: row[TEAM_NAME],
       affiliation: row[AFFILIATION],
       racerName: row[RACER_NAME],
       racerId: row[RACER_ID],
-      mobile: formatted
+      mobile: mobile
     }
     return parsed;
   }

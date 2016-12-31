@@ -4,7 +4,19 @@
 }
 
 .team {
-  background-color: aliceblue;
+  margin: 5px;
+}
+
+.team-number {
+  margin: 0;
+  background-color: #EEE;
+  text-align: center;
+  border-radius: 100%;
+  border: 2px solid black;
+}
+
+.team-name {
+  font-weight: bold;
 }
 
 .racer-list {
@@ -13,5 +25,17 @@
 }
 
 .racer {
-  background-color: yellow;
+  margin: 5px;
+  display: flex;
 }
+
+.label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+
+.racer-detail {
+  margin-right: 10px;
+}
+
