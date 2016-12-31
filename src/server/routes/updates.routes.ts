@@ -1,12 +1,13 @@
 import * as express from "express";
 import * as winston from "winston";
 
+import { restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 import { DataIntermediary } from "../data-intermediate";
 
 export default function updatesRouterWithDb(dataIntermediary: DataIntermediary) {
 let updatesRouter = express.Router();
 
-  updatesRouter.use(function(req, res, next) {
+  updatesRouter.use((req, res, next) => {
     winston.log('verbose', "Updates request");
     if (req.isAuthenticated()) {
       next();
@@ -16,7 +17,7 @@ let updatesRouter = express.Router();
     }
   });
 
-  updatesRouter.get('/', function(req, res) {
+  updatesRouter.get('/', restrictedViewOnly, (req, res) => {
     dataIntermediary.getStatusUpdates()
       .then(updates => {
         res.type("application/json");
@@ -24,7 +25,7 @@ let updatesRouter = express.Router();
       });
   });
 
-  updatesRouter.get('/:id', (req, res) => {
+  updatesRouter.get('/:id', restrictedViewOnly, (req, res) => {
     let id = req.params.id;
     dataIntermediary.getStatusUpdate(id)
       .then(update => {
@@ -33,7 +34,7 @@ let updatesRouter = express.Router();
       });
   });
 
-  updatesRouter.post('/', (req, res) => {
+  updatesRouter.post('/', restrictedBasic, (req, res) => {
     let newUpdateProperties = req.body;
     dataIntermediary.createStatusUpdate(newUpdateProperties)
       .then(update => {
@@ -42,7 +43,7 @@ let updatesRouter = express.Router();
       });
   });
 
-  updatesRouter.put('/:id', (req, res) => {
+  updatesRouter.put('/:id', restrictedBasic, (req, res) => {
     let newDetailsUpdate = req.body;
     dataIntermediary.updateTeamUpdate(newDetailsUpdate, req.user)
     .then(changedUpdate => {
@@ -50,7 +51,7 @@ let updatesRouter = express.Router();
     })
   })
 
-  updatesRouter.delete('/:id', (req, res) => {
+  updatesRouter.delete('/:id', restrictedBasic, (req, res) => {
     let id = req.params.id;
     dataIntermediary.deleteTeamUpdate(id)
     .then(() => {

@@ -15,11 +15,12 @@ import { UserWithoutPassword } from "../../common/user";
 import * as winston from "winston";
 
 import { DataIntermediary } from "../data-intermediate";
+import { restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 
 export default function textsRouterWithDb(textIntermediary: DataIntermediary, twilio) {
   let textsRouter = express.Router();
 
-  textsRouter.use(function(req, res, next) {
+  textsRouter.use((req, res, next) => {
     if (req.isAuthenticated()) {
       next();
     } else {
@@ -28,7 +29,7 @@ export default function textsRouterWithDb(textIntermediary: DataIntermediary, tw
     }
   });
 
-  textsRouter.get('/', function(req, res) {
+  textsRouter.get('/', restrictedViewOnly, (req, res) => {
     textIntermediary.getTexts()
       .then(texts => {
         res.type('application/json');
@@ -41,7 +42,7 @@ export default function textsRouterWithDb(textIntermediary: DataIntermediary, tw
       });
   })
 
-  textsRouter.get('/byNumber/:number', function(req, res) {
+  textsRouter.get('/byNumber/:number', restrictedViewOnly, (req, res) => {
     let number = req.params.number
     textIntermediary.getTextsByNumber(number)
       .then(texts => {
@@ -54,7 +55,7 @@ export default function textsRouterWithDb(textIntermediary: DataIntermediary, tw
       });
   });
 
-  textsRouter.post('/', (req, res) => {
+  textsRouter.post('/', restrictedBasic, (req, res) => {
     let newText = req.body;
     let twilioClient = twilio.client;
     let user = newText.user;
@@ -78,7 +79,7 @@ export default function textsRouterWithDb(textIntermediary: DataIntermediary, tw
     });
   });
 
-  textsRouter.put('/:id', (req, res) => {
+  textsRouter.put('/:id', restrictedBasic, (req, res) => {
     let newDetailsText = Text.fromJSON(req.body);
     textIntermediary.updateText(newDetailsText)
       .then(changedText => {

@@ -6,12 +6,12 @@ import { DataIntermediary } from "../data-intermediate";
 export default function publicRouterWithDb(dataIntermediary: DataIntermediary) {
   let publicRouter = express.Router();
 
-  publicRouter.use(function(req, res, next) {
+  publicRouter.use((req, res, next) => {
     winston.log('verbose', 'Public Teams request');
     next();
   });
 
-  publicRouter.get('/teams', function(req, res) {
+  publicRouter.get('/teams', (req, res) => {
     dataIntermediary.getTeams()
       .then(teams => {
         res.type('application/json');

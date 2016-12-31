@@ -3,11 +3,12 @@ import * as winston from "winston";
 
 import { Team } from "../../common/team";
 import { DataIntermediary } from "../data-intermediate";
+import { restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 
 export default function teamsRouterWithDb(dataIntermediary: DataIntermediary) {
   let teamsRouter = express.Router();
 
-  teamsRouter.use(function(req, res, next) {
+  teamsRouter.use((req, res, next) => {
     winston.log('verbose', 'Teams request');
     if (req.isAuthenticated()) {
       next();
@@ -17,14 +18,14 @@ export default function teamsRouterWithDb(dataIntermediary: DataIntermediary) {
     }
   });
 
-  teamsRouter.get('/', function(req, res) {
+  teamsRouter.get('/', restrictedViewOnly, (req, res) => {
     dataIntermediary.getTeams()
       .then(teams => {
         res.type('application/json');
         res.send(JSON.stringify(teams));
       });
   })
-  teamsRouter.get('/:id', (req, res) => {
+  teamsRouter.get('/:id', restrictedViewOnly, (req, res) => {
     let id = req.params.id;
     dataIntermediary.getTeam(id)
       .then(team => {
@@ -32,7 +33,7 @@ export default function teamsRouterWithDb(dataIntermediary: DataIntermediary) {
         res.send(JSON.stringify(team));
       });
   })
-  teamsRouter.post('/', (req, res) => {
+  teamsRouter.post('/', restrictedBasic, (req, res) => {
     let body = req.body;
     dataIntermediary.createTeam(body)
       .then(newTeam => {
@@ -40,7 +41,7 @@ export default function teamsRouterWithDb(dataIntermediary: DataIntermediary) {
         res.send(JSON.stringify(newTeam));
       });
   });
-  teamsRouter.put('/:id', (req, res) => {
+  teamsRouter.put('/:id', restrictedViewOnly, (req, res) => {
     let newDetailsTeam = Team.fromJSON(req.body);
     dataIntermediary.updateTeam(newDetailsTeam, req.user)
       .then(changedTeam => {
@@ -48,7 +49,7 @@ export default function teamsRouterWithDb(dataIntermediary: DataIntermediary) {
         res.send(JSON.stringify(changedTeam));
       });
   })
-  teamsRouter.delete('/:id', (req, res) => {
+  teamsRouter.delete('/:id', restrictedViewOnly, (req, res) => {
     let deletedTeamId = req.params.id;
     dataIntermediary.deleteTeam(deletedTeamId)
       .then(() => {

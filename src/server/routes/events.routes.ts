@@ -2,6 +2,7 @@ import * as express from "express";
 import { DbFacadeInterface } from '../db/db-facade';
 import { ThingEvent } from "../../common/event";
 import * as winston from "winston";
+import { restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 
 export default function eventsRouterWithDb(db_facade: DbFacadeInterface) {
   let eventsRouter = express.Router();
@@ -16,7 +17,7 @@ export default function eventsRouterWithDb(db_facade: DbFacadeInterface) {
     }
   });
 
-  eventsRouter.get('/', (req, res) => {
+  eventsRouter.get('/', restrictedViewOnly, (req, res) => {
     winston.log('info', 'GET /');
     db_facade.getEvents()
       .then(events => {
@@ -24,7 +25,7 @@ export default function eventsRouterWithDb(db_facade: DbFacadeInterface) {
       });
   });
 
-  eventsRouter.get('/:id', (req, res) => {
+  eventsRouter.get('/:id', restrictedViewOnly, (req, res) => {
     let id = req.params.id;
     db_facade.getEvent(id)
       .then(event => {
@@ -32,7 +33,7 @@ export default function eventsRouterWithDb(db_facade: DbFacadeInterface) {
       });
   });
 
-  eventsRouter.post('/', (req, res) => {
+  eventsRouter.post('/', restrictedBasic, (req, res) => {
     let body = req.body;
     db_facade.createEvent(body)
       .then(newEvent => {
@@ -40,7 +41,7 @@ export default function eventsRouterWithDb(db_facade: DbFacadeInterface) {
       });
   });
 
-  eventsRouter.put('/:id', (req, res) => {
+  eventsRouter.put('/:id', restrictedBasic, (req, res) => {
     let id = req.params.id;
     let body = req.body;
     let newDetailsEvent = ThingEvent.fromJSON(body);
@@ -51,7 +52,7 @@ export default function eventsRouterWithDb(db_facade: DbFacadeInterface) {
     });
   });
 
-  eventsRouter.delete('/:id', (req, res) => {
+  eventsRouter.delete('/:id', restrictedBasic, (req, res) => {
     let id = req.params.id;
 
     db_facade.deleteEvent(id)

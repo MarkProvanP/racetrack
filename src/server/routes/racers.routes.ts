@@ -3,11 +3,12 @@ import { DbFacadeInterface } from "../db/db-facade";
 import { Racer } from "../../common/racer";
 import * as winston from "winston";
 import { DataIntermediary } from "../data-intermediate";
+import { restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 
 export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
   let racersRouter = express.Router();
 
-  racersRouter.use(function(req, res, next) {
+  racersRouter.use((req, res, next) => {
     winston.log('verbose', 'Racers request');
     if (req.isAuthenticated()) {
       next();
@@ -17,7 +18,7 @@ export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
     }
   });
 
-  racersRouter.get('/', function(req, res) {
+  racersRouter.get('/', restrictedViewOnly, (req, res) => {
     winston.log('verbose', 'GET /racers'); 
     dataIntermediary.getRacers()
       .then(racers => {
@@ -26,7 +27,7 @@ export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
       });
   })
 
-  racersRouter.get('/:id', (req, res) => {
+  racersRouter.get('/:id', restrictedViewOnly, (req, res) => {
     let id = req.params.id;
     dataIntermediary.getRacer(id)
       .then(racer => {
@@ -35,7 +36,7 @@ export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
       });
   });
 
-  racersRouter.post('/', function(req, res) {
+  racersRouter.post('/', restrictedModifyAll, (req, res) => {
     winston.log('verbose', 'POST /racers')
     let body = req.body;
     dataIntermediary.createRacer(body)
@@ -45,7 +46,7 @@ export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
       })
   })
 
-  racersRouter.put('/:id', function(req, res) {
+  racersRouter.put('/:id', restrictedModifyAll, (req, res) => {
     winston.log('verbose', 'PUT /racers')
     let body = req.body;
     winston.log('verbose', body);
@@ -58,7 +59,7 @@ export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
       });
   })
 
-  racersRouter.delete('/:id', function(req, res) {
+  racersRouter.delete('/:id', restrictedModifyAll, (req, res) => {
     winston.log('verbose', 'DELETE /racers');
     let body = req.body;
     let deletedRacerId = req.params.id;
