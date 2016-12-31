@@ -20,6 +20,13 @@
 
 .recipient-card {
   padding: 6px;
+  margin: 6px;
+  display: flex;
+  align-items: center;
+
+  span {
+    margin-right: 6px;
+  }
 }
 
 .text-body {

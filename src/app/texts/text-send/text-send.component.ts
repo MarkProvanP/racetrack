@@ -18,6 +18,9 @@ class Recipient {
   }
 
   matchesNumber(numberString: string) {
+    if (!this.number) {
+      return false;
+    }
     return this.number.toE164().indexOf(numberString) != -1;
   }
 
@@ -44,7 +47,7 @@ export class TextSendComponent {
   matchingRecipients: Recipient[] = [];
   allRecipients: Recipient[] = [];
   searchQuery = "";
-  addingNewRecipient: boolean;
+  editingRecipients: boolean;
 
   filterRecipients() {
     let search = this.searchQuery.toLowerCase();
@@ -59,14 +62,19 @@ export class TextSendComponent {
     console.log(this.matchingRecipients);
   }
 
-  addNewRecipient() {
-    this.addingNewRecipient = true;
+  toggleEditingRecipients() {
+    this.editingRecipients = !this.editingRecipients;
   }
 
   addRecipient(recipient: Recipient) {
     this.recipients.push(recipient);
     this.searchQuery = "";
     this.filterRecipients();
+  }
+
+  removeRecipient(recipient: Recipient) {
+    let index = this.recipients.indexOf(recipient);
+    this.recipients.splice(index, 1);
   }
 
   constructor(
@@ -97,7 +105,7 @@ export class TextSendComponent {
       allContacts = allContacts.concat(contacts);
     });
     this.allRecipients = allContacts;
-    this.recipients = this.allRecipients.filter(recipient => recipient.number.equals(this.toNumber));
+    this.recipients = this.allRecipients.filter(recipient => recipient.hasPhoneNumber(this.toNumber));
     if (!this.recipients.length) {
       this.recipients.push(new Recipient('?', '?', this.toNumber))
     }

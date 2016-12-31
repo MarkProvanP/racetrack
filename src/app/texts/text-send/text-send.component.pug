@@ -6,16 +6,19 @@
       table(style='width: 100%')
         tr
           th To:
+            button(md-icon-button, (click)='toggleEditingRecipients()')
+              md-icon(*ngIf='editingRecipients') done
+              md-icon(*ngIf='!editingRecipients') edit
           td 
             .text-recipients-list
               md-card.recipient-card(*ngFor='let recipient of recipients')
-                md-card-content
-                  | {{recipient.name}}
-                  | {{recipient.numNote}}
-                  phone-widget([number]='recipient.number')
-              button(md-icon-button, (click)='addNewRecipient()')
-                md-icon add
-        tr(*ngIf='addingNewRecipient')
+                span.recipient-name {{recipient.name}}
+                span.recipient-number-note {{recipient.numNote}}
+                phone-widget([number]='recipient.number')
+
+                button(md-icon-button, *ngIf='editingRecipients', (click)='removeRecipient(recipient)')
+                  md-icon delete
+        tr(*ngIf='editingRecipients')
           th Add
           td
             .next-recipient
