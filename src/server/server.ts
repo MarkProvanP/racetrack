@@ -108,7 +108,7 @@ function onAuthorizeFail(data, message, error, accept) {
   accept(new Error("not allowed!"));
 }
 
-let dataIntermediary;
+let dataIntermediate;
 
 import * as nodemailer from "nodemailer";
 let xoauth2 = require("xoauth2");
@@ -330,15 +330,15 @@ setup(MONGODB_URI)
   .then(db_facade => {
     winston.info('MongoDB now ready for use');
 
-    dataIntermediary = GetDataIntermediary(db_facade, messageSender, emailer);
+    dataIntermediate = GetDataIntermediary(db_facade, messageSender, emailer);
 
 
     // Check to see if the admin user has been created yet. If not, create it.
-    dataIntermediary.canAddUser('admin')
+    dataIntermediate.canAddUser('admin')
     .then(can => {
       if (!can) return;
       winston.info(`Creating admin user with password: ${RACE2_ADMIN_PASSWORD}`);
-      dataIntermediary.addUserWithPassword('admin', RACE2_ADMIN_PASSWORD, {
+      dataIntermediate.addUserWithPassword('admin', RACE2_ADMIN_PASSWORD, {
         name: "Administrator",
         email: GMAIL_USER,
         phone: "",
@@ -400,32 +400,32 @@ setup(MONGODB_URI)
 
     let apiRouter = express.Router();
 
-    let authRouter = AuthWithDataIntermediary(dataIntermediary);
+    let authRouter = AuthWithDataIntermediary(dataIntermediate);
     apiRouter.use('/auth', authRouter);
 
-    let teamsRouter = teamsRouterWithDb(dataIntermediary);
+    let teamsRouter = teamsRouterWithDb(dataIntermediate);
     apiRouter.use('/teams', teamsRouter);
 
-    let racersRouter = racersRouterWithDb(dataIntermediary);
+    let racersRouter = racersRouterWithDb(dataIntermediate);
     apiRouter.use("/racers", racersRouter);
 
     let twilioObj = {
       client: twilioClient,
       fromNumber: TWILIO_SENDING_NO
     }
-    let textsRouter = textsRouterWithDb(dataIntermediary, twilioObj);
+    let textsRouter = textsRouterWithDb(dataIntermediate, twilioObj);
     apiRouter.use("/texts", textsRouter);
 
-    let updatesRouter = updatesRouterWithDb(dataIntermediary);
+    let updatesRouter = updatesRouterWithDb(dataIntermediate);
     apiRouter.use("/updates", updatesRouter);
 
     let eventsRouter = eventsRouterWithDb(db_facade);
     apiRouter.use('/events', eventsRouter);
 
-    let usersRouter = usersRouterWithDb(dataIntermediary);
+    let usersRouter = usersRouterWithDb(dataIntermediate);
     apiRouter.use('/users', usersRouter);
 
-    let publicRouter = publicRouterWithDb(dataIntermediary);
+    let publicRouter = publicRouterWithDb(dataIntermediate);
     apiRouter.use('/public', publicRouter);
 
     http.listen(PORT, function() {
@@ -451,10 +451,10 @@ setup(MONGODB_URI)
      * Set up nodemailer for sending emails
      * Use the access token saved in the DB
      */
-    dataIntermediary.getSavedConfig()
+    dataIntermediate.getSavedConfig()
     .then(retrieved => {
       if (!retrieved) {
-        return dataIntermediary.createSavedConfig()
+        return dataIntermediate.createSavedConfig()
       } else {
         return retrieved;
       }
@@ -494,7 +494,7 @@ setup(MONGODB_URI)
 
 
 function handleTextMessage(twilioText: TwilioInboundText) {
-  dataIntermediary.addTextFromTwilio(twilioText)
+  dataIntermediate.addTextFromTwilio(twilioText)
     .catch(err => {
       winston.error('Could not add inbound Twilio text to database!', {text: twilioText, err: err});
     });

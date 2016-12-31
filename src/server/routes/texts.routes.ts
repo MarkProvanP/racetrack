@@ -17,7 +17,7 @@ import * as winston from "winston";
 import { DataIntermediary } from "../data-intermediate";
 import { restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 
-export default function textsRouterWithDb(textIntermediary: DataIntermediary, twilio) {
+export default function textsRouterWithDb(dataIntermediate: DataIntermediary, twilio) {
   let textsRouter = express.Router();
 
   textsRouter.use((req, res, next) => {
@@ -30,7 +30,7 @@ export default function textsRouterWithDb(textIntermediary: DataIntermediary, tw
   });
 
   textsRouter.get('/', restrictedViewOnly, (req, res) => {
-    textIntermediary.getTexts()
+    dataIntermediate.getTexts()
       .then(texts => {
         res.type('application/json');
         res.send(JSON.stringify(texts));
@@ -44,7 +44,7 @@ export default function textsRouterWithDb(textIntermediary: DataIntermediary, tw
 
   textsRouter.get('/byNumber/:number', restrictedViewOnly, (req, res) => {
     let number = req.params.number
-    textIntermediary.getTextsByNumber(number)
+    dataIntermediate.getTextsByNumber(number)
       .then(texts => {
         res.type('application/json');
         res.send(JSON.stringify(texts));
@@ -68,7 +68,7 @@ export default function textsRouterWithDb(textIntermediary: DataIntermediary, tw
         winston.error('Twilio send text error!', {err});
         res.status(500).send(`Twilio error! : ${err}`);
       } else {
-        textIntermediary.addNewSentText(text, user)
+        dataIntermediate.addNewSentText(text, user)
           .then(createdText => {
             res.json(createdText);
           })
@@ -81,7 +81,7 @@ export default function textsRouterWithDb(textIntermediary: DataIntermediary, tw
 
   textsRouter.put('/:id', restrictedBasic, (req, res) => {
     let newDetailsText = Text.fromJSON(req.body);
-    textIntermediary.updateText(newDetailsText)
+    dataIntermediate.updateText(newDetailsText)
       .then(changedText => {
         res.type("application/json");
         res.send(JSON.stringify(changedText));

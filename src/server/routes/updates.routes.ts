@@ -4,7 +4,7 @@ import * as winston from "winston";
 import { restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 import { DataIntermediary } from "../data-intermediate";
 
-export default function updatesRouterWithDb(dataIntermediary: DataIntermediary) {
+export default function updatesRouterWithDb(dataIntermediate: DataIntermediary) {
 let updatesRouter = express.Router();
 
   updatesRouter.use((req, res, next) => {
@@ -18,7 +18,7 @@ let updatesRouter = express.Router();
   });
 
   updatesRouter.get('/', restrictedViewOnly, (req, res) => {
-    dataIntermediary.getStatusUpdates()
+    dataIntermediate.getStatusUpdates()
       .then(updates => {
         res.type("application/json");
         res.send(JSON.stringify(updates));
@@ -27,7 +27,7 @@ let updatesRouter = express.Router();
 
   updatesRouter.get('/:id', restrictedViewOnly, (req, res) => {
     let id = req.params.id;
-    dataIntermediary.getStatusUpdate(id)
+    dataIntermediate.getStatusUpdate(id)
       .then(update => {
         res.type('application/json');
         res.send(JSON.stringify(update));
@@ -36,7 +36,7 @@ let updatesRouter = express.Router();
 
   updatesRouter.post('/', restrictedBasic, (req, res) => {
     let newUpdateProperties = req.body;
-    dataIntermediary.createStatusUpdate(newUpdateProperties)
+    dataIntermediate.createStatusUpdate(newUpdateProperties)
       .then(update => {
         res.type("application/json");
         res.send(JSON.stringify(update));
@@ -45,7 +45,7 @@ let updatesRouter = express.Router();
 
   updatesRouter.put('/:id', restrictedBasic, (req, res) => {
     let newDetailsUpdate = req.body;
-    dataIntermediary.updateTeamUpdate(newDetailsUpdate, req.user)
+    dataIntermediate.updateTeamUpdate(newDetailsUpdate, req.user)
     .then(changedUpdate => {
       res.json(changedUpdate);
     })
@@ -53,7 +53,7 @@ let updatesRouter = express.Router();
 
   updatesRouter.delete('/:id', restrictedBasic, (req, res) => {
     let id = req.params.id;
-    dataIntermediary.deleteTeamUpdate(id)
+    dataIntermediate.deleteTeamUpdate(id)
     .then(() => {
       res.send('successfully deleted update');
     })

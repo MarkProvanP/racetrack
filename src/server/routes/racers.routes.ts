@@ -5,7 +5,7 @@ import * as winston from "winston";
 import { DataIntermediary } from "../data-intermediate";
 import { restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 
-export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
+export default function racersRouterWithDb(dataIntermediate: DataIntermediary) {
   let racersRouter = express.Router();
 
   racersRouter.use((req, res, next) => {
@@ -20,7 +20,7 @@ export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
 
   racersRouter.get('/', restrictedViewOnly, (req, res) => {
     winston.log('verbose', 'GET /racers'); 
-    dataIntermediary.getRacers()
+    dataIntermediate.getRacers()
       .then(racers => {
         res.type('application/json');
         res.send(JSON.stringify(racers));
@@ -29,7 +29,7 @@ export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
 
   racersRouter.get('/:id', restrictedViewOnly, (req, res) => {
     let id = req.params.id;
-    dataIntermediary.getRacer(id)
+    dataIntermediate.getRacer(id)
       .then(racer => {
         res.type('application/json');
         res.send(JSON.stringify(racer));
@@ -39,7 +39,7 @@ export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
   racersRouter.post('/', restrictedModifyAll, (req, res) => {
     winston.log('verbose', 'POST /racers')
     let body = req.body;
-    dataIntermediary.createRacer(body)
+    dataIntermediate.createRacer(body)
       .then(newRacer => {
         res.type('application/json');
         res.send(JSON.stringify(newRacer));
@@ -52,7 +52,7 @@ export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
     winston.log('verbose', body);
     let newDetailsRacer = Racer.fromJSON(body);
 
-    dataIntermediary.updateRacer(newDetailsRacer, req.user)
+    dataIntermediate.updateRacer(newDetailsRacer, req.user)
       .then(changedRacer => {
         res.type('application/json');
         res.send(JSON.stringify(changedRacer));
@@ -64,7 +64,7 @@ export default function racersRouterWithDb(dataIntermediary: DataIntermediary) {
     let body = req.body;
     let deletedRacerId = req.params.id;
 
-    dataIntermediary.deleteRacer(deletedRacerId)
+    dataIntermediate.deleteRacer(deletedRacerId)
       .then(() => {
         res.send('successfully deleted racer');
       });
