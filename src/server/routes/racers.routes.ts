@@ -22,8 +22,7 @@ export default function racersRouterWithDb(dataIntermediate: DataIntermediary) {
     winston.log('verbose', 'GET /racers'); 
     dataIntermediate.getRacers()
       .then(racers => {
-        res.type('application/json');
-        res.send(JSON.stringify(racers));
+        res.json(racers);
       });
   })
 
@@ -31,8 +30,7 @@ export default function racersRouterWithDb(dataIntermediate: DataIntermediary) {
     let id = req.params.id;
     dataIntermediate.getRacer(id)
       .then(racer => {
-        res.type('application/json');
-        res.send(JSON.stringify(racer));
+        res.json(racer);
       });
   });
 
@@ -41,8 +39,7 @@ export default function racersRouterWithDb(dataIntermediate: DataIntermediary) {
     let body = req.body;
     dataIntermediate.createRacer(body)
       .then(newRacer => {
-        res.type('application/json');
-        res.send(JSON.stringify(newRacer));
+        res.json(newRacer);
       })
   })
 
@@ -54,8 +51,7 @@ export default function racersRouterWithDb(dataIntermediate: DataIntermediary) {
 
     dataIntermediate.updateRacer(newDetailsRacer, req.user)
       .then(changedRacer => {
-        res.type('application/json');
-        res.send(JSON.stringify(changedRacer));
+        res.json(changedRacer);
       });
   })
 

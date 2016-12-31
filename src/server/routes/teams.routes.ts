@@ -21,32 +21,28 @@ export default function teamsRouterWithDb(dataIntermediate: DataIntermediary) {
   teamsRouter.get('/', restrictedViewOnly, (req, res) => {
     dataIntermediate.getTeams()
       .then(teams => {
-        res.type('application/json');
-        res.send(JSON.stringify(teams));
+        res.json(teams)
       });
   })
   teamsRouter.get('/:id', restrictedViewOnly, (req, res) => {
     let id = req.params.id;
     dataIntermediate.getTeam(id)
       .then(team => {
-        res.type('application/json');
-        res.send(JSON.stringify(team));
+        res.json(team)
       });
   })
   teamsRouter.post('/', restrictedBasic, (req, res) => {
     let body = req.body;
     dataIntermediate.createTeam(body)
       .then(newTeam => {
-        res.type('application/json');
-        res.send(JSON.stringify(newTeam));
+        res.json(newTeam)
       });
   });
   teamsRouter.put('/:id', restrictedViewOnly, (req, res) => {
     let newDetailsTeam = Team.fromJSON(req.body);
     dataIntermediate.updateTeam(newDetailsTeam, req.user)
       .then(changedTeam => {
-        res.type('application/json');
-        res.send(JSON.stringify(changedTeam));
+        res.json(changedTeam);
       });
   })
   teamsRouter.delete('/:id', restrictedViewOnly, (req, res) => {

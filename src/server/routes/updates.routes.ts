@@ -20,8 +20,7 @@ let updatesRouter = express.Router();
   updatesRouter.get('/', restrictedViewOnly, (req, res) => {
     dataIntermediate.getStatusUpdates()
       .then(updates => {
-        res.type("application/json");
-        res.send(JSON.stringify(updates));
+        res.json(updates);
       });
   });
 
@@ -29,8 +28,7 @@ let updatesRouter = express.Router();
     let id = req.params.id;
     dataIntermediate.getStatusUpdate(id)
       .then(update => {
-        res.type('application/json');
-        res.send(JSON.stringify(update));
+        res.json(update);
       });
   });
 
@@ -38,8 +36,7 @@ let updatesRouter = express.Router();
     let newUpdateProperties = req.body;
     dataIntermediate.createStatusUpdate(newUpdateProperties)
       .then(update => {
-        res.type("application/json");
-        res.send(JSON.stringify(update));
+        res.json(update);
       });
   });
 

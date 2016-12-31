@@ -32,8 +32,7 @@ export default function textsRouterWithDb(dataIntermediate: DataIntermediary, tw
   textsRouter.get('/', restrictedViewOnly, (req, res) => {
     dataIntermediate.getTexts()
       .then(texts => {
-        res.type('application/json');
-        res.send(JSON.stringify(texts));
+        res.json(texts);
       })
       .catch(err => {
         console.error('textsrouter error', err);
@@ -46,8 +45,7 @@ export default function textsRouterWithDb(dataIntermediate: DataIntermediary, tw
     let number = req.params.number
     dataIntermediate.getTextsByNumber(number)
       .then(texts => {
-        res.type('application/json');
-        res.send(JSON.stringify(texts));
+        res.json(texts)
       })
       .catch(err => {
         res.status(500);
@@ -83,8 +81,7 @@ export default function textsRouterWithDb(dataIntermediate: DataIntermediary, tw
     let newDetailsText = Text.fromJSON(req.body);
     dataIntermediate.updateText(newDetailsText)
       .then(changedText => {
-        res.type("application/json");
-        res.send(JSON.stringify(changedText));
+        res.json(changedText);
       });
   });
 
