@@ -42,5 +42,13 @@ Configuration is done through environment variables
 
 ` TWILIO_SMS_WEBHOOK` - Twilio webhook URL for receiving texts
 
+# Other stuff
+
+HTTPS support is included when the ` HTTPS_FORCE ` env variable is set (to anything, even 'false' - it must be the empty string or non-existent to be false - the wonders of JavaScript...).
+When set, when the application detects that it is running on Heroku it will force all HTTP requests to be redirected to HTTPS,
+and will trust the X-Forwarded-Proto header as this is Heroku's proxy server.
+Also included is a mechanismto load up ACME challenge-response pairs, using a JSON-encoded array of {request: "/.well-known/bleh", response: "keyboard-cat"} objects as the` ACME_CHALLENGES ` ENV variable.
+http://collectiveidea.com/blog/archives/2016/01/12/lets-encrypt-with-a-rails-app-on-heroku
+
 # License
  [MIT](/LICENSE)
