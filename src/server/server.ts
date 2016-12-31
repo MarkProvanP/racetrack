@@ -1,5 +1,15 @@
+const ON_HEROKU = process.env.NODE && ~process.env.NODE.indexOf("heroku");
+
 import * as express from "express";
 let app = express();
+
+let forceSSL = require("express-force-ssl");
+if (ON_HEROKU) {
+  console.log("Running on Heroku, requiring SSL")
+  app.use(forceSSL);
+} else {
+  console.log("Not running on Heroku, not requiring SSL");
+}
 
 app.use(express.static('dist'));
 
