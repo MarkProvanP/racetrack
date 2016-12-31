@@ -6,6 +6,29 @@ import { Text, PhoneNumber } from '../../../common/text';
 import { TextService } from '../../text.service';
 import { DataService } from '../../data.service';
 
+class Recipient {
+  constructor(
+    public name: string,
+    public numNote: string,
+    public number: PhoneNumber
+  ) {}
+
+  matchesName(name: string) {
+    return this.name.toLowerCase().indexOf(name) != -1;
+  }
+
+  matchesNumber(numberString: string) {
+    return this.number.toE164().indexOf(numberString) != -1;
+  }
+
+  hasPhoneNumber(phoneNumber: PhoneNumber) {
+    if (!this.number) {
+      return false;
+    }
+    return this.number.equals(phoneNumber)
+  }
+}
+
 @Component({
   selector: 'text-send',
   templateUrl: './text-send.component.pug',
@@ -18,20 +41,20 @@ export class TextSendComponent {
   message: string;
   isSending = false;
   recipients = [];
-  matchingRecipients = [];
-  allRecipients = [];
-  newRecipient = "";
+  matchingRecipients: Recipient[] = [];
+  allRecipients: Recipient[] = [];
+  searchQuery = "";
   addingNewRecipient: boolean;
 
   filterRecipients() {
-    let search = this.newRecipient.toLowerCase();
+    let search = this.searchQuery.toLowerCase();
     console.log(this.allRecipients);
     console.log(this.matchingRecipients);
     this.matchingRecipients = this.allRecipients.filter(recipient => {
       console.log('checking search', search, 'against recipient', recipient);
-      return (recipient.name.toLowerCase().indexOf(search) != -1
-        || recipient.number.toE164().indexOf(search) != -1)
-        && this.recipients.filter(r => r.number.equals(recipient.number)).length == 0;
+      return recipient.matchesName(this.searchQuery)
+        || recipient.matchesNumber(this.searchQuery)
+        && (this.recipients.filter(r => r.hasPhoneNumber(recipient.number)).length == 0);
     });
     console.log(this.matchingRecipients);
   }
@@ -40,9 +63,9 @@ export class TextSendComponent {
     this.addingNewRecipient = true;
   }
 
-  addRecipient(recipient) {
+  addRecipient(recipient: Recipient) {
     this.recipients.push(recipient);
-    this.newRecipient = "";
+    this.searchQuery = "";
     this.filterRecipients();
   }
 
@@ -70,24 +93,13 @@ export class TextSendComponent {
     let racers = this.dataService.getRacers()
     let allContacts = [];
     racers.forEach(racer => {
-      let contacts = racer.phones.map(contact => {
-        console.log(racer, contact);
-        return {
-          name: racer.name,
-          numNote: contact.notes || "",
-          number: contact.number
-        }
-      });
+      let contacts = racer.phones.map(contact => new Recipient(racer.name, contact.notes || "", contact.number));
       allContacts = allContacts.concat(contacts);
     });
     this.allRecipients = allContacts;
     this.recipients = this.allRecipients.filter(recipient => recipient.number.equals(this.toNumber));
     if (!this.recipients.length) {
-      this.recipients.push({
-        name: '?',
-        numNote: '?',
-        number: this.toNumber
-      })
+      this.recipients.push(new Recipient('?', '?', this.toNumber))
     }
   }
 }

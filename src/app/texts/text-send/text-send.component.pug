@@ -20,7 +20,7 @@
           td
             .next-recipient
               md-input-container.search-field
-                input(md-input, [(ngModel)]='newRecipient', (input)='filterRecipients()', placeholder='Search for racer name or phone number')
+                input(md-input, [(ngModel)]='searchQuery', (input)='filterRecipients()', placeholder='Search for racer name or phone number')
               md-card#filter-recipients-list.filter-recipients-list
                 i(*ngIf='!matchingRecipients.length') No racers matching query!
                 md-list(*ngIf='matchingRecipients.length')
