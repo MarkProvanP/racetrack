@@ -6,20 +6,23 @@ import { UserService } from '../user.service';
 import { Observable } from "rxjs/Observable";
 
 @Injectable()
-export class AuthenticatedGuard implements CanActivate {
-  constructor(private router: Router, private userService: UserService) {}
+export class PasswordResetGuard implements CanActivate {
+  constructor(
+    private router: Router,
+    private userService: UserService
+  ) {}
 
   canActivate(): Observable<boolean> {
     return this.userService.auth()
       .map(authenticated => {
-        if (authenticated.auth) {
-          return true;
-        } else {
-          this.router.navigate(['/']);
+        if (authenticated.resetPassword) {
+          this.router.navigate(['/set-password']);
           return false;
+        } else {
+          return true;
         }
       }).catch(error => {
-        return Observable.of(false);
+        return Observable.of(true);
       })
   }
 }

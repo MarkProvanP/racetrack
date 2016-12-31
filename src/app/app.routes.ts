@@ -29,13 +29,13 @@ import { UserListComponent } from "./user/list";
 import { PrivateApp } from "./private-app";
 import { PublicApp } from "./public-app"
 
-import { AuthenticatedGuard, UnauthenticatedGuard } from './guards';
+import { AuthenticatedGuard, UnauthenticatedGuard, PasswordResetGuard } from './guards';
 
 export const ROUTES: Routes = [
   {
     path: 'safetyteam',
     component: PrivateApp,
-    canActivate: [AuthenticatedGuard],
+    canActivate: [AuthenticatedGuard, PasswordResetGuard],
     children: [
       {
         path: 'texts',
@@ -97,7 +97,6 @@ export const ROUTES: Routes = [
           { path: 'logout', component: LogoutComponent },
           { path: 'me', component: MeComponent },
           { path: 'list', component: UserListComponent },
-          { path: 'set-password', component: SetPasswordComponent }
         ]
       },
       { path: 'mass-text', component: MassTextComponent },
@@ -105,6 +104,11 @@ export const ROUTES: Routes = [
       { path: 'import', component: ImportComponent },
       { path: '', redirectTo: '/safetyteam/dashboard', pathMatch: 'full' }
     ]
+  },
+  {
+    path: 'set-password',
+    canActivate: [AuthenticatedGuard],
+    component: SetPasswordComponent
   },
   {
     path: '',

@@ -61,3 +61,6 @@ npm-debug.log
 *.swp
 
 /bin
+
+# Heroku ENV #
+.env

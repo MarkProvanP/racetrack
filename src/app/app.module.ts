@@ -71,7 +71,7 @@ import {
   TeamHasUpdatePipe
 } from "./pipes";
 
-import { AuthenticatedGuard, UnauthenticatedGuard } from './guards';
+import { AuthenticatedGuard, UnauthenticatedGuard, PasswordResetGuard } from './guards';
 
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
@@ -84,6 +84,7 @@ const APP_PROVIDERS = [
   NominatimService,
   AuthenticatedGuard,
   UnauthenticatedGuard,
+  PasswordResetGuard,
   Title
 ];
 

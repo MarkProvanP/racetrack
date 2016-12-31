@@ -194,11 +194,17 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
   });
 
   router.get('/api/auth', isLoggedIn, (req, res) => {
-    let user = req.user;
-    res.json({
-      auth: true,
-      resetPassword: user.recentlyReset
-    });
+    let username = req.user.username;
+    dataIntermediate.getUser(username)
+    .then(user => {
+      res.json({
+        auth: true,
+        resetPassword: user.recentlyReset
+      });
+    })
+    .catch(err => {
+      res.status(500).send();
+    })
   });
 
   router.get('/api/authenticated', isLoggedIn, (req, res) => {
