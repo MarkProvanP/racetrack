@@ -36,6 +36,8 @@ const DATA_EMAIL_RECIPIENTS = [GMAIL_USER].concat(process.env.DATA_EMAIL_RECIPIE
 console.log(`Will send error emails to ${ERROR_EMAIL_RECIPIENTS}`);
 console.log(`Will send status emails to ${STATUS_EMAIL_RECIPIENTS}`);
 console.log(`Will send data emails to ${DATA_EMAIL_RECIPIENTS}`);
+import { hostname } from "os";
+const HOSTNAME = hostname();
 
 const XOAUTH2_SETTINGS = {
   user: GMAIL_USER,
@@ -206,7 +208,7 @@ export class Emailer {
       DATE: new Date(),
       PROMISE_STRING: promiseString,
       STACKTRACE: stacktrace,
-      HOSTNAME: os.hostname()
+      HOSTNAME: HOSTNAME
     })
     return this.sendEmail(
       ERROR_EMAIL_RECIPIENTS,
@@ -221,7 +223,7 @@ export class Emailer {
       APP_NAME: APP_NAME,
       DATE: new Date(),
       STACKTRACE: stacktrace,
-      HOSTNAME: os.hostname()
+      HOSTNAME: HOSTNAME
     })
     return this.sendEmail(
       ERROR_EMAIL_RECIPIENTS,
@@ -260,7 +262,7 @@ export class Emailer {
     let emailHTMLString = EMAIL_TEMPLATES.serverStarted({
       APP_NAME: APP_NAME,
       DATE: new Date(),
-      HOSTNAME: os.hostname()
+      HOSTNAME: HOSTNAME
     })
     return this.sendEmail(
       STATUS_EMAIL_RECIPIENTS,
