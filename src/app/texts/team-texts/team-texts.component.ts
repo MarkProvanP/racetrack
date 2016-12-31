@@ -36,10 +36,7 @@ export class TeamTextsComponent implements OnInit {
   }
 
   getTeams() {
-    return this.dataService.getTeams()
-      .then(teams => {
-        this.teams = teams;
-      });
+    this.teams = this.dataService.getTeams();
   }
 
   selectTextsByTeam(team: Team) {
@@ -74,12 +71,10 @@ export class TeamTextsComponent implements OnInit {
       this.onTextsChanged();
     });
     this.texts = this.textService.getAllTexts();
-    this.getTeams()
-      .then(teams => {
-        this.paramsSub = this.activatedRoute.params.subscribe(params => {
-          let team = this.teams.filter(team => team.id == params['id'])[0]
-          this.selectTextsByTeam(team);
-        });
-      });
+    this.getTeams();
+    this.paramsSub = this.activatedRoute.params.subscribe(params => {
+      let team = this.teams.filter(team => team.id == params['id'])[0]
+      this.selectTextsByTeam(team);
+    });
   }
 }

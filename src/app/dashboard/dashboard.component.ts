@@ -45,10 +45,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getTeams(): void {
-    this.dataService
-        .getTeams()
-        .then(teams => this.allTeams = teams)
-        .then(teams => this.filterTeams());
+    this.allTeams = this.dataService.getTeams();
+    this.filterTeams();
   }
 
   filterTeams() {

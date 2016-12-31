@@ -167,16 +167,13 @@ export class MassTextComponent implements OnInit {
 
   ngOnInit() {
     this.getActiveMassTextEvent();
-    this.dataService.getTeams()
-      .then(teams => {
-        this.teams = teams;
-        this.teams.forEach(team => {
-          this.racers = this.racers.concat(team.racers);
-          team.racers.forEach(racer => {
-            this.racerToTeamMap.set(racer, team);
-          });
-        });
+    this.teams = this.dataService.getTeams()
+    this.teams.forEach(team => {
+      this.racers = this.racers.concat(team.racers);
+      team.racers.forEach(racer => {
+        this.racerToTeamMap.set(racer, team);
       });
+    });
     let onTextsChanged = (texts) => {
       console.log('texts changed/received!');
     }

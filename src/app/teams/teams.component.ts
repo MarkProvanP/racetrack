@@ -25,7 +25,7 @@ export class TeamsComponent implements OnInit {
   }
 
   getTeams() {
-    this.teams = this.dataService.getAllTeams();
+    this.teams = this.dataService.getTeams();
   }
 
   ngOnInit(): void {

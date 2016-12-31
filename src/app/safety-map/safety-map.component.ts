@@ -29,7 +29,7 @@ export class SafetyMapComponent implements OnInit {
       this.teams = teams;
     })
     this.dataService.addUpdatesChangedListener(updates => {
-      this.teams = this.dataService.getAllTeams();
+      this.teams = this.dataService.getTeams();
     })
   }
 
@@ -38,6 +38,6 @@ export class SafetyMapComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.teams = this.dataService.getAllTeams()
+    this.teams = this.dataService.getTeams()
   }
 }

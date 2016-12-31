@@ -79,14 +79,11 @@ export class UpdatesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataService.getTeams()
-    .then(teams => {
-      this.teams = teams;
-      this.paramsSub = this.activatedRoute.params.subscribe(params => {
-        let team = this.teams.filter(team => team.id == params['id'])[0]
-        this.selectUpdatesByTeam(team);
-      });
-    })
+    this.teams = this.dataService.getTeams();
+    this.paramsSub = this.activatedRoute.params.subscribe(params => {
+      let team = this.teams.filter(team => team.id == params['id'])[0]
+      this.selectUpdatesByTeam(team);
+    });
   }
 
   onMarkerDragEnd(event) {

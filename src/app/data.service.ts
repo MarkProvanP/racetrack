@@ -62,7 +62,7 @@ export class DataService {
   }
 
   private whenAuthenticated() {
-    this.getAllTeamsFromBackend()
+    this.getTeamsFromBackend()
     .then(teams => {
       this.teams = teams;
       this.broadcastTeamsChanged();
@@ -139,11 +139,7 @@ export class DataService {
 
 //----------------------------------------------------------------------//
   
-  getTeams(): Promise<Team[]> {
-    return this.getAllTeamsFromBackend();
-  }
-  
-  getAllTeams(): Team[] {
+  getTeams(): Team[] {
     return this.teams;
   }
 
@@ -162,7 +158,7 @@ export class DataService {
     return this.writeTeamToBackend(team);
   }
 
-  getAllTeamsFromBackend(): Promise<Team[]> {
+  getTeamsFromBackend(): Promise<Team[]> {
     return this.http.get(this.teamsUrl, this.httpNoBodyExtras)
                .toPromise()
                .then(response => response.json().map(Team.fromJSON))
@@ -302,7 +298,7 @@ export class DataService {
   getRacersWithoutTeams(): Promise<Racer[]> {
     return this.getRacersFromBackend()
       .then(racers => {
-        return this.getAllTeamsFromBackend()
+        return this.getTeamsFromBackend()
           .then(teams => {
             let racersInTeams = teams
               .map(team => team.racers)
@@ -314,14 +310,12 @@ export class DataService {
       });
   }
 
-  getRacerForPhoneNumber(phone: PhoneNumber): Promise<Racer> {
-    return this.getRacersFromBackend()
-      .then(racers => racers.filter(racer => racer.phones.filter(contact => contact.number === phone))[0]);
+  getRacerForPhoneNumber(phone: PhoneNumber): Racer {
+    return this.racers.filter(racer => racer.phones.filter(contact => contact.number === phone))[0];
   }
 
-  getTeamForRacer(racer: Racer): Promise<Team> {
-    return this.getTeams()
-      .then(teams => teams.filter(team => team.hasRacer(racer))[0]);
+  getTeamForRacer(racer: Racer): Team {
+    return this.teams.filter(team => team.hasRacer(racer))[0];
   }
 
 //----------------------------------------------------------------------//
