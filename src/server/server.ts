@@ -119,7 +119,7 @@ const EMAIL_TEMPLATES = {
   uncaughtException: pug.compileFile("src/email-templates/uncaught-exception.pug"),
   textSent: pug.compileFile("src/email-templates/text-sent.pug"),
   textReceived: pug.compileFile("src/email-templates/text-received.pug"),
-  serverStarted: pug.compileFile("src/email-templates/text-received.pug")
+  serverStarted: pug.compileFile("src/email-templates/server-started.pug")
 }
 
 export class Emailer {
