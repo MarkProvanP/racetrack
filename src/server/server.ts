@@ -65,6 +65,7 @@ import {
   CLOSE_SOCKET
 } from "../common/message";
 
+
 var path = require('path');
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -110,6 +111,16 @@ let dataIntermediary;
 import * as nodemailer from "nodemailer";
 let xoauth2 = require("xoauth2");
 
+import * as pug from "pug";
+const EMAIL_TEMPLATES = {
+  userCreated: pug.compileFile("src/email-templates/user-created.pug"),
+  passwordReset: pug.compileFile("src/email-templates/password-reset.pug"),
+  unhandledRejection: pug.compileFile("src/email-templates/unhandled-rejection.pug"),
+  uncaughtException: pug.compileFile("src/email-templates/uncaught-exception.pug"),
+  textSent: pug.compileFile("src/email-templates/text-sent.pug"),
+  textReceived: pug.compileFile("src/email-templates/text-received.pug"),
+  serverStarted: pug.compileFile("src/email-templates/text-received.pug")
+}
 
 export class Emailer {
   private smtpTransport;
@@ -162,80 +173,96 @@ export class Emailer {
   }
 
   sendUserCreatedEmail(user: UserWithoutPassword, password: string) {
+    let emailHTMLString = EMAIL_TEMPLATES.userCreated({
+      APP_NAME: APP_NAME,
+      USER_NAME: user.name,
+      APP_URL: APP_URL,
+      USER_PASSWORD: password
+    })
     return this.sendEmail(
       user.email,
       `Welcome to ${APP_NAME}, ${user.name}`,
-      `
-      <h1>Hello, ${user.name}</h1>
-      <p>An account has been created for you on <a href='${APP_URL}'>${APP_NAME}</a></p>
-      <p>Your temporary password is <b>${password}</b></p>
-      `
+      emailHTMLString
     )
   }
 
   sendPasswordResetEmail(to: string, password: string) {
+    let emailHTMLString = EMAIL_TEMPLATES.passwordReset({
+      APP_NAME: APP_NAME,
+      PASSWORD: password
+    })
     return this.sendEmail(
       to,
       `${APP_NAME} Password Reset`,
-      `
-      <h1>${APP_NAME} Password Reset</h1>
-      <p>Password reset to <b>${password}</b></p>
-      `
+      emailHTMLString
     )
   }
 
   sendUnhandledRejectionEmail(reason, promise) {
     let stacktrace = newlineReplace(String(reason.stack));
     let promiseString = newlineReplace(String(promise));
+    let emailHTMLString = EMAIL_TEMPLATES.unhandledRejection({
+      APP_NAME: APP_NAME,
+      DATE: new Date(),
+      PROMISE_STRING: promiseString,
+      STACKTRACE: stacktrace
+    })
     return this.sendEmail(
       ERROR_EMAIL_RECIPIENTS,
       `${APP_NAME} - Unhandled rejection!`,
-      `
-      <h1>${APP_NAME}- Unhandled rejection</h1>
-      <p>At ${new Date()}</p>
-      <h2>Promise</h2>
-      <p>${promiseString}</p>
-      <h2>Stacktrace</h2>
-      <p>${stacktrace}</p>
-      `
+      emailHTMLString
     )
   }
 
   sendUncaughtExceptionEmail(exception) {
     let stacktrace = newlineReplace(exception.stack);
+    let emailHTMLString = EMAIL_TEMPLATES.uncaughtException({
+      APP_NAME: APP_NAME,
+      DATE: new Date(),
+      STACKTRACE: stacktrace
+    })
     return this.sendEmail(
       ERROR_EMAIL_RECIPIENTS,
       `${APP_NAME} - Uncaught Exception!`,
-      `
-      <h1>${APP_NAME}- Uncaught Exception</h1>
-      <p>At ${new Date()}</p>
-      <h2>Stacktrace</h2>
-      <p>${stacktrace}</p>
-      `
+      emailHTMLString
     )
   }
 
   sendTextSentEmail(text: TwilioOutboundText) {
+    let emailHTMLString = EMAIL_TEMPLATES.textSent({
+      APP_NAME: APP_NAME,
+      TEXT_RECIPIENT: text.to,
+      TEXT_BODY: text.body
+    })
     return this.sendEmail(
       DATA_EMAIL_RECIPIENTS,
       `${APP_NAME} - Text sent to ${text.to}`,
-      `
-      <h1>${APP_NAME} - Text Sent!</h1>
-      <p>To: ${text.to}</p>
-      <p>Body: ${text.body}</p>
-      `
+      emailHTMLString
     )
   }
 
   sendTextReceivedEmail(text: TwilioInboundText) {
+    let emailHTMLString = EMAIL_TEMPLATES.textReceived({
+      APP_NAME: APP_NAME,
+      TEXT_SENDER: text.From,
+      TEXT_BODY: text.Body
+    })
     return this.sendEmail(
       DATA_EMAIL_RECIPIENTS,
       `${APP_NAME} - Text Received from ${text.From}`,
-      `
-      <h1>${APP_NAME} - Text Received!</h1>
-      <p>From: ${text.From}</p>
-      <p>Body: ${text.Body}</p>
-      `
+      emailHTMLString
+    )
+  }
+  
+  sendServerStartedEmail() {
+    let emailHTMLString = EMAIL_TEMPLATES.serverStarted({
+      APP_NAME: APP_NAME,
+      DATE: new Date()
+    })
+    return this.sendEmail(
+      STATUS_EMAIL_RECIPIENTS,
+      "Server started!",
+      emailHTMLString
     )
   }
 }
@@ -446,14 +473,7 @@ setup(MONGODB_URI)
         })
       })
 
-      emailer.sendEmail(
-        STATUS_EMAIL_RECIPIENTS,
-        "Server started!",
-        `
-        <h1>Server started!</h1>
-        <p>Server started at ${new Date()}</p>
-        `
-      )
+      emailer.sendServerStartedEmail()
       .then((messageInfo) => {
         console.log(messageInfo);
       })

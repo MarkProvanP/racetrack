@@ -1,0 +1,11 @@
+extends basic.pug
+
+block title
+  title Welcome to #{APP_NAME}, #{USER_NAME}
+
+block content
+  h1 Hello, ${USER_NAME}!
+  p An account has been created for you on
+    a(href=APP_URL) #{APP_NAME}
+  p Your temporary password is
+    b #{USER_PASSWORD}
