@@ -21,10 +21,6 @@ texts-list {
   flex-direction: column;
 }
 
-/deep/ .md-list-item:hover {
-  background-color: lightgrey;
-}
-
-/deep/ .md-list-item.selected {
-  background-color: #EEEEEE;
+.selected {
+  background-color: #EEE !important;
 }

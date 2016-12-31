@@ -21,10 +21,7 @@ texts-list {
   }
 }
 
-/deep/ .md-list-item:hover {
-  background-color: lightgrey;
+.selected {
+  background-color: #EEE !important;
 }
 
-/deep/ .md-list-item.selected {
-  background-color: #EEEEEE;
-}

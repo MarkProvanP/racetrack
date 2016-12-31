@@ -9,8 +9,8 @@ import { TextService, TextFilterOptions } from '../../text.service';
 
 @Component({
   selector: "team-texts",
-  templateUrl: "./team-texts.template.html",
-  styleUrls: ["./team-texts.styles.scss"]
+  templateUrl: "./team-texts.component.pug",
+  styleUrls: ["./team-texts.component.scss"]
 })
 export class TeamTextsComponent implements OnInit {
   @Input() texts: Text[];
@@ -31,8 +31,8 @@ export class TeamTextsComponent implements OnInit {
     private router: Router
   ) {};
 
-  routeToTeam(team: Team) {
-    this.router.navigate(['/safetyteam', 'texts', 'by-team', team.id]);
+  getTeamLink(team: Team) {
+    return `/safetyteam/texts/by-team/${team.id}`;
   }
 
   getTeams() {

@@ -1,0 +1,7 @@
+nav(md-tab-nav-bar)
+  a(md-tab-link,
+    *ngFor='let tabLink of tabs; let i = index',
+    [routerLink]=" ['/safetyteam', 'texts', tabLink.link] ",
+    [active]='activeLinkIndex === i',
+    (click)='activeLinkIndex = i') {{tabLink.label}}
+router-outlet

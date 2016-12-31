@@ -11,8 +11,8 @@ import { UserService } from '../../../user.service';
 
 @Component({
   selector: 'app-text',
-  templateUrl: './app-text.template.html',
-  styleUrls: ['./app-text.style.scss']
+  templateUrl: './app-text.component.pug',
+  styleUrls: ['./app-text.component.scss']
 })
 export class AppTextComponent {
   @Input() text: AppText;

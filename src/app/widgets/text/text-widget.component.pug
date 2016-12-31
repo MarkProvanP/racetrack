@@ -1,0 +1,14 @@
+.text-widget
+  table
+    tr
+      th From
+      td {{text.racer.name}}
+        phone-widget([number]='text.from') 
+    tr
+      th At
+      td
+        time-widget([time]='text.timestamp')
+    tr
+      th Body
+      td {{text.body}}
+

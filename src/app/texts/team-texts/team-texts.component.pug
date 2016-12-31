@@ -1,0 +1,8 @@
+.texts-by-team.master-detail
+  .teams-list.master
+    md-nav-list
+      a(md-list-item, *ngFor='let team of teams', [routerLink]='getTeamLink(team)', routerLinkActive='selected')
+        h3(md-line) ({{numberUnreadMessagesForTeam(team)}}) {{team.name}}
+        p(md-line) {{team.getPrettyRacersList()}}
+  texts-list([texts]='selectedTeamTexts', [display]='displayOptions')
+

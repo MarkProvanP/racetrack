@@ -4,7 +4,7 @@ import { Text } from "../../../common/text";
 
 @Component({
   selector: 'text-widget',
-  templateUrl: './text-widget.component.html',
+  templateUrl: './text-widget.component.pug',
   styleUrls: ['./text-widget.component.scss']
 })
 export class TextWidget {

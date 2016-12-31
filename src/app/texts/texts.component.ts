@@ -1,23 +1,12 @@
-import { Component } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-
-import { Racer } from "../../common/racer";
-import { Team } from "../../common/team";
-import { Text } from '../../common/text';
-import { TextService } from '../text.service';
-
-import * as moment from "moment";
-
-import { AllTextsComponent } from "./all-texts";
-import { RacerTextsComponent } from "./racer-texts";
-import { TeamTextsComponent } from "./team-texts";
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "texts",
-  templateUrl: "./texts.template.html",
-  styleUrls: ["./texts.styles.scss"]
+  templateUrl: "./texts.component.pug",
+  styleUrls: ["./texts.component.scss"]
 })
-export class TextsComponent {
+export class TextsComponent implements OnInit {
   tabs = [
     {link: 'all', label: 'All'},
     {link: 'by-team', label: 'By Team'},
@@ -26,7 +15,18 @@ export class TextsComponent {
   activeLinkIndex = 0;
 
   constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute
+    private router: Router
   ) {}
+
+  ngOnInit() {
+    // Horrible hack time!
+    let selectionFromRoute = this.router.url.split("/")[3];
+    for (let i = 0; i < this.tabs.length; i++) {
+      let option = this.tabs[i];
+      if (option.link == selectionFromRoute) {
+        this.activeLinkIndex = i;
+        return;
+      }
+    }
+  }
 }

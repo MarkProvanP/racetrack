@@ -9,8 +9,8 @@ import { TextService, TextFilterOptions } from '../../text.service';
 
 @Component({
   selector: "racer-texts",
-  templateUrl: "./racer-texts.template.html",
-  styleUrls: ["./racer-texts.styles.scss"]
+  templateUrl: "./racer-texts.component.pug",
+  styleUrls: ["./racer-texts.component.scss"]
 })
 export class RacerTextsComponent implements OnInit {
   texts: Text[];
@@ -35,8 +35,8 @@ export class RacerTextsComponent implements OnInit {
     })
   }
 
-  routeToRacer(racer: Racer) {
-    this.router.navigate(['/safetyteam', 'texts', 'by-racer', racer.id]);
+  getRacerLink(racer: Racer) {
+    return `/safetyteam/texts/by-racer/${racer.id}`;
   }
 
   getRacers() {

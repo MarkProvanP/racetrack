@@ -16,8 +16,8 @@ const DEFAULT_SHOW_OPTION = 'all';
 
 @Component({
   selector: "texts-list",
-  templateUrl: "./texts-list.template.html",
-  styleUrls: ["./texts-list.styles.scss"]
+  templateUrl: "./texts-list.component.pug",
+  styleUrls: ["./texts-list.component.scss"]
 })
 export class TextsListComponent {
   actuallyAllTexts: Text[];
