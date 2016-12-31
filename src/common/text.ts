@@ -12,7 +12,7 @@ export class PhoneNumber {
     return `+${this.countryCode}${this.nationalNumber}`
   }
 
-  equals(other: PhoneNumber) {
+  equals(other: PhoneNumber | string) {
     if (typeof other == 'string') {
       let otherString = other as string;
       return this.toE164() == otherString;
@@ -215,6 +215,10 @@ export class InboundText extends Text {
 
 export class AppText extends InboundText {
   text_subclass: string = 'AppText';
+
+  static isAppText(text: TwilioInboundText) {
+    return text.Body.indexOf(APP_TEXT_HEADER) == 0;
+  }
 
   location: Location;
 

@@ -1,5 +1,3 @@
-const APP_TEXT_HEADER = "!AutoUpdate!";
-
 let generatePassword = require("password-generator");
 
 import { DbFacadeInterface} from "./db/db-facade";
@@ -233,19 +231,6 @@ export class DataIntermediary {
     })
   }
 
-  private populateText(text: DbFormText): Promise<FullFormText> {
-    return this.addRacerToText(text)
-    .catch(err => {
-      console.error(`addracertotext failed`);
-      return Promise.reject(err);
-    })
-    .then(textWithRacer => this.addTeamToText(textWithRacer))
-    .catch(err => {
-      console.error(`addTeamToText failed populateText(${this.shortDebugText(text)})`, err);
-      return Promise.reject(err);
-    })
-  }
-
   private getTextsReady(texts: DbFormText[]): Promise<Text[]> {
     let textPromises = texts.map(text => this.populateText(text));
     return Promise.all(textPromises)
@@ -273,48 +258,21 @@ export class DataIntermediary {
   public addTextFromTwilio(text: TwilioInboundText): Promise<Text> {
     this.emailer.sendTextReceivedEmail(text);
     let id = uuid.v4();
-    let createdText;
+    let createdText = AppText.isAppText(text) ? AppText.fromTwilio(id, text) : InboundText.fromTwilio(id, text);
+    let inDbForm = createdText.toDbForm();
 
-    if (text.Body.indexOf(APP_TEXT_HEADER) == 0) {
-      createdText = AppText.fromTwilio(id, text);
-    } else {
-      createdText = InboundText.fromTwilio(id, text);
-    }
-
-    let fromNumber = createdText.from;
-    return this.getRacers()
-      .then(racers => {
-        let matchingRacers = racers.filter(
-          racer => racer.phones.filter(contact => contact.number.equals(fromNumber)).length);
-        if (matchingRacers.length > 0) {
-          createdText.racer = matchingRacers[0];
-        } else {
-          createdText.racer = undefined;
-        }
-        return this.getTeams()
-      })
-      .then(teams => {
-        let matchingTeams = teams
-          .filter(team =>
-            team.racers.filter(racer => createdText.racer && racer.id == createdText.racer.id).length > 0);
-        if (matchingTeams.length > 0) {
-          createdText.team = matchingTeams[0];
-        } else {
-          createdText.team = undefined;
-        }
-      })
-      .then(result => {
-        return this.dbFacade.createText(createdText.toDbForm());
-      })
-      .then(result => {
-        let newMessage = new TextReceivedMessage(createdText);
-        this.messageSender.sendMessageToWebClients(newMessage);
-        return Promise.resolve(createdText)
-      })
-      .catch(err => {
-        console.error(`addTextFromTwilio(${this.shortDebugTwilioInboundText(text)})`, err);
-        return Promise.reject(err);
-      })
+    return this.dbFacade.createText(inDbForm)
+    .then(addedToDb => this.populateText(inDbForm))
+    .then(populatedText => {
+      let text = Text.fromJSON(populatedText);
+      let newMessage = new TextReceivedMessage(text);
+      this.messageSender.sendMessageToWebClients(newMessage);
+      return text;
+    })
+    .catch(err => {
+      console.error(`addTextFromTwilio(${this.shortDebugTwilioInboundText(text)})`, err);
+      return Promise.reject(err);
+    })
   }
 
   public addNewSentText(text: TwilioOutboundText, user: UserWithoutPassword): Promise<Text> {
@@ -325,58 +283,39 @@ export class DataIntermediary {
       user: user,
       timestamp: new Date()
     }
-    let toNumber = createdText.to;
-    return this.getRacers()
-      .then(racers => {
-        let matchingRacers = racers.filter(
-          racer => racer.phones.filter(contact => contact.number.equals(toNumber)).length);
-        if (matchingRacers.length > 0) {
-          createdText.racer = matchingRacers[0];
-        } else {
-          createdText.racer = undefined;
-        }
-        return this.getTeams()
-      })
-      .then(teams => {
-        let matchingTeams = teams
-          .filter(team =>
-            team.racers.filter(racer => createdText.racer && racer.id == createdText.racer.id).length);
-        if (matchingTeams.length) {
-          createdText.team = matchingTeams[0];
-        } else {
-          createdText.team = undefined;
-        }
-      })
-      .then(result => {
-        return this.dbFacade.createText(createdText.toDbForm());
-      })
-      .then(result => {
-        let newMessage = new TextSentMessage(createdText);
-        this.messageSender.sendMessageToWebClients(newMessage);
-        return Promise.resolve(createdText)
-      });
+    let inDbForm = createdText.toDbForm();
+    return this.dbFacade.createText(inDbForm)
+    .then(addedToDb => this.populateText(inDbForm))
+    .then(populatedText => {
+      let text = Text.fromJSON(populatedText)
+      let newMessage = new TextSentMessage(text);
+      this.messageSender.sendMessageToWebClients(newMessage);
+      return text 
+    });
   }
 
-  private addRacerToText(text: DbFormText): Promise<any> {
+  private populateText(text: DbFormText): Promise<FullFormText> {
+    return this.addRacerToText(text)
+    .catch(err => {
+      console.error(`addRacerToText failed`);
+      return Promise.reject(err);
+    })
+    .then(textWithRacer => this.addTeamToText(textWithRacer))
+    .catch(err => {
+      console.error(`addTeamToText failed populateText(${this.shortDebugText(text)})`, err);
+      return Promise.reject(err);
+    })
+  }
+
+
+  private addRacerToText(text): Promise<any> {
     let copy = JSON.parse(JSON.stringify(text));
     let inbound = text.text_subclass == "InboundText" || text.text_subclass == "AppText";
+    let checkNumber = inbound ? text.from : text.to;
     return this.getRacers()
       .then(racers => {
-        let possibleRacers = racers
-          .filter(racer => {
-            return racer.phones.filter(contact => {
-              if (inbound) {
-                return contact.number.equals(text.from)
-              } else {
-                return contact.number.equals(text.to);
-              }
-            }).length
-          });
-        if (possibleRacers.length > 0) {
-          copy.racer = possibleRacers[0];
-        } else {
-          copy.racer = undefined;
-        }
+        let possibleRacers = racers.filter(racer => racer.hasPhoneNumber(checkNumber));
+        copy.racer = possibleRacers.length ? possibleRacers[0] : undefined;
         return copy;
       })
       .catch(err => {
@@ -389,13 +328,9 @@ export class DataIntermediary {
     let copy = JSON.parse(JSON.stringify(text));
     return this.getTeams()
     .then(teams => {
-      let possibleTeams = teams.filter(team => team.racers.filter(racer => text.racer && racer.id == text.racer.id).length);
-      if (possibleTeams.length) {
-        copy.team = possibleTeams[0];
-      } else {
-        copy.team = undefined;
-      }
-      return Promise.resolve(copy);
+      let possibleTeams = teams.filter(team => team.hasRacer(text.racer));
+      copy.team = possibleTeams.length ? possibleTeams[0] : undefined;
+      return copy;
     })
     .catch(err => {
       console.error(`addTeamToText(${this.shortDebugText(text)}) after adding teams`, err);

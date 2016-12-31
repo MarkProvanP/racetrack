@@ -52,6 +52,14 @@ export class Racer {
     }
   }
 
+  hasPhoneNumber(phoneNumber: PhoneNumber | string): boolean {
+    return this.phones.filter(contact => {
+      if (contact.number) {
+        return contact.number.equals(phoneNumber);
+      }
+    }).length > 0;
+  }
+
   toDbForm() {
     return JSON.parse(JSON.stringify(this));
   }

@@ -133,8 +133,12 @@ export class Team {
     return prettyStatusName(this.getCurrentStatus());
   }
 
-  hasRacer(racer: Racer): boolean {
-    return this.racers.filter(r => racer.id === r.id).length > 0;
+  hasRacer(racer: Racer | RacerId): boolean {
+    if (typeof racer == 'string') {
+      return this.racers.filter(r => racer == r.id).length > 0;
+    } else {
+      return this.racers.filter(r => racer.id === r.id).length > 0;
+    }
   }
 
   getPrettyTimeSinceCheckin() {
