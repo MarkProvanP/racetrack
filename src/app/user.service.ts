@@ -185,7 +185,7 @@ export class UserService {
 
   auth() {
     return this.http.get(this.authApi, {withCredentials: true})
-      .map(res => res.json().auth)
+      .map(res => res.json())
       .catch(this.handleError)
   }
 

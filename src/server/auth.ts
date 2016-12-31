@@ -37,8 +37,12 @@ export let restrictedModifyAll = restrictedLevel(UserPrivileges.MODIFY_ALL);
 export let restrictedSuperuser = restrictedLevel(UserPrivileges.SUPERUSER);
 
 export class User {
-  username: UserId;
+  // Fields kept only for server use
   password: string;
+  recentlyReset: boolean;
+
+  // Fields that are given to the frontend
+  username: UserId;
   name: string;
   email: string;
   phone: PhoneNumber;
@@ -62,7 +66,8 @@ export class User {
     return new User(username, password, clone);
   }
 
-  changePassword(newPassword) {
+  changePassword(newPassword: string, isReset?: boolean) {
+    this.recentlyReset = !!isReset;
     let clone = this.makeClone();
     let salt = bcrypt.genSaltSync(10);
     let hashed = bcrypt.hashSync(newPassword, salt);
@@ -187,7 +192,11 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
   });
 
   router.get('/api/auth', isLoggedIn, (req, res) => {
-    res.json({auth: true})
+    let user = req.user;
+    res.json({
+      auth: true,
+      resetPassword: user.recentlyReset
+    });
   });
 
   router.get('/api/authenticated', isLoggedIn, (req, res) => {

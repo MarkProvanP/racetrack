@@ -481,7 +481,7 @@ export class DataIntermediary {
     let newPassword = generatePassword();
     let user;
     return this.getUser(username)
-    .then(user => user.changePassword(newPassword))
+    .then(user => user.changePassword(newPassword, true))
     .then(changed => this.updateUser(changed))
     .then(changed => {
       user = changed;

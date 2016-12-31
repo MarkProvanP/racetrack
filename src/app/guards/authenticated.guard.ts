@@ -12,7 +12,10 @@ export class AuthenticatedGuard implements CanActivate {
   canActivate(): Observable<boolean> {
     return this.userService.auth()
       .map(authenticated => {
-        if (authenticated) {
+        if (authenticated.auth) {
+          if (authenticated.resetPassword) {
+            this.router.navigate(['/safetyteam', 'user', 'set-password'])
+          }
           return true;
         } else {
           this.router.navigate(['/']);
