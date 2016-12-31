@@ -1,5 +1,6 @@
 .text-send {
   max-width: 800px;
+  min-width: 600px;
 }
 
 .text-send > md-card {
@@ -10,13 +11,30 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .next-recipient {
   display: block;
 }
 
-#filter-recipients-list.filter-recipients-list {
+.recipient-card {
+  padding: 6px;
+}
+
+.text-body {
+  width: 100%;
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+.search-field {
+  width: 100%;
+}
+
+.filter-recipients-list {
   position: relative;
   top: 0;
   margin: 0;

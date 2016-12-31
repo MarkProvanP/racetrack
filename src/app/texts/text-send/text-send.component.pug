@@ -3,28 +3,37 @@
     md-card-content
       div(*ngIf='isSending')
         i Sending
-      .text-recipients-list
-        md-card(*ngFor='let recipient of recipients')
-          md-card-content
-          | {{recipient.name}}
-          | {{recipient.numNote}}
-          phone-widget([number]='recipient.number')
-        .next-recipient
-          md-input-container
-            input(md-input, [(ngModel)]='newRecipient', (input)='filterRecipients()', placeholder='Recipients')
-          md-card#filter-recipients-list.filter-recipients-list
-            md-list
-              md-list-item(*ngFor='let recipient of matchingRecipients', (click)='addRecipient(recipient)')
-              | {{recipient.name}}
-              | {{recipient.numNote}}
-              phone-widget([number]='recipient.number')
       table(style='width: 100%')
         tr
-          th Message:
-        tr
+          th To:
+          td 
+            .text-recipients-list
+              md-card.recipient-card(*ngFor='let recipient of recipients')
+                md-card-content
+                  | {{recipient.name}}
+                  | {{recipient.numNote}}
+                  phone-widget([number]='recipient.number')
+              button(md-icon-button, (click)='addNewRecipient()')
+                md-icon add
+        tr(*ngIf='addingNewRecipient')
+          th Add
           td
-            md-input-container
-              textarea(md-input, style='width: 100%', [(ngModel)]='message')
+            .next-recipient
+              md-input-container.search-field
+                input(md-input, [(ngModel)]='newRecipient', (input)='filterRecipients()', placeholder='Search for racer name or phone number')
+              md-card#filter-recipients-list.filter-recipients-list
+                i(*ngIf='!matchingRecipients.length') No racers matching query!
+                md-list(*ngIf='matchingRecipients.length')
+                  md-list-item(*ngFor='let recipient of matchingRecipients', (click)='addRecipient(recipient)')
+                    ng-container(*ngIf='recipient')
+                      | {{recipient.name}}
+                      | {{recipient.numNote}}
+                      phone-widget([number]='recipient.number')
+        tr
+          th Message:
+          td
+            md-input-container.text-body
+              textarea(md-input, [(ngModel)]='message')
       |  
       button(md-raised-button, color='accent', (click)='sendNewText()') Send
       |  

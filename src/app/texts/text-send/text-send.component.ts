@@ -21,17 +21,23 @@ export class TextSendComponent {
   matchingRecipients = [];
   allRecipients = [];
   newRecipient = "";
+  addingNewRecipient: boolean;
 
   filterRecipients() {
     let search = this.newRecipient.toLowerCase();
+    console.log(this.allRecipients);
+    console.log(this.matchingRecipients);
     this.matchingRecipients = this.allRecipients.filter(recipient => {
       console.log('checking search', search, 'against recipient', recipient);
       return (recipient.name.toLowerCase().indexOf(search) != -1
-        || recipient.number.indexOf(search) != -1)
-        && this.recipients.filter(r => r.number == recipient.number).length == 0;
+        || recipient.number.toE164().indexOf(search) != -1)
+        && this.recipients.filter(r => r.number.equals(recipient.number)).length == 0;
     });
-    console.log(this.allRecipients);
     console.log(this.matchingRecipients);
+  }
+
+  addNewRecipient() {
+    this.addingNewRecipient = true;
   }
 
   addRecipient(recipient) {
@@ -75,7 +81,7 @@ export class TextSendComponent {
       allContacts = allContacts.concat(contacts);
     });
     this.allRecipients = allContacts;
-    this.recipients = this.allRecipients.filter(recipient => recipient.number == this.toNumber);
+    this.recipients = this.allRecipients.filter(recipient => recipient.number.equals(this.toNumber));
     if (!this.recipients.length) {
       this.recipients.push({
         name: '?',
