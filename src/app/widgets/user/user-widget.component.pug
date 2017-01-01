@@ -1,0 +1,3 @@
+.user-widget(*ngIf='userId && loaded', [title]='getTooltip()')  {{user.name}}
+.user-widget(*ngIf='userId && !loaded') Loading {{userId}}...
+.user-widget(*ngIf='!userId') No User

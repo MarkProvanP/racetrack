@@ -269,7 +269,7 @@ export class UserService {
 
   public getUserAction() {
     let userAction = {
-      user: this.getUser(),
+      user: this.getUser().username,
       timestamp: new Date()
     } as UserActionInfo;
     return userAction;

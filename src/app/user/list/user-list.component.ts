@@ -40,7 +40,7 @@ export class UserListComponent implements OnInit {
   }
 
   loadUsers() {
-    this.dataService.getUsers()
+    this.dataService.getUsersFromBackend()
     .then(users => this.users = users);
   }
 

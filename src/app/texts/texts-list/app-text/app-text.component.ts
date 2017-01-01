@@ -22,9 +22,9 @@ export class AppTextComponent {
   @Output() onAddCheckin: EventEmitter<AppText> = new EventEmitter();
   @Output() onCreateUpdate: EventEmitter<AppText> = new EventEmitter();
 
-  constructor(private userService: UserService) {
-    
-  }
+  constructor(
+    private userService: UserService
+  ) {}
 
   stringThing() {
     return JSON.stringify(this.text.location);

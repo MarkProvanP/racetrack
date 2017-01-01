@@ -26,14 +26,15 @@ export class UserWithoutPassword {
 export class UserActionInfo {
   constructor(
     public timestamp: Date,
-    public user: UserWithoutPassword
+    public user: UserId
   ) {}
 
   static fromJSON(obj) {
     if (!obj) return undefined;
+    let user = typeof obj.user == 'string' ? obj.user : obj.user.username;
     return new UserActionInfo(
       obj.timestamp,
-      UserWithoutPassword.fromJSON(obj.user)
+      user
     )
   }
 }

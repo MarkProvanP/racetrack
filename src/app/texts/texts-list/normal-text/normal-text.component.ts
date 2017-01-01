@@ -8,6 +8,7 @@ import { Text, InboundText } from '../../../../common/text';
 import { UserActionInfo } from "../../../../common/user";
 
 import { UserService } from '../../../user.service';
+import { DataService } from "../../../data.service";
 
 @Component({
   selector: 'normal-text',
@@ -22,9 +23,9 @@ export class NormalTextComponent {
   @Output() onAddCheckin: EventEmitter<InboundText> = new EventEmitter();
   @Output() onCreateUpdate: EventEmitter<InboundText> = new EventEmitter();
 
-  constructor(private userService: UserService) {
-    
-  }
+  constructor(
+    private userService: UserService
+  ) {}
 
   markTextAsRead() {
     this.text.readBy = this.userService.getUserAction();

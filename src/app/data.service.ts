@@ -38,6 +38,7 @@ export class DataService {
   private teams: Team[] = [];
   private racers: Racer[] = [];
   private updates: TeamUpdate[] = [];
+  private usersObject = {};
 
   private teamsChangedListeners = [];
   private racersChangedListeners = [];
@@ -367,31 +368,55 @@ export class DataService {
 
 //----------------------------------------------------------------------//
 
+  getUser(username: UserId): Promise<UserWithoutPassword> {
+    let promiseOrUser = this.usersObject[username];
+    if (promiseOrUser instanceof Promise) {
+      return promiseOrUser;
+    } else if (promiseOrUser instanceof UserWithoutPassword) {
+      return Promise.resolve(promiseOrUser);
+    }
+    // Otherwise, fetch from backend
+    let promise = this.getUserFromBackend(username)
+    this.usersObject[username] = promise;
+    return promise;
+  }
 
-  public getUser(username: UserId): Promise<UserWithoutPassword> {
+  private getUserFromBackend(username: UserId): Promise<UserWithoutPassword> {
     let url = `${this.usersUrl}/${username}`;
-    return this.http.get(url, {withCredentials: true})
+    return this.http.get(url, this.httpExtras)
     .toPromise()
     .catch(this.handleError)
     .then(response => response.json())
     .then(user => UserWithoutPassword.fromJSON(user))
+    .then(user => {
+      this.usersObject[username] = user;
+      return user;
+    })
   }
 
-  public getUsers(): Promise<UserWithoutPassword[]> {
-    return this.http.get(this.usersUrl, {withCredentials: true})
+  getUsersFromBackend(): Promise<UserWithoutPassword[]> {
+    return this.http.get(this.usersUrl, this.httpExtras)
     .toPromise()
     .catch(this.handleError)
     .then(response => response.json())
-    .then(users => users.map(user => UserWithoutPassword.fromJSON(user)));
+    .then(users => users.map(user => UserWithoutPassword.fromJSON(user)))
+    .then(users => {
+      users.forEach(user => this.usersObject[user.username] = user);
+      return users;
+    })
   }
 
-  public updateUser(user): Promise<UserWithoutPassword> {
+  updateUser(user): Promise<UserWithoutPassword> {
     let url = `${this.usersUrl}/${user.username}`;
     return this.http.put(url, JSON.stringify(user), this.httpExtras)
     .toPromise()
     .catch(this.handleError)
     .then(response => response.json())
     .then(user => UserWithoutPassword.fromJSON(user))
+    .then(user => {
+      this.usersObject[user.username] = user;
+      return user;
+    })
   }
 
   public resetUserPassword(user: UserWithoutPassword): Promise<UserWithoutPassword> {
@@ -401,6 +426,10 @@ export class DataService {
     .catch(this.handleError)
     .then(response => response.json())
     .then(user => UserWithoutPassword.fromJSON(user))
+    .then(user => {
+      this.usersObject[user.username] = user;
+      return user;
+    })
   }
 
   public createUser(user): Promise<UserWithoutPassword> {
@@ -409,12 +438,17 @@ export class DataService {
     .catch(this.handleError)
     .then(response => response.json())
     .then(user => UserWithoutPassword.fromJSON(user))
+    .then(user => {
+      this.usersObject[user.username] = user;
+      return user;
+    })
   }
 
   public deleteUser(username: UserId): Promise<any> {
     let url = `${this.usersUrl}/${username}`;
     return this.http.delete(url, {withCredentials: true})
     .toPromise()
+    .then(success => this.usersObject[username] = undefined)
     .catch(this.handleError)
   }
 

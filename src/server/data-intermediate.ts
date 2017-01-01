@@ -41,6 +41,7 @@ import {
 } from "../common/message";
 import { Emailer, MessageSender } from "./server";
 import { User } from "./auth";
+import { UserActionInfo } from "../common/user";
 
 import * as winston from "winston";
 import * as uuid from "uuid";
@@ -279,10 +280,10 @@ export class DataIntermediary {
     this.emailer.sendTextSentEmail(text);
     let id = uuid.v4();
     let createdText = OutboundText.fromTwilio(id, text);
-    createdText.sentBy = {
-      user: user,
-      timestamp: new Date()
-    }
+    createdText.sentBy = new UserActionInfo(
+      new Date(),
+      user.username
+    );
     let inDbForm = createdText.toDbForm();
     return this.dbFacade.createText(inDbForm)
     .then(addedToDb => this.populateText(inDbForm))

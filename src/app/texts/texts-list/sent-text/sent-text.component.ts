@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 import { Text } from '../../../../common/text';
 
+import { DataService } from "../../../data.service";
+
 @Component({
   selector: 'sent-text',
   templateUrl: './sent-text.component.pug',
@@ -10,4 +12,8 @@ import { Text } from '../../../../common/text';
 export class SentTextComponent {
   @Input() text: Text;
   @Input() display: any;
+
+  constructor(
+    private dataService: DataService
+  ) {}
 }
