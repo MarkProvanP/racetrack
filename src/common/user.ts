@@ -31,6 +31,13 @@ export class UserActionInfo {
 
   static fromJSON(obj) {
     if (!obj) return undefined;
+    if (!obj.user) {
+      console.error('UserActionInfo does not have a valid user!', obj);
+      return new UserActionInfo(
+        obj.timestamp,
+        obj.user
+      )
+    }
     let user = typeof obj.user == 'string' ? obj.user : obj.user.username;
     return new UserActionInfo(
       obj.timestamp,

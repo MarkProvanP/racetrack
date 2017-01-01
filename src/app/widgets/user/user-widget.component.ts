@@ -31,6 +31,10 @@ export class UserWidget implements OnInit {
   }
 
   getTooltip() {
-    return `${this.user.name} - phone: ${this.user.phone}, role: ${this.user.role}`;
+    if (this.user.phone && this.user.role) {
+      return `${this.user.name} - phone: ${this.user.phone.toE164()}, role: ${this.user.role}`;
+    } else {
+      return this.user.name;
+    }
   }
 }
