@@ -5,8 +5,17 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import * as Papa from "papaparse";
 
 import { UserId, UserWithoutPassword, prettyUserPrivilegesLevel, isAboveMinimumPrivilege, UserPrivileges } from '../../../common/user';
+import { PhoneNumber } from "../../../common/text";
 import { UserService } from "../../user.service";
 import { DataService } from "../../data.service";
+
+function UsernameToEmail(username: String) {
+  return username + "@st-andrews.ac.uk";
+}
+const IMPORT_USERNAME = "SaintMail";
+const IMPORT_NAME = "Name";
+const IMPORT_PHONE = "Mobile Number";
+const IMPORT_ROLE = "Position";
 
 @Component({
   selector: 'user-list',
@@ -136,11 +145,11 @@ export class UserListComponent implements OnInit {
       console.log(bulkData)
       bulkData.data.forEach(row => {
         this.bulkUsers.push({
-          username: row.Username,
-          name: row.Name,
-          email: row.Email,
-          phone: row.Phone,
-          role: row.Role,
+          username: row[IMPORT_USERNAME],
+          name: row[IMPORT_NAME],
+          email: UsernameToEmail(row[IMPORT_USERNAME]),
+          phone: PhoneNumber.parse(row[IMPORT_PHONE]),
+          role: row[IMPORT_ROLE],
           level: UserPrivileges.VIEW_ONLY
         })
       })

@@ -66,7 +66,7 @@ export class PrivateApp {
 
   setTitle() {
     let unread = this.getNumberUnreadTexts()
-    let normal = 'Race2 Dashboard';
+    let normal = this.name;
     let title;
     if (unread) {
       title = `(${unread}) ${normal}`;
