@@ -23,8 +23,9 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
  * Webpack Constants
  */
 const HMR = helpers.hasProcessFlag('hot');
+const APP_NAME = process.env.APP_NAME;
 const METADATA = {
-  title: 'Race2 Dashboard',
+  title: APP_NAME,
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer()
 };
