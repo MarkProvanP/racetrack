@@ -418,6 +418,7 @@ export class DataIntermediary {
 
   addUser(username, properties): Promise<User> {
     let newPassword = generatePassword();
+    properties.recentlyReset = true;
     return this.addUserWithPassword(username, newPassword, properties);
   }
 
