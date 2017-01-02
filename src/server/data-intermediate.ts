@@ -104,6 +104,13 @@ export class DataIntermediary {
 
   public getRacer(id: RacerId): Promise<Racer> {
     return this.dbFacade.getRacer({id})
+    .then(racer => {
+      if (!racer) {
+        throw new NotFoundError(id, Racer);
+      } else {
+        return racer;
+      }
+    })
     .then(racer => Racer.fromJSON(racer))
   }
 
@@ -166,16 +173,16 @@ export class DataIntermediary {
   }
 
   getTeam(id: TeamId): Promise<Team> {
-    return this.dbFacade.getTeams({id})
-      .then(docs => {
-        if (docs.length > 0) {
-          let unpopulatedTeam = docs[0];
-          return this.populateTeam(unpopulatedTeam)
-            .then(team => Promise.resolve(Team.fromJSON(team)));
-        } else {
-          return Promise.resolve(undefined);
-        }
-    });
+    return this.dbFacade.getTeam({id})
+    .then(team => {
+      if (!team) {
+        throw new NotFoundError(id, Team);
+      } else {
+        return team;
+      }
+    })
+    .then(team => this.populateTeam(team))
+    .then(team => Team.fromJSON(team))
   }
 
   updateTeam(team: Team, user?: UserWithoutPassword): Promise<Team> {
@@ -201,9 +208,9 @@ export class DataIntermediary {
 
   deleteTeam(id: TeamId): Promise<any> {
     return this.dbFacade.deleteTeam(id)
-      .then(result => {
-        return Promise.resolve();
-      });
+    .then(result => {
+      return Promise.resolve();
+    });
   }
 
 //================================================================
@@ -387,7 +394,7 @@ export class DataIntermediary {
     return this.dbFacade.getUser({username})
     .then(user => {
       if (!user) {
-        throw new NotFoundError(username);
+        throw new NotFoundError(username, User);
       } else {
         return user;
       }

@@ -14,6 +14,7 @@ import {
 import { UserWithoutPassword } from "../../common/user";
 import * as winston from "winston";
 
+import { NotFoundError } from "../errors";
 import { DataIntermediary } from "../data-intermediate";
 import { restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 
@@ -29,28 +30,28 @@ export default function textsRouterWithDb(dataIntermediate: DataIntermediary, tw
     }
   });
 
+  function handleServerError(req, res) {
+    return (err) => {
+      if (err instanceof NotFoundError) {
+        res.status(404).send(err.toString());
+      } else {
+        winston.log('error', err);
+        res.status(500).send();
+      }
+    }
+  }
+
   textsRouter.get('/', restrictedViewOnly, (req, res) => {
     dataIntermediate.getTexts()
-      .then(texts => {
-        res.json(texts);
-      })
-      .catch(err => {
-        console.error('textsrouter error', err);
-        res.status(500)
-        res.json({err: err});
-      });
+    .then(texts => res.json(texts))
+    .catch(handleServerError(req, res))
   })
 
   textsRouter.get('/byNumber/:number', restrictedViewOnly, (req, res) => {
     let number = req.params.number
     dataIntermediate.getTextsByNumber(number)
-      .then(texts => {
-        res.json(texts)
-      })
-      .catch(err => {
-        res.status(500);
-        res.json({err: err});
-      });
+    .then(texts => res.json(texts))
+    .catch(handleServerError(req, res))
   });
 
   textsRouter.post('/', restrictedBasic, (req, res) => {
@@ -64,15 +65,11 @@ export default function textsRouterWithDb(dataIntermediate: DataIntermediary, tw
     }, (err, text) => {
       if (err) {
         winston.error('Twilio send text error!', {err});
-        res.status(500).send(`Twilio error! : ${err}`);
+        handleServerError(req, res)(err)
       } else {
         dataIntermediate.addNewSentText(text, user)
-          .then(createdText => {
-            res.json(createdText);
-          })
-          .catch(err => {
-            res.status(500).json({err: err});
-          })
+        .then(createdText => res.json(createdText))
+        .catch(handleServerError(req, res))
       }
     });
   });
@@ -80,9 +77,8 @@ export default function textsRouterWithDb(dataIntermediate: DataIntermediary, tw
   textsRouter.put('/:id', restrictedBasic, (req, res) => {
     let newDetailsText = Text.fromJSON(req.body);
     dataIntermediate.updateText(newDetailsText)
-      .then(changedText => {
-        res.json(changedText);
-      });
+    .then(changedText => res.json(changedText))
+    .catch(handleServerError(req, res))
   });
 
   return textsRouter;

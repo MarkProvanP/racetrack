@@ -3,6 +3,7 @@ import * as winston from "winston";
 
 import { restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 import { DataIntermediary } from "../data-intermediate";
+import { NotFoundError } from "../errors";
 
 export default function updatesRouterWithDb(dataIntermediate: DataIntermediary) {
 let updatesRouter = express.Router();
@@ -17,48 +18,49 @@ let updatesRouter = express.Router();
     }
   });
 
+  function handleServerError(req, res) {
+    return (err) => {
+      if (err instanceof NotFoundError) {
+        res.status(404).send(err.toString());
+      } else {
+        winston.log('error', err);
+        res.status(500).send();
+      }
+    }
+  }
+
   updatesRouter.get('/', restrictedViewOnly, (req, res) => {
     dataIntermediate.getStatusUpdates()
-      .then(updates => {
-        res.json(updates);
-      });
+    .then(updates => res.json(updates))
+    .catch(handleServerError(req, res))
   });
 
   updatesRouter.get('/:id', restrictedViewOnly, (req, res) => {
     let id = req.params.id;
     dataIntermediate.getStatusUpdate(id)
-    .catch(err => res.status(500).send())
-    .then(update => {
-      if (update) {
-        res.json(update);
-      } else {
-        res.status(404).send();
-      }
-    });
+    .then(update => res.json(update))
+    .catch(handleServerError(req, res))
   });
 
   updatesRouter.post('/', restrictedBasic, (req, res) => {
     let newUpdateProperties = req.body;
     dataIntermediate.createStatusUpdate(newUpdateProperties)
-      .then(update => {
-        res.json(update);
-      });
+    .then(update => res.json(update))
+    .catch(handleServerError(req, res))
   });
 
   updatesRouter.put('/:id', restrictedBasic, (req, res) => {
     let newDetailsUpdate = req.body;
     dataIntermediate.updateTeamUpdate(newDetailsUpdate, req.user)
-    .then(changedUpdate => {
-      res.json(changedUpdate);
-    })
+    .then(update => res.json(update))
+    .catch(handleServerError(req, res))
   })
 
   updatesRouter.delete('/:id', restrictedBasic, (req, res) => {
     let id = req.params.id;
     dataIntermediate.deleteTeamUpdate(id)
-    .then(() => {
-      res.send('successfully deleted update');
-    })
+    .then(() => res.send())
+    .catch(handleServerError(req, res))
   })
 
   return updatesRouter;

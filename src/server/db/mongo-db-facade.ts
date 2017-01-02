@@ -1,5 +1,3 @@
-const APP_TEXT_HEADER = "!AutoUpdate!";
-
 import { Racer, RacerId, DbFormRacer } from "../../common/racer";
 import { Team, TeamId, PopulatedTeam, UnpopulatedTeam, DbFormTeam } from "../../common/team";
 import {
@@ -33,7 +31,6 @@ import * as uuid from "uuid";
 
 import * as winston from "winston";
 
-import { NoSuchUserError } from '../../common/error';
 import { UserWithoutPassword, UserId } from '../../common/user';
 
 export function setup(url): Promise<MongoDbFacade> {
