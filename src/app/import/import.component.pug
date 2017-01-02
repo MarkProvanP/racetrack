@@ -40,6 +40,17 @@ md-card
               span.label ID
               span.value {{racer.id}}
             .racer-detail
-              span.label Mobile
+              span.label Email
+              span.value {{racer.email}}
+            .racer-detail
+              span.label Phone
               span.value
-                phone-widget([number]='racer.mobile')
+                .contact-number(*ngFor='let contact of racer.phones')
+                  phone-widget([number]='contact.number')
+            .racer-detail
+              span.label Creation status
+              span.value
+                md-icon(*ngIf='isRacerCreated(racer.id)') done
+                md-icon(*ngIf='!isRacerCreated(racer.id)') cancel
+      md-card-actions
+        button(md-raised-button, color='primary', [disabled]='isTeamCreated(team)', (click)='createTeam(team)') Create

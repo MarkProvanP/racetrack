@@ -6,12 +6,14 @@ export interface DbFormRacer {
   id: RacerId;
   name: string;
   phones: ContactNumber[]
+  email: string;
 }
 
 export class Racer {
   id: RacerId;
   name: string;
   phones: ContactNumber[];
+  email: string;
 
   makeClone() {
     let copy = JSON.parse(JSON.stringify(this));
@@ -38,6 +40,7 @@ export class Racer {
   constructor(id: RacerId, properties) {
     this.id = id;
     this.name = properties.name;
+    this.email = properties.email;
     if (properties.phones) {
       this.phones = properties.phones.map(contactNumber => ContactNumber.fromJSON(contactNumber));
     }

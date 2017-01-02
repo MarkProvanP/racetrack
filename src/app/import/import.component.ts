@@ -1,8 +1,10 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 
 import { Team, TeamId } from "../../common/team";
 import { Racer, RacerId } from "../../common/racer";
 import { PhoneNumber } from "../../common/text";
+
+import { DataService } from "../data.service";
 
 import * as Papa from "papaparse";
 import * as _ from "lodash";
@@ -15,6 +17,9 @@ const RACER_MOBILE = "Mobile";
 const AFFILIATION = "Hall/Society/Sport affiliation";
 const TEAM_NUMBER = "Team Number";
 const RACER_ID = "St Andrews Email";
+function UsernameToEmail(username: String) {
+  return username + "@st-andrews.ac.uk";
+}
 
 interface DataRow {
   teamNumber: TeamId,
@@ -43,9 +48,24 @@ interface ParseRacer {
   templateUrl: './import.component.pug',
   styleUrls: ['./import.component.scss']
 })
-export class ImportComponent {
+export class ImportComponent implements OnInit {
   parsedData: DataRow[];
   parsedTeams: Team[];
+
+  teams: Team[];
+  racers: Racer[];
+
+  constructor(
+    private dataService: DataService
+  ) {
+    this.dataService.addTeamsChangedListener(teams => this.teams = teams)
+    this.dataService.addRacersChangedListener(racers => this.racers = racers)
+  }
+
+  ngOnInit() {
+    this.teams = this.dataService.getTeams();
+    this.racers = this.dataService.getRacers();
+  }
 
   fileChangeEvent(fileInputEvent: any) {
     let fileInput = fileInputEvent.srcElement;
@@ -79,17 +99,30 @@ export class ImportComponent {
           id: row.teamNumber,
           name: row.teamName,
           racers: [],
-          affiliation: row.affiliation ? row.affiliation : "None"
+          affiliation: row.affiliation,
         }
       }
       let team = teamsObj[row.teamNumber];
       team.racers.push({
         id: row.racerId,
         name: row.racerName,
-        mobile: row.mobile
+        phones: [{
+          number: row.mobile,
+          notes: "Default",
+          preferred: true
+        }],
+        email: UsernameToEmail(row.racerId)
       })
     })
     this.parsedTeams = Object.keys(teamsObj).map(teamId => teamsObj[teamId]);
+  }
+
+  createTeam(team: Team) {
+    let racerPromises = team.racers.map(racer => this.dataService.createRacer(racer))
+    Promise.all(racerPromises)
+    .then(racers => {
+      this.dataService.createTeam(team)
+    })
   }
 
   parseRow(row) {
@@ -103,5 +136,13 @@ export class ImportComponent {
       mobile: mobile
     }
     return parsed;
+  }
+
+  isRacerCreated(racer: Racer) {
+    return this.racers.filter(r => racer.id == r.id).length > 0;
+  }
+
+  isTeamCreated(team: Team) {
+    return this.teams.filter(t => team.id == t.id).length > 0;
   }
 }

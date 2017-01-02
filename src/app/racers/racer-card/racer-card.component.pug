@@ -11,6 +11,11 @@
           td
             p {{racer.id}}
         tr
+          th Email:
+          td
+            md-input-container
+              input(md-input, type='email', [(ngModel)]='racer.email', [disabled]='!inEditMode')
+        tr
           th Phone:
           td
             .racer-phone-numbers-list
