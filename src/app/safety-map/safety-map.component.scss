@@ -1,21 +1,127 @@
-.safety-map-container {
-  display: flex;
-  flex: 1;
-}
-
-.team-sidebar{
-  overflow-y: scroll;
-}
-
-.map-pane {
-  position: relative;
-  flex: 1;
-}
-
 .sebm-google-map-container {
   height: calc(100vh - 64px);
 }
 
-.team-row td {
-  margin: 0px;
+.safety-map-container {
+  flex: 1;
+  position: relative;
 }
+
+.pane-title {
+  margin: 0;
+}
+
+$padding-amount: 12px;
+$reduced-padding-amount: 6px;
+
+.safety-map-guide {
+  position: absolute;
+  left: 25px;
+  top: 25px;
+  width: 350px;
+  padding: 0;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+
+  .race-logo {
+    height: 50px;
+  }
+}
+
+.md-card-top-padded {
+  padding: $padding-amount;
+}
+
+.md-card-no-pad {
+
+}
+
+.list-title {
+  padding-left: $padding-amount;
+  padding-right: $padding-amount;
+  padding-top: $reduced-padding-amount;
+  padding-bottom: $reduced-padding-amount;
+  background-color: #f1f1f1;
+  height: 24px;
+
+  h3 {
+    margin: 0px;
+    display: inline-block;
+  }
+}
+
+.list {
+  overflow-y: scroll;
+  padding-top: $reduced-padding-amount;
+  padding-bottom: $reduced-padding-amount;
+  flex: 1;
+}
+
+.list-item {
+  padding-top: $reduced-padding-amount;
+  padding-left: $reduced-padding-amount;
+  padding-right: $reduced-padding-amount;
+  margin-left: $reduced-padding-amount;
+  margin-right: $reduced-padding-amount;
+  .list-item-title {
+    display: flex;
+    .text {
+      flex: 1;
+    }
+    .button {
+
+    }
+  }
+
+  .list-item-detail {
+    display: none;
+  }
+}
+
+.list-item:hover {
+  background-color: #f1f1f1;
+}
+
+.list-item.expanded {
+  background-color: #f1f1f1;
+  .list-item-detail {
+    display: flex;
+  }
+}
+
+.flex-container {
+  display: flex;
+  .expand {
+    flex: 1;
+  }
+  .noexpand {
+
+  }
+}
+
+.detail-row {
+  font-size: smaller;
+
+  .label {
+    font-style: italic;
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  .value {
+  }
+}
+
+.small-button-icon {
+  border-radius: 100%;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: bottom;
+  height: 24px;
+  display: inline-block;
+}
+
+.small-button-icon:hover {
+  background-color: #EEE;
+}
+

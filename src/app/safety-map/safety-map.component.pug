@@ -1,37 +1,59 @@
 .safety-map-container
+  sebm-google-map([latitude]='currentMapSettings.lat',
+    [longitude]='currentMapSettings.lng',
+    [zoom]='currentMapSettings.zoom',
+    (centerChange)='onMapCenterChange($event)',
+    (zoomChange)='onMapZoomChange($event)')
+    sebm-google-map-marker([latitude]='hostel.lat',
+      [longitude]='hostel.lng',
+      [iconUrl]='hostel.iconUrl')
+    sebm-google-map-marker(*ngFor='let team of teams | teamHasUpdate ',
+      [latitude]='(team.getLastUpdate().location.latitude)',
+      [longitude]='(team.getLastUpdate().location.longitude)',
+      [title]='team.name')
+      sebm-google-map-info-window
+        table
+          tr
+            th Team name:
+            td  {{team.name}}
+          tr
+            th Racers:
+            td  {{team.getPrettyRacersList()}}
+          tr
+            th Current place:
+            td  {{team.getLastUpdate().location.place}}
+
   .team-sidebar
-    table
-      thead
-        tr
-          th Team
-          th
-            md-icon place
-          th Last update
-          th Status
-      tbody(class='vert-scroll')
-        tr(*ngFor='let team of teams | teamHasUpdate' class='team-row')
-          td {{team.name}}
-          td
-            button(md-icon-button (click)='highlightTeam(team)')
-              md-icon([ngStyle]="{'color': team.color}") place
-          td
-            time-widget([fromNow]='true', [time]='team.getLastUpdate().timestamp')
-          td {{team.getLastUpdate().prettyStatusName()}}
-  .map-pane
-    sebm-google-map([latitude]='default.lat', [longitude]='default.lng', [zoom]='default.zoom')
-      sebm-google-map-marker([latitude]='hostel.lat', [longitude]='hostel.lng', [iconUrl]='hostel.iconUrl')
-      sebm-google-map-marker(*ngFor='let team of teams | teamHasUpdate ',
-        [latitude]='(team.getLastUpdate().location.latitude)',
-        [longitude]='(team.getLastUpdate().location.longitude)',
-        [title]='team.name')
-        sebm-google-map-info-window
-          table
-            tr
-              th Team name:
-              td  {{team.name}}
-            tr
-              th Racers:
-              td  {{team.getPrettyRacersList()}}
-            tr
-              th Current place:
-              td  {{team.getLastUpdate().location.place}}
+  md-card.safety-map-guide
+    .md-card-top-padded
+      h2.pane-title Safety Team Map
+    .list-title
+      h3 Teams
+    .list
+      .list-item(*ngFor='let team of teams', [ngClass]='{"expanded": isTeamExpanded(team)}')
+        .list-item-title
+          .text {{team.name}}
+          .button((click)='moveMapToTeam(team)')
+            md-icon.small-button-icon place
+          .button((click)='toggleTeamExpand(team)')
+            md-icon.small-button-icon(*ngIf='!isTeamExpanded(team)') expand_more
+            md-icon.small-button-icon(*ngIf='isTeamExpanded(team)') expand_less
+        .list-item-detail.flex-container
+          .expand
+            .detail-row
+              span.label Racers
+              span.value {{team.getPrettyRacersList()}}
+            .detail-row
+              span.label Last location
+              span.value(*ngIf='team.getLastUpdate()') 
+                location-widget([location]='team.getLastUpdate().location')
+              span.value(*ngIf='!team.getLastUpdate()') !!!
+            .detail-row
+              span.label Last update
+              span.value(*ngIf='team.getLastUpdate()')
+                time-widget([fromNow]='true', [time]='team.getLastUpdate().timestamp')
+              span.value(*ngIf='!team.getLastUpdate()') !!!
+            .detail-row
+              span.label Status
+              span.value(*ngIf='team.getLastUpdate()') {{team.getLastUpdate().prettyStatusName()}}
+              span.value(*ngIf='!team.getLastUpdate()') !!!
