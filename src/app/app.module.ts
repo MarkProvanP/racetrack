@@ -143,7 +143,7 @@ const APP_PROVIDERS = [
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES, { useHash: true }),
+    RouterModule.forRoot(ROUTES, { useHash: false }),
     MaterialModule.forRoot(),
     AgmCoreModule.forRoot({
       apiKey: GOOGLE_MAPS_API_KEY

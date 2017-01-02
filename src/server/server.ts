@@ -15,8 +15,6 @@ if (ON_HEROKU && HTTPS_FORCE) {
   console.log("Not running on Heroku, not requiring SSL");
 }
 
-app.use(express.static('dist'));
-
 import * as winston from "winston";
 winston.add(winston.transports.File, { filename: 'logfile.log' })
 
@@ -450,6 +448,25 @@ setup(MONGODB_URI)
     let publicRouter = publicRouterWithDb(dataIntermediate);
     apiRouter.use('/public', publicRouter);
 
+    apiRouter.post("/email", (req, res) => {
+      let mailOptions = req.body;
+      emailer.sendEmail(
+        mailOptions.to,
+        mailOptions.subject,
+        mailOptions.html
+      )
+      .then(messageInfo => {
+        console.log(messageInfo);
+        res.send(messageInfo);
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).send(err);
+      })
+    })
+
+    emailer.sendServerStartedEmail()
+
     http.listen(PORT, function() {
       winston.info(`App now listening on port: ${PORT}`);
     });
@@ -468,47 +485,10 @@ setup(MONGODB_URI)
     });
 
     app.use('/r2bcknd', apiRouter);
-
-    /*
-     * Set up nodemailer for sending emails
-     * Use the access token saved in the DB
-     */
-    dataIntermediate.getSavedConfig()
-    .then(retrieved => {
-      if (!retrieved) {
-        return dataIntermediate.createSavedConfig()
-      } else {
-        return retrieved;
-      }
+    app.use(express.static('dist'));
+    app.get('/*', (req, res) => {
+      res.sendFile('index.html', { root: 'dist' })
     })
-    .then(savedConfig => {
-
-      apiRouter.post("/email", (req, res) => {
-        let mailOptions = req.body;
-        emailer.sendEmail(
-          mailOptions.to,
-          mailOptions.subject,
-          mailOptions.html
-        )
-        .then(messageInfo => {
-          console.log(messageInfo);
-          res.send(messageInfo);
-        })
-        .catch(err => {
-          console.error(err);
-          res.status(500).send(err);
-        })
-      })
-
-      emailer.sendServerStartedEmail()
-      .then((messageInfo) => {
-        console.log(messageInfo);
-      })
-      .catch(err => {
-        console.error(err);
-      })
-    })
-    
 
 }).catch(err => {
   console.error('error setting up server', err);
