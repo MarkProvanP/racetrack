@@ -4,9 +4,11 @@ block title
   h1 Welcome to #{APP_NAME}, #{USER_NAME}
 
 block content
-  h2 Hello, ${USER_NAME}!
-  p An account has been created for you on
+  h2 Hello, #{USER_NAME}!
+  p An account has been created for you on 
     a(href=APP_URL) #{APP_NAME}
+  p Your username is:
+    b #{USER_USERNAME}
   p Your temporary password is:
   div
     b #{USER_PASSWORD}

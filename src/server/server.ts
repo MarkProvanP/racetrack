@@ -198,6 +198,7 @@ export class Emailer {
     let emailHTMLString = EMAIL_TEMPLATES.userCreated({
       APP_NAME: APP_NAME,
       USER_NAME: user.name,
+      USER_USERNAME: user.username,
       APP_URL: APP_URL,
       USER_PASSWORD: password
     })
