@@ -1,3 +1,4 @@
 .user-widget(*ngIf='userId && loaded', [title]='getTooltip()')  {{user.name}}
-.user-widget(*ngIf='userId && !loaded') Loading {{userId}}...
-.user-widget(*ngIf='!userId') No User
+.user-widget(*ngIf='userId && !loaded && !error') Loading {{userId}}...
+.user-widget(*ngIf='!userId && !error') No User
+.user-widget.error(*ngIf='error', title='Error loading {{userId}} - {{error.status}}') {{userId}}

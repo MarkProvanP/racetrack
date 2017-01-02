@@ -13,6 +13,7 @@ export class UserWidget implements OnInit {
   @Input("user") userId: UserId;
   user: UserWithoutPassword
   loaded: boolean;
+  error: boolean;
 
   constructor(
     private dataService: DataService
@@ -27,7 +28,10 @@ export class UserWidget implements OnInit {
     .then(user => {
       this.user = user;
       this.loaded = true;
-    });
+    })
+    .catch(err => {
+      this.error = err;
+    })
   }
 
   getTooltip() {
