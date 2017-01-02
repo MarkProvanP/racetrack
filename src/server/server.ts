@@ -563,7 +563,7 @@ setup(MONGODB_URI)
       const basicData = {
         title: APP_NAME,
         description: "Keep track of all the teams as they hitchhike for charity!",
-        image: APP_URL + "/assets/img/race2_prague.jpg"
+        image: APP_URL + "assets/img/race2_prague.jpg"
       }
 
       let match
