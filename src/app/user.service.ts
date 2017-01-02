@@ -135,6 +135,9 @@ export class UserService {
         this.getMe();
       }
     })
+    .catch(err => {
+      console.log('error on auth()')
+    })
   }
 
   public addOnAuthStatusChangedListener(callback) {

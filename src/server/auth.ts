@@ -8,13 +8,12 @@ let LocalStrategy = localStrategy.Strategy;
 import * as winston from "winston";
 let router = express.Router();
 
+import { NotFoundError } from "./errors";
 import { DataIntermediary } from "./data-intermediate";
 import { UserId, UserPrivileges, isAboveMinimumPrivilege, UserWithoutPassword, UserActionInfo } from "../common/user";
 import { PhoneNumber } from '../common/text';
 
 import * as bcrypt from "bcrypt-nodejs";
-
-import { NoSuchUserError } from '../common/error';
 
 const NO_USER_ERROR_CODE = 402;
 
@@ -117,7 +116,7 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
         return done(null, user);
       })
       .catch(err => {
-        if (err instanceof NoSuchUserError) {
+        if (err instanceof NotFoundError) {
           winston.log('info', `username: ${username} does not exist!`);
           return done(null, false, { message: 'Invalid username' });
         } else {
@@ -153,22 +152,24 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
     .catch(err => done(err, null));
   });
 
+  function handleServerError(req, res) {
+    return (err) => {
+      if (err instanceof NotFoundError) {
+        res.status(404).send(err.toString());
+      } else {
+        console.error('auth.ts error', err);
+        res.status(500).send();
+      }
+    }
+  }
+
   router.post('/api/login', passport.authenticate('local'), (req, res) => {
     winston.log('info', '/api/login request');
     dataIntermediate.getUser(req.user.username)
-      .then(user => {
-        res.json(user.copyWithoutPassword())
-      })
-      .catch(err => {
-        winston.log('error','/api/login error!', {err});
-        if (err instanceof NoSuchUserError) {
-          res.status(NO_USER_ERROR_CODE);
-          res.send();
-        } else {
-          res.status(500);
-          res.json({error: err})
-        }
-      })
+    .then(user => {
+      res.json(user.copyWithoutPassword())
+    })
+    .catch(handleServerError(req, res))
   });
 
   router.get('/api/logout', isLoggedIn, (req, res) => {
@@ -192,10 +193,10 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
     }
     let newPassword = req.body.password;
     dataIntermediate.changeUserPassword(username, newPassword)
-    .catch(err => res.status(500).send())
     .then(user => User.fromJSON(user))
     .then(user => user.copyWithoutPassword())
-    .then(changedUser => res.json(changedUser));
+    .then(changedUser => res.json(changedUser))
+    .catch(handleServerError(req, res))
   });
 
   router.get('/api/auth', isLoggedIn, (req, res) => {
@@ -207,27 +208,14 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
         resetPassword: user.recentlyReset
       });
     })
-    .catch(err => {
-      res.status(500).send();
-    })
+    .catch(handleServerError(req, res))
   });
 
   router.get('/api/authenticated', isLoggedIn, (req, res) => {
     winston.log('info', '/api/authenticated request');
     dataIntermediate.getUser(req.user.username)
-      .then(user => {
-        res.json(user.copyWithoutPassword())
-      })
-      .catch(err => {
-        winston.log('error','/api/authenticated error!', {err});
-        if (err instanceof NoSuchUserError) {
-          res.status(NO_USER_ERROR_CODE);
-          res.send();
-        } else {
-          res.status(500);
-          res.json({error: err})
-        }
-      })
+    .then(user => res.json(user.copyWithoutPassword()))
+    .catch(handleServerError(req, res))
   });
 
   return router;
