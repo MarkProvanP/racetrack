@@ -50,10 +50,16 @@ export class OrderByPipe implements PipeTransform {
         return input.sort((a, b) => {
           let aValue = a[propertyArray[0]];
           for (let i = 1; i < propertyArray.length; i++) {
+            if (!aValue) {
+              return 0;
+            }
             aValue = aValue[propertyArray[i]];
           }
           let bValue = b[propertyArray[0]];
           for (let i = 1; i < propertyArray.length; i++) {
+            if (!bValue) {
+              return 0;
+            }
             bValue = bValue[propertyArray[i]];
           }
           let compare = OrderByPipe._orderByComparator(aValue, bValue)

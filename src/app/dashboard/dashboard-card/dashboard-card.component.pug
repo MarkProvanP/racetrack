@@ -16,18 +16,21 @@ md-card(class='dashboard-card', [ngClass]='getCardClass()')
     h3(*ngIf='isBig') Notes
     div(*ngIf='isBig')
       | {{team.notes}}
-    div(*ngIf='isBig && team.lastCheckin.byUser')
+    div(*ngIf='isBig && teamHasCheckedIn()')
       h3 Last checkin
       time-widget([time]='team.lastCheckin.checkinTime', [fromNow]='true')
       |  by
       user-widget([user]='team.lastCheckin.byUser.user')
       |  at
       time-widget([time]='team.lastCheckin.byUser.timestamp')
-    div(*ngIf='team.lastCheckin.byUser')
-      md-progress-bar(mode='determinate', [color]='checkinProgressBarColor()', [title]='checkinProgressBarTitle()', [value]='checkinProgressBarValue()')
+    div(*ngIf='teamHasCheckedIn()')
+      md-progress-bar(mode='determinate',
+        [color]='checkinProgressBarColor()',
+        [title]='checkinProgressBarTitle()',
+        [value]='checkinProgressBarValue()')
       div(*ngIf='getOverdueTime()')
         b {{getOverdueTime().humanize()}} overdue!
-    div(*ngIf='!team.lastCheckin.byUser')
+    div(*ngIf='!teamHasCheckedIn()')
       h3 Team has not checked in!
     div(*ngIf='isBig && team.getLastUpdate()')
       h3 Last update

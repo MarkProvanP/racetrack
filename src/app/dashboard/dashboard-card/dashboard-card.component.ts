@@ -63,6 +63,10 @@ export class DashboardCardComponent {
 
   }
 
+  teamHasCheckedIn() {
+    return this.team.lastCheckin && this.team.lastCheckin.byUser;
+  }
+
   checkinProgressBarColor() {
     let ratio = this.checkinProgressBarValue();
     if (ratio < 100) {
