@@ -140,12 +140,17 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
   }
 
   passport.serializeUser((user, done) => {
-    done(null, user.username);
+    try {
+      done(null, user.username);
+    } catch (err) {
+      done(err, null);
+    }
   });
 
   passport.deserializeUser((username, done) => {
     getPublicUser(username)
-      .then(user => done(null, user));
+    .then(user => done(null, user))
+    .catch(err => done(err, null));
   });
 
   router.post('/api/login', passport.authenticate('local'), (req, res) => {
