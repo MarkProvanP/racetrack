@@ -211,6 +211,7 @@ export class Emailer {
   sendPasswordResetEmail(to: string, password: string) {
     let emailHTMLString = EMAIL_TEMPLATES.passwordReset({
       APP_NAME: APP_NAME,
+      APP_URL: APP_URL,
       PASSWORD: password
     })
     return this.sendEmail(
