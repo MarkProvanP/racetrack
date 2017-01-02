@@ -41,6 +41,7 @@ import {
 } from "../common/message";
 import { Emailer, MessageSender } from "./server";
 import { User } from "./auth";
+import { NotFoundError } from "./errors";
 import { UserActionInfo } from "../common/user";
 
 import * as winston from "winston";
@@ -384,7 +385,14 @@ export class DataIntermediary {
 //================================================================
   getUser(username): Promise<User> {
     return this.dbFacade.getUser({username})
-      .then(user => User.fromJSON(user));
+    .then(user => {
+      if (!user) {
+        throw new NotFoundError(username);
+      } else {
+        return user;
+      }
+    })
+    .then(user => User.fromJSON(user));
   }
 
   getUsers(): Promise<User[]> {

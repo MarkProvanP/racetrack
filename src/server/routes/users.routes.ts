@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as winston from "winston";
 
+import { NotFoundError } from "../errors";
 import { DataIntermediary } from "../data-intermediate";
 import { User, restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 
@@ -17,19 +18,29 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
     }
   });
 
+  function handleServerError(req, res) {
+    return (err) => {
+      if (err instanceof NotFoundError) {
+        res.status(404).send(err.toString());
+      } else {
+        winston.log('error', err);
+        res.status(500).send();
+      }
+    }
+  }
+
   userDataRouter.get('/', restrictedViewOnly, (req, res) => {
     dataIntermediate.getUsers()
-    .catch(err => res.status(500).send())
     .then(users => users.map(user => user.copyWithoutPassword()))
-    .then(users => res.json(users));
+    .then(users => res.json(users))
+    .catch(handleServerError(req, res));
   });
 
   userDataRouter.get('/:username', restrictedViewOnly, (req, res) => {
     let username = req.params.username;
     dataIntermediate.getUser(username)
-    .catch(err => res.status(500).send())
-    .then(user => user.copyWithoutPassword())
-    .then(user => res.json(user));
+    .then(user => res.json(user.copyWithoutPassword()))
+    .catch(handleServerError(req, res))
   });
 
   userDataRouter.post('/', restrictedModifyAll, (req, res) => {
@@ -41,8 +52,8 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
       return;
     }
     dataIntermediate.addUser(username, newUser)
-    .catch(err => res.status(500).send())
-    .then(newUser => res.json(newUser.copyWithoutPassword()));
+    .then(newUser => res.json(newUser.copyWithoutPassword()))
+    .catch(handleServerError(req, res));
   });
 
   userDataRouter.put('/:username', restrictedModifyAll, (req, res) => {
@@ -54,10 +65,10 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
     }
     let updatedUser = req.body;
     dataIntermediate.updateUser(updatedUser)
-    .catch(err => res.status(500).send())
     .then(user => User.fromJSON(user))
     .then(user => user.copyWithoutPassword())
-    .then(changedUser => res.json(changedUser));
+    .then(changedUser => res.json(changedUser))
+    .catch(handleServerError(req, res));
   });
 
   userDataRouter.put('/:username/reset-password', restrictedModifyAll, (req, res) => {
@@ -71,7 +82,8 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
     .catch(err => res.status(500).send())
     .then(user => User.fromJSON(user))
     .then(user => user.copyWithoutPassword())
-    .then(changedUser => res.json(changedUser));
+    .then(changedUser => res.json(changedUser))
+    .catch(handleServerError(req, res));
   });
 
   userDataRouter.delete('/:username', restrictedModifyAll, (req, res) => {
@@ -82,8 +94,8 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
       return;
     }
     dataIntermediate.deleteUser(username)
-    .catch(err => res.status(500).send())
-    .then(() => res.send('successfully deleted user'));
+    .then(() => res.send('successfully deleted user'))
+    .catch(handleServerError(req, res));
   });
   
   return userDataRouter;

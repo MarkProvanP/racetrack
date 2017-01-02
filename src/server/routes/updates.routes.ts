@@ -27,9 +27,14 @@ let updatesRouter = express.Router();
   updatesRouter.get('/:id', restrictedViewOnly, (req, res) => {
     let id = req.params.id;
     dataIntermediate.getStatusUpdate(id)
-      .then(update => {
+    .catch(err => res.status(500).send())
+    .then(update => {
+      if (update) {
         res.json(update);
-      });
+      } else {
+        res.status(404).send();
+      }
+    });
   });
 
   updatesRouter.post('/', restrictedBasic, (req, res) => {
