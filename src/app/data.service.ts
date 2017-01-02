@@ -1,5 +1,6 @@
 import { Injectable }    from '@angular/core';
 import { Headers, Http } from '@angular/http';
+import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
 import * as _ from "lodash";
 import 'rxjs/add/operator/toPromise';
 
@@ -46,7 +47,8 @@ export class DataService {
 
   constructor(
     private http: Http,
-    private userService: UserService
+    private userService: UserService,
+    private snackBar: MdSnackBar
   ) {
     this.userService.addOnAuthStatusChangedListener(authenticated => {
       if (authenticated) {
@@ -468,6 +470,7 @@ export class DataService {
   }
 
   private handleError(error: any): Promise<any> {
+    this.snackBar.open('A Data Service error occured!', 'Dismiss')
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);
   }

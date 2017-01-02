@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
+import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
 
 import { Text, TextId, PhoneNumber, InboundText, OutboundText } from '../common/text';
 import { Racer } from '../common/racer';
@@ -122,6 +123,7 @@ export class TextService {
   constructor(
     private http: Http,
     private userService: UserService,
+    private snackBar: MdSnackBar
   ) {
     this.userService.addOnAuthStatusChangedListener(authenticated => {
       console.log('authenticated status changed to', authenticated);
@@ -181,10 +183,14 @@ export class TextService {
 
   private getAllTextsFromBackend(): Promise<Text[]> {
     return this.http.get(this.textsUrl, this.httpExtras)
-      .toPromise()
-      .then(response => response.json()
-      .map(text => Text.fromJSON(text)))
-      .catch(this.handleError);
+    .toPromise()
+    .then(response => response.json()
+    .map(text => Text.fromJSON(text)))
+    .catch(this.handleError)
+    .catch(err => {
+      console.error("Error getting all texts from backend, leaving no texts")
+      return [];
+    })
   }
 
   private writeTextToBackend(text: Text): Promise<Text> {
@@ -215,6 +221,7 @@ export class TextService {
   }
 
   private handleError(error: any): Promise<any> {
+    this.snackBar.open('A Text Service error occured!', 'Dismiss')
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);
   }

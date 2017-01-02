@@ -3,6 +3,7 @@ import { Location } from "@angular/common";
 import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
+import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
 
 import * as io from "socket.io-client";
 
@@ -126,7 +127,8 @@ export class UserService {
 
   constructor(
     private http: Http,
-    private location: Location
+    private location: Location,
+    private snackBar: MdSnackBar
   ) {
     this.auth()
     .toPromise()
@@ -195,7 +197,7 @@ export class UserService {
     return this.http
       .post(this.loginUrl, JSON.stringify(user), this.httpExtras)
       .toPromise()
-      .catch(this.handleHttpError)
+      .catch(this.handleError)
       .then(response => {
         return response.json()
       })
@@ -207,7 +209,7 @@ export class UserService {
     return this.http
       .get(this.logoutUrl, this.httpExtras)
       .toPromise()
-      .catch(this.handleHttpError)
+      .catch(this.handleError)
       .then(response => {
         this.setNotAuthenticated();
         return response.json()
@@ -225,18 +227,13 @@ export class UserService {
     return this.http
       .get(this.meUrl, this.httpExtras)
       .toPromise()
-      .catch(this.handleHttpError)
+      .catch(this.handleError)
       .then(response => response.json())
       .then(user => UserWithoutPassword.fromJSON(user))
       .then(user => {
         this.setUser(user);
         return user;
       });
-  }
-
-  private handleHttpError(error: any): Promise<any> {
-    console.error('UserService handleHttpError', error);
-    return Promise.reject(error);
   }
 
   public isAuthenticated() {
@@ -252,8 +249,8 @@ export class UserService {
   }
 
   private handleError(error: any): Promise<any> {
+    this.snackBar.open('A User Service error occured!', 'Dismiss')
     console.error('An error occurred', error); // for demo purposes only
-    debugger;
     return Promise.reject(error.message || error);
   }
 
