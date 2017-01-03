@@ -138,7 +138,9 @@ export class OutboundText extends Text {
   static fromJSON(obj: FullFormText) {
     let clone = JSON.parse(JSON.stringify(obj));
     let readBy = obj.readBy ? UserActionInfo.fromJSON(obj.readBy) : undefined;
+    let sentBy = obj.sentBy ? UserActionInfo.fromJSON(obj.sentBy) : undefined;
     clone.readBy = readBy;
+    clone.sentBy = sentBy;
     if (obj.racer) {
       // HOTFIX take racer ID, not whole object
       clone.racer = obj.racer.id ? obj.racer.id : obj.racer
