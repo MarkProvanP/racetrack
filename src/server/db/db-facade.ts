@@ -1,6 +1,6 @@
-import { Racer, DbFormRacer, RacerId } from "../../common/racer";
+import { Racer, RacerId } from "../../common/racer";
 import { Team, DbFormTeam, TeamId } from "../../common/team";
-import { TeamUpdate, DbFormTeamUpdate, TeamUpdateId } from "../../common/update";
+import { TeamUpdate, TeamUpdateId } from "../../common/update";
 import {
   Text,
   TextId,
@@ -21,10 +21,10 @@ export interface DbFacadeInterface {
   createSavedConfig(savedConfig: SavedConfig): Promise<void>;
   updateSavedConfig(savedConfig: SavedConfig): Promise<void>;
 
-  getRacers(query): Promise<DbFormRacer[]>;
-  getRacer(query): Promise<DbFormRacer>;
-  updateRacer(racer: DbFormRacer): Promise<void>;
-  createRacer(racer: DbFormRacer): Promise<void>;
+  getRacers(query): Promise<Racer[]>;
+  getRacer(query): Promise<Racer>;
+  updateRacer(racer: Racer): Promise<void>;
+  createRacer(racer: Racer): Promise<void>;
   deleteRacer(id: RacerId): Promise<void>;
 
   getTeams(query) : Promise<DbFormTeam[]>;
@@ -39,10 +39,10 @@ export interface DbFacadeInterface {
   createText(text: Text): Promise<void>;
   deleteText(id: TextId): Promise<void>;
 
-  getTeamUpdates(query): Promise<DbFormTeamUpdate[]>;
-  getTeamUpdate(query): Promise<DbFormTeamUpdate>;
-  updateTeamUpdate(update: DbFormTeamUpdate): Promise<void>;
-  createTeamUpdate(update: DbFormTeamUpdate): Promise<void>;
+  getTeamUpdates(query): Promise<TeamUpdate[]>;
+  getTeamUpdate(query): Promise<TeamUpdate>;
+  updateTeamUpdate(update: TeamUpdate): Promise<void>;
+  createTeamUpdate(update: TeamUpdate): Promise<void>;
   deleteTeamUpdate(id: TeamUpdateId): Promise<void>;
 
   getUser(query): Promise<User>;

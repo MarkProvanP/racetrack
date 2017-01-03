@@ -2,13 +2,6 @@ import { PhoneNumber, ContactNumber } from './text';
 
 export type RacerId = string;
 
-export interface DbFormRacer {
-  id: RacerId;
-  name: string;
-  phones: ContactNumber[]
-  email: string;
-}
-
 export class Racer {
   id: RacerId;
   name: string;
@@ -31,10 +24,6 @@ export class Racer {
       throw new Error('Racer fromJSON on invalid object!');
     }
     return new Racer(obj.id, obj);
-  }
-
-  toIdJSON() {
-    return JSON.stringify(this);
   }
 
   constructor(id: RacerId, properties) {
@@ -61,9 +50,5 @@ export class Racer {
         return contact.number.equals(phoneNumber);
       }
     }).length > 0;
-  }
-
-  toDbForm() {
-    return JSON.parse(JSON.stringify(this));
   }
 }

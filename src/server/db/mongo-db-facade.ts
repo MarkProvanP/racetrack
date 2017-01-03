@@ -1,11 +1,10 @@
-import { Racer, RacerId, DbFormRacer } from "../../common/racer";
+import { Racer, RacerId } from "../../common/racer";
 import { Team, TeamId, PopulatedTeam, UnpopulatedTeam, DbFormTeam } from "../../common/team";
 import {
   TeamStatus,
   TeamUpdate,
   TeamUpdateId,
-  Location,
-  DbFormTeamUpdate
+  Location
 } from "../../common/update";
 import {
   Text,
@@ -90,12 +89,11 @@ class MongoDbFacade implements DbFacadeInterface {
 
 //================================================================
 
-  getRacers(query): Promise<DbFormRacer[]> {
-    let r = this.racersCollection.find(query).toArray() as DbFormRacer[];
-    return Promise.resolve(r);
+  getRacers(query): Promise<Racer[]> {
+    return this.racersCollection.find(query).toArray();
   }
 
-  getRacer(query): Promise<DbFormRacer> {
+  getRacer(query): Promise<Racer> {
     return this.racersCollection.findOne(query)
     .catch(err => {
       console.error('mongoDbFacade getRacer() error', err)
@@ -103,11 +101,11 @@ class MongoDbFacade implements DbFacadeInterface {
     })
   }
 
-  updateRacer(racer: DbFormRacer): Promise<void> {
+  updateRacer(racer: Racer): Promise<void> {
     return this.racersCollection.updateOne({id: racer.id}, { $set: racer});
   }
 
-  createRacer(racer: DbFormRacer): Promise<void> {
+  createRacer(racer: Racer): Promise<void> {
     return this.racersCollection.insert(racer);
   }
 
@@ -159,19 +157,19 @@ class MongoDbFacade implements DbFacadeInterface {
   }
 
 //================================================================
-  getTeamUpdates(query): Promise<DbFormTeamUpdate[]> {
+  getTeamUpdates(query): Promise<TeamUpdate[]> {
     return this.updatesCollection.find(query).toArray();
   }
 
-  getTeamUpdate(query): Promise<DbFormTeamUpdate> {
+  getTeamUpdate(query): Promise<TeamUpdate> {
     return this.updatesCollection.findOne(query);
   }
 
-  updateTeamUpdate(update: DbFormTeamUpdate): Promise<void> {
+  updateTeamUpdate(update: TeamUpdate): Promise<void> {
     return this.updatesCollection.updateOne({id: update.id}, {$set: update})
   }
 
-  createTeamUpdate(update: DbFormTeamUpdate): Promise<void> {
+  createTeamUpdate(update: TeamUpdate): Promise<void> {
     return this.updatesCollection.insert(update);
   }
 

@@ -3,7 +3,6 @@ let generatePassword = require("password-generator");
 import { DbFacadeInterface} from "./db/db-facade";
 import {
   Racer,
-  DbFormRacer,
   RacerId
 } from "../common/racer";
 import {
@@ -15,8 +14,7 @@ import {
 } from "../common/team";
 import {
   TeamUpdate,
-  TeamUpdateId,
-  DbFormTeamUpdate
+  TeamUpdateId
 } from "../common/update";
 import {
   Text,
@@ -113,7 +111,7 @@ export class DataIntermediary {
   }
 
   public updateRacer(racer: Racer, user?: UserWithoutPassword): Promise<Racer> {
-    return this.dbFacade.updateRacer(racer.toDbForm())
+    return this.dbFacade.updateRacer(racer)
     .then(() => {
       if (user) {
         let newMessage = new RacerUpdatedMessage(racer, user);
@@ -126,7 +124,7 @@ export class DataIntermediary {
   public createRacer(properties): Promise<Racer> {
     let id = properties.id ? properties.id : uuid.v4();
     let newRacer = new Racer(id, properties);
-    return this.dbFacade.createRacer(newRacer.toDbForm())
+    return this.dbFacade.createRacer(newRacer)
       .then(r => newRacer);
   }
 
