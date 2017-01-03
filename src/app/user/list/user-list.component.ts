@@ -74,7 +74,16 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  isLevelDisabled(level) {
+  getLevelValue(e) {
+    /*
+     * Had strange bug where Angular thought that 'e' was undefined in the templating bit
+     * so using this to get around
+     */
+    return e.key;
+  }
+
+  isLevelDisabled(e) {
+    let level = e.key
     let b = Number(level) == UserPrivileges.SUPERUSER;
     return b ? true : null;
   }
