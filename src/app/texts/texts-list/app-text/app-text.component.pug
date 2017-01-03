@@ -4,11 +4,11 @@ md-card.text-card.text-card-normal
       .inline-text-title(*ngIf='display.oneline')
         phone-widget([number]='text.from')
         |  - 
-        span(*ngIf='text.racer') {{text.racer.name}}
+        span(*ngIf='textRacer') {{textRacer.name}}
         |  - 
-        span(*ngIf='text.team') {{text.team.name}}
+        span(*ngIf='textTeam') {{textTeam.name}}
         |  
-        span.error(*ngIf='!text.team') ERROR: No Team for Racer!
+        span.error(*ngIf='!textTeam') ERROR: No Team for Racer!
       div
         time-widget([time]='text.timestamp')
         location-widget([location]='text.location')
@@ -32,9 +32,9 @@ md-card.text-card.text-card-normal
     button(md-icon-button, (click)='markTextAsRead()', [disabled]='text.readBy', [title]='"Mark text as read"')
       md-icon done
     |  
-    button(md-icon-button, [disabled]='!canCheckinFromText(text)', (click)='addCheckIn()', [title]='"Add checkin for team"')
+    button(md-icon-button, [disabled]='!canCheckinFromText()', (click)='addCheckIn()', [title]='"Add checkin for team"')
       md-icon update
     |  
-    button(md-icon-button, [disabled]='!canUpdateFromText(text)', (click)='createUpdate()', [title]='"Create team update from this text"')
+    button(md-icon-button, [disabled]='!canUpdateFromText()', (click)='createUpdate()', [title]='"Create team update from this text"')
       md-icon add
 

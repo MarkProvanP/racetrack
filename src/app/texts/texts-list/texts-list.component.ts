@@ -79,17 +79,21 @@ export class TextsListComponent {
   }
 
   checkInTeamFromText(text: Text) {
-    let team = text.team;
-    team.lastCheckin = {
+    let teamId = text.team;
+    let lastCheckin = {
       checkinTime: text.timestamp,
       byUser: this.userService.getUserAction()
     }
-    this.dataService.updateTeamAndWriteToBackend(team)
+    return this.dataService.getTeamPromise(teamId)
+    .then(team => {
+      team.lastCheckin = lastCheckin
+      return this.dataService.updateTeamAndWriteToBackend(team)
+    })
     .then(res => {
       let config = new MdSnackBarConfig();
       config.duration = 5000;
       this.snackBar.open("Checked in team from text", undefined, config);
-    })
+    });
   }
 
   createUpdateFromText(text: Text) {

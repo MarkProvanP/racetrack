@@ -39,11 +39,11 @@ export class TextFilterOptions {
   filter(text: Text): boolean {
     if (this.racer !== undefined) {
       if (this.hasRacer) { if (!text.racer) return false }
-      if (!text.racer || text.racer.id != this.racer.id) return false;
+      if (!text.racer || text.racer != this.racer.id) return false;
     }
     if (this.team !== undefined) {
       if (this.hasTeam) { if (!text.team) return false }
-      if (!text.team || text.team.id != this.team.id) return false;
+      if (!text.team || text.team != this.team.id) return false;
     }
     if (text instanceof InboundText && this.read != undefined) {
       if (!!(<InboundText> text).readBy != this.read) return false;
@@ -84,6 +84,7 @@ export class TextService {
   private textsUrl = this.baseUrl + "texts";
 
   private texts: Text[] = [];
+  textsObject = {};
 
   private onTextsChangedReceivers = [];
   private onTextReceivedReceivers = [];
@@ -171,6 +172,22 @@ export class TextService {
 
   private broadcastTextReceived(text: Text) {
     this.onTextReceivedReceivers.forEach(callback => callback(text));
+  }
+
+  getTextPromise(id: TextId) {
+    let promiseOrText = this.textsObject[id];
+    if (promiseOrText instanceof Promise) {
+      return promiseOrText;
+    } else if (promiseOrText instanceof Text) {
+      return Promise.resolve(promiseOrText)
+    }
+    // Otherwise, fetch from backend
+    // TODO add single text fetching from backend
+    let promise = this.getAllTextsFromBackend()
+      .then(texts => texts.filter(t => t.id == id)[0])
+    this.textsObject[id] = promise;
+    return promise;
+
   }
 
   getAllTexts(): Text[] {

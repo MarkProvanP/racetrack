@@ -1,16 +1,16 @@
-md-card.text-card.text-outbound([ngClass]='{"unknown-text": !text.racer}')
+md-card.text-card.text-outbound([ngClass]='{"unknown-text": !textRacer}')
   md-card-header
     md-card-title
-      i(*ngIf='!text.racer') Text from unknown number!
+      i(*ngIf='!textRacer') Text from unknown number!
         phone-widget([number]='text.from')
-      .inline-text-title(*ngIf='text.racer && display.oneline')
+      .inline-text-title(*ngIf='textRacer && display.oneline')
         phone-widget([number]='text.to')
         |  - 
-        span(*ngIf='text.racer') {{text.racer.name}}
+        span(*ngIf='textRacer') {{textRacer.name}}
         |  - 
-        span(*ngIf='text.team') {{text.team.name}}
+        span(*ngIf='textTeam') {{textTeam.name}}
         |  
-        span.error(*ngIf='!text.team') ERROR: No Team for Racer!
+        span.error(*ngIf='!textTeam') ERROR: No Team for Racer!
       time-widget([time]='text.timestamp')
       .text-title(*ngIf='!display.oneline')
         div(*ngIf='display.number')

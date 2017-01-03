@@ -1,8 +1,10 @@
 import * as moment from "moment";
 import * as _ from "lodash";
 
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 
+import { Team, TeamId } from "../../../../common/team";
+import { Racer, RacerId } from "../../../../common/racer";
 import { Text, InboundText } from '../../../../common/text';
 
 import { UserActionInfo } from "../../../../common/user";
@@ -15,17 +17,33 @@ import { DataService } from "../../../data.service";
   templateUrl: './normal-text.component.pug',
   styleUrls: ['./normal-text.component.scss']
 })
-export class NormalTextComponent {
+export class NormalTextComponent implements OnInit {
   @Input() text: InboundText;
   @Input() display: any;
   @Output() onMakeRead: EventEmitter<InboundText> = new EventEmitter();
   @Output() onCreateReply: EventEmitter<InboundText> = new EventEmitter();
   @Output() onAddCheckin: EventEmitter<InboundText> = new EventEmitter();
   @Output() onCreateUpdate: EventEmitter<InboundText> = new EventEmitter();
+  textTeam: Team;
+  textRacer: Racer;
 
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private dataService: DataService
   ) {}
+
+  ngOnInit() {
+    let teamId = this.text.team;
+    if (teamId) {
+      this.dataService.getTeamPromise(teamId)
+      .then(team => this.textTeam = team);
+    }
+    let racerId = this.text.racer;
+    if (racerId) {
+      this.dataService.getRacerPromise(racerId)
+      .then(racer => this.textRacer = racer);
+    }
+  }
 
   markTextAsRead() {
     this.text.readBy = this.userService.getUserAction();
@@ -49,19 +67,19 @@ export class NormalTextComponent {
     this.onCreateUpdate.emit(this.text);
   }
 
-  canCheckinFromText(text: Text) {
-    if (!text.team) return false;
-    if (_.isEmpty(text.team.lastCheckin.checkinTime)) return true;
-    let lastCheckinMoment = moment(text.team.lastCheckin.checkinTime)
-    let textMoment = moment(text.timestamp);
+  canCheckinFromText() {
+    if (!this.textTeam) return false;
+    if (_.isEmpty(this.textTeam.lastCheckin.checkinTime)) return true;
+    let lastCheckinMoment = moment(this.textTeam.lastCheckin.checkinTime)
+    let textMoment = moment(this.text.timestamp);
     return lastCheckinMoment.isBefore(textMoment);
   }
 
-  canUpdateFromText(text: Text) {
-    if (!text.team) return false;
-    if (!text.team.statusUpdates.length) return true;
-    let lastUpdateMoment = moment(text.team.getLastUpdate().timestamp)
-    let textMoment = moment(text.timestamp);
+  canUpdateFromText() {
+    if (!this.textTeam) return false;
+    if (!this.textTeam.statusUpdates.length) return true;
+    let lastUpdateMoment = moment(this.textTeam.getLastUpdate().timestamp)
+    let textMoment = moment(this.text.timestamp);
     return lastUpdateMoment.isBefore(textMoment);
   }
 }

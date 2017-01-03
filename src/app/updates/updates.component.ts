@@ -11,7 +11,7 @@ import { TeamUpdate, TeamStatus, prettyStatusName } from "../../common/update";
 
 @Component({
   selector: 'updates',
-  templateUrl: './updates.component.html',
+  templateUrl: './updates.component.pug',
   styleUrls: ['./updates.component.scss']
 })
 export class UpdatesComponent implements OnInit {

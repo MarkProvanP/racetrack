@@ -1,0 +1,81 @@
+.updates-by-team.master-detail
+  .teams-list.master
+    md-list
+      md-list-item(*ngFor='let team of teams', (click)='routeToTeam(team)', [ngClass]="'selected'")
+        img(md-list-avatar, src='http://blogs-images.forbes.com/kristintablang/files/2016/02/Uber-Puppies.jpg')
+        h3(md-line) {{team.name}}
+        p(md-line) {{team.getPrettyRacersList()}}
+  .no-team-container(*ngIf='!selectedTeam')
+    .inner
+      h3 No team selected
+  .update-list-wrapper
+    .updates-list(*ngIf='selectedTeam')
+      md-card.notes-card
+        h4 Team Notes
+        md-input-container
+          textarea(md-input, [(ngModel)]='selectedTeam.notes')
+        md-card-actions
+          button(md-button, (click)='saveNotes()') Save
+      .add-button-wrapper
+        button(*ngIf='!inCreateUpdateMode', md-fab, color='primary', (click)='createNewUpdate()')
+          md-icon.md-24 add
+      .new-update-wrapper(*ngIf='inCreateUpdateMode')
+        new-update([team]='selectedTeam', (onstatuscreated)='onUpdateCreated()')
+      .update-card-wrapper(*ngFor="let update of selectedTeam.statusUpdates | orderBy: '-timestamp'")
+        md-card.update-card
+          .info-table
+            table
+              tr
+                th Time
+                td
+                  time-widget([time]='update.timestamp')
+              tr
+                th Place
+                td(*ngIf='!isEditing(update)')
+                  location-widget([location]='update.location')
+                td(*ngIf='isEditing(update)')
+                  md-input-container
+                    input.place-input(md-input, [(ngModel)]='update.location.place')
+                  location-widget([location]='update.location', showcoords='true', hideplace='true')
+              tr
+                th Status
+                td(*ngIf='!isEditing(update)')  {{update.prettyStatusName()}}
+                td(*ngIf='isEditing(update)')
+                  md-select([(ngModel)]='update.status')
+                    md-option(*ngFor='let item of statusEnum | keys', [value]='item.key') {{getPrettyStatusName(item)}}
+              tr
+                th Linked texts
+                td(*ngIf='update.linkedTexts.length')
+                  button(md-button, *ngIf='!showingLinkedTextsForUpdate(update)', (click)='loadLinkedTextsForUpdate(update)') Show
+                  div(*ngIf='showingLinkedTextsForUpdate(update)')
+                    text-widget(*ngFor='let text of update.linkedTexts', [text]='text')
+                td(*ngIf='!update.linkedTexts.length') No linked texts!
+              tr
+                th Notes
+                td(*ngIf='!isEditing(update)')  {{update.notes}}
+                td(*ngIf='isEditing(update)')
+                  md-input-container
+                    textarea.notes-input(md-input, [(ngModel)]='update.notes')
+              tr(*ngIf='update.byUser')
+                th By User
+                td
+                  user-widget([user]='update.byUser.user')
+                  |  at
+                  time-widget([time]='update.byUser.timestamp')
+            md-checkbox([disabled]='!isEditing(update)', [(ngModel)]='update.isPublic') Is Public
+            |  
+            button(md-icon-button, *ngIf='!isEditing(update)', (click)='editUpdate(update)')
+              md-icon mode_edit
+            |  
+            button(md-icon-button, *ngIf='isEditing(update)', (click)='saveUpdate(update)')
+              md-icon save
+          .location-map
+            sebm-google-map([latitude]='update.location.latitude',
+              [longitude]='update.location.longitude',
+              [disableDefaultUI]='default.ui',
+              [zoom]='default.zoom')
+              sebm-google-map-marker([latitude]='update.location.latitude',
+                [longitude]='update.location.longitude',
+                [markerDraggable]='isEditing(update)',
+                (dragend)='onMarkerDragEnd($event)')
+

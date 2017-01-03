@@ -1,30 +1,49 @@
 import * as moment from "moment";
 import * as _ from "lodash";
 
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 
+import { Team, TeamId } from "../../../../common/team";
+import { Racer, RacerId } from "../../../../common/racer";
 import { Text, AppText } from '../../../../common/text';
 
 import { UserActionInfo } from "../../../../common/user";
 
 import { UserService } from '../../../user.service';
+import { DataService } from "../../../data.service";
 
 @Component({
   selector: 'app-text',
   templateUrl: './app-text.component.pug',
   styleUrls: ['./app-text.component.scss']
 })
-export class AppTextComponent {
+export class AppTextComponent implements OnInit {
   @Input() text: AppText;
   @Input() display: any;
   @Output() onMakeRead: EventEmitter<AppText> = new EventEmitter();
   @Output() onCreateReply: EventEmitter<AppText> = new EventEmitter();
   @Output() onAddCheckin: EventEmitter<AppText> = new EventEmitter();
   @Output() onCreateUpdate: EventEmitter<AppText> = new EventEmitter();
+  textTeam: Team;
+  textRacer: Racer;
 
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private dataService: DataService
   ) {}
+
+  ngOnInit() {
+    let teamId = this.text.team;
+    if (teamId) {
+      this.dataService.getTeamPromise(teamId)
+      .then(team => this.textTeam = team);
+    }
+    let racerId = this.text.racer;
+    if (racerId) {
+      this.dataService.getRacerPromise(racerId)
+      .then(racer => this.textRacer = racer);
+    }
+  }
 
   stringThing() {
     return JSON.stringify(this.text.location);
@@ -47,19 +66,19 @@ export class AppTextComponent {
     this.onCreateUpdate.emit(this.text);
   }
 
-  canCheckinFromText(text: Text) {
-    if (!text.team) return false;
-    if (_.isEmpty(text.team.lastCheckin.checkinTime)) return true;
-    let lastCheckinMoment = moment(text.team.lastCheckin.checkinTime)
-    let textMoment = moment(text.timestamp);
+  canCheckinFromText() {
+    if (!this.textTeam) return false;
+    if (_.isEmpty(this.textTeam.lastCheckin.checkinTime)) return true;
+    let lastCheckinMoment = moment(this.textTeam.lastCheckin.checkinTime)
+    let textMoment = moment(this.text.timestamp);
     return lastCheckinMoment.isBefore(textMoment);
   }
 
-  canUpdateFromText(text: Text) {
-    if (!text.team) return false;
-    if (!text.team.statusUpdates.length) return true;
-    let lastUpdateMoment = moment(text.team.getLastUpdate().timestamp)
-    let textMoment = moment(text.timestamp);
+  canUpdateFromText() {
+    if (!this.textTeam) return false;
+    if (!this.textTeam.statusUpdates.length) return true;
+    let lastUpdateMoment = moment(this.textTeam.getLastUpdate().timestamp)
+    let textMoment = moment(this.text.timestamp);
     return lastUpdateMoment.isBefore(textMoment);
   }
 }

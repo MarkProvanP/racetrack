@@ -96,8 +96,8 @@ export abstract class Text {
   body: string;
   to: PhoneNumber;
   from: PhoneNumber;
-  racer: Racer;
-  team: Team;
+  racer: RacerId;
+  team: TeamId;
   timestamp: Date;
 
   abstract isRead(): boolean;
@@ -117,8 +117,14 @@ export abstract class Text {
 
   toDbForm(): DbFormText {
     let copy = JSON.parse(JSON.stringify(this));
-    if (this.racer) copy.racer = this.racer.id;
-    if (this.team) copy.team = this.team.id;
+    // HOTFIX use racer/team ID, not object
+    let anyThis = this as any;
+    if (this.racer) {
+      copy.racer = anyThis.racer.id ? anyThis.racer.id : this.racer;
+    }
+    if (this.team) {
+      copy.team = anyThis.team.id ? anyThis.team.id : this.team;
+    }
     return copy;
   }
 }
@@ -130,13 +136,17 @@ export class OutboundText extends Text {
   sentBy: UserActionInfo;
 
   static fromJSON(obj: FullFormText) {
-    let racer = obj.racer ? Racer.fromJSON(obj.racer) : undefined;
-    let team = obj.team ? Team.fromJSON(obj.team) : undefined;
-    let sentBy = obj.sentBy ? UserActionInfo.fromJSON(obj.sentBy) : undefined;
     let clone = JSON.parse(JSON.stringify(obj));
-    clone.racer = racer;
-    clone.team = team;
-    clone.sentBy = sentBy;
+    let readBy = obj.readBy ? UserActionInfo.fromJSON(obj.readBy) : undefined;
+    clone.readBy = readBy;
+    if (obj.racer) {
+      // HOTFIX take racer ID, not whole object
+      clone.racer = obj.racer.id ? obj.racer.id : obj.racer
+    }
+    if (obj.team) {
+      // HOTFIX take team ID not whole object
+      clone.team = obj.team.id ? obj.team.id : obj.team
+    }
     return new OutboundText(clone.id, clone);
   }
 
@@ -175,13 +185,17 @@ export class InboundText extends Text {
   readBy: UserActionInfo;
 
   static fromJSON(obj: FullFormText) {
-    let racer = obj.racer ? Racer.fromJSON(obj.racer) : undefined;
-    let team = obj.team ? Team.fromJSON(obj.team) : undefined;
-    let readBy = obj.readBy ? UserActionInfo.fromJSON(obj.readBy) : undefined;
     let clone = JSON.parse(JSON.stringify(obj));
-    clone.racer = racer;
-    clone.team = team;
+    let readBy = obj.readBy ? UserActionInfo.fromJSON(obj.readBy) : undefined;
     clone.readBy = readBy;
+    if (obj.racer) {
+      // HOTFIX take racer ID, not whole object
+      clone.racer = obj.racer.id ? obj.racer.id : obj.racer
+    }
+    if (obj.team) {
+      // HOTFIX take team ID not whole object
+      clone.team = obj.team.id ? obj.team.id : obj.team
+    }
     return new InboundText(clone.id, clone);
   }
 
@@ -231,13 +245,17 @@ export class AppText extends InboundText {
     if (!obj) {
       throw new Error('AppText fromJSON on invalid object!');
     }
-    let racer = obj.racer ? Racer.fromJSON(obj.racer) : undefined;
-    let team = obj.team ? Team.fromJSON(obj.team) : undefined;
-    let readBy = obj.readBy ? UserActionInfo.fromJSON(obj.readBy) : undefined;
     let clone = JSON.parse(JSON.stringify(obj));
-    clone.racer = racer;
-    clone.team = team;
+    let readBy = obj.readBy ? UserActionInfo.fromJSON(obj.readBy) : undefined;
     clone.readBy = readBy;
+    if (obj.racer) {
+      // HOTFIX take racer ID, not whole object
+      clone.racer = obj.racer.id ? obj.racer.id : obj.racer
+    }
+    if (obj.team) {
+      // HOTFIX take team ID not whole object
+      clone.team = obj.team.id ? obj.team.id : obj.team
+    }
     return new AppText(clone.id, clone);
   }
 

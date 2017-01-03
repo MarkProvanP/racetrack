@@ -1,8 +1,9 @@
-.text-widget
+.text-widget(*ngIf='text')
   table
     tr
       th From
-      td {{text.racer.name}}
+      td
+        p(*ngIf='textRacer') {{textRacer.name}}
         phone-widget([number]='text.from') 
     tr
       th At
@@ -11,4 +12,5 @@
     tr
       th Body
       td {{text.body}}
-
+.text-widget(*ngIf='!text && !error') Loading...
+.text-widget.error(*ngIf='error') Error! {{error.status}}

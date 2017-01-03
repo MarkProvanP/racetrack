@@ -39,6 +39,9 @@ export class DataService {
   private teams: Team[] = [];
   private racers: Racer[] = [];
   private updates: TeamUpdate[] = [];
+  private racersObject = {};
+  private teamsObject = {};
+  private updatesObject = {};
   private usersObject = {};
 
   private teamsChangedListeners = [];
@@ -180,6 +183,19 @@ export class DataService {
     }
   }
 
+  getTeamPromise(id: TeamId): Promise<Team> {
+    let promiseOrTeam = this.teamsObject[id];
+    if (promiseOrTeam instanceof Promise) {
+      return promiseOrTeam;
+    } else if (promiseOrTeam instanceof Team) {
+      return Promise.resolve(promiseOrTeam);
+    }
+    // Otherwise, fetch from backend
+    let promise = this.getTeamFromBackend(id)
+    this.teamsObject[id] = promise;
+    return promise;
+  }
+
   deleteTeam(id: TeamId): Promise<void> {
     let url = `${this.teamsUrl}/${id}`;
     return this.http.delete(url, this.httpExtras)
@@ -236,6 +252,19 @@ export class DataService {
         return r;
       }
     }
+  }
+
+  getRacerPromise(id: RacerId): Promise<Racer> {
+    let promiseOrRacer = this.racersObject[id];
+    if (promiseOrRacer instanceof Promise) {
+      return promiseOrRacer;
+    } else if (promiseOrRacer instanceof Racer) {
+      return Promise.resolve(promiseOrRacer);
+    }
+    // Otherwise, fetch from backend
+    let promise = this.getRacerFromBackend(id)
+    this.racersObject[id] = promise;
+    return promise;
   }
 
   deleteRacer(id: RacerId): Promise<void> {
