@@ -324,7 +324,7 @@ export class DataIntermediary {
     return this.getRacers()
       .then(racers => {
         let possibleRacers = racers.filter(racer => racer.hasPhoneNumber(checkNumber));
-        copy.racer = possibleRacers.length ? possibleRacers[0] : undefined;
+        copy.racer = possibleRacers.length ? possibleRacers[0].id : undefined;
         return copy;
       })
       .catch(err => {
@@ -338,7 +338,7 @@ export class DataIntermediary {
     return this.getTeams()
     .then(teams => {
       let possibleTeams = teams.filter(team => team.hasRacer(text.racer));
-      copy.team = possibleTeams.length ? possibleTeams[0] : undefined;
+      copy.team = possibleTeams.length ? possibleTeams[0].id : undefined;
       return copy;
     })
     .catch(err => {
