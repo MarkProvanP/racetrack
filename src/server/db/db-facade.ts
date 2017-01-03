@@ -4,7 +4,6 @@ import { TeamUpdate, DbFormTeamUpdate, TeamUpdateId } from "../../common/update"
 import {
   Text,
   TextId,
-  DbFormText,
   PhoneNumber,
   TwilioInboundText,
   TwilioOutboundText
@@ -34,10 +33,10 @@ export interface DbFacadeInterface {
   createTeam(team: DbFormTeam): Promise<void>;
   deleteTeam(id: TeamId): Promise<void>;
 
-  getTexts(query): Promise<DbFormText[]>;
-  getText(query): Promise<DbFormText>;
+  getTexts(query): Promise<Text[]>;
+  getText(query): Promise<Text>;
   updateText(query): Promise<void>;
-  createText(text: DbFormText): Promise<void>;
+  createText(text: Text): Promise<void>;
   deleteText(id: TextId): Promise<void>;
 
   getTeamUpdates(query): Promise<DbFormTeamUpdate[]>;

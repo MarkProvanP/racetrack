@@ -183,8 +183,7 @@ export class TextService {
     }
     // Otherwise, fetch from backend
     // TODO add single text fetching from backend
-    let promise = this.getAllTextsFromBackend()
-      .then(texts => texts.filter(t => t.id == id)[0])
+    let promise = this.getTextFromBackend(id)
     this.textsObject[id] = promise;
     return promise;
 
@@ -196,6 +195,14 @@ export class TextService {
 
   getTextsFiltered(options: TextFilterOptions) {
     return this.texts.filter(text => options.filter(text));
+  }
+
+  private getTextFromBackend(id: TextId): Promise<Text> {
+    let url = `${this.textsUrl}/${id}`;
+    return this.http.get(url, this.httpExtras)
+    .toPromise()
+    .then(response => Text.fromJSON(response))
+    .catch(this.handleError)
   }
 
   private getAllTextsFromBackend(): Promise<Text[]> {

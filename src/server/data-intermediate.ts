@@ -21,14 +21,12 @@ import {
 import {
   Text,
   TextId,
-  DbFormText,
   PhoneNumber,
   InboundText,
   OutboundText,
   AppText,
   TwilioInboundText,
-  TwilioOutboundText,
-  FullFormText,
+  TwilioOutboundText
 } from "../common/text";
 import { UserWithoutPassword, UserId } from "../common/user";
 import {
@@ -215,11 +213,16 @@ export class DataIntermediary {
 
 //================================================================
   
-  private shortDebugText(text: Text | DbFormText) {
+  private shortDebugText(text: Text) {
     return `{id: ${text.id}, body: ${text.body}}`;
   }
   private shortDebugTwilioInboundText(text: TwilioInboundText) {
     return `{SmsSid: ${text.SmsSid}, Body: ${text.Body}}`;
+  }
+
+  public getText(id: TextId): Promise<Text> {
+    return this.dbFacade.getText({id})
+    .then(text => this.populateText(text))
   }
 
   public getTexts(): Promise<Text[]> {
@@ -240,7 +243,7 @@ export class DataIntermediary {
     })
   }
 
-  private getTextsReady(texts: DbFormText[]): Promise<Text[]> {
+  private getTextsReady(texts: Text[]): Promise<Text[]> {
     let textPromises = texts.map(text => this.populateText(text));
     return Promise.all(textPromises)
       .then(texts => texts.map(text => Text.fromJSON(text)))
@@ -303,7 +306,7 @@ export class DataIntermediary {
     });
   }
 
-  private populateText(text: DbFormText): Promise<FullFormText> {
+  private populateText(text: Text): Promise<Text> {
     return this.addRacerToText(text)
     .catch(err => {
       console.error(`addRacerToText failed`);

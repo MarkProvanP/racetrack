@@ -59,36 +59,6 @@ import { Team, TeamId } from './team';
 import { Location } from "./update";
 import { UserActionInfo, UserWithoutPassword } from './user';
 
-export interface DbFormText {
-  text_subclass: string;
-
-  id: TextId;
-  body: string;
-  to: PhoneNumber;
-  from: PhoneNumber;
-  racer: RacerId;
-  team: TeamId;
-  twilio: TwilioInboundText | TwilioOutboundText;
-  timestamp: Date;
-  readBy?: UserActionInfo;
-  sentBy?: UserActionInfo;
-}
-
-export interface FullFormText {
-  text_subclass: string;
-
-  id: TextId;
-  body: string;
-  to: PhoneNumber;
-  from: PhoneNumber;
-  racer: Racer;
-  team: Team;
-  twilio: TwilioInboundText | TwilioOutboundText;
-  timestamp: Date;
-  readBy?: UserActionInfo;
-  sentBy?: UserActionInfo;
-}
-
 export abstract class Text {
   text_subclass: string;
 
@@ -102,7 +72,7 @@ export abstract class Text {
 
   abstract isRead(): boolean;
 
-  static fromJSON(obj: FullFormText): Text {
+  static fromJSON(obj): Text {
     if (obj.text_subclass == 'AppText') {
       return AppText.fromJSON(obj);
     } else if (obj.text_subclass == 'InboundText') {
@@ -115,7 +85,7 @@ export abstract class Text {
     }
   }
 
-  toDbForm(): DbFormText {
+  toDbForm(): Text {
     let copy = JSON.parse(JSON.stringify(this));
     // HOTFIX use racer/team ID, not object
     let anyThis = this as any;
@@ -135,7 +105,7 @@ export class OutboundText extends Text {
   twilio: TwilioOutboundText;
   sentBy: UserActionInfo;
 
-  static fromJSON(obj: FullFormText) {
+  static fromJSON(obj) {
     let clone = JSON.parse(JSON.stringify(obj));
     let readBy = obj.readBy ? UserActionInfo.fromJSON(obj.readBy) : undefined;
     let sentBy = obj.sentBy ? UserActionInfo.fromJSON(obj.sentBy) : undefined;
@@ -186,7 +156,7 @@ export class InboundText extends Text {
   twilio: TwilioInboundText;
   readBy: UserActionInfo;
 
-  static fromJSON(obj: FullFormText) {
+  static fromJSON(obj) {
     let clone = JSON.parse(JSON.stringify(obj));
     let readBy = obj.readBy ? UserActionInfo.fromJSON(obj.readBy) : undefined;
     clone.readBy = readBy;

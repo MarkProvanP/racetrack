@@ -15,9 +15,7 @@ import {
   AppText,
   PhoneNumber,
   TwilioInboundText,
-  TwilioOutboundText,
-  FullFormText,
-  DbFormText
+  TwilioOutboundText
 } from "../../common/text";
 import { ThingEvent, ThingEventId } from "../../common/event";
 import { DbFacadeInterface } from "./db-facade";
@@ -143,19 +141,17 @@ class MongoDbFacade implements DbFacadeInterface {
 
 
 //================================================================
-  getTexts(query): Promise<DbFormText[]> {
-    let t = this.textsCollection.find(query).toArray() as DbFormText[]
-    return Promise.resolve(t);
+  getTexts(query): Promise<Text[]> {
+    return this.textsCollection.find(query).toArray()
   }
 
-  getText(query): Promise<DbFormText> {
-    let t = this.textsCollection.findOne(query) as DbFormText
-    return Promise.resolve(t);
+  getText(query): Promise<Text> {
+    return this.textsCollection.findOne(query)
   }
-  updateText(text: DbFormText): Promise<void> {
+  updateText(text: Text): Promise<void> {
     return this.textsCollection.updateOne({id: text.id}, { $set: text})
   }
-  createText(text: DbFormText): Promise<void> {
+  createText(text: Text): Promise<void> {
     return this.textsCollection.insert(text);
   }
   deleteText(id: TextId): Promise<void> {

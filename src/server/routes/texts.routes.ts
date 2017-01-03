@@ -2,14 +2,12 @@ import * as express from "express";
 import { DbFacadeInterface} from "../db/db-facade";
 import {
   Text,
-  DbFormText,
   PhoneNumber,
   InboundText,
   OutboundText,
   AppText,
   TwilioInboundText,
-  TwilioOutboundText,
-  FullFormText,
+  TwilioOutboundText
 } from "../../common/text";
 import { UserWithoutPassword } from "../../common/user";
 import * as winston from "winston";
@@ -44,6 +42,13 @@ export default function textsRouterWithDb(dataIntermediate: DataIntermediary, tw
   textsRouter.get('/', restrictedViewOnly, (req, res) => {
     dataIntermediate.getTexts()
     .then(texts => res.json(texts))
+    .catch(handleServerError(req, res))
+  })
+
+  textsRouter.get('/:id', restrictedViewOnly, (req, res) => {
+    let id = req.params.id;
+    dataIntermediate.getText(id)
+    .then(text => res.json(text))
     .catch(handleServerError(req, res))
   })
 
