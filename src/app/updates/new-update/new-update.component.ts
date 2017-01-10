@@ -15,8 +15,8 @@ import { NominatimService } from "../../nominatim.service";
 
 @Component({
   selector: 'new-update',
-  templateUrl: './new-update.template.html',
-  styleUrls: ['./new-update.styles.scss']
+  templateUrl: './new-update.component.pug',
+  styleUrls: ['./new-update.component.scss']
 })
 export class NewUpdateComponent implements OnInit {
   @Input() team: Team;

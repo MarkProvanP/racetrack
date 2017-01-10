@@ -1,0 +1,46 @@
+md-card.new-update-card
+  .new-status-update
+    .info-table
+      .status-row
+        h3 New status update - {{team.name}}
+      table
+        tr
+          th Status
+          td
+            md-select([(ngModel)]='newStatusObj.status')
+              md-option(*ngFor='let item of statusEnum | keys', [value]='item.key') {{getPrettyStatusName(item)}}
+        tr
+          th Place:
+          td
+            .place-name.full-width
+              md-input-container.place-input
+                input(md-input, [(ngModel)]='newStatusObj.location.place')
+              |  
+              button.search-button(md-icon-button, (click)='searchForPlace()')
+                md-icon search
+            div
+              p.place-suggestion {{placeSuggestion}}
+            div
+              location-widget([location]='newStatusObj.location')
+        tr
+          th Notes:
+          td
+            md-input-container.full-width
+              textarea.notes-input(md-input, [(ngModel)]='newStatusObj.notes')
+        tr
+          th Linked texts:
+          td  {{newStatusObj.linkedTexts}}
+      md-checkbox([(ngModel)]='newStatusObj.isPublic') Make public
+      md-slide-toggle([(ngModel)]='team.inEurope') In Europe?
+      |  
+      button(md-raised-button, color='accent', (click)='saveNewUpdate()') Save update
+      |  
+      button(md-raised-button, (click)='cancelNewUpdate()') Cancel
+    .location-map
+      sebm-google-map([latitude]='mapSettings.lat',
+      [longitude]='mapSettings.lng',
+      [zoom]='mapSettings.zoom')
+        sebm-google-map-marker([latitude]='(newStatusObj.location.latitude)',
+        [longitude]='(newStatusObj.location.longitude)',
+        [markerDraggable]='true',
+        (dragEnd)='onMarkerDragEnd($event)')

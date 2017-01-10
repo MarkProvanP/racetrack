@@ -25,12 +25,12 @@
   justify-content: space-between;
 }
 
-.place-input {
+.full-width {
   width: 100%;
 }
 
 .notes-input {
-  width: 100%;
+  resize: vertical;
 }
 
 md-select {

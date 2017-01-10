@@ -2,7 +2,8 @@
   .teams-list.master
     md-list
       md-list-item(*ngFor='let team of teams', (click)='routeToTeam(team)', [ngClass]="'selected'")
-        img(md-list-avatar, src='http://blogs-images.forbes.com/kristintablang/files/2016/02/Uber-Puppies.jpg')
+        div(md-list-avatar)
+          h1.team-number {{team.id}}
         h3(md-line) {{team.name}}
         p(md-line) {{team.getPrettyRacersList()}}
   .no-team-container(*ngIf='!selectedTeam')
@@ -52,10 +53,9 @@
                 td(*ngIf='!update.linkedTexts.length') No linked texts!
               tr
                 th Notes
-                td(*ngIf='!isEditing(update)')  {{update.notes}}
-                td(*ngIf='isEditing(update)')
-                  md-input-container
-                    textarea.notes-input(md-input, [(ngModel)]='update.notes')
+                td
+                  md-input-container.full-width
+                    textarea.notes-input(md-input, [(ngModel)]='update.notes', [disabled]='!isEditing(update)')
               tr(*ngIf='update.byUser')
                 th By User
                 td
@@ -67,6 +67,7 @@
             button(md-icon-button, *ngIf='!isEditing(update)', (click)='editUpdate(update)')
               md-icon mode_edit
             |  
+            button(md-raised-button, *ngIf='isEditing(update)', (click)='resetUpdateTimestamp(update)') Reset Update Time
             button(md-icon-button, *ngIf='isEditing(update)', (click)='saveUpdate(update)')
               md-icon save
           .location-map

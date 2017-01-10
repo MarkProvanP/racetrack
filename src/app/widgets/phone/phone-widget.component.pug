@@ -1,10 +1,11 @@
 .phone-widget(*ngIf='!number')
   span.no-phone No phone number!
 .phone-widget(*ngIf='number && !edit')
-  span.country-code {{number.countryCode}}
+  span.country-code +{{number.countryCode}}
   span.number {{number.nationalNumber}}
 .phone-widget.edit(*ngIf='number && edit')
-  md-input-container.countryCode
+  md-input-container.country-code
     input(md-input, [(ngModel)]='number.countryCode', width='3')
-  md-input-container.nationalNumber
+    span(md-prefix) +
+  md-input-container.national-number
     input(md-input, [(ngModel)]='number.nationalNumber')

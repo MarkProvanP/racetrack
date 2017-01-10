@@ -2,7 +2,7 @@
   md-card
     md-card-title
       h3(*ngIf='!inEditMode') {{team.name}}
-      md-input-container(*ngIf='inEditMode')
+      md-input-container(*ngIf='inEditMode').full-width
         input(md-input, placeholder='Team name', [(ngModel)]='team.name')
     md-card-content
       md-slide-toggle([(ngModel)]='team.inEurope', (change)='updateTeam()') In Europe?

@@ -101,4 +101,8 @@ export class UpdatesComponent implements OnInit {
     let options = new TextFilterOptions({textIds: this.linkedTextUpdate.linkedTexts});
     this.loadedLinkedTexts = this.textService.getTextsFiltered(options)
   }
+
+  resetUpdateTimestamp(update: TeamUpdate) {
+    update.timestamp = new Date();
+  }
 }
