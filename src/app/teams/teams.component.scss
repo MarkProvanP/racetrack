@@ -5,6 +5,14 @@
   flex: 1;
 }
 
+.team-number {
+  margin: 0;
+  background-color: #EEE;
+  text-align: center;
+  border-radius: 100%;
+  border: 2px solid black;
+}
+
 .master-detail {
   display: flex;
   .master {

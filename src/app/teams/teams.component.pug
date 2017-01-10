@@ -2,6 +2,8 @@
   .master
     md-nav-list
       a(md-list-item, *ngFor='let team of teams', routerLink="{{getTeamLink(team)}}" routerLinkActive='selected')
+        div(md-list-avatar)
+          h1.team-number {{team.id}}
         h3(md-line) {{team.name}}
         p(md-line) {{team.getPrettyRacersList()}}
     |  
