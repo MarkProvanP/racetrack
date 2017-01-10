@@ -134,6 +134,9 @@ export class Team {
   }
 
   hasRacer(racer: Racer | RacerId): boolean {
+    if (!racer) {
+      return false;
+    }
     if (typeof racer == 'string') {
       return this.racers.filter(r => racer == r.id).length > 0;
     } else {

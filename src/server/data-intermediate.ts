@@ -338,6 +338,9 @@ export class DataIntermediary {
     let copy = JSON.parse(JSON.stringify(text));
     return this.getTeams()
     .then(teams => {
+      if (!text.racer) {
+        return copy;
+      }
       let possibleTeams = teams.filter(team => team.hasRacer(text.racer));
       copy.team = possibleTeams.length ? possibleTeams[0].id : undefined;
       return copy;
