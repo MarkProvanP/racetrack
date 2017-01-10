@@ -21,7 +21,7 @@
         button(*ngIf='!inCreateUpdateMode', md-fab, color='primary', (click)='createNewUpdate()')
           md-icon.md-24 add
       .new-update-wrapper(*ngIf='inCreateUpdateMode')
-        new-update([team]='selectedTeam', (onstatuscreated)='onUpdateCreated()')
+        new-update([team]='selectedTeam', (onStatusCreated)='onUpdateCreated()')
       .update-card-wrapper(*ngFor="let update of selectedTeam.statusUpdates | orderBy: '-timestamp'")
         md-card.update-card
           .info-table
@@ -37,7 +37,7 @@
                 td(*ngIf='isEditing(update)')
                   md-input-container
                     input.place-input(md-input, [(ngModel)]='update.location.place')
-                  location-widget([location]='update.location', showcoords='true', hideplace='true')
+                  location-widget([location]='update.location', showCoords='true', hidePlace='true')
               tr
                 th Status
                 td(*ngIf='!isEditing(update)')  {{update.prettyStatusName()}}
@@ -78,5 +78,5 @@
               sebm-google-map-marker([latitude]='update.location.latitude',
                 [longitude]='update.location.longitude',
                 [markerDraggable]='isEditing(update)',
-                (dragend)='onMarkerDragEnd($event)')
+                (dragEnd)='onMarkerDragEnd($event)')
 

@@ -31,7 +31,7 @@ export class NewUpdateComponent implements OnInit {
       accuracy: 0,
       source: LOCATION_SOURCES.MANUAL
     },
-    notes: "Default starting status",
+    notes: "Drop off location!",
     isPublic: false,
     byUser: undefined,
     linkedTexts: []
