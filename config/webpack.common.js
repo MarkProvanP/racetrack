@@ -26,6 +26,7 @@ const HMR = helpers.hasProcessFlag('hot');
 const APP_NAME = process.env.APP_NAME;
 const METADATA = {
   title: APP_NAME,
+  appLogoSrc: "assets/img/race2_prague.jpg",
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer()
 };

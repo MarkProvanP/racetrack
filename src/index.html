@@ -20,12 +20,48 @@
   <!-- base url -->
   <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
 
+<style>
+
+body {
+  margin: 0;
+  height: 100vh;
+}
+
+.loading-wrapper {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-box {
+  padding: 20px;
+}
+
+.loading-icon {
+  height: 100px;
+}
+
+.loading-text {
+  text-align: center;
+  font-family: Roboto, sans-serif;
+}
+
+</style>
+
 </head>
 
 <body>
 
   <app>
-    Loading...
+    <div class='loading-wrapper'>
+      <div class='loading-box'>
+        <img class='loading-icon' src='<%= htmlWebpackPlugin.options.metadata.appLogoSrc %>'>
+        <div class='loading-text'>
+          Loading...
+        </div>
+      </div>
+    </div>
   </app>
 
   <% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true) { %>
