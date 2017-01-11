@@ -69,6 +69,7 @@ export class NormalTextComponent implements OnInit {
 
   canCheckinFromText() {
     if (!this.textTeam) return false;
+    if (!this.textTeam.lastCheckin) return true;
     if (_.isEmpty(this.textTeam.lastCheckin.checkinTime)) return true;
     let lastCheckinMoment = moment(this.textTeam.lastCheckin.checkinTime)
     let textMoment = moment(this.text.timestamp);
