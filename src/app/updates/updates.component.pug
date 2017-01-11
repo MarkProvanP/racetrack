@@ -1,7 +1,7 @@
 .updates-by-team.master-detail
   .teams-list.master
-    md-list
-      md-list-item(*ngFor='let team of teams', (click)='routeToTeam(team)', [ngClass]="'selected'")
+    md-nav-list
+      a(md-list-item, *ngFor='let team of teams', (click)='routeToTeam(team)', [routerLink]='getTeamLink(team)', routerLinkActive='selected')
         div(md-list-avatar)
           h1.team-number {{team.id}}
         h3(md-line) {{team.name}}
@@ -12,9 +12,11 @@
   .update-list-wrapper
     .updates-list(*ngIf='selectedTeam')
       md-card.notes-card
-        h4 Team Notes
-        md-input-container
-          textarea(md-input, [(ngModel)]='selectedTeam.notes')
+        md-card-title {{selectedTeam.name}}
+        md-card-subtitle {{selectedTeam.getPrettyRacersList()}}
+        h4 Notes
+        md-input-container.full-width
+          textarea.notes-input(md-input, [(ngModel)]='selectedTeam.notes')
         md-card-actions
           button(md-button, (click)='saveNotes()') Save
       .add-button-wrapper

@@ -41,13 +41,16 @@ export class UpdatesComponent implements OnInit {
     this.router.navigate(['/safetyteam', 'updates', team.id]);
   }
 
+  getTeamLink(team: Team) {
+    return `/safetyteam/updates/${team.id}`;
+  }
+
   saveNotes() {
     this.dataService.updateTeamAndWriteToBackend(this.selectedTeam);
   }
 
   selectUpdatesByTeam(team: Team) {
     this.selectedTeam = team;
-    console.log(this.selectedTeam);
   }
 
   getPrettyStatusName(item) {
