@@ -42,6 +42,16 @@ import { UserActionInfo } from "../common/user";
 
 import * as winston from "winston";
 import * as uuid from "uuid";
+import { DOMParser, XMLSerializer } from "xmldom";
+
+let fs = require("fs");
+let path = require("path");
+
+const TEAM_MARKER_EXISTING_DIR = path.join(process.cwd(), "src/assets/map-pin/teams");
+const TEAM_MARKER_TEMPLATE_FILE = path.join(process.cwd(), "src/assets/map-pin/template-team-marker.svg");
+const TEAM_MARKER_TEMPLATE_STRING = fs.readFileSync(TEAM_MARKER_TEMPLATE_FILE, {
+  encoding: "utf-8"
+});
 
 export interface SavedConfig {
   nodemailer: {
@@ -183,6 +193,7 @@ export class DataIntermediary {
 
   updateTeam(team: Team, user?: UserWithoutPassword): Promise<Team> {
     let depopulatedTeam = team.depopulate();
+    this.invalidateMapPinForTeam(team.id);
     return this.dbFacade.updateTeam(depopulatedTeam)
     .then(updatedTeam => this.populateTeam(updatedTeam))
     .then(result => {
@@ -396,6 +407,7 @@ export class DataIntermediary {
   }
 
 //================================================================
+
   getUser(username): Promise<User> {
     return this.dbFacade.getUser({username})
     .then(user => {
@@ -462,6 +474,63 @@ export class DataIntermediary {
 
   deleteUser(username: UserId): Promise<void> {
     return this.dbFacade.deleteUser(username)
+  }
+
+//================================================================
+
+  getTeamMapPinSVG(teamId: TeamId): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let pinPath = path.join(TEAM_MARKER_EXISTING_DIR, teamId)
+      try {
+        fs.readFile(pinPath, {
+          encoding: "utf-8"
+        }, (err, data) => {
+          if (err) {
+            // Team marker pin SVG file doesn't exist, so create new
+            let teamPinTemplate = new DOMParser().parseFromString(TEAM_MARKER_TEMPLATE_STRING);
+            this.getTeam(teamId)
+            .then(team => {
+              let teamNumberNode = teamPinTemplate.getElementById("PIN_TEXT")
+              teamNumberNode.textContent = teamId;
+              let color = team.color;
+              if (color) {
+                let pinBlobNode = teamPinTemplate.getElementById("PIN_BLOB");
+                pinBlobNode.setAttribute("style", `fill:${color}`)
+              }
+              let serializer = new XMLSerializer();
+              let svgString = serializer.serializeToString(teamPinTemplate);
+              fs.writeFile(pinPath, svgString);
+              resolve(svgString);
+            })
+            .catch(err => reject(err))
+          } else {
+            resolve(data);
+          }
+        })
+      } catch (err) {
+        console.error(`Hard exception getting map pin SVG for team ${teamId}`, err);
+        reject(err);
+      }
+    })
+  }
+
+  invalidateMapPinForTeam(teamId: TeamId) {
+    let pinPath = path.join(TEAM_MARKER_EXISTING_DIR, teamId)
+    try {
+      fs.stat(pinPath, (err, stats) => {
+        if (!err) {
+          fs.unlink(pinPath, (err) => {
+            if (err) {
+              console.error(`Error deleting map pin file: ${pinPath}`)
+            } else {
+              console.log(`successfully invalidated map pin ${pinPath}`)
+            }
+          });
+        }
+      })
+    } catch (err) {
+      console.error(`Hard exception invaliding map pin for team ${teamId}`, err);
+    }
   }
 }
 
