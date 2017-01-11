@@ -43,33 +43,38 @@ export default function miscRouterWithDb(dataIntermediate: DataIntermediary) {
   miscRouter.get('/team-pin/:id', (req, res) => {
     let teamId = req.params.id;
     let pinPath = path.join(TEAM_MARKER_EXISTING_DIR, teamId)
-    fs.readFile(pinPath, {
-      encoding: "utf-8"
-    }, (err, data) => {
-      if (err) {
-        // Team marker pin SVG file doesn't exist, so create new
-        let teamPinTemplate = new DOMParser().parseFromString(TEAM_MARKER_TEMPLATE_STRING);
-        dataIntermediate.getTeam(teamId)
-        .then(team => {
-          let teamNumberNode = teamPinTemplate.getElementById("PIN_TEXT")
-          teamNumberNode.textContent = teamId;
-          let color = team.color;
-          if (color) {
-            let pinBlobNode = teamPinTemplate.getElementById("PIN_BLOB");
-            pinBlobNode.setAttribute("style", `fill:${color}`)
-          }
-          let serializer = new XMLSerializer();
-          let svgString = serializer.serializeToString(teamPinTemplate);
+    try {
+      fs.readFile(pinPath, {
+        encoding: "utf-8"
+      }, (err, data) => {
+        if (err) {
+          // Team marker pin SVG file doesn't exist, so create new
+          let teamPinTemplate = new DOMParser().parseFromString(TEAM_MARKER_TEMPLATE_STRING);
+          dataIntermediate.getTeam(teamId)
+          .then(team => {
+            let teamNumberNode = teamPinTemplate.getElementById("PIN_TEXT")
+            teamNumberNode.textContent = teamId;
+            let color = team.color;
+            if (color) {
+              let pinBlobNode = teamPinTemplate.getElementById("PIN_BLOB");
+              pinBlobNode.setAttribute("style", `fill:${color}`)
+            }
+            let serializer = new XMLSerializer();
+            let svgString = serializer.serializeToString(teamPinTemplate);
+            res.type("image/svg+xml");
+            res.send(svgString);
+            fs.writeFile(pinPath, svgString);
+          })
+          .catch(handleServerError(req, res));
+        } else {
           res.type("image/svg+xml");
-          res.send(svgString);
-          fs.writeFile(pinPath, svgString);
-        })
-        .catch(handleServerError(req, res));
-      } else {
-        res.type("image/svg+xml");
-        res.send(data);
-      }
-    })
+          res.send(data);
+        }
+      })
+    } catch (err) {
+      console.error(`Hard exception`, err);
+      handleServerError(req, res)(err);
+    }
   })
   
   return miscRouter;
