@@ -19,7 +19,7 @@ const TEAM_MARKER_TEMPLATE_STRING = fs.readFileSync(TEAM_MARKER_TEMPLATE_FILE, {
 export default function miscRouterWithDb(dataIntermediate: DataIntermediary) {
   let miscRouter = express.Router();
 
-  miscRouter.use((req, res, next) => {
+  function AuthCheck(req, res, next) {
     winston.log('verbose', 'Misc request');
     if (req.isAuthenticated()) {
       next();
@@ -27,7 +27,7 @@ export default function miscRouterWithDb(dataIntermediate: DataIntermediary) {
       res.status(401);
       res.send();
     }
-  });
+  }
 
   function handleServerError(req, res) {
     return (err) => {
