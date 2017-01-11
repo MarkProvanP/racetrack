@@ -1,0 +1,53 @@
+md-sidenav-container.md-content
+  md-sidenav.sidebar(#start='', mode='over')
+    .user-profile
+    md-nav-list
+      a(md-list-item, [routerLink]=" ['/safetyteam', 'user', 'me'] ", routerLinkActive='active', (click)='start.toggle()')
+        .md-list-item
+          .md-list-text
+            span(md-line) {{getUsername()}}
+            |  
+            span.secondary(md-line) My profile
+      a(md-list-item, [routerLink]=" ['/safetyteam', 'user', 'logout'] ", routerLinkActive='active', (click)='start.toggle()')
+        .md-list-item
+          .md-list-text  Log out
+      a(md-list-item, [routerLink]=" ['/safetyteam', 'racers'] ", routerLinkActive='active', (click)='start.toggle()')
+        .md-list-item
+          .md-list-text  Racers
+      a(md-list-item, [routerLink]=" ['/safetyteam', 'teams'] ", routerLinkActive='active', (click)='start.toggle()')
+        .md-list-item
+          .md-list-text  Teams
+      a(md-list-item, [routerLink]=" ['/safetyteam', 'updates'] ", routerLinkActive='active', (click)='start.toggle()')
+        .md-list-item
+          .md-list-text  Updates
+      a(md-list-item, [routerLink]=" ['/safetyteam', 'user', 'list'] ", routerLinkActive='active', (click)='start.toggle()')
+        .md-list-item
+          .md-list-text  Users
+      a(md-list-item, [routerLink]=" ['/safetyteam', 'mass-text'] ", routerLinkActive='active', (click)='start.toggle()')
+        .md-list-item
+          .md-list-text  Mass Text
+      a(md-list-item, [routerLink]=" ['/safetyteam', 'import'] ", routerLinkActive='active', (click)='start.toggle()')
+        .md-list-item
+          .md-list-text  Import
+      div(*ngFor='let otherUser of getOtherUsers()')  {{otherUser.name}}
+  .md-content
+    md-toolbar.toolbar.logged-in([ngClass]='toolbarClass()')
+      button(md-icon-button, (click)='start.toggle()')
+        md-icon menu
+      |  
+      a(md-button, [routerLink]=" ['/'] ") {{ name }}
+      span.fill
+        .text-received-flash(*ngIf='getNumberUnreadTexts()')
+          a([routerLink]="['/safetyteam', 'texts', 'all']", [queryParams]="{show: 'unread'}", md-button) {{getUnreadTextsNotification()}}
+      |  
+      button(md-button, (click)='toggleGlobalTimezone()')  {{this.getTimezone().short}} Times
+      |  
+      a(md-button, [routerLink]=" ['/safetyteam/texts'] ", routerLinkActive='active') Texts
+      |  
+      a(md-button, [routerLink]=" ['/safetyteam/map'] ", routerLinkActive='active') Safety Map
+      |  
+      a(md-button, [routerLink]=" ['/safetyteam/dashboard'] ", routerLinkActive='active') Dashboard
+    md-progress-bar(mode='indeterminate', color='primary', *ngIf='loading')
+    main
+      router-outlet
+

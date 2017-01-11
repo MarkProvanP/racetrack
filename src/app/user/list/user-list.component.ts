@@ -2,12 +2,17 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 
+import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
+
 import * as Papa from "papaparse";
 
 import { UserId, UserWithoutPassword, prettyUserPrivilegesLevel, isAboveMinimumPrivilege, UserPrivileges } from '../../../common/user';
 import { PhoneNumber } from "../../../common/text";
 import { UserService } from "../../user.service";
 import { DataService } from "../../data.service";
+
+const DEFAULT_SNACKBAR_CONFIG = new MdSnackBarConfig();
+DEFAULT_SNACKBAR_CONFIG.duration = 5000;
 
 function UsernameToEmail(username: String) {
   return username + "@st-andrews.ac.uk";
@@ -39,7 +44,8 @@ export class UserListComponent implements OnInit {
   constructor(
     private userService: UserService,
     private dataService: DataService,
-    private router: Router
+    private router: Router,
+    private snackBar: MdSnackBar
   ) {
     this.loadUsers();
   }
@@ -55,7 +61,9 @@ export class UserListComponent implements OnInit {
 
   resetPassword(user: UserWithoutPassword) {
     this.dataService.resetUserPassword(user)
-    .then(res => console.log('Password updated!'));
+    .then(res => {
+      this.snackBar.open(`Reset password for ${user.name}`, undefined, DEFAULT_SNACKBAR_CONFIG);
+    })
   }
 
   ngOnInit() {
@@ -90,7 +98,10 @@ export class UserListComponent implements OnInit {
 
   deleteUser(username: UserId) {
     this.dataService.deleteUser(username)
-    .then(() => this.loadUsers());
+    .then(() => {
+      this.loadUsers();
+      this.snackBar.open(`Deleted user ${username}`, undefined, DEFAULT_SNACKBAR_CONFIG);
+    })
   }
 
   isEditingUser(user) {
@@ -108,6 +119,7 @@ export class UserListComponent implements OnInit {
   saveUser() {
     this.dataService.updateUser(this.currentlyEditingUser)
     .then(success => {
+      this.snackBar.open(`Saved user details`, undefined, DEFAULT_SNACKBAR_CONFIG)
       this.stopEditingUser()
       this.loadUsers();
     });
@@ -123,7 +135,11 @@ export class UserListComponent implements OnInit {
   createUser(user: UserWithoutPassword) {
     console.log('createUser(', user, ')')
     return this.dataService.createUser(user)
-    .then(res => this.loadUsers())
+    .then(res => {
+      this.loadUsers();
+      this.form.reset();
+      this.snackBar.open('Created user!', undefined, DEFAULT_SNACKBAR_CONFIG);
+    })
     .catch(err => {
       console.log(err);
     });

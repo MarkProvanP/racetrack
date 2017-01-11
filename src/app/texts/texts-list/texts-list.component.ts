@@ -14,6 +14,9 @@ import * as moment from "moment";
 const NUM_TEXTS_DISPLAYED_SIMULTANEOUSLY = 10;
 const DEFAULT_SHOW_OPTION = 'all';
 
+const DEFAULT_SNACKBAR_CONFIG = new MdSnackBarConfig();
+DEFAULT_SNACKBAR_CONFIG.duration = 5000;
+
 @Component({
   selector: "texts-list",
   templateUrl: "./texts-list.component.pug",
@@ -60,9 +63,7 @@ export class TextsListComponent {
   updateText(text: Text, message?: string) {
     this.textService.updateTextAndWriteToBackend(text)
     .then(res => {
-      let config = new MdSnackBarConfig();
-      config.duration = 5000;
-      this.snackBar.open(message || 'Updated text', undefined, config);
+      this.snackBar.open(message || 'Updated text', undefined, DEFAULT_SNACKBAR_CONFIG);
     })
   }
 
@@ -90,9 +91,7 @@ export class TextsListComponent {
       return this.dataService.updateTeamAndWriteToBackend(team)
     })
     .then(res => {
-      let config = new MdSnackBarConfig();
-      config.duration = 5000;
-      this.snackBar.open("Checked in team from text", undefined, config);
+      this.snackBar.open("Checked in team from text", undefined, DEFAULT_SNACKBAR_CONFIG);
     });
   }
 
