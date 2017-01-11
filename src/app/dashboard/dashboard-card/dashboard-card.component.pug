@@ -1,7 +1,7 @@
 md-card(class='dashboard-card', [ngClass]='getCardClass()')
   md-card-header
     div(md-card-avatar)
-      h1.team-number {{team.id}}
+      h1.team-number([ngStyle]='{"background-color": team.color}') {{team.id}}
     button(md-icon-button, (click)='toggleBig()')
       md-icon(*ngIf='isBig') expand_less
       md-icon(*ngIf='!isBig') expand_more

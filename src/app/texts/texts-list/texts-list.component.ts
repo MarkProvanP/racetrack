@@ -47,6 +47,7 @@ export class TextsListComponent {
   inCreateUpdateMode = false;
   inTextSendMode = false;
   selectedText;
+  selectedTextTeam: Team;
   queryParamsSub: any;
 
   readFilterOption;
@@ -98,6 +99,7 @@ export class TextsListComponent {
   createUpdateFromText(text: Text) {
     this.inCreateUpdateMode = true;
     this.selectedText = text;
+    this.selectedTextTeam = this.dataService.getTeam(text.team)
   }
 
   replyToText(text: Text) {

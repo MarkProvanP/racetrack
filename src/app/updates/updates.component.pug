@@ -3,7 +3,7 @@
     md-nav-list
       a(md-list-item, *ngFor='let team of teams', (click)='routeToTeam(team)', [routerLink]='getTeamLink(team)', routerLinkActive='selected')
         div(md-list-avatar)
-          h1.team-number {{team.id}}
+          h1.team-number([ngStyle]='{"background-color": team.color}') {{team.id}}
         h3(md-line) {{team.name}}
         p(md-line) {{team.getPrettyRacersList()}}
   .no-team-container(*ngIf='!selectedTeam')

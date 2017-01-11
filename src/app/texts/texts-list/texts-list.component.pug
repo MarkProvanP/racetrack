@@ -17,35 +17,30 @@
           [toRacer]='selectedText.racer',
           [toNumber]='selectedText.from',
           (onTextSendClose)='onTextSendClose()')
-      normal-text.text-card.normal-text(
-        [text]='text',
+      normal-text.text-card.normal-text([text]='text',
         [display]='display',
         (onMakeRead)='updateText($event, "Marked text as read")',
         (onCreateReply)='replyToText($event)',
         (onAddCheckin)='checkInTeamFromText($event)',
         (onCreateUpdate)='createUpdateFromText($event)',
         *ngIf='isInboundText(text) && text.racer')
-      app-text.text-card.normal-text(
-        [text]='text',
+      app-text.text-card.normal-text([text]='text',
         [display]='display',
         (onMakeRead)='updateText($event, "Marked text as read")',
         (onCreateReply)='replyToText($event)',
         (onAddCheckin)='checkInTeamFromText($event)',
         (onCreateUpdate)='createUpdateFromText($event)',
         *ngIf='isAppText(text) && text.racer')
-      sent-text.text-card.sent-text(
-        [text]='text',
+      sent-text.text-card.sent-text([text]='text',
         [display]='display',
         *ngIf='isOutboundText(text)')
-      unknown-text.text-card.unknown-text(
-        [text]='text',
+      unknown-text.text-card.unknown-text([text]='text',
         [display]='display',
         (onMakeRead)='updateText($event, "Marked text as read")',
         (onCreateReply)='replyToText($event)',
         *ngIf='isInboundText(text) && !text.racer')
-      .new-update-wrapper(*ngIf='inCreateUpdateMode && text == selectedText')
-        new-update(
-          [team]='text.team',
+      .new-update-wrapper(*ngIf='inCreateUpdateMode && text == selectedText && selectedTextTeam')
+        new-update([team]='selectedTextTeam',
           [text]='text',
           (onStatusCreated)='onStatusCreated()')
     div(*ngIf='textsAfterLast')

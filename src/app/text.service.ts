@@ -201,7 +201,8 @@ export class TextService {
     let url = `${this.textsUrl}/${id}`;
     return this.http.get(url, this.httpExtras)
     .toPromise()
-    .then(response => Text.fromJSON(response))
+    .then(res => res.json())
+    .then(res => Text.fromJSON(res))
     .catch(this.handleError)
   }
 
