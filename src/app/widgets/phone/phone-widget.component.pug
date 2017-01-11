@@ -1,6 +1,6 @@
-.phone-widget(*ngIf='!number')
+.phone-widget(*ngIf='!numberExists() && !edit')
   span.no-phone No phone number!
-.phone-widget(*ngIf='number && !edit')
+.phone-widget(*ngIf='numberExists() && !edit')
   span.country-code +{{number.countryCode}}
   span.number {{number.nationalNumber}}
 .phone-widget.edit(*ngIf='number && edit')

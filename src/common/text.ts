@@ -20,9 +20,13 @@ export class PhoneNumber {
     return this.countryCode == other.countryCode && this.nationalNumber == other.nationalNumber;
   }
 
+  exists() {
+    return this.countryCode && this.nationalNumber;
+  }
+
   static parse(thing): PhoneNumber {
     if (!thing) {
-      return undefined;
+      return new PhoneNumber(undefined, undefined);
     }
     if (typeof thing == "string") {
       try {
@@ -33,7 +37,7 @@ export class PhoneNumber {
         return new PhoneNumber(countryCode, nationalNumber);
       } catch (err) {
         console.error(`Error when parsing phone number "${thing}"`, err);
-        return undefined;
+        return new PhoneNumber(undefined, undefined);
       }
     } else {
       return new PhoneNumber(thing.countryCode, thing.nationalNumber);

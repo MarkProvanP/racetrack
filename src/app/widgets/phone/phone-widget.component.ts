@@ -10,4 +10,8 @@ import { PhoneNumber } from "../../../common/text";
 export class PhoneWidget {
   @Input() number: PhoneNumber;
   @Input() edit: boolean;
+
+  numberExists() {
+    return this.number && this.number.exists()
+  }
 }
