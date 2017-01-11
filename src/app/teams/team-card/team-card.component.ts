@@ -1,3 +1,5 @@
+import * as moment from "moment";
+
 import { Component, Input, OnInit, OnDestroy } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
@@ -6,6 +8,8 @@ import { Location, TeamUpdate, TeamStatus } from '../../../common/update';
 import { Racer } from '../../../common/racer';
 import { UserService } from "../../user.service";
 import { DataService } from '../../data.service';
+
+const ALLOWED_CHECKIN_DURATION = moment.duration(3, 'hours');
 
 @Component({
   selector: 'team-card',
@@ -39,6 +43,10 @@ export class TeamCardComponent implements OnInit, OnDestroy {
 
   getTeam() {
     this.team = this.dataService.getTeam(this.id);
+  }
+
+  teamHasCheckedIn() {
+    return this.team.lastCheckin && this.team.lastCheckin.byUser;
   }
 
   ngOnInit() {
@@ -122,6 +130,14 @@ export class TeamCardComponent implements OnInit, OnDestroy {
     }
   }
 
+  deleteUpdate(update: TeamUpdate) {
+    let index = this.team.statusUpdates.indexOf(update);
+    if (index > -1) {
+      this.team.statusUpdates.splice(index, 1);
+    }
+    this.dataService.updateTeamAndWriteToBackend(this.team)
+  }
+
   onStatusCreated() {
     this.inNewUpdateMode = false;
   }
@@ -136,5 +152,44 @@ export class TeamCardComponent implements OnInit, OnDestroy {
       byUser: this.userService.getUserAction()
     }
     this.dataService.updateTeamAndWriteToBackend(this.team)
+  }
+
+  clearCheckin() {
+    this.team.lastCheckin = null;
+    this.dataService.updateTeamAndWriteToBackend(this.team)
+  }
+
+  checkinProgressBarColor() {
+    let ratio = this.checkinProgressBarValue();
+    if (ratio < 100) {
+      return 'accent'
+    } else {
+      return 'warn'
+    }
+  }
+
+  getOverdueTime() {
+    let now = moment();
+    let lastCheckinTime = moment(this.team.lastCheckin.checkinTime);
+    let duration = moment.duration(now.diff(lastCheckinTime));
+    let overdue = duration.subtract(ALLOWED_CHECKIN_DURATION);
+    if (overdue.asSeconds() > 0) return overdue;
+  }
+
+  checkinProgressBarTitle() {
+    let now = moment();
+    let lastCheckinTime = moment(this.team.lastCheckin.checkinTime);
+    let duration = moment.duration(now.diff(lastCheckinTime));
+    return `Last checked in ${duration.humanize()} ago, allowed ${ALLOWED_CHECKIN_DURATION.humanize()}`
+  }
+
+  checkinProgressBarValue() {
+    let now = moment();
+    let lastCheckinTime = moment(this.team.lastCheckin.checkinTime);
+    let duration = moment.duration(now.diff(lastCheckinTime));
+    let durationSeconds = duration.asSeconds();
+    let allowedSeconds = ALLOWED_CHECKIN_DURATION.asSeconds();
+    let ratio = durationSeconds/allowedSeconds;
+    return Math.round(ratio * 100);
   }
 }

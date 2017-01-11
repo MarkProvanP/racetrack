@@ -184,12 +184,14 @@ export class DataIntermediary {
   updateTeam(team: Team, user?: UserWithoutPassword): Promise<Team> {
     let depopulatedTeam = team.depopulate();
     return this.dbFacade.updateTeam(depopulatedTeam)
-      .then(result => {
-        if (user) {
-          let newMessage = new TeamUpdatedMessage(team, user);
-          this.messageSender.sendMessageToWebClients(newMessage);
-        }
-        return team;
+    .then(updatedTeam => this.populateTeam(updatedTeam))
+    .then(result => {
+      let updatedTeam = Team.fromJSON(result)
+      if (user) {
+        let newMessage = new TeamUpdatedMessage(updatedTeam, user);
+        this.messageSender.sendMessageToWebClients(newMessage);
+      }
+      return updatedTeam;
     });
   }
 

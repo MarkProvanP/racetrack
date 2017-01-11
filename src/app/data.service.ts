@@ -127,7 +127,7 @@ export class DataService {
     return this.http.get(this.publicTeamsUrl, this.httpExtras)
                .toPromise()
                .then(response => response.json().map(Team.fromJSON))
-               .catch(this.handleError);
+               .catch(err => this.handleError(err));
   }
 
   getPublicTeam(id: TeamId): Promise<Team> {
@@ -135,7 +135,7 @@ export class DataService {
     return this.http.get(url, this.httpExtras)
       .toPromise()
       .then(response => Team.fromJSON(response.json()))
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
 //----------------------------------------------------------------------//
@@ -163,7 +163,7 @@ export class DataService {
     return this.http.get(this.teamsUrl, this.httpExtras)
                .toPromise()
                .then(response => response.json().map(Team.fromJSON))
-               .catch(this.handleError);
+               .catch(err => this.handleError(err));
   }
 
   getTeamFromBackend(id: TeamId): Promise<Team> {
@@ -171,7 +171,7 @@ export class DataService {
     return this.http.get(url, this.httpExtras)
       .toPromise()
       .then(response => Team.fromJSON(response.json()))
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
   getTeam(id: TeamId): Team {
@@ -201,7 +201,7 @@ export class DataService {
     return this.http.delete(url, this.httpExtras)
       .toPromise()
       .then(() => null)
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
   createTeam(properties): Promise<Team> {
@@ -209,7 +209,7 @@ export class DataService {
       .post(this.teamsUrl, JSON.stringify(properties), this.httpExtras)
       .toPromise()
       .then(res => Team.fromJSON(res.json()))
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
   writeTeamToBackend(team: Team): Promise<Team> {
@@ -221,7 +221,7 @@ export class DataService {
         let t = Team.fromJSON(response.json())
         return t;
       })
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
 //----------------------------------------------------------------------//
@@ -234,7 +234,7 @@ export class DataService {
     return this.http.get(this.racersUrl, this.httpExtras)
                .toPromise()
                .then(response => response.json().map(Racer.fromJSON))
-               .catch(this.handleError);
+               .catch(err => this.handleError(err));
   }
 
   getRacerFromBackend(id: RacerId): Promise<Racer> {
@@ -242,7 +242,7 @@ export class DataService {
     return this.http.get(url, this.httpExtras)
       .toPromise()
       .then(response => Racer.fromJSON(response.json()))
-      .catch(this.handleError)
+      .catch(err => this.handleError(err))
   }
 
   getRacer(id: RacerId): Racer {
@@ -272,7 +272,7 @@ export class DataService {
     return this.http.delete(url, this.httpExtras)
       .toPromise()
       .then(() => null)
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
   createRacer(properties): Promise<Racer> {
@@ -280,7 +280,7 @@ export class DataService {
       .post(this.racersUrl, JSON.stringify(properties), this.httpExtras)
       .toPromise()
       .then(res => Racer.fromJSON(res.json()))
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
   updateRacerAndWriteToBackend(racer: Racer): Promise<Racer> {
@@ -306,7 +306,7 @@ export class DataService {
         let r = Racer.fromJSON(response.json())
         return r;
       })
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
 //----------------------------------------------------------------------//
@@ -352,7 +352,7 @@ export class DataService {
     return this.http.put(url, JSON.stringify(update), this.httpExtras)
     .toPromise()
     .then(res => TeamUpdate.fromJSON(res.json()))
-    .catch(this.handleError);
+    .catch(err => this.handleError(err));
   }
 
 //----------------------------------------------------------------------//
@@ -361,7 +361,7 @@ export class DataService {
     return this.http.get(this.eventsUrl, this.httpExtras)
       .toPromise()
       .then(response => response.json().map(ThingEvent.fromJSON))
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
   getEvent(id: ThingEventId): Promise<ThingEvent> {
@@ -369,7 +369,7 @@ export class DataService {
     return this.http.get(url, this.httpExtras)
       .toPromise()
       .then(response => ThingEvent.fromJSON(response.json()))
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
   deleteEvent(event: ThingEvent): Promise<ThingEvent> {
@@ -377,7 +377,7 @@ export class DataService {
     return this.http.delete(url, this.httpExtras)
       .toPromise()
       .then(() => null)
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
   createEvent(properties): Promise<ThingEvent> {
@@ -385,7 +385,7 @@ export class DataService {
       .post(this.eventsUrl, JSON.stringify(properties), this.httpExtras)
       .toPromise()
       .then(res => ThingEvent.fromJSON(res.json()))
-      .catch(this.handleError)
+      .catch(err => this.handleError(err))
   }
 
   updateEvent(event: ThingEvent): Promise<ThingEvent> {
@@ -394,7 +394,7 @@ export class DataService {
       .put(url, JSON.stringify(event), this.httpExtras)
       .toPromise()
       .then(response => ThingEvent.fromJSON(response.json()))
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
 //----------------------------------------------------------------------//
@@ -416,7 +416,7 @@ export class DataService {
     let url = `${this.usersUrl}/${username}`;
     return this.http.get(url, this.httpExtras)
     .toPromise()
-    .catch(this.handleError)
+    .catch(err => this.handleError(err))
     .then(response => response.json())
     .then(user => UserWithoutPassword.fromJSON(user))
     .then(user => {
@@ -428,7 +428,7 @@ export class DataService {
   getUsersFromBackend(): Promise<UserWithoutPassword[]> {
     return this.http.get(this.usersUrl, this.httpExtras)
     .toPromise()
-    .catch(this.handleError)
+    .catch(err => this.handleError(err))
     .then(response => response.json())
     .then(users => users.map(user => UserWithoutPassword.fromJSON(user)))
     .then(users => {
@@ -441,7 +441,7 @@ export class DataService {
     let url = `${this.usersUrl}/${user.username}`;
     return this.http.put(url, JSON.stringify(user), this.httpExtras)
     .toPromise()
-    .catch(this.handleError)
+    .catch(err => this.handleError(err))
     .then(response => response.json())
     .then(user => UserWithoutPassword.fromJSON(user))
     .then(user => {
@@ -454,7 +454,7 @@ export class DataService {
     let url = `${this.usersUrl}/${user.username}/reset-password`;
     return this.http.put(url, {}, this.httpExtras)
     .toPromise()
-    .catch(this.handleError)
+    .catch(err => this.handleError(err))
     .then(response => response.json())
     .then(user => UserWithoutPassword.fromJSON(user))
     .then(user => {
@@ -466,7 +466,7 @@ export class DataService {
   public createUser(user): Promise<UserWithoutPassword> {
     return this.http.post(this.usersUrl, JSON.stringify(user), this.httpExtras)
     .toPromise()
-    .catch(this.handleError)
+    .catch(err => this.handleError(err))
     .then(response => response.json())
     .then(user => UserWithoutPassword.fromJSON(user))
     .then(user => {
@@ -480,7 +480,7 @@ export class DataService {
     return this.http.delete(url, {withCredentials: true})
     .toPromise()
     .then(success => this.usersObject[username] = undefined)
-    .catch(this.handleError)
+    .catch(err => this.handleError(err))
   }
 
 //----------------------------------------------------------------------//
@@ -495,7 +495,7 @@ export class DataService {
     return this.http.post(this.emailUrl, JSON.stringify(mailOptions), this.httpExtras)
     .toPromise()
     .then(res => res.json())
-    .catch(this.handleError)
+    .catch(err => this.handleError(err))
   }
 
   private handleError(error: any): Promise<any> {

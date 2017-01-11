@@ -12,6 +12,25 @@
       h4 Affiliation
       md-input-container(class='full-width')
         input(md-input, [disabled]='!inEditMode', [(ngModel)]='team.affiliation')
+      h4 Checkin Status
+      div(*ngIf='teamHasCheckedIn()')
+        h3 Last checkin
+        time-widget([time]='team.lastCheckin.checkinTime', [fromNow]='true')
+        |  by
+        user-widget([user]='team.lastCheckin.byUser.user')
+        |  at
+        time-widget([time]='team.lastCheckin.byUser.timestamp')
+        md-progress-bar(mode='determinate',
+          [color]='checkinProgressBarColor()',
+          [title]='checkinProgressBarTitle()',
+          [value]='checkinProgressBarValue()')
+        div(*ngIf='getOverdueTime()')
+          b {{getOverdueTime().humanize()}} overdue!
+      div(*ngIf='!teamHasCheckedIn()')
+        h3 Team has not checked in!
+      button(md-raised-button, color='primary', (click)='addCheckin()') Add Checkin
+      | 
+      button(md-raised-button, color='primary', (click)='clearCheckin()', [disabled]='!teamHasCheckedIn()') Clear Checkin
       h4 Notes
       md-input-container(class='full-width')
         textarea(md-input, [disabled]='!inEditMode', [(ngModel)]='team.notes')
@@ -22,6 +41,7 @@
       .status-update-list-wrapper
         md-list
           md-list-item(*ngFor="let update of team.statusUpdates | orderBy: '-timestamp' ")
+            button(md-raised-button, *ngIf='inEditMode', (click)='deleteUpdate(update)') Delete
             time-widget(md-line, [time]='update.timestamp')
             div(md-line)
               span
@@ -56,6 +76,4 @@
       button(md-raised-button, color='warn', (click)='deleteTeam()') Delete
       |  
       button(md-raised-button, color='primary', (click)='goToTeamTexts(team)') See Texts
-      |  
-      button(md-raised-button, color='primary', (click)='addCheckin()') Add checkin
 

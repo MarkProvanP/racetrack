@@ -10,6 +10,7 @@
     md-radio-group([(ngModel)]='sortOption', (change)='onSortUpdate()')
       md-radio-button([value]='sortOptions.UPDATE_TIME') Checkin Time
       md-radio-button([value]='sortOptions.TEAM_NAME') Team Name
+      md-radio-button([value]='sortOptions.TEAM_ID') Team Number
     |  
     button(md-icon-button, (click)='toggleOrder()')
       md-icon(*ngIf='sortAscending', title='Switch to sort descending order') arrow_upward

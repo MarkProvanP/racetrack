@@ -29,7 +29,7 @@ export interface DbFacadeInterface {
 
   getTeams(query) : Promise<DbFormTeam[]>;
   getTeam(query): Promise<DbFormTeam>;
-  updateTeam(team: DbFormTeam) : Promise<void>;
+  updateTeam(team: DbFormTeam) : Promise<DbFormTeam>;
   createTeam(team: DbFormTeam): Promise<void>;
   deleteTeam(id: TeamId): Promise<void>;
 

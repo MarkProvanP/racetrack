@@ -116,17 +116,16 @@ class MongoDbFacade implements DbFacadeInterface {
 //================================================================
   
   getTeams(query): Promise<DbFormTeam[]> {
-    let t = this.teamsCollection.find(query).toArray() as DbFormTeam[];
-    return Promise.resolve(t);
+    return this.teamsCollection.find(query).toArray();
   }
 
   getTeam(query): Promise<DbFormTeam> {
-    let t = this.teamsCollection.findOne(query) as DbFormTeam;
-    return Promise.resolve(t);
+    return this.teamsCollection.findOne(query);
   }
 
-  updateTeam(team: DbFormTeam): Promise<void> {
-    return this.teamsCollection.updateOne({id: team.id}, { $set: team });
+  updateTeam(team: DbFormTeam): Promise<DbFormTeam> {
+    return this.teamsCollection.findOneAndReplace({id: team.id}, team, { returnNewDocument: true })
+    .then(res => res.value)
   }
 
   createTeam(team: DbFormTeam): Promise<void> {

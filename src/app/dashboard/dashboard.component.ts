@@ -9,7 +9,8 @@ const DEFAULT_SHOW_OPTION = 'all';
 
 const SORT_OPTIONS = {
   UPDATE_TIME: "lastCheckin.checkinTime",
-  TEAM_NAME: "name"
+  TEAM_NAME: "name",
+  TEAM_ID: "id"
 }
 const DEFAULT_SORT_OPTION = SORT_OPTIONS.UPDATE_TIME;
 
@@ -22,7 +23,7 @@ export class DashboardComponent implements OnInit {
   allTeams: Team[] = [];
   filteredTeams: Team[];
   queryParamsSub: any;
-  teamsFilterOption: any;
+  teamsFilterOption: any = DEFAULT_SHOW_OPTION;
 
   sortOption = DEFAULT_SORT_OPTION;
 
