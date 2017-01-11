@@ -111,6 +111,7 @@ import textsRouterWithDb from "./routes/texts.routes";
 import updatesRouterWithDb from "./routes/updates.routes";
 import eventsRouterWithDb from "./routes/events.routes";
 import usersRouterWithDb from "./routes/users.routes";
+import miscRouterWithDb from "./routes/misc.routes";
 
 import { SavedConfig, GetDataIntermediary } from "./data-intermediate";
 import { DbFacadeInterface } from './db/db-facade';
@@ -447,6 +448,9 @@ setup(MONGODB_URI)
 
     let publicRouter = publicRouterWithDb(dataIntermediate);
     apiRouter.use('/public', publicRouter);
+
+    let miscRouter = miscRouterWithDb(dataIntermediate);
+    apiRouter.use('/misc', miscRouter);
 
     apiRouter.post("/email", (req, res) => {
       let mailOptions = req.body;
