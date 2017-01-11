@@ -10,7 +10,7 @@
     sebm-google-map-marker(*ngFor='let team of teams | teamHasUpdate ',
       [latitude]='(team.getLastUpdate().location.latitude)',
       [longitude]='(team.getLastUpdate().location.longitude)',
-      [iconUrl]='defaultMapSettings.teamIconUrl',
+      [iconUrl]='getIconUrlForTeam(team)',
       [title]='team.name')
       sebm-google-map-info-window
         table
@@ -33,8 +33,10 @@
     .list
       .list-item(*ngFor='let team of teams', [ngClass]='{"expanded": isTeamExpanded(team)}')
         .list-item-title
-          .text {{team.name}}
-          .button((click)='moveMapToTeam(team)')
+          .text
+            b.team-number {{team.id}}
+            | {{team.name}}
+          .button((click)='moveMapToTeam(team)', [ngStyle]='{color: team.color}')
             md-icon.small-button-icon place
           .button((click)='toggleTeamExpand(team)')
             md-icon.small-button-icon(*ngIf='!isTeamExpanded(team)') expand_more

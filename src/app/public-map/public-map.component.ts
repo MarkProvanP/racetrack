@@ -40,6 +40,10 @@ export class PublicMapComponent implements OnInit {
     private router: Router
   ) {}
 
+  getIconUrlForTeam(team: Team) {
+    return `/r2bcknd/misc/team-pin/${team.id}`
+  }
+
   showingAllTeams() {
     if (this.teamShowingProgress) {
       return []
