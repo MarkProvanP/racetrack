@@ -66,4 +66,5 @@ npm-debug.log
 .env
 
 # Generated team pin marker SVG files
-src/assets/map-pin/teams
+src/assets/map-pin/teams/*
+!src/assets/map-pin/teams/.empty
