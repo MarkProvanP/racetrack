@@ -20,7 +20,7 @@ export class PublicMapComponent implements OnInit {
   hostel = {
     lat: 50.0718908,
     lng: 14.4462584,
-    iconUrl: '/assets/map-pin/Map_marker-64.png'
+    iconUrl: '/assets/map-pin/chequered-map-marker.svg'
   }
 
   polylineSettings = {

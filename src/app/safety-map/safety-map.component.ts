@@ -37,7 +37,7 @@ export class SafetyMapComponent implements OnInit {
   hostel = {
     lat: 50.0718908,
     lng: 14.4462584,
-    iconUrl: '/assets/map-pin/smaller-map-marker.svg'
+    iconUrl: '/assets/map-pin/chequered-map-marker.svg'
   }
 
   expandedTeam: Team;
