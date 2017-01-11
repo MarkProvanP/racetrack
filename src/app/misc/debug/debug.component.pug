@@ -9,3 +9,17 @@ div
     md-input-container
       textarea(md-input, [(ngModel)]='email.body', placeholder='Body:')
     button(md-raised-button, color='primary', (click)='sendEmail()') Send
+  h2 Give everyone pretty colours!
+    button(md-raised-button, color='primary', (click)='prettyColors()') Prettify!
+    table
+      thead
+        tr
+          td Id
+          td Name
+          td Color
+      tbody
+        tr(*ngFor='let team of teams | orderBy: "+id"')
+          td {{team.id}}
+          td {{team.name}}
+          td
+            input(type='color', [(ngModel)]='team.color')

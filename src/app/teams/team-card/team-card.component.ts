@@ -1,4 +1,5 @@
 import * as moment from "moment";
+import randomColor = require("randomcolor");
 
 import { Component, Input, OnInit, OnDestroy } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -39,6 +40,10 @@ export class TeamCardComponent implements OnInit, OnDestroy {
     this.dataService.addTeamsChangedListener(teams => {
       this.getTeam();
     })
+  }
+
+  randomColor() {
+    this.team.color = randomColor()
   }
 
   getTeam() {

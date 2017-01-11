@@ -6,7 +6,9 @@
         input(md-input, placeholder='Team name', [(ngModel)]='team.name')
     md-card-content
       md-slide-toggle([(ngModel)]='team.inEurope', (change)='updateTeam()') In Europe?
+      h4 Color
       input(type='color', [(ngModel)]='team.color', [disabled]='!inEditMode')
+      button(md-raised-button, (click)='randomColor()', *ngIf='inEditMode') Random
       h4 Team number
       p {{team.id}}
       h4 Affiliation
