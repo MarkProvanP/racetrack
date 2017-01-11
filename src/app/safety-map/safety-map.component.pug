@@ -10,6 +10,7 @@
     sebm-google-map-marker(*ngFor='let team of teams | teamHasUpdate ',
       [latitude]='(team.getLastUpdate().location.latitude)',
       [longitude]='(team.getLastUpdate().location.longitude)',
+      [iconUrl]='defaultMapSettings.teamIconUrl',
       [title]='team.name')
       sebm-google-map-info-window
         table

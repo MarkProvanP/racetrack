@@ -17,6 +17,7 @@ export class SafetyMapComponent implements OnInit {
     lat: 53.612805,
     lng: 5.301865,
     zoom: 6,
+    teamIconUrl: '/assets/map-pin/template-team-marker.svg'
   }
 
   currentMapSettings = JSON.parse(JSON.stringify(this.defaultMapSettings));
