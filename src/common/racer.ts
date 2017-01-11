@@ -5,7 +5,7 @@ export type RacerId = string;
 export class Racer {
   id: RacerId;
   name: string;
-  phones: ContactNumber[];
+  phones: ContactNumber[] = [];
   email: string;
 
   makeClone() {
@@ -36,6 +36,7 @@ export class Racer {
   }
 
   getPrimaryContactNumber() {
+    if (!this.phones) return;
     let primary = this.phones.filter(contact => contact.preferred);
     if (!primary) {
       return null;
@@ -45,6 +46,7 @@ export class Racer {
   }
 
   hasPhoneNumber(phoneNumber: PhoneNumber | string): boolean {
+    if (!this.phones) return false;
     return this.phones.filter(contact => {
       if (contact.number) {
         return contact.number.equals(phoneNumber);

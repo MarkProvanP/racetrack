@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 
 import { Team } from '../../../common/team';
 import { Location, TeamUpdate, TeamStatus } from '../../../common/update';
+import { PhoneNumber, ContactNumber } from "../../../common/text";
 import { Racer, RacerId } from '../../../common/racer';
 import { DataService } from '../../data.service';
 
@@ -65,10 +66,13 @@ export class RacerCardComponent implements OnInit, OnDestroy {
   }
 
   addNumberToRacer() {
-    let newContact = {
-      number: undefined,
-      notes: undefined,
-      preferred: true
+    let newContact = new ContactNumber(
+      new PhoneNumber(),
+      undefined,
+      true
+    );
+    if (!this.racer.phones) {
+      this.racer.phones = [];
     }
     this.racer.phones.push(newContact);
   }

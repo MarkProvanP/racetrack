@@ -27,7 +27,7 @@
                     |  {{contact.notes || &quot;No notes&quot;}}
                   md-checkbox([(ngModel)]='contact.preferred', disabled) Preferred
                 .contact-edit.contact-row(*ngIf='inEditMode')
-                  phone-widget([number]='contact.number', [edit]=true)
+                  phone-widget([number]='contact.number', [edit]='true')
                   md-input-container
                     input(md-input, placeholder='Notes', [(ngModel)]='contact.notes')
                   md-checkbox([(ngModel)]='contact.preferred') Preferred
