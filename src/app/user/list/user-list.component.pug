@@ -2,7 +2,7 @@
   md-tab-group
     md-tab(label='List')
       .user-cards
-        md-card.user-card(*ngFor='let user of users')
+        md-card.user-card(*ngFor='let user of users | orderBy: "+username"')
           table
             tr
               th Username

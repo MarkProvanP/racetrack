@@ -1,7 +1,10 @@
 .updates-by-team.master-detail
   .teams-list.master
     md-nav-list
-      a(md-list-item, *ngFor='let team of teams', (click)='routeToTeam(team)', [routerLink]='getTeamLink(team)', routerLinkActive='selected')
+      a(md-list-item, *ngFor="let team of teams | orderBy: '+id'",
+      (click)='routeToTeam(team)',
+      [routerLink]='getTeamLink(team)',
+      routerLinkActive='selected')
         div(md-list-avatar)
           h1.team-number([ngStyle]='{"background-color": team.color}') {{team.id}}
         h3(md-line) {{team.name}}

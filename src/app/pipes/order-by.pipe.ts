@@ -10,6 +10,12 @@ import * as moment from "moment";
 })
 export class OrderByPipe implements PipeTransform {
   static _orderByComparator(a: any, b: any): number {
+    let compareAsNumbers = (!isNaN(parseFloat(a)) || isFinite(a))
+      || (!isNaN(parseFloat(b)) || isFinite(b));
+    if (compareAsNumbers && a && b) {
+      if (parseFloat(a) < parseFloat(b)) return -1;
+      if (parseFloat(a) > parseFloat(b)) return 1;
+    }
     let momentA = moment(a);
     let momentB = moment(b);
     let compareAsDates = momentA.isValid() && momentB.isValid();
@@ -18,20 +24,14 @@ export class OrderByPipe implements PipeTransform {
       if (diff < 0) { return -1 }
       if (diff > 0) { return 1 }
       return 0;
-    }
-    let compareAsStrings = (isNaN(parseFloat(a)) || !isFinite(a))
-      || (isNaN(parseFloat(b)) || !isFinite(b));
-    if (compareAsStrings && a && b) {
+    } else {
       if (a.toLowerCase() < b.toLowerCase()) return -1;
       if (a.toLowerCase() > b.toLowerCase()) return 1;
-    } else {
-      if (parseFloat(a) < parseFloat(b)) return -1;
-      if (parseFloat(a) > parseFloat(b)) return 1;
     }
     return 0;
   }
 
-  transform(input: any, [config = '+']): any {
+  transform(input: any, config: any): any {
     if (!Array.isArray(input)) return input;
 
     input = input.slice(0);

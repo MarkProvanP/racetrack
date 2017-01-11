@@ -1,6 +1,8 @@
 .texts-by-racer.master-detail
   .racers-list.master
     md-nav-list
-      a(md-list-item, *ngFor='let racer of racers', [routerLink]='getRacerLink(racer)', routerLinkActive='selected')
+      a(md-list-item, *ngFor='let racer of racers | orderBy: "+name" ',
+      [routerLink]='getRacerLink(racer)',
+      routerLinkActive='selected')
         h3(md-line)  ({{numberUnreadMessagesForRacer(racer)}}) {{racer.name}}
   texts-list([texts]='selectedRacerTexts', [display]='displayOptions', *ngIf='selectedRacerTexts')

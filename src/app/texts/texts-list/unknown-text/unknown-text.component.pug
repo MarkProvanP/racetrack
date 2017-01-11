@@ -12,7 +12,7 @@ md-card.text-card.unknown-text([ngClass]='{"linking": inLinkingMode}')
       .master-detail
         .racers-list.master
           md-list
-            md-list-item(*ngFor='let racer of racersList', (click)='pickRacer(racer)')
+            md-list-item(*ngFor='let racer of racersList | orderBy: "+name" ', (click)='pickRacer(racer)')
               | {{racer.name}}
               i(*ngIf='selectedRacer == racer') - Selected
         .detail

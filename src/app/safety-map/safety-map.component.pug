@@ -31,7 +31,7 @@
     .list-title
       h3 Teams
     .list
-      .list-item(*ngFor='let team of teams', [ngClass]='{"expanded": isTeamExpanded(team)}')
+      .list-item(*ngFor='let team of teams | orderBy: "+id" ', [ngClass]='{"expanded": isTeamExpanded(team)}')
         .list-item-title
           .text
             b.team-number {{team.id}}

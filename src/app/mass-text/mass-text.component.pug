@@ -46,7 +46,7 @@
             th Response time
             th Response text
         tbody
-          tr(*ngFor='let racer of racers', [ngClass]='getRacerRowClass(racer)')
+          tr(*ngFor='let racer of racers | orderBy: "+name"', [ngClass]='getRacerRowClass(racer)')
             td {{getTeamForRacer(racer).name}}
             td {{racer.name}}
             td

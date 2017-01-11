@@ -26,16 +26,13 @@
     sebm-google-map-polyline(*ngIf='teamShowingProgress',
       [strokeColor]='polylineSettings.strokeColor',
       [strokeWeight]='polylineSettings.strokeWeight',
-      [strokeOpacity]='polylineSettings.strokeOpacity'
-    )
+      [strokeOpacity]='polylineSettings.strokeOpacity')
       sebm-google-map-polyline-point(*ngFor='let update of teamStatusUpdates()',
         [latitude]='update.location.latitude',
-        [longitude]='update.location.longitude'
-      )
+        [longitude]='update.location.longitude')
     sebm-google-map-marker(*ngFor='let update of teamStatusUpdates()',
       [latitude]='update.location.latitude',
-      [longitude]='update.location.longitude'
-    )
+      [longitude]='update.location.longitude')
       sebm-google-map-info-window
         table
           tr
@@ -56,7 +53,8 @@
         md-icon keyboard_backspace
       h3 Progress for {{teamShowingProgress.name}}
     .list
-      .list-item(*ngFor='let team of showingAllTeams()', [ngClass]='{"expanded": isTeamExpanded(team)}')
+      .list-item(*ngFor='let team of showingAllTeams() | orderBy: "+id" ',
+        [ngClass]='{"expanded": isTeamExpanded(team)}')
         .list-item-title
           .text
             b.team-number {{team.id}}
