@@ -45,8 +45,8 @@ export class TextFilterOptions {
       if (this.hasTeam) { if (!text.team) return false }
       if (!text.team || text.team != this.team.id) return false;
     }
-    if (text instanceof InboundText && this.read != undefined) {
-      if (!!(<InboundText> text).readBy != this.read) return false;
+    if (this.read != undefined) {
+      if (text.isRead() != this.read) return false;
     }
     if (text instanceof OutboundText && this.read != undefined) {
       return false;
