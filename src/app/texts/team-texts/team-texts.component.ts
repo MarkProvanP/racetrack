@@ -13,8 +13,8 @@ import { TextService, TextFilterOptions } from '../../text.service';
   styleUrls: ["./team-texts.component.scss"]
 })
 export class TeamTextsComponent implements OnInit {
-  @Input() texts: Text[];
-  teams: Team[];
+  @Input() texts: Text[] = [];
+  teams: Team[] = [];
   selectedTeam: Team;
   selectedTeamTexts: Text[];
   displayOptions = {
