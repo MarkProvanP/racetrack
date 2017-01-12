@@ -1,0 +1,18 @@
+.add-non-native-text-component-wrapper
+  md-card
+    h1 Add non-native text
+    table
+      tr
+        th To
+        td
+          phone-widget([number]='newText.to', edit='true')
+      tr
+        th From
+        td
+          phone-widget([number]='newText.from', edit='true')
+      tr
+        th Text
+        td
+          md-input-container.full-width
+            textarea.text-body(md-input, [(ngModel)]='newText.body')
+    button(md-raised-button, color='primary', (click)='createNonNativeText()') Add 

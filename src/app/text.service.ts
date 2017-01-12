@@ -203,7 +203,7 @@ export class TextService {
     .toPromise()
     .then(res => res.json())
     .then(res => Text.fromJSON(res))
-    .catch(this.handleError)
+    .catch(err => this.handleError(err))
   }
 
   private getAllTextsFromBackend(): Promise<Text[]> {
@@ -211,7 +211,7 @@ export class TextService {
     .toPromise()
     .then(response => response.json()
     .map(text => Text.fromJSON(text)))
-    .catch(this.handleError)
+    .catch(err => this.handleError(err))
     .catch(err => {
       console.error("Error getting all texts from backend, leaving no texts")
       return [];
@@ -227,7 +227,7 @@ export class TextService {
         let t = Text.fromJSON(response.json());
         return t;
       })
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
   }
 
   sendText(to: PhoneNumber, message: string): Promise<OutboundText> {
@@ -242,7 +242,14 @@ export class TextService {
       .toPromise()
       .then(response => OutboundText.fromJSON(response.json()))
       .then(text => this.addText(text))
-      .catch(this.handleError);
+      .catch(err => this.handleError(err));
+  }
+
+  createNonNativeText(properties) {
+    return this.http.post(`${this.textsUrl}/non-native`, JSON.stringify(properties), this.httpExtras)
+    .toPromise()
+    .then(res => res.json())
+    .catch(err => this.handleError(err))
   }
 
   private handleError(error: any): Promise<any> {

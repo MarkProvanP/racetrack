@@ -1,0 +1,17 @@
+.add-non-native-text-component-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  md-card {
+    margin: 20px;
+  }
+
+  .text-body {
+    resize: vertical;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+}

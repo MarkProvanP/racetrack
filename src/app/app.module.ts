@@ -26,6 +26,7 @@ import { AllTextsComponent } from './texts/all-texts';
 import { TeamTextsComponent } from './texts/team-texts';
 import { RacerTextsComponent } from './texts/racer-texts';
 import { TextsListComponent } from './texts/texts-list';
+import { AddNonNativeTextComponent } from "./texts/non-native";
 import { TextsComponent } from './texts';
 import { RacersComponent } from './racers';
 import { RacerCardComponent } from './racers/racer-card';
@@ -43,6 +44,7 @@ import { NormalTextComponent } from './texts/texts-list/normal-text';
 import { AppTextComponent } from './texts/texts-list/app-text';
 import { SentTextComponent } from './texts/texts-list/sent-text';
 import { UnknownTextComponent } from './texts/texts-list/unknown-text';
+import { NonNativeInboundTextComponent } from "./texts/texts-list/non-native-inbound-text";
 import { MassTextComponent } from './mass-text';
 import { ImportComponent } from "./import";
 import { UpdatesComponent } from "./updates";
@@ -101,6 +103,7 @@ const APP_PROVIDERS = [
     TeamTextsComponent,
     RacerTextsComponent,
     TextsListComponent,
+    AddNonNativeTextComponent,
     TextsComponent,
     RacersComponent,
     RacerCardComponent,
@@ -118,6 +121,7 @@ const APP_PROVIDERS = [
     AppTextComponent,
     SentTextComponent,
     UnknownTextComponent,
+    NonNativeInboundTextComponent,
     MassTextComponent,
     ImportComponent,
     UpdatesComponent,

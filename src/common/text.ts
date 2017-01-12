@@ -83,10 +83,16 @@ export abstract class Text {
       return InboundText.fromJSON(obj);
     } else if (obj.text_subclass == 'OutboundText') {
       return OutboundText.fromJSON(obj);
+    } else if (obj.text_subclass == 'NonNativeInboundText') {
+      return NonNativeInboundText.fromJSON(obj);
     } else {
       // For non-updated ones!
       return InboundText.fromJSON(obj);
     }
+  }
+
+  constructor(id: TextId, properties) {
+    this.id = id;
   }
 
   toDbForm(): Text {
@@ -100,6 +106,29 @@ export abstract class Text {
       copy.team = anyThis.team.id ? anyThis.team.id : this.team;
     }
     return copy;
+  }
+}
+
+export class NonNativeInboundText extends Text {
+  text_subclass = "NonNativeInboundText";
+
+  addedBy: UserActionInfo;
+
+  static fromJSON(obj) {
+    let clone = JSON.parse(JSON.stringify(obj));
+    return new NonNativeInboundText(clone.id, clone);
+  }
+
+  isRead() {
+    return true;
+  }
+
+  constructor(id: TextId, properties) {
+    super(id, properties);
+    this.body = properties.body;
+    this.to = properties.to;
+    this.from = properties.from;
+    this.timestamp = properties.timestamp;
   }
 }
 
@@ -141,8 +170,7 @@ export class OutboundText extends Text {
   }
 
   constructor(id: TextId, properties) {
-    super();
-    this.id = id;
+    super(id, properties);
     this.body = properties.body;
     this.to = PhoneNumber.parse(properties.to);
     this.from = PhoneNumber.parse(properties.from);
@@ -190,8 +218,7 @@ export class InboundText extends Text {
   }
 
   constructor(id: TextId, properties) {
-    super();
-    this.id = id;
+    super(id, properties);
     this.body = properties.body;
     this.to = PhoneNumber.parse(properties.to);
     this.from = PhoneNumber.parse(properties.from);

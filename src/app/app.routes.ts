@@ -4,6 +4,7 @@ import { TextsComponent } from './texts';
 import { AllTextsComponent } from './texts/all-texts';
 import { RacerTextsComponent } from './texts/racer-texts';
 import { TeamTextsComponent } from './texts/team-texts';
+import { AddNonNativeTextComponent } from "./texts/non-native";
 
 import { RacersComponent } from './racers';
 import { TeamsComponent } from './teams';
@@ -62,6 +63,9 @@ export const ROUTES: Routes = [
               { path: '', component: TeamTextsComponent },
               { path: ':id', component: TeamTextsComponent }
             ]
+          },
+          {
+            path: 'non-native', component: AddNonNativeTextComponent
           }
         ]
       },

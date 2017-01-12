@@ -24,7 +24,8 @@ import {
   OutboundText,
   AppText,
   TwilioInboundText,
-  TwilioOutboundText
+  TwilioOutboundText,
+  NonNativeInboundText,
 } from "../common/text";
 import { UserWithoutPassword, UserId } from "../common/user";
 import {
@@ -275,6 +276,24 @@ export class DataIntermediary {
     .catch(err => {
       console.error(`updateText(${this.shortDebugText(text)}, ${user}})`, err);
       throw err;
+    })
+  }
+
+  public addNonNativeInboundText(textProperties): Promise<Text> {
+    let id = uuid.v4();
+    let createdText = new NonNativeInboundText(id, textProperties);
+    let inDbForm = createdText.toDbForm();
+    return this.dbFacade.createText(inDbForm)
+    .then(addedToDb => this.populateText(inDbForm))
+    .then(populated => {
+      let text = Text.fromJSON(populated);
+      let newMessage = new TextReceivedMessage(text);
+      this.messageSender.sendMessageToWebClients(newMessage);
+      return text;
+    })
+    .catch(err => {
+      console.error(`addNonNativeInboundText${textProperties}`, err);
+      return Promise.reject(err);
     })
   }
 

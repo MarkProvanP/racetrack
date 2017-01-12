@@ -10,7 +10,8 @@ export class TextsComponent implements OnInit {
   tabs = [
     {link: 'all', label: 'All'},
     {link: 'by-team', label: 'By Team'},
-    {link: 'by-racer', label: 'By Racer'}
+    {link: 'by-racer', label: 'By Racer'},
+    {link: 'non-native', label: 'Add from elsewhere'}
   ]
   activeLinkIndex = 0;
 
