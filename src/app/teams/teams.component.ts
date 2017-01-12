@@ -25,7 +25,10 @@ export class TeamsComponent implements OnInit {
   }
 
   getTeams() {
-    this.teams = this.dataService.getTeams();
+    this.dataService.getTeamsFromBackend()
+    .then(teams => {
+      this.teams = teams;
+    })
   }
 
   ngOnInit(): void {

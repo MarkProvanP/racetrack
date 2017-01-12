@@ -35,10 +35,6 @@ export class TeamTextsComponent implements OnInit {
     return `/safetyteam/texts/by-team/${team.id}`;
   }
 
-  getTeams() {
-    this.teams = this.dataService.getTeams();
-  }
-
   selectTextsByTeam(team: Team) {
     this.selectedTeam = team;
     if (team) {
@@ -71,7 +67,14 @@ export class TeamTextsComponent implements OnInit {
       this.onTextsChanged();
     });
     this.texts = this.textService.getAllTexts();
-    this.getTeams();
+    this.dataService.getTeamsFromBackend()
+    .then(teams => {
+      this.teams = teams;
+      this.paramsSub = this.activatedRoute.params.subscribe(params => {
+        let team = this.teams.filter(team => team.id == params['id'])[0]
+        this.selectTextsByTeam(team);
+      });
+    })
     this.paramsSub = this.activatedRoute.params.subscribe(params => {
       let team = this.teams.filter(team => team.id == params['id'])[0]
       this.selectTextsByTeam(team);

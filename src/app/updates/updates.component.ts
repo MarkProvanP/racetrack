@@ -15,7 +15,7 @@ import { TeamUpdate, TeamStatus, prettyStatusName } from "../../common/update";
   styleUrls: ['./updates.component.scss']
 })
 export class UpdatesComponent implements OnInit {
-  teams: Team[];
+  teams: Team[] = [];
   selectedTeam: Team
   inCreateUpdateMode: boolean = false;
   statusEnum = TeamStatus;
@@ -82,7 +82,14 @@ export class UpdatesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.teams = this.dataService.getTeams();
+    this.dataService.getTeamsFromBackend()
+    .then(teams => {
+      this.teams = teams;
+      this.paramsSub = this.activatedRoute.params.subscribe(params => {
+        let team = this.teams.filter(team => team.id == params['id'])[0]
+        this.selectUpdatesByTeam(team);
+      });
+    })
     this.paramsSub = this.activatedRoute.params.subscribe(params => {
       let team = this.teams.filter(team => team.id == params['id'])[0]
       this.selectUpdatesByTeam(team);

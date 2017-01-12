@@ -59,7 +59,10 @@ export class SafetyMapComponent implements OnInit {
       this.teams = teams;
     })
     this.dataService.addUpdatesChangedListener(updates => {
-      this.teams = this.dataService.getTeams();
+      this.dataService.getTeamsFromBackend()
+      .then(teams => {
+        this.teams = teams;
+      })
     })
   }
 
@@ -79,6 +82,9 @@ export class SafetyMapComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.teams = this.dataService.getTeams()
+    this.dataService.getTeamsFromBackend()
+    .then(teams => {
+      this.teams = teams;
+    })
   }
 }
