@@ -2,8 +2,18 @@
   height: 100vh;
 }
 
+.inline {
+  display: inline-block;
+}
+
 .team-number {
   margin-right: 5px;
+  border: 1px solid black;
+  border-radius: 100%;
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  text-align: center;
 }
 
 $padding-amount: 12px;
@@ -40,9 +50,19 @@ $reduced-padding-amount: 6px;
   background-color: #f1f1f1;
   height: 24px;
 
-  h3 {
+  display: flex;
+  align-items: center;
+
+  .title {
     margin: 0px;
-    display: inline-block;
+  }
+
+  .fill {
+    flex: 1;
+  }
+
+  .toggle {
+    margin: 0px;
   }
 }
 
@@ -51,6 +71,13 @@ $reduced-padding-amount: 6px;
 .public-map-container {
   flex: 1;
   position: relative;
+}
+
+.no-updates {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .list {

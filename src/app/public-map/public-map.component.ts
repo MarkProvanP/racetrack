@@ -32,6 +32,7 @@ export class PublicMapComponent implements OnInit {
   expandedTeam: Team;
   teamShowingProgress: Team;
   showingTeamId: TeamId;
+  allProgressLines: boolean = false;
   paramsSub: any;
 
   constructor(
