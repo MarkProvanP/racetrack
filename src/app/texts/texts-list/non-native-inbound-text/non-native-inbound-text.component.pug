@@ -6,10 +6,16 @@ md-card.text-card.text-card-normal([ngClass]='{unread: !text.readBy}')
           phone-widget([number]='text.from')
         |  - 
         span(*ngIf='textRacer') {{textRacer.name}}
+        span.error(*ngIf='!textRacer') No Racer!
         |  - 
         span(*ngIf='textTeam') {{textTeam.name}}
-        |  
-        span.error(*ngIf='!textTeam') ERROR: No Team for Racer!
+        span.error(*ngIf='!textTeam') No Team!
+      .added-by(*ngIf='text.addedBy')
+        | Added by
+        user-widget([user]='text.addedBy.user')
+        | at 
+        time-widget([time]='text.addedBy.timestamp')
+      | Text timestamp
       time-widget([time]='text.timestamp')
       .text-title(*ngIf='!display.oneline')
         div(*ngIf='display.number')
@@ -23,12 +29,6 @@ md-card.text-card.text-card-normal([ngClass]='{unread: !text.readBy}')
     |  at
     time-widget([time]='text.readBy.timestamp')
   md-card-actions
-    button(md-icon-button, (click)='replyToText()', [title]='"Reply to text"')
-      md-icon reply
-    |  
-    button(md-icon-button, (click)='markTextAsRead()', [disabled]='text.readBy', [title]='"Mark text as read"')
-      md-icon done
-    |  
     button(md-icon-button, [disabled]='!canCheckinFromText()', (click)='addCheckIn()', [title]='"Add checkin for team"')
       md-icon update
     |  

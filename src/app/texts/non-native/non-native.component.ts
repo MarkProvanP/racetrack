@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 
 import { TextService } from "../../text.service";
+import { UserService } from "../../user.service";
 import { PhoneNumber } from "../../../common/text";
 
 import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
@@ -17,10 +18,12 @@ export class AddNonNativeTextComponent {
     to: new PhoneNumber(undefined, undefined),
     from: new PhoneNumber(undefined, undefined),
     body: undefined,
-    timestamp: undefined
+    timestamp: undefined,
+    addedBy: undefined
   }
   constructor(
     private textService: TextService,
+    private userService: UserService,
     private snackBar: MdSnackBar
   ) {}
 
@@ -32,7 +35,8 @@ export class AddNonNativeTextComponent {
         to: new PhoneNumber(undefined, undefined),
         from: new PhoneNumber(undefined, undefined),
         body: undefined,
-        timestamp: undefined
+        timestamp: undefined,
+        addedBy: this.userService.getUserAction()
       }
     })
   }

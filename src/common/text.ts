@@ -126,9 +126,10 @@ export class NonNativeInboundText extends Text {
   constructor(id: TextId, properties) {
     super(id, properties);
     this.body = properties.body;
-    this.to = properties.to;
-    this.from = properties.from;
+    this.to = PhoneNumber.parse(properties.to);
+    this.from = PhoneNumber.parse(properties.from);
     this.timestamp = properties.timestamp;
+    this.addedBy = UserActionInfo.fromJSON(properties.addedBy)
   }
 }
 
