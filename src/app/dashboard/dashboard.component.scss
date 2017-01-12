@@ -13,6 +13,13 @@
     display: flex;
     flex-direction: column;
 
+    .loading {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     md-card {
       margin: 5px;
     }

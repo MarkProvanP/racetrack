@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit {
   queryParamsSub: any;
   teamsFilterOption: any = DEFAULT_SHOW_OPTION;
 
+  loading: boolean = false;
   sortOption = DEFAULT_SORT_OPTION;
 
   constructor(
@@ -46,8 +47,13 @@ export class DashboardComponent implements OnInit {
   }
 
   getTeams(): void {
-    this.allTeams = this.dataService.getTeams();
-    this.filterTeams();
+    this.loading = true;
+    this.dataService.getTeamsFromBackend()
+    .then(teams => {
+      this.allTeams = teams;
+      this.loading = false;
+      this.filterTeams();
+    })
   }
 
   filterTeams() {
@@ -62,14 +68,14 @@ export class DashboardComponent implements OnInit {
 
   onFilterUpdate() {
     let navigationExtras = {
-      queryParams: { show: this.teamsFilterOption }
+      queryParams: { show: this.teamsFilterOption, sort: this.sortOption }
     }
     this.router.navigate([], navigationExtras);
   }
 
   onSortUpdate() {
     let navigationExtras = {
-      queryParams: { sort: this.sortOption }
+      queryParams: { show: this.teamsFilterOption, sort: this.sortOption }
     }
     this.router.navigate([], navigationExtras)
   }
