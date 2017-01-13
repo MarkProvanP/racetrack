@@ -54,7 +54,7 @@
     "preversion": "npm test",
     "version": "npm run build",
     "postversion": "git push && git push --tags",
-    "backend": "node bin/server/server",
+    "backend": "node --optimize_for_size --max_old_space_size=920 --gc-interval=100 bin/server/server",
     "backend:build": "tsc src/server/server.ts --outDir bin",
     "backend:clean": "npm run rimraf -- bin",
     "postinstall": "npm run build:prod && npm run backend:build"
