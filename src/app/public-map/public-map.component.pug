@@ -6,7 +6,6 @@
     sebm-google-map-marker(*ngFor='let team of showingAllTeams() | teamHasUpdate ',
       [latitude]='(team.getLastUpdate().location.latitude)',
       [longitude]='(team.getLastUpdate().location.longitude)',
-      [iconUrl]='getIconUrlForTeam(team)',
       [title]='team.name')
       sebm-google-map-info-window
         table
@@ -44,7 +43,6 @@
         [latitude]='update.location.latitude',
         [longitude]='update.location.longitude')
     sebm-google-map-marker(*ngFor='let update of teamStatusUpdates()',
-      [iconUrl]='getIconUrlForTeam(teamShowingProgress)',
       [latitude]='update.location.latitude',
       [longitude]='update.location.longitude')
       sebm-google-map-info-window
