@@ -1,0 +1,8 @@
+{
+  "root": "dist/",
+  "/r2bcknd/*": "/r2bcknd/",
+  "/socket.io": "/socket.io",
+  "/**": "/index.html",
+  "error_page": "error.html",
+  "https_only": true
+}
