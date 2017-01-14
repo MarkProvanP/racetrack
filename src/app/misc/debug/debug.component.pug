@@ -23,3 +23,6 @@ div
           td {{team.name}}
           td
             input(type='color', [(ngModel)]='team.color')
+  h2 Fetch everything from twilio!
+    button(md-raised-button, color='primary', (click)='twilioFetch()') Fetch!
+    p.twilio {{allTwilioTexts}}

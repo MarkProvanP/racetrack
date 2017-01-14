@@ -275,6 +275,13 @@ export class DataIntermediary {
 
   public getText(id: TextId): Promise<Text> {
     return this.dbFacade.getText({id})
+    .then(text => {
+      if (!text) {
+        throw new NotFoundError(id, Text)
+      } else {
+        return text;
+      }
+    })
     .then(text => this.populateText(text))
   }
 
@@ -302,7 +309,7 @@ export class DataIntermediary {
       let racers = _.flatten(teams.map(team => team.racers))
       let populatedTexts = texts.map(text => {
         let copy = JSON.parse(JSON.stringify(text));
-        let checkNumber = text.isOutgoing() ? text.to: text.from;
+        let checkNumber = Text.isTextOutgoing(text) ? text.to: text.from;
         let possibleRacers = racers.filter(racer => racer.hasPhoneNumber(checkNumber));
         copy.racer = possibleRacers.length ? possibleRacers[0].id : undefined;
         if (copy.racer) {
@@ -402,7 +409,7 @@ export class DataIntermediary {
 
   private addRacerToText(text): Promise<any> {
     let copy = JSON.parse(JSON.stringify(text));
-    let checkNumber = text.isOutgoing ? text.to : text.from;
+    let checkNumber = Text.isTextOutgoing(text) ? text.to : text.from;
     return this.getRacers()
       .then(racers => {
         let possibleRacers = racers.filter(racer => racer.hasPhoneNumber(checkNumber));
@@ -453,6 +460,14 @@ export class DataIntermediary {
 
   getStatusUpdate(id: TeamUpdateId): Promise<TeamUpdate> {
     return this.dbFacade.getTeamUpdate({id})
+    .then(update => {
+      if (!update) {
+        throw new NotFoundError(id, TeamUpdate)
+      } else {
+        return update;
+      }
+    })
+    .then(update => TeamUpdate.fromJSON(update))
   }
 
   updateTeamUpdate(update: TeamUpdate, user?: UserWithoutPassword): Promise<TeamUpdate> {

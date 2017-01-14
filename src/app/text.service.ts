@@ -252,6 +252,14 @@ export class TextService {
     .catch(err => this.handleError(err))
   }
 
+  twilioFetch() {
+    let url = this.textsUrl + "/misc/fetch-twilio"
+    return this.http.get(url, this.httpExtras)
+    .toPromise()
+    .then(res => res.json())
+    .catch(err => this.handleError(err))
+  }
+
   private handleError(error: any): Promise<any> {
     this.snackBar.open('A Text Service error occured!', 'Dismiss')
     console.error('An error occurred', error); // for demo purposes only

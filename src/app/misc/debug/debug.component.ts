@@ -44,4 +44,13 @@ export class DebugComponent implements OnInit {
     this.dataService.sendEmail(this.email.to, this.email.subject, this.email.body)
     .then(res => console.log(res))
   }
+
+  allTwilioTexts = []
+
+  twilioFetch() {
+    this.textService.twilioFetch()
+    .then(texts => {
+      this.allTwilioTexts = []
+    })
+  }
 }

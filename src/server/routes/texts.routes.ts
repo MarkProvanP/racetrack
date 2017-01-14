@@ -93,5 +93,19 @@ export default function textsRouterWithDb(dataIntermediate: DataIntermediary, tw
     .catch(handleServerError(req, res))
   });
 
+  textsRouter.get('/misc/fetch-twilio', restrictedModifyAll, (req, res) => {
+    dataIntermediate.getTexts()
+    .then(textsInDb => {
+      twilio.client.messages.list((err, data) => {
+        if (err) {
+          handleServerError(req, res)(err);
+        } else {
+          res.json(data)
+        }
+      })
+    })
+    .catch(handleServerError(req, res))
+  })
+
   return textsRouter;
 }

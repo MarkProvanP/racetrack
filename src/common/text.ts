@@ -76,6 +76,19 @@ export abstract class Text {
 
   abstract isRead(): boolean;
   abstract isOutgoing(): boolean;
+  
+  static isTextOutgoing(text) {
+    if (!text) {
+      return false;
+    }
+    if (text.isOutgoing) {
+      return text.isOutgoing();
+    } else {
+      if (text.text_subclass == 'AppText' || text.text_subclass == 'InboundText') return true;
+      if (text.text_subclass == 'OutboundText') return false;
+      else return (<NonNativeText> text).outgoing;
+    }
+  }
 
   static fromJSON(obj): Text {
     if (obj.text_subclass == 'AppText') {
