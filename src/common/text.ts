@@ -66,7 +66,12 @@ import { UserActionInfo, UserWithoutPassword } from './user';
 export abstract class Text {
   text_subclass: string;
 
+  static getTwilioSid(obj) {
+    return obj.twilioSid || obj.twilio.SmsSid || obj.twilio.sid
+  }
+
   id: TextId;
+  twilioSid: string;
   body: string;
   to: PhoneNumber;
   from: PhoneNumber;
@@ -107,6 +112,7 @@ export abstract class Text {
 
   constructor(id: TextId, properties) {
     this.id = id;
+    this.twilioSid = properties.twilioSid;
   }
 
   toDbForm(): Text {
@@ -189,6 +195,7 @@ export class OutboundText extends Text {
     p['from'] = PhoneNumber.parse(twilio.from);
     p['twilio'] = twilio;
     p['timestamp'] = new Date();
+    p['twilioSid'] = twilio.sid;
     return new OutboundText(id, p);
   }
 
@@ -237,6 +244,7 @@ export class InboundText extends Text {
     p['from'] = twilio.From;
     p['twilio'] = twilio;
     p['timestamp'] = new Date();
+    p['twilioSid'] = twilio.SmsSid;
     return new InboundText(id, p);
   }
 
@@ -304,6 +312,7 @@ export class AppText extends InboundText {
     p['from'] = twilio.From;
     p['twilio'] = twilio;
     p['timestamp'] = new Date();
+    p['twilioSid'] = twilio.SmsSid;
     return new AppText(id, p);
   }
 }
@@ -365,3 +374,27 @@ export interface TwilioOutboundText {
   errorMessage;
   subresourceUris: { media: string };
 }
+
+export interface TwilioRecord {
+  sid,
+  date_created,
+  date_updated,
+  date_sent,
+  account_sid,
+  to,
+  from,
+  messaging_service_sid,
+  body,
+  status,
+  num_segments,
+  num_media,
+  direction,
+  api_version,
+  price,
+  price_unit,
+  error_code,
+  error_message,
+  uri,
+  subresource_uris: { media: string }
+}
+

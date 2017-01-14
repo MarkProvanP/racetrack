@@ -45,12 +45,16 @@ export class DebugComponent implements OnInit {
     .then(res => console.log(res))
   }
 
+  currentlyFetchingTwilio: boolean;
   allTwilioTexts = []
 
-  twilioFetch() {
-    this.textService.twilioFetch()
-    .then(texts => {
-      this.allTwilioTexts = []
-    })
+  twilioFetchBegin() {
+    this.textService.twilioFetchBegin()
+    this.currentlyFetchingTwilio = true
+  }
+
+  twilioFetchCheck() {
+    this.textService.twilioFetchCheck()
+    .then(results => this.allTwilioTexts = results)
   }
 }

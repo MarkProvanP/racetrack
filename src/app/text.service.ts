@@ -252,8 +252,15 @@ export class TextService {
     .catch(err => this.handleError(err))
   }
 
-  twilioFetch() {
-    let url = this.textsUrl + "/misc/fetch-twilio"
+  twilioFetchBegin() {
+    let url = this.textsUrl + "/misc/fetch-twilio-begin"
+    return this.http.get(url, this.httpExtras)
+    .toPromise()
+    .catch(err => this.handleError(err))
+  }
+
+  twilioFetchCheck() {
+    let url = this.textsUrl + "/misc/fetch-twilio-results"
     return this.http.get(url, this.httpExtras)
     .toPromise()
     .then(res => res.json())

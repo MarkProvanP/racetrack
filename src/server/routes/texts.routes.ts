@@ -7,16 +7,19 @@ import {
   OutboundText,
   AppText,
   TwilioInboundText,
-  TwilioOutboundText
+  TwilioOutboundText,
+  TwilioRecord
 } from "../../common/text";
 import { UserWithoutPassword } from "../../common/user";
 import * as winston from "winston";
+
+import * as https from "https";
 
 import { NotFoundError } from "../errors";
 import { DataIntermediary } from "../data-intermediate";
 import { restrictedViewOnly, restrictedBasic, restrictedModifyAll, restrictedSuperuser } from "../auth";
 
-export default function textsRouterWithDb(dataIntermediate: DataIntermediary, twilio) {
+export default function textsRouterWithDb(dataIntermediate: DataIntermediary, twilio, twilioAccountSid, twilioAuthToken) {
   let textsRouter = express.Router();
 
   textsRouter.use((req, res, next) => {
@@ -93,14 +96,58 @@ export default function textsRouterWithDb(dataIntermediate: DataIntermediary, tw
     .catch(handleServerError(req, res))
   });
 
-  textsRouter.get('/misc/fetch-twilio', restrictedModifyAll, (req, res) => {
+  let lastTwilioFetchResults = []
+
+  function twilioMessagePage(dbTextsObj, data, pageNumber, notInDb: TwilioRecord[]) {
+    console.log('twilioMessagePage', pageNumber);
+    data.messages.forEach(message => {
+      if (!dbTextsObj[message.sid]) {
+        // Text not yet in DB
+        console.log('Not in DB', message);
+        notInDb.push(message);
+      }
+    })
+    if (!data.next_page_uri) {
+      console.log('No more data!')
+      console.log(`${notInDb.length} texts not in DB`)
+      lastTwilioFetchResults = notInDb;
+      return;
+    }
+    let options = {
+      auth: `${twilioAccountSid}:${twilioAuthToken}`,
+      host: 'api.twilio.com',
+      path: data.next_page_uri
+    }
+
+    https.request(options, res => {
+      let str = "";
+      res.on('data', chunk => {
+        str += chunk;
+      })
+      res.on('end', () => {
+        let jsonForm = JSON.parse(str)
+        twilioMessagePage(dbTextsObj, jsonForm, pageNumber+1, notInDb);
+      })
+    }).end()
+  }
+
+  textsRouter.get('/misc/fetch-twilio-results', restrictedModifyAll, (req, res) => {
+    res.json(lastTwilioFetchResults)
+  })
+
+  textsRouter.get('/misc/fetch-twilio-begin', restrictedModifyAll, (req, res) => {
     dataIntermediate.getTexts()
     .then(textsInDb => {
+      let dbTextsObj = {};
+      textsInDb.forEach(text => {
+        dbTextsObj[Text.getTwilioSid(text)] = text;
+      })
       twilio.client.messages.list((err, data) => {
         if (err) {
           handleServerError(req, res)(err);
         } else {
           res.json(data)
+          twilioMessagePage(dbTextsObj, data, 1, [])
         }
       })
     })

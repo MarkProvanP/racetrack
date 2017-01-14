@@ -24,5 +24,6 @@ div
           td
             input(type='color', [(ngModel)]='team.color')
   h2 Fetch everything from twilio!
-    button(md-raised-button, color='primary', (click)='twilioFetch()') Fetch!
-    p.twilio {{allTwilioTexts}}
+  button(md-raised-button, color='primary', (click)='twilioFetchBegin()' [disabled]='currentlyFetchingTwilio') Start Fetch!
+  button(md-raised-button, color='primary', (click)='twilioFetchCheck()' [disabled]='!currentlyFetchingTwilio') Check Fetch!
+  p.twilio {{allTwilioTexts}}

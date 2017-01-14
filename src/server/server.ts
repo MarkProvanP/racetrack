@@ -434,7 +434,7 @@ setup(MONGODB_URI)
       client: twilioClient,
       fromNumber: TWILIO_SENDING_NO
     }
-    let textsRouter = textsRouterWithDb(dataIntermediate, twilioObj);
+    let textsRouter = textsRouterWithDb(dataIntermediate, twilioObj, TWILIO_SID, TWILIO_AUTH_TOKEN);
     apiRouter.use("/texts", textsRouter);
 
     let updatesRouter = updatesRouterWithDb(dataIntermediate);
