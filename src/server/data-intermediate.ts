@@ -80,6 +80,14 @@ export interface SavedConfig {
 
 let singleton;
 
+function arrayToIdObj(a) {
+  let obj = {};
+  a.forEach(e => {
+    obj[e.id] = e;
+  })
+  return obj;
+}
+
 export function GetDataIntermediary(
   dbFacade: DbFacadeInterface,
   messageSender: MessageSender,
@@ -289,13 +297,23 @@ export class DataIntermediary {
   }
 
   private getTextsReady(texts: Text[]): Promise<Text[]> {
-    let textPromises = texts.map(text => this.populateText(text));
-    return Promise.all(textPromises)
-      .then(texts => texts.map(text => Text.fromJSON(text)))
-      .catch(err => {
-        console.error(`getTextsReady(${texts.map(text => this.shortDebugText(text))})`, err);
-        throw err;
+    return this.getTeams()
+    .then(teams => {
+      let racers = _.flatten(teams.map(team => team.racers))
+      let populatedTexts = texts.map(text => {
+        let copy = JSON.parse(JSON.stringify(text));
+        let inbound = text.text_subclass == "InboundText" || text.text_subclass == "AppText";
+        let checkNumber = inbound ? text.from : text.to;
+        let possibleRacers = racers.filter(racer => racer.hasPhoneNumber(checkNumber));
+        copy.racer = possibleRacers.length ? possibleRacers[0].id : undefined;
+        if (copy.racer) {
+          let possibleTeams = teams.filter(team => team.hasRacer(text.racer));
+          copy.team = possibleTeams.length ? possibleTeams[0].id : undefined;
+        }
+        return copy;
       })
+      return populatedTexts;
+    })
   }
 
   public updateText(text: Text, user?: UserWithoutPassword): Promise<Text> {
