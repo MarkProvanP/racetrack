@@ -26,6 +26,7 @@ import {
   TwilioInboundText,
   TwilioOutboundText,
   NonNativeText,
+  TwilioRecord
 } from "../common/text";
 import { UserWithoutPassword, UserId } from "../common/user";
 import {
@@ -354,7 +355,7 @@ export class DataIntermediary {
     })
   }
 
-  public addTextFromTwilio(text: TwilioInboundText): Promise<Text> {
+  public addNewReceivedText(text: TwilioInboundText): Promise<Text> {
     this.emailer.sendTextReceivedEmail(text);
     let id = uuid.v4();
     let createdText = AppText.isAppText(text) ? AppText.fromTwilio(id, text) : InboundText.fromTwilio(id, text);
@@ -369,8 +370,21 @@ export class DataIntermediary {
       return text;
     })
     .catch(err => {
-      console.error(`addTextFromTwilio(${this.shortDebugTwilioInboundText(text)})`, err);
+      console.error(`addNewReceivedText(${this.shortDebugTwilioInboundText(text)})`, err);
       return Promise.reject(err);
+    })
+  }
+
+  public addTextFromTwilioLog(text: TwilioRecord): Promise<Text> {
+    let id = uuid.v4();
+    let createdText = AppText.isAppText(text) ? AppText.fromTwilio(id, text) : InboundText.fromTwilio(id, text);
+    let inDbForm = createdText.toDbForm();
+
+    return this.dbFacade.createText(inDbForm)
+    .then(addedToDb => this.populateText(inDbForm))
+    .then(populatedText => {
+      let text = Text.fromJSON(populatedText);
+      return text;
     })
   }
 

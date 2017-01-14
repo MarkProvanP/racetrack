@@ -479,9 +479,15 @@ setup(MONGODB_URI)
       if (twilio.validateExpressRequest(req, TWILIO_AUTH_TOKEN, {url: TWILIO_SMS_WEBHOOK})) {
         let text = req.body;
         winston.log('verbose', `Received text from Twilio`, {text});
-        handleTextMessage(text);
-        let response = new twilio.TwimlResponse();
-        res.send(response.toString());
+        dataIntermediate.addNewReceivedText(text)
+        .then(success => {
+          let response = new twilio.TwimlResponse();
+          res.send(response.toString());
+        })
+        .catch(err => {
+          winston.error('Could not add inbound Twilio text to database!', {text, err});
+          res.status(500).send(err);
+        });
       } else {
         winston.warn('Invalid Twilio request received!');
         res.status(403).send("Error, you're not twilio!");
@@ -608,12 +614,3 @@ setup(MONGODB_URI)
 }).catch(err => {
   console.error('error setting up server', err);
 });
-
-
-function handleTextMessage(twilioText: TwilioInboundText) {
-  dataIntermediate.addTextFromTwilio(twilioText)
-    .catch(err => {
-      winston.error('Could not add inbound Twilio text to database!', {text: twilioText, err: err});
-    });
-}
-

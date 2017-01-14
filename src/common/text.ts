@@ -2,6 +2,22 @@ const APP_TEXT_HEADER = "!AutoUpdate!";
 
 import * as libphonenumber from "google-libphonenumber";
 
+function getTwilioSid(twilio) {
+  return twilio.SmsSid || twilio.sid;
+}
+
+function getTwilioFrom(twilio) {
+  return twilio.from || twilio.From;
+}
+
+function getTwilioTo(twilio) {
+  return twilio.to || twilio.To;
+}
+
+function getTwilioBody(twilio) {
+  return twilio.body|| twilio.Body;
+}
+
 export class PhoneNumber {
   constructor(
     public countryCode: string,
@@ -66,8 +82,12 @@ import { UserActionInfo, UserWithoutPassword } from './user';
 export abstract class Text {
   text_subclass: string;
 
-  static getTwilioSid(obj) {
-    return obj.twilioSid || obj.twilio.SmsSid || obj.twilio.sid
+  static getTextSid(obj) {
+    return obj.twilio ? getTwilioSid(obj.twilio) : obj.twilioSid;
+  }
+
+  static getTextBody(obj) {
+    return obj.twilio ? getTwilioBody(obj.twilio) : obj.body
   }
 
   id: TextId;
@@ -188,14 +208,14 @@ export class OutboundText extends Text {
     return true;
   }
 
-  static fromTwilio(id: TextId, twilio: TwilioOutboundText) {
+  static fromTwilio(id: TextId, twilio: TwilioOutboundText | TwilioRecord) {
     let p = {};
-    p['body'] = twilio.body;
-    p['to'] = PhoneNumber.parse(twilio.to);
-    p['from'] = PhoneNumber.parse(twilio.from);
+    p['body'] = getTwilioBody(twilio);
+    p['to'] = PhoneNumber.parse(getTwilioTo(twilio));
+    p['from'] = PhoneNumber.parse(getTwilioFrom(twilio));
     p['twilio'] = twilio;
     p['timestamp'] = new Date();
-    p['twilioSid'] = twilio.sid;
+    p['twilioSid'] = getTwilioSid(twilio);
     return new OutboundText(id, p);
   }
 
@@ -237,14 +257,14 @@ export class InboundText extends Text {
     return new InboundText(clone.id, clone);
   }
 
-  static fromTwilio(id: TextId, twilio: TwilioInboundText) {
+  static fromTwilio(id: TextId, twilio: TwilioInboundText | TwilioRecord) {
     let p = {};
-    p['body'] = twilio.Body;
-    p['to'] = twilio.To;
-    p['from'] = twilio.From;
+    p['body'] = getTwilioBody(twilio);
+    p['to'] = getTwilioTo(twilio);
+    p['from'] = getTwilioFrom(twilio);
     p['twilio'] = twilio;
     p['timestamp'] = new Date();
-    p['twilioSid'] = twilio.SmsSid;
+    p['twilioSid'] = getTwilioSid(twilio);
     return new InboundText(id, p);
   }
 
@@ -268,8 +288,9 @@ export class InboundText extends Text {
 export class AppText extends InboundText {
   text_subclass: string = 'AppText';
 
-  static isAppText(text: TwilioInboundText) {
-    return text.Body.indexOf(APP_TEXT_HEADER) == 0;
+  static isAppText(text: TwilioInboundText | TwilioRecord) {
+    let body = Text.getTextBody(text)
+    return body.indexOf(APP_TEXT_HEADER) == 0;
   }
 
   location: Location;
@@ -297,10 +318,10 @@ export class AppText extends InboundText {
     return new AppText(clone.id, clone);
   }
 
-  static fromTwilio(id: TextId, twilio: TwilioInboundText) {
+  static fromTwilio(id: TextId, twilio: TwilioInboundText | TwilioRecord) {
     let p = {};
 
-    let messageWithoutHeader = twilio.Body.substring(APP_TEXT_HEADER.length + 1);
+    let messageWithoutHeader = getTwilioBody(twilio).substring(APP_TEXT_HEADER.length + 1);
     let deEscaped1 = messageWithoutHeader.replace(/\\/g, "");
     let deEscaped2 = deEscaped1.replace(/\"\{/g, "{");
     let deEscaped3 = deEscaped2.replace(/\}\"/g, "}");
@@ -308,11 +329,11 @@ export class AppText extends InboundText {
     
     p['body'] = parsedAppMessage.message;
     p['location'] = parsedAppMessage.location;
-    p['to'] = twilio.To;
-    p['from'] = twilio.From;
+    p['to'] = getTwilioTo(twilio)
+    p['from'] = getTwilioFrom(twilio)
     p['twilio'] = twilio;
     p['timestamp'] = new Date();
-    p['twilioSid'] = twilio.SmsSid;
+    p['twilioSid'] = getTwilioSid(twilio);
     return new AppText(id, p);
   }
 }

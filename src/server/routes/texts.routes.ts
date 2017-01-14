@@ -65,7 +65,14 @@ export default function textsRouterWithDb(dataIntermediate: DataIntermediary, tw
   textsRouter.post('/non-native', restrictedBasic, (req, res) => {
     let textProperties = req.body;
     dataIntermediate.addNonNativeText(textProperties)
-    .then(text => res.send(text))
+    .then(text => res.json(text))
+    .catch(handleServerError(req, res))
+  })
+
+  textsRouter.post('/import', restrictedModifyAll, (req, res) => {
+    let text = req.body;
+    dataIntermediate.addTextFromTwilioLog(text)
+    .then(text => res.json(text))
     .catch(handleServerError(req, res))
   })
 
@@ -140,7 +147,7 @@ export default function textsRouterWithDb(dataIntermediate: DataIntermediary, tw
     .then(textsInDb => {
       let dbTextsObj = {};
       textsInDb.forEach(text => {
-        dbTextsObj[Text.getTwilioSid(text)] = text;
+        dbTextsObj[Text.getTextSid(text)] = text;
       })
       twilio.client.messages.list((err, data) => {
         if (err) {
