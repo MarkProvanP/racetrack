@@ -83,11 +83,15 @@ export abstract class Text {
   text_subclass: string;
 
   static getTextSid(obj) {
-    return obj.twilio ? getTwilioSid(obj.twilio) : obj.twilioSid;
+    return obj.twilio ? getTwilioSid(obj.twilio) : (obj.twilioSid || obj.SmsSid || obj.twilioSid)
   }
 
   static getTextBody(obj) {
-    return obj.twilio ? getTwilioBody(obj.twilio) : obj.body
+    return obj.twilio ? getTwilioBody(obj.twilio) : (obj.body || obj.Body)
+  }
+
+  static createFromTwilio(id, twilio) {
+    return AppText.isAppText(twilio) ? AppText.fromTwilio(id, twilio) : InboundText.fromTwilio(id, twilio);
   }
 
   id: TextId;
@@ -290,10 +294,6 @@ export class AppText extends InboundText {
 
   static isAppText(text: TwilioInboundText | TwilioRecord) {
     let body = Text.getTextBody(text)
-    if (!body) {
-      console.log('Text has no body!', text);
-      return false;
-    }
     return body.indexOf(APP_TEXT_HEADER) == 0;
   }
 
