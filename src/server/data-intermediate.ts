@@ -43,6 +43,7 @@ import { UserActionInfo } from "../common/user";
 
 import * as winston from "winston";
 import * as uuid from "uuid";
+import * as _ from "lodash";
 import { DOMParser, XMLSerializer } from "xmldom";
 
 let fs = require("fs");
@@ -122,7 +123,7 @@ export class DataIntermediary {
 //================================================================
 
   public getRacers(): Promise<Racer[]> {
-    return this.dbFacade.getRacers({})
+    return this.dbFacade.getAllRacers()
     .then(racers => racers.map(racer => Racer.fromJSON(racer)));
   }
 
@@ -163,15 +164,30 @@ export class DataIntermediary {
 //================================================================
 
   getTeams(): Promise<Team[]> {
-    return this.dbFacade.getTeams({})
-    .then(docs => {
-      let teams = docs as [UnpopulatedTeam];
-      let teamPromises = teams.map(team => this.populateTeam(team).catch(err => {
-        console.error(`error populating team ${team} in getTeams() teamPromises`, err);
-        throw err;
-      }));
-      return Promise.all(teamPromises)
-        .then(teams => teams.map(team => Team.fromJSON(team)));
+    return this.dbFacade.getAllTeams()
+    .then(teams => {
+      let racerIdsForTeams = teams.map(team => team.racers);
+      let allRacerIds = _.flatten(racerIdsForTeams)
+      let updateIdsForTeams = teams.map(team => team.statusUpdates);
+      let allUpdateIds = _.flatten(updateIdsForTeams);
+
+      return Promise.all([this.dbFacade.getRacers(allRacerIds), this.dbFacade.getTeamUpdates(allUpdateIds)])
+      .then(results => {
+        let racersObj = results[0];
+        let updatesObj = results[1];
+        let populated = teams.map(team => {
+          let racers = team.racers.map(racerId => racersObj[racerId]) as Racer[]
+          let statusUpdates = team.statusUpdates.map(updateId => updatesObj[updateId]) as TeamUpdate[]
+          let clone = JSON.parse(JSON.stringify(team));
+          clone.racers = racers;
+          clone.statusUpdates = statusUpdates;
+          return clone;
+        })
+        return populated;
+      })
+      .then(teams => teams.map(team => {
+        return Team.fromJSON(team)
+      }))
     })
     .catch(err => {
       console.error(`getTeams()`, err);
@@ -412,7 +428,7 @@ export class DataIntermediary {
   }
 
   getStatusUpdates(): Promise<TeamUpdate[]> {
-    return this.dbFacade.getTeamUpdates({})
+    return this.dbFacade.getAllTeamUpdates()
       .then(docs => {
         let updates = docs;
         return Promise.resolve(updates);
@@ -420,11 +436,7 @@ export class DataIntermediary {
   }
 
   getStatusUpdate(id: TeamUpdateId): Promise<TeamUpdate> {
-    return this.dbFacade.getTeamUpdates({id})
-      .then(docs => {
-        let update = docs[0];
-        return Promise.resolve(update);
-      });
+    return this.dbFacade.getTeamUpdate({id})
   }
 
   updateTeamUpdate(update: TeamUpdate, user?: UserWithoutPassword): Promise<TeamUpdate> {

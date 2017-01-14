@@ -21,13 +21,15 @@ export interface DbFacadeInterface {
   createSavedConfig(savedConfig: SavedConfig): Promise<void>;
   updateSavedConfig(savedConfig: SavedConfig): Promise<void>;
 
-  getRacers(query): Promise<Racer[]>;
+  getAllRacers(): Promise<Racer[]>;
+  getRacers(ids: RacerId[]);
   getRacer(query): Promise<Racer>;
   updateRacer(racer: Racer): Promise<void>;
   createRacer(racer: Racer): Promise<void>;
   deleteRacer(id: RacerId): Promise<void>;
 
-  getTeams(query) : Promise<DbFormTeam[]>;
+  getAllTeams() : Promise<DbFormTeam[]>;
+  getTeams(ids: TeamId[]);
   getTeam(query): Promise<DbFormTeam>;
   updateTeam(team: DbFormTeam) : Promise<DbFormTeam>;
   createTeam(team: DbFormTeam): Promise<void>;
@@ -39,7 +41,8 @@ export interface DbFacadeInterface {
   createText(text: Text): Promise<void>;
   deleteText(id: TextId): Promise<void>;
 
-  getTeamUpdates(query): Promise<TeamUpdate[]>;
+  getAllTeamUpdates(): Promise<TeamUpdate[]>;
+  getTeamUpdates(ids: TeamUpdateId[]);
   getTeamUpdate(query): Promise<TeamUpdate>;
   updateTeamUpdate(update: TeamUpdate): Promise<void>;
   createTeamUpdate(update: TeamUpdate): Promise<void>;

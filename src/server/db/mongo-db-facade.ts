@@ -89,8 +89,23 @@ class MongoDbFacade implements DbFacadeInterface {
 
 //================================================================
 
-  getRacers(query): Promise<Racer[]> {
-    return this.racersCollection.find(query).toArray();
+  getAllRacers(): Promise<Racer[]> {
+    return this.racersCollection.find({}).toArray();
+  }
+
+  getRacers(ids: RacerId[]) {
+    let query = {
+      id: { $in: ids }
+    }
+    return this.racersCollection.find(query)
+    .toArray()
+    .then(racers => {
+      let obj = {}
+      racers.forEach(racer => {
+        obj[racer.id] = racer;
+      })
+      return obj;
+    })
   }
 
   getRacer(query): Promise<Racer> {
@@ -115,8 +130,23 @@ class MongoDbFacade implements DbFacadeInterface {
 
 //================================================================
   
-  getTeams(query): Promise<DbFormTeam[]> {
-    return this.teamsCollection.find(query).toArray();
+  getAllTeams(): Promise<DbFormTeam[]> {
+    return this.teamsCollection.find({}).toArray();
+  }
+
+  getTeams(ids: TeamId[]) {
+    let query = {
+      id: { $in: ids }
+    }
+    return this.teamsCollection.find(query)
+    .toArray()
+    .then(teams => {
+      let obj = {}
+      teams.forEach(team => {
+        obj[team.id] = team;
+      })
+      return obj;
+    })
   }
 
   getTeam(query): Promise<DbFormTeam> {
@@ -156,8 +186,23 @@ class MongoDbFacade implements DbFacadeInterface {
   }
 
 //================================================================
-  getTeamUpdates(query): Promise<TeamUpdate[]> {
-    return this.updatesCollection.find(query).toArray();
+  getAllTeamUpdates(): Promise<TeamUpdate[]> {
+    return this.updatesCollection.find({}).toArray();
+  }
+
+  getTeamUpdates(ids: TeamUpdateId[]) {
+    let query = {
+      id: { $in: ids }
+    }
+    return this.updatesCollection.find(query)
+    .toArray()
+    .then(updates => {
+      let obj = {};
+      updates.forEach(update => {
+        obj[update.id] = update;
+      })
+      return obj;
+    })
   }
 
   getTeamUpdate(query): Promise<TeamUpdate> {
