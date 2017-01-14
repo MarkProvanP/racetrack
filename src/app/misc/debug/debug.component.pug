@@ -1,5 +1,17 @@
 h1 Debug Things
 div
+  h2 Send authenticated API request!
+  md-button-toggle-group(name='apiMethod', [(ngModel)]='apiRequest.method')
+    md-button-toggle(value='get') GET
+    md-button-toggle(value='post') POST
+    md-button-toggle(value='put') PUT
+    md-button-toggle(value='delete') DELETE
+  md-input-container
+    input(md-input, [(ngModel)]='apiRequest.endpoint', placeholder='Endpoint')
+  md-input-container
+    textarea(md-input, [(ngModel)]='apiRequest.body', placeholder='Body')
+  button(md-raised-button, color='primary', (click)='makeApiCall()') Execute!
+  div.api-response {{apiResponse}}
   h2 Email
   div
     md-input-container
@@ -10,20 +22,37 @@ div
       textarea(md-input, [(ngModel)]='email.body', placeholder='Body:')
     button(md-raised-button, color='primary', (click)='sendEmail()') Send
   h2 Give everyone pretty colours!
-    button(md-raised-button, color='primary', (click)='prettyColors()') Prettify!
-    table
-      thead
-        tr
-          td Id
-          td Name
-          td Color
-      tbody
-        tr(*ngFor='let team of teams | orderBy: "+id"')
-          td {{team.id}}
-          td {{team.name}}
-          td
-            input(type='color', [(ngModel)]='team.color')
+  button(md-raised-button, color='primary', (click)='loadTeams()') Load teams!
+  button(md-raised-button, color='primary', (click)='prettyColors()', [disabled]='teams') Prettify!
+  table
+    thead
+      tr
+        td Id
+        td Name
+        td Color
+    tbody
+      tr(*ngFor='let team of teams | orderBy: "+id"')
+        td {{team.id}}
+        td {{team.name}}
+        td
+          input(type='color', [(ngModel)]='team.color')
   h2 Fetch everything from twilio!
-  button(md-raised-button, color='primary', (click)='twilioFetchBegin()' [disabled]='currentlyFetchingTwilio') Start Fetch!
-  button(md-raised-button, color='primary', (click)='twilioFetchCheck()' [disabled]='!currentlyFetchingTwilio') Check Fetch!
-  p.twilio {{allTwilioTexts}}
+  button(md-raised-button, color='primary', (click)='twilioFetchBegin()', [disabled]='currentlyFetchingTwilio') Start Fetch!
+  button(md-raised-button, color='primary', (click)='twilioFetchCheck()', [disabled]='!currentlyFetchingTwilio') Check Fetch!
+  table(*ngIf='allTwilioTexts')
+    tr
+      th Import
+      th To
+      th From
+      th Time
+      th Body
+    tr(*ngFor='let text of allTwilioTexts')
+      td
+        md-checkbox([(ngModel)]='text.import')
+      td
+        phone-widget([number]='textNumber(text.to)')
+      td
+        phone-widget([number]='textNumber(text.from)')
+      td
+        time-widget([time]='textTime(text)')
+      td {{text.body}}
