@@ -105,4 +105,14 @@ export class DebugComponent implements OnInit {
     this.textService.twilioFetchCheck()
     .then(results => this.allTwilioTexts = results)
   }
+
+  importSelectedTexts() {
+    let toImport = this.allTwilioTexts.filter(t => t.import)
+    toImport.forEach(twilio => {
+      this.textService.importTwilioText(twilio)
+      .then(success => {
+        twilio.imported = true;
+      })
+    })
+  }
 }

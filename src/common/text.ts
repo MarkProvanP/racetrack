@@ -290,6 +290,10 @@ export class AppText extends InboundText {
 
   static isAppText(text: TwilioInboundText | TwilioRecord) {
     let body = Text.getTextBody(text)
+    if (!body) {
+      console.log('Text has no body!', text);
+      return false;
+    }
     return body.indexOf(APP_TEXT_HEADER) == 0;
   }
 

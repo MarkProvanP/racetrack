@@ -39,6 +39,7 @@ div
   h2 Fetch everything from twilio!
   button(md-raised-button, color='primary', (click)='twilioFetchBegin()', [disabled]='currentlyFetchingTwilio') Start Fetch!
   button(md-raised-button, color='primary', (click)='twilioFetchCheck()', [disabled]='!currentlyFetchingTwilio') Check Fetch!
+  button(md-raised-button, color='primary', (click)='importSelectedTexts()', [disabled]='!allTwilioTexts') Import Selected!
   table(*ngIf='allTwilioTexts')
     tr
       th Import
@@ -48,7 +49,8 @@ div
       th Body
     tr(*ngFor='let text of allTwilioTexts')
       td
-        md-checkbox([(ngModel)]='text.import')
+        md-checkbox(*ngIf='!text.imported', [(ngModel)]='text.import')
+        md-icon(*ngIf='text.imported') check
       td
         phone-widget([number]='textNumber(text.to)')
       td
