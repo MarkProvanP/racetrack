@@ -19,7 +19,8 @@ export class AddNonNativeTextComponent {
     from: new PhoneNumber(undefined, undefined),
     body: undefined,
     timestamp: undefined,
-    addedBy: undefined
+    addedBy: undefined,
+    outgoing: false
   }
   constructor(
     private textService: TextService,
@@ -36,8 +37,17 @@ export class AddNonNativeTextComponent {
         from: new PhoneNumber(undefined, undefined),
         body: undefined,
         timestamp: undefined,
-        addedBy: this.userService.getUserAction()
+        addedBy: this.userService.getUserAction(),
+        outgoing: false
       }
     })
+  }
+
+  getTextDirection() {
+    return this.newText.outgoing ? "Safety Team to Racer" : "Racer to Safety Team"
+  }
+
+  toggleDirection() {
+    this.newText.outgoing = !this.newText.outgoing;
   }
 }

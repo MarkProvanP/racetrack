@@ -4,7 +4,7 @@ import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
 
 import { Racer } from "../../../common/racer";
 import { Team, CheckinInfo } from "../../../common/team";
-import { Text, TextId, InboundText, OutboundText, AppText, NonNativeInboundText } from '../../../common/text';
+import { Text, TextId, InboundText, OutboundText, AppText, NonNativeText } from '../../../common/text';
 import { DataService } from '../../data.service';
 import { TextService } from '../../text.service';
 import { UserService } from '../../user.service';
@@ -80,8 +80,8 @@ export class TextsListComponent {
     return text instanceof AppText;
   }
 
-  isNonNativeInboundText(text: Text) {
-    return text instanceof NonNativeInboundText;
+  isNonNativeText(text: Text) {
+    return text instanceof NonNativeText;
   }
 
   checkInTeamFromText(text: Text) {

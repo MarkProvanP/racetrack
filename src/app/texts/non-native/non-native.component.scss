@@ -1,7 +1,9 @@
 .add-non-native-text-component-wrapper {
   display: flex;
+  flex: 1;
   justify-content: center;
   align-items: center;
+  overflow-y: scroll;
 
   md-card {
     margin: 20px;

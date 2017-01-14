@@ -44,7 +44,7 @@ import { NormalTextComponent } from './texts/texts-list/normal-text';
 import { AppTextComponent } from './texts/texts-list/app-text';
 import { SentTextComponent } from './texts/texts-list/sent-text';
 import { UnknownTextComponent } from './texts/texts-list/unknown-text';
-import { NonNativeInboundTextComponent } from "./texts/texts-list/non-native-inbound-text";
+import { NonNativeTextComponent } from "./texts/texts-list/non-native-text";
 import { MassTextComponent } from './mass-text';
 import { ImportComponent } from "./import";
 import { UpdatesComponent } from "./updates";
@@ -121,7 +121,7 @@ const APP_PROVIDERS = [
     AppTextComponent,
     SentTextComponent,
     UnknownTextComponent,
-    NonNativeInboundTextComponent,
+    NonNativeTextComponent,
     MassTextComponent,
     ImportComponent,
     UpdatesComponent,

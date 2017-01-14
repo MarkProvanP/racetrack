@@ -39,11 +39,11 @@
         (onMakeRead)='updateText($event, "Marked text as read")',
         (onCreateReply)='replyToText($event)',
         *ngIf='isInboundText(text) && !text.racer')
-      non-native-inbound-text.text-card.normal-text([text]='text',
+      non-native-text.text-card.normal-text([text]='text',
         [display]='display',
         (onAddCheckin)='checkInTeamFromText($event)',
         (onCreateUpdate)='createUpdateFromText($event)',
-        *ngIf='isNonNativeInboundText(text)')
+        *ngIf='isNonNativeText(text)')
       .new-update-wrapper(*ngIf='inCreateUpdateMode && text == selectedText && selectedTextTeam')
         new-update([team]='selectedTextTeam',
           [text]='text',

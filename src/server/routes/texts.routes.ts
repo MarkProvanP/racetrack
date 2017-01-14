@@ -61,7 +61,7 @@ export default function textsRouterWithDb(dataIntermediate: DataIntermediary, tw
 
   textsRouter.post('/non-native', restrictedBasic, (req, res) => {
     let textProperties = req.body;
-    dataIntermediate.addNonNativeInboundText(textProperties)
+    dataIntermediate.addNonNativeText(textProperties)
     .then(text => res.send(text))
     .catch(handleServerError(req, res))
   })

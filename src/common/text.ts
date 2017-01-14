@@ -75,6 +75,7 @@ export abstract class Text {
   timestamp: Date;
 
   abstract isRead(): boolean;
+  abstract isOutgoing(): boolean;
 
   static fromJSON(obj): Text {
     if (obj.text_subclass == 'AppText') {
@@ -83,8 +84,8 @@ export abstract class Text {
       return InboundText.fromJSON(obj);
     } else if (obj.text_subclass == 'OutboundText') {
       return OutboundText.fromJSON(obj);
-    } else if (obj.text_subclass == 'NonNativeInboundText') {
-      return NonNativeInboundText.fromJSON(obj);
+    } else if (obj.text_subclass == 'NonNativeText' || obj.text_subclass == 'NonNativeInboundText') {
+      return NonNativeText.fromJSON(obj);
     } else {
       // For non-updated ones!
       return InboundText.fromJSON(obj);
@@ -109,14 +110,18 @@ export abstract class Text {
   }
 }
 
-export class NonNativeInboundText extends Text {
-  text_subclass = "NonNativeInboundText";
-
+export class NonNativeText extends Text {
+  text_subclass = "NonNativeText";
   addedBy: UserActionInfo;
+  outgoing: boolean;
+
+  isOutgoing() {
+    return this.outgoing;
+  }
 
   static fromJSON(obj) {
     let clone = JSON.parse(JSON.stringify(obj));
-    return new NonNativeInboundText(clone.id, clone);
+    return new NonNativeText(clone.id, clone);
   }
 
   isRead() {
@@ -138,6 +143,10 @@ export class OutboundText extends Text {
 
   twilio: TwilioOutboundText;
   sentBy: UserActionInfo;
+
+  isOutgoing() {
+    return true;
+  }
 
   static fromJSON(obj) {
     let clone = JSON.parse(JSON.stringify(obj));
@@ -188,6 +197,10 @@ export class InboundText extends Text {
 
   twilio: TwilioInboundText;
   readBy: UserActionInfo;
+
+  isOutgoing() {
+    return false;
+  }
 
   static fromJSON(obj) {
     let clone = JSON.parse(JSON.stringify(obj));

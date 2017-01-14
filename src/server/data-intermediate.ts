@@ -25,7 +25,7 @@ import {
   AppText,
   TwilioInboundText,
   TwilioOutboundText,
-  NonNativeInboundText,
+  NonNativeText,
 } from "../common/text";
 import { UserWithoutPassword, UserId } from "../common/user";
 import {
@@ -302,8 +302,7 @@ export class DataIntermediary {
       let racers = _.flatten(teams.map(team => team.racers))
       let populatedTexts = texts.map(text => {
         let copy = JSON.parse(JSON.stringify(text));
-        let inbound = text.text_subclass == "InboundText" || text.text_subclass == "AppText";
-        let checkNumber = inbound ? text.from : text.to;
+        let checkNumber = text.isOutgoing() ? text.to: text.from;
         let possibleRacers = racers.filter(racer => racer.hasPhoneNumber(checkNumber));
         copy.racer = possibleRacers.length ? possibleRacers[0].id : undefined;
         if (copy.racer) {
@@ -330,9 +329,9 @@ export class DataIntermediary {
     })
   }
 
-  public addNonNativeInboundText(textProperties): Promise<Text> {
+  public addNonNativeText(textProperties): Promise<Text> {
     let id = uuid.v4();
-    let createdText = new NonNativeInboundText(id, textProperties);
+    let createdText = new NonNativeText(id, textProperties);
     let inDbForm = createdText.toDbForm();
     return this.dbFacade.createText(inDbForm)
     .then(addedToDb => this.populateText(inDbForm))
@@ -343,7 +342,7 @@ export class DataIntermediary {
       return text;
     })
     .catch(err => {
-      console.error(`addNonNativeInboundText${textProperties}`, err);
+      console.error(`addNonNativeText${textProperties}`, err);
       return Promise.reject(err);
     })
   }
@@ -403,8 +402,7 @@ export class DataIntermediary {
 
   private addRacerToText(text): Promise<any> {
     let copy = JSON.parse(JSON.stringify(text));
-    let inbound = text.text_subclass == "InboundText" || text.text_subclass == "AppText";
-    let checkNumber = inbound ? text.from : text.to;
+    let checkNumber = text.isOutgoing ? text.to : text.from;
     return this.getRacers()
       .then(racers => {
         let possibleRacers = racers.filter(racer => racer.hasPhoneNumber(checkNumber));

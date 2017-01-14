@@ -11,6 +11,17 @@
         td
           phone-widget([number]='newText.from', edit='true')
       tr
+        th Text Direction
+        td
+          span.direction {{getTextDirection()}}
+          button(md-icon-button, (click)='toggleDirection()')
+            md-icon swap_horiz
+      tr
+        th Timestamp
+        td
+          md-input-container
+            input(md-input, type='datetime-local', [(ngModel)]='newText.timestamp')
+      tr
         th Text
         td
           md-input-container.full-width

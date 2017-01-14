@@ -13,11 +13,11 @@ import { UserService } from '../../../user.service';
 import { DataService } from "../../../data.service";
 
 @Component({
-  selector: 'non-native-inbound-text',
-  templateUrl: './non-native-inbound-text.component.pug',
-  styleUrls: ['./non-native-inbound-text.component.scss']
+  selector: 'non-native-text',
+  templateUrl: './non-native-text.component.pug',
+  styleUrls: ['./non-native-text.component.scss']
 })
-export class NonNativeInboundTextComponent implements OnInit {
+export class NonNativeTextComponent implements OnInit {
   @Input() text: InboundText;
   @Input() display: any;
   @Output() onMakeRead: EventEmitter<InboundText> = new EventEmitter();
