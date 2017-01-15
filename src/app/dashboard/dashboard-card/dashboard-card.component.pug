@@ -6,7 +6,7 @@ md-card(class='dashboard-card', [ngClass]='getCardClass()')
       md-icon(*ngIf='isBig') expand_less
       md-icon(*ngIf='!isBig') expand_more
     md-card-title
-      b(md-row) {{team.name}}
+      a(md-row, [routerLink]="['/safetyteam', 'teams', team.id]") {{team.name}}
       .safety-team-flag
         img(src='/assets/img/EU.svg', *ngIf='team.inEurope' title='Team is in Europe')
         |  

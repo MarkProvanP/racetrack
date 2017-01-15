@@ -18,7 +18,6 @@ export class TeamTextsComponent implements OnInit {
   selectedTeam: Team;
   selectedTeamTexts: Text[];
   displayOptions = {
-    oneline: false,
     racer: true,
     timestamp: true
   }

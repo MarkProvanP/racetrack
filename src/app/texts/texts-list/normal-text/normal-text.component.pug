@@ -1,20 +1,14 @@
 md-card.text-card.text-card-normal([ngClass]='{unread: !text.readBy}')
   md-card-header
     md-card-title
-      .inline-text-title(*ngIf='display.oneline')
+      .inline-text-title
         span
           phone-widget([number]='text.from')
         |  - 
-        span(*ngIf='textRacer') {{textRacer.name}}
+        a(*ngIf='textRacer', [routerLink]="['/safetyteam', 'racers', textRacer.id]") {{textRacer.name}}
         |  - 
-        span(*ngIf='textTeam') ({{textTeam.id}}) {{textTeam.name}}
-        |  
-        span.error(*ngIf='!textTeam') ERROR: No Team for Racer!
+        a(*ngIf='textTeam', [routerLink]="['/safetyteam', 'teams', textTeam.id]") ({{textTeam.id}}) {{textTeam.name}}
       time-widget([time]='text.timestamp')
-      .text-title(*ngIf='!display.oneline')
-        div(*ngIf='display.number')
-          phone-widget([number]='text.from')
-        div(*ngIf='display.time') {{text.getPrettyTimestamp()}}
   md-card-content
     .text-body  {{text.body}}
   .text-read(*ngIf='text.readBy')

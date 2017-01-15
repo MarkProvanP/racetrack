@@ -57,7 +57,9 @@
       h4 Racers
       .team-racers-list
         md-card(*ngFor="let racer of team.racers | orderBy: '+name' ")
-          md-card-content {{racer.name}}
+          md-card-content
+            a([routerLink]=" ['/safetyteam', 'racers', racer.id]") {{racer.name}}
+            phone-widget([number]='racer.getPrimaryContactNumber().number')
           |  
           button(*ngIf='inEditMode', md-icon-button, (click)='removeRacer(racer)', color='warn')
             md-icon.md-24 delete

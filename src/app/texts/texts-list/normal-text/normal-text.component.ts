@@ -43,6 +43,7 @@ export class NormalTextComponent implements OnInit {
       this.dataService.getRacerPromise(racerId)
       .then(racer => this.textRacer = racer);
     }
+    console.log(this.display)
   }
 
   markTextAsRead() {
