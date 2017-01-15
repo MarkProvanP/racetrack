@@ -1,6 +1,7 @@
 const APP_TEXT_HEADER = "!AutoUpdate!";
 
 import * as libphonenumber from "google-libphonenumber";
+import * as moment from "moment";
 
 function getTwilioSid(twilio) {
   return twilio.SmsSid || twilio.sid;
@@ -16,6 +17,11 @@ function getTwilioTo(twilio) {
 
 function getTwilioBody(twilio) {
   return twilio.body|| twilio.Body;
+}
+
+function getTwilioTimestamp(twilio) {
+  if (!twilio.date_created) return 
+  return moment(twilio.date_created, 'ddd, DD MMM YYYY HH:mm:ss ZZ').toDate();
 }
 
 export class PhoneNumber {
@@ -218,7 +224,7 @@ export class OutboundText extends Text {
     p['to'] = PhoneNumber.parse(getTwilioTo(twilio));
     p['from'] = PhoneNumber.parse(getTwilioFrom(twilio));
     p['twilio'] = twilio;
-    p['timestamp'] = new Date();
+    p['timestamp'] = getTwilioTimestamp(twilio) || new Date();
     p['twilioSid'] = getTwilioSid(twilio);
     return new OutboundText(id, p);
   }
@@ -258,6 +264,14 @@ export class InboundText extends Text {
       // HOTFIX take team ID not whole object
       clone.team = obj.team.id ? obj.team.id : obj.team
     }
+    // HOTFIX for missed timestamp
+    if (clone.twilio) {
+      let twilioTimestamp = getTwilioTimestamp(clone.twilio)
+      if (twilioTimestamp) {
+        clone.timestamp = twilioTimestamp;
+      }
+    }
+
     return new InboundText(clone.id, clone);
   }
 
@@ -267,7 +281,7 @@ export class InboundText extends Text {
     p['to'] = getTwilioTo(twilio);
     p['from'] = getTwilioFrom(twilio);
     p['twilio'] = twilio;
-    p['timestamp'] = new Date();
+    p['timestamp'] = getTwilioTimestamp(twilio) || new Date();
     p['twilioSid'] = getTwilioSid(twilio);
     return new InboundText(id, p);
   }
@@ -336,7 +350,7 @@ export class AppText extends InboundText {
     p['to'] = getTwilioTo(twilio)
     p['from'] = getTwilioFrom(twilio)
     p['twilio'] = twilio;
-    p['timestamp'] = new Date();
+    p['timestamp'] = getTwilioTimestamp(twilio) || new Date();
     p['twilioSid'] = getTwilioSid(twilio);
     return new AppText(id, p);
   }
