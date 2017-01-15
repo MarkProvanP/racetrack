@@ -119,8 +119,8 @@ export abstract class Text {
     if (text.isOutgoing) {
       return text.isOutgoing();
     } else {
-      if (text.text_subclass == 'AppText' || text.text_subclass == 'InboundText') return true;
-      if (text.text_subclass == 'OutboundText') return false;
+      if (text.text_subclass == 'AppText' || text.text_subclass == 'InboundText') return false;
+      if (text.text_subclass == 'OutboundText') return true;
       else return (<NonNativeText> text).outgoing;
     }
   }

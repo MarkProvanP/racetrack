@@ -8,7 +8,7 @@ md-card.text-card.text-card-normal([ngClass]='{unread: !text.readBy}')
         span(*ngIf='textRacer') {{textRacer.name}}
         span.error(*ngIf='!textRacer') No Racer!
         |  - 
-        span(*ngIf='textTeam') {{textTeam.name}}
+        span(*ngIf='textTeam') ({{textTeam.id}}) {{textTeam.name}}
         span.error(*ngIf='!textTeam') No Team!
       .added-by(*ngIf='text.addedBy')
         | Added by

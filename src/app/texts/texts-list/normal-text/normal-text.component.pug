@@ -7,7 +7,7 @@ md-card.text-card.text-card-normal([ngClass]='{unread: !text.readBy}')
         |  - 
         span(*ngIf='textRacer') {{textRacer.name}}
         |  - 
-        span(*ngIf='textTeam') {{textTeam.name}}
+        span(*ngIf='textTeam') ({{textTeam.id}}) {{textTeam.name}}
         |  
         span.error(*ngIf='!textTeam') ERROR: No Team for Racer!
       time-widget([time]='text.timestamp')

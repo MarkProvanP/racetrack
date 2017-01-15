@@ -8,7 +8,7 @@ md-card.text-card.text-outbound([ngClass]='{"unknown-text": !textRacer}')
         |  - 
         span(*ngIf='textRacer') {{textRacer.name}}
         |  - 
-        span(*ngIf='textTeam') {{textTeam.name}}
+        span(*ngIf='textTeam') ({{textTeam.id}}) {{textTeam.name}}
         |  
         span.error(*ngIf='!textTeam') ERROR: No Team for Racer!
       time-widget([time]='text.timestamp')

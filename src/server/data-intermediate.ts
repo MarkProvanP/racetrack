@@ -314,7 +314,7 @@ export class DataIntermediary {
         let possibleRacers = racers.filter(racer => racer.hasPhoneNumber(checkNumber));
         copy.racer = possibleRacers.length ? possibleRacers[0].id : undefined;
         if (copy.racer) {
-          let possibleTeams = teams.filter(team => team.hasRacer(text.racer));
+          let possibleTeams = teams.filter(team => team.hasRacer(copy.racer));
           copy.team = possibleTeams.length ? possibleTeams[0].id : undefined;
         }
         return copy;
@@ -358,7 +358,7 @@ export class DataIntermediary {
   public addNewReceivedText(text: TwilioInboundText): Promise<Text> {
     this.emailer.sendTextReceivedEmail(text);
     let id = uuid.v4();
-    let createdText = AppText.isAppText(text) ? AppText.fromTwilio(id, text) : InboundText.fromTwilio(id, text);
+    let createdText = Text.createFromTwilio(id, text)
     let inDbForm = createdText.toDbForm();
 
     return this.dbFacade.createText(inDbForm)
