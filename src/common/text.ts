@@ -100,14 +100,34 @@ export abstract class Text {
     return AppText.isAppText(twilio) ? AppText.fromTwilio(id, twilio) : InboundText.fromTwilio(id, twilio);
   }
 
-  id: TextId;
-  twilioSid: string;
-  body: string;
-  to: PhoneNumber;
-  from: PhoneNumber;
-  racer: RacerId;
-  team: TeamId;
-  timestamp: Date;
+  public id: TextId;
+  public twilioSid: string;
+  public body: string;
+  public to: PhoneNumber;
+  public from: PhoneNumber;
+  public racer: RacerId;
+  public team: TeamId;
+  public timestamp: Date;
+
+  public getBody() {
+    return this.body
+  }
+
+  public getTo() {
+    return this.to;
+  }
+
+  public getFrom() {
+    return this.from;
+  }
+
+  public getTeam() {
+    return this.team;
+  }
+
+  public getRacer() {
+    return this.racer;
+  }
 
   abstract isRead(): boolean;
   abstract isOutgoing(): boolean;

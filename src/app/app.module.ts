@@ -67,6 +67,8 @@ import { TextService } from './text.service';
 import { UserService } from './user.service';
 import { NominatimService } from "./nominatim.service";
 
+import { PushNotificationsModule } from "angular2-notifications";
+
 import {
   OrderByPipe,
   KeysPipe,
@@ -151,7 +153,8 @@ const APP_PROVIDERS = [
     MaterialModule.forRoot(),
     AgmCoreModule.forRoot({
       apiKey: GOOGLE_MAPS_API_KEY
-    })
+    }),
+    PushNotificationsModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

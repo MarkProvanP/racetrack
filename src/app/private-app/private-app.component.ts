@@ -3,6 +3,7 @@
  */
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Title } from "@angular/platform-browser";
+import { PushNotificationsService } from "angular2-notifications";
 import { TextService, TextFilterOptions } from '../text.service';
 import { UserService } from '../user.service';
 import { DataService } from '../data.service';
@@ -30,7 +31,8 @@ export class PrivateApp {
     private textService: TextService,
     private titleService: Title,
     private userService: UserService,
-    private dataService: DataService
+    private dataService: DataService,
+    private notificationsService: PushNotificationsService
   ) {}
 
   toolbarClass() {
@@ -42,6 +44,7 @@ export class PrivateApp {
   }
 
   ngOnInit() {
+    this.notificationsService.requestPermission();
     this.textService.addTextReceivedCallback(text => this.onTextReceived(text));
     this.textService.addTextsChangedCallback(texts => this.onTextsChanged());
     this.setTitle();
@@ -73,12 +76,14 @@ export class PrivateApp {
     } else {
       title = normal;
     }
-    console.log('setting title to', title);
     this.titleService.setTitle(title);
   }
 
-  onTextReceived(text: Text) {
+  onTextReceived(text) {
     console.log('received text', text);
+    this.notificationsService.create(`Text from Team ${text.getTeam()} (${text.getFrom()}))`, {
+      body: text.getBody()
+    })
     this.setTitle();
   }
 
