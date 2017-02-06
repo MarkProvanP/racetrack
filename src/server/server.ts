@@ -469,8 +469,6 @@ setup(MONGODB_URI)
       })
     })
 
-    emailer.sendServerStartedEmail()
-
     http.listen(PORT, function() {
       winston.info(`App now listening on port: ${PORT}`);
     });
