@@ -3,7 +3,7 @@
     md-card-title
       h3(*ngIf='!inEditMode') {{racer.name}}
       md-input-container(*ngIf='inEditMode')
-        input(md-input, placeholder='Racer name', [(ngModel)]='racer.name')
+        input(mdInput, placeholder='Racer name', [(ngModel)]='racer.name')
     md-card-content
       table
         tr
@@ -14,7 +14,7 @@
           th Email:
           td
             md-input-container
-              input(md-input, type='email', [(ngModel)]='racer.email', [disabled]='!inEditMode')
+              input(mdInput, type='email', [(ngModel)]='racer.email', [disabled]='!inEditMode')
         tr
           th Phone:
           td
@@ -29,7 +29,7 @@
                 .contact-edit.contact-row(*ngIf='inEditMode')
                   phone-widget([number]='contact.number', [edit]='true')
                   md-input-container
-                    input(md-input, placeholder='Notes', [(ngModel)]='contact.notes')
+                    input(mdInput, placeholder='Notes', [(ngModel)]='contact.notes')
                   md-checkbox([(ngModel)]='contact.preferred') Preferred
                   |  
                   button(md-mini-fab, color='warn', (click)='removeContactFromRacer(contact)')

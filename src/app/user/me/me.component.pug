@@ -27,9 +27,9 @@
     md-card-content
       form([formGroup]='changePassword', (ngSubmit)='onChangePasswordSubmit()', class='form')
         md-input-container
-          input(md-input, type='password', formControlName='newPassword', required, placeholder='New password')
+          input(mdInput, type='password', formControlName='newPassword', required, placeholder='New password')
         md-input-container
-          input(md-input, type='password', formControlName='newPasswordAgain', required, placeholder='New password (again)')
+          input(mdInput, type='password', formControlName='newPasswordAgain', required, placeholder='New password (again)')
         p(*ngIf='changePasswordError', class='change-password-error')
           | {{getChangePasswordErrorMessage()}}
         button(md-raised-button, color='primary', type='submit') Change Password

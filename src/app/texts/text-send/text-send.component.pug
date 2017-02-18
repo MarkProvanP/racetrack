@@ -23,7 +23,7 @@
           td
             .next-recipient
               md-input-container.search-field
-                input(md-input, [(ngModel)]='searchQuery', (input)='filterRecipients()', placeholder='Search for racer name or phone number')
+                input(mdInput, [(ngModel)]='searchQuery', (input)='filterRecipients()', placeholder='Search for racer name or phone number')
               md-card#filter-recipients-list.filter-recipients-list
                 i(*ngIf='!matchingRecipients.length') No racers matching query!
                 md-list(*ngIf='matchingRecipients.length')
@@ -36,7 +36,7 @@
           th Message:
           td
             md-input-container.text-body
-              textarea(md-input, [(ngModel)]='message')
+              textarea(mdInput, [(ngModel)]='message')
       |  
       button(md-raised-button, color='accent', (click)='sendNewText()') Send
       |  

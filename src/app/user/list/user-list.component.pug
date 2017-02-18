@@ -8,17 +8,17 @@
               th Username
               td
                 md-input-container
-                  input(md-input, [(ngModel)]='user.username', [disabled]='!isEditingUser(user)')
+                  input(mdInput, [(ngModel)]='user.username', [disabled]='!isEditingUser(user)')
             tr
               th Name
               td
                 md-input-container
-                  input(md-input, [(ngModel)]='user.name', [disabled]='!isEditingUser(user)')
+                  input(mdInput, [(ngModel)]='user.name', [disabled]='!isEditingUser(user)')
             tr
               th Email
               td
                 md-input-container
-                  input(md-input, type='email', [(ngModel)]='user.email', [disabled]='!isEditingUser(user)')
+                  input(mdInput, type='email', [(ngModel)]='user.email', [disabled]='!isEditingUser(user)')
             tr
               th Phone
               td
@@ -27,7 +27,7 @@
               th Role
               td
                 md-input-container
-                  input(md-input, [(ngModel)]='user.role', [disabled]='!isEditingUser(user)')
+                  input(mdInput, [(ngModel)]='user.role', [disabled]='!isEditingUser(user)')
             tr
               th Privilege Level
               td(*ngIf='!isEditingUser(user)') {{prettyLevelName(user.level)}}
@@ -58,17 +58,17 @@
                   th Username
                   td
                     md-input-container
-                      input(md-input, formControlName='username')
+                      input(mdInput, formControlName='username')
                 tr
                   th Name
                   td
                     md-input-container
-                      input(md-input, formControlName='name')
+                      input(mdInput, formControlName='name')
                 tr
                   th Email
                   td
                     md-input-container
-                      input(md-input, type='email', formControlName='email')
+                      input(mdInput, type='email', formControlName='email')
                 tr
                   th Phone
                   td
@@ -77,7 +77,7 @@
                   th Role
                   td
                     md-input-container
-                      input(md-input, formControlName='role')
+                      input(mdInput, formControlName='role')
                 button(md-raised-button, color='primary', type='submit') Register
             table
               tr

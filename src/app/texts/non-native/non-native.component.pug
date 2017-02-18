@@ -20,10 +20,10 @@
         th Timestamp
         td
           md-input-container
-            input(md-input, type='datetime-local', [(ngModel)]='newText.timestamp')
+            input(mdInput, type='datetime-local', [(ngModel)]='newText.timestamp')
       tr
         th Text
         td
           md-input-container.full-width
-            textarea.text-body(md-input, [(ngModel)]='newText.body')
+            textarea.text-body(mdInput, [(ngModel)]='newText.body')
     button(md-raised-button, color='primary', (click)='createNonNativeText()') Add 

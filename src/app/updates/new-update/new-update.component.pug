@@ -14,7 +14,7 @@ md-card.new-update-card
           td
             .place-name.full-width
               md-input-container.place-input
-                input(md-input, [(ngModel)]='newStatusObj.location.place')
+                input(mdInput, [(ngModel)]='newStatusObj.location.place')
               |  
               button.search-button(md-icon-button, (click)='searchForPlace()')
                 md-icon search
@@ -26,7 +26,7 @@ md-card.new-update-card
           th Notes:
           td
             md-input-container.full-width
-              textarea.notes-input(md-input, [(ngModel)]='newStatusObj.notes')
+              textarea.notes-input(mdInput, [(ngModel)]='newStatusObj.notes')
         tr
           th Linked texts:
           td  {{newStatusObj.linkedTexts}}

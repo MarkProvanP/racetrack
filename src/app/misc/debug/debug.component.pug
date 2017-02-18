@@ -7,19 +7,19 @@ div
     md-button-toggle(value='put') PUT
     md-button-toggle(value='delete') DELETE
   md-input-container
-    input(md-input, [(ngModel)]='apiRequest.endpoint', placeholder='Endpoint')
+    input(mdInput, [(ngModel)]='apiRequest.endpoint', placeholder='Endpoint')
   md-input-container
-    textarea(md-input, [(ngModel)]='apiRequest.body', placeholder='Body')
+    textarea(mdInput, [(ngModel)]='apiRequest.body', placeholder='Body')
   button(md-raised-button, color='primary', (click)='makeApiCall()') Execute!
   div.api-response {{apiResponse}}
   h2 Email
   div
     md-input-container
-      input(md-input, type='email', [(ngModel)]='email.to', placeholder='To:')
+      input(mdInput, type='email', [(ngModel)]='email.to', placeholder='To:')
     md-input-container
-      input(md-input, [(ngModel)]='email.subject', placeholder='Re:')
+      input(mdInput, [(ngModel)]='email.subject', placeholder='Re:')
     md-input-container
-      textarea(md-input, [(ngModel)]='email.body', placeholder='Body:')
+      textarea(mdInput, [(ngModel)]='email.body', placeholder='Body:')
     button(md-raised-button, color='primary', (click)='sendEmail()') Send
   h2 Give everyone pretty colours!
   button(md-raised-button, color='primary', (click)='loadTeams()') Load teams!

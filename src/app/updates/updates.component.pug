@@ -19,7 +19,7 @@
         md-card-subtitle {{selectedTeam.getPrettyRacersList()}}
         h4 Notes
         md-input-container.full-width
-          textarea.notes-input(md-input, [(ngModel)]='selectedTeam.notes')
+          textarea.notes-input(mdInput, [(ngModel)]='selectedTeam.notes')
         md-card-actions
           button(md-button, (click)='saveNotes()') Save
       .add-button-wrapper
@@ -41,7 +41,7 @@
                   location-widget([location]='update.location')
                 td(*ngIf='isEditing(update)')
                   md-input-container
-                    input.place-input(md-input, [(ngModel)]='update.location.place')
+                    input.place-input(mdInput, [(ngModel)]='update.location.place')
                   location-widget([location]='update.location', showCoords='true', hidePlace='true')
               tr
                 th Status
@@ -60,7 +60,7 @@
                 th Notes
                 td
                   md-input-container.full-width
-                    textarea.notes-input(md-input, [(ngModel)]='update.notes', [disabled]='!isEditing(update)')
+                    textarea.notes-input(mdInput, [(ngModel)]='update.notes', [disabled]='!isEditing(update)')
               tr(*ngIf='update.byUser')
                 th By User
                 td

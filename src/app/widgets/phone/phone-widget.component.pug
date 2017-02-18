@@ -5,7 +5,7 @@
   span.number {{number.nationalNumber}}
 .phone-widget.edit(*ngIf='number && edit')
   md-input-container.country-code
-    input(md-input, [(ngModel)]='number.countryCode', width='3')
+    input(mdInput, [(ngModel)]='number.countryCode', width='3')
     span(md-prefix) +
   md-input-container.national-number
-    input(md-input, [(ngModel)]='number.nationalNumber')
+    input(mdInput, [(ngModel)]='number.nationalNumber')

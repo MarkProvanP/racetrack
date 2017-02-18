@@ -35,7 +35,7 @@ md-card.text-card.unknown-text([ngClass]='{"linking": inLinkingMode}')
             .new-contact
               phone-widget([number]='newContact.number', [edit]=true)
               md-input-container
-                input.shrink(md-input, placeholder='Notes', [(ngModel)]='newContact.notes')
+                input.shrink(mdInput, placeholder='Notes', [(ngModel)]='newContact.notes')
               md-checkbox([(ngModel)]='newContact.preferred') Preferred
     md-card-actions
       button(md-raised-button, color='primary', (click)='saveNumberToRacer()', [disabled]='!selectedRacer') Save
