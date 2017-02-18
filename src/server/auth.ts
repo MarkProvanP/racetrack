@@ -138,7 +138,7 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
       .then(user => user.copyWithoutPassword());
   }
 
-  passport.serializeUser((user, done) => {
+  passport.serializeUser((user: User, done) => {
     try {
       done(null, user.username);
     } catch (err) {
@@ -174,13 +174,8 @@ export function AuthWithDataIntermediary(dataIntermediate: DataIntermediary) {
 
   router.get('/api/logout', isLoggedIn, (req, res) => {
     winston.log('info', '/api/logout request');
-    req.session.destroy(err => {
-      if (err) {
-        res.status(500);
-        res.json({status: 'error'});
-      }
-      res.json({status: 'logged out'});
-    });
+    req.logOut()
+    res.json({status: 'logged out'})
   });
 
   router.put('/api/change-password', isLoggedIn, (req, res) => {

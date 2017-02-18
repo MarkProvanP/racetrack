@@ -172,53 +172,37 @@ export class DataIntermediary {
 
 //================================================================
 
-  getTeams(): Promise<Team[]> {
-    return this.dbFacade.getAllTeams()
-    .then(teams => {
-      let racerIdsForTeams = teams.map(team => team.racers);
-      let allRacerIds = _.flatten(racerIdsForTeams)
-      let updateIdsForTeams = teams.map(team => team.statusUpdates);
-      let allUpdateIds = _.flatten(updateIdsForTeams);
-
-      return Promise.all([this.dbFacade.getRacers(allRacerIds), this.dbFacade.getTeamUpdates(allUpdateIds)])
-      .then(results => {
-        let racersObj = results[0];
-        let updatesObj = results[1];
-        let populated = teams.map(team => {
-          let racers = team.racers.map(racerId => racersObj[racerId]) as Racer[]
-          let statusUpdates = team.statusUpdates.map(updateId => updatesObj[updateId]) as TeamUpdate[]
-          let clone = JSON.parse(JSON.stringify(team));
-          clone.racers = racers;
-          clone.statusUpdates = statusUpdates;
-          return clone;
-        })
-        return populated;
-      })
-      .then(teams => teams.map(team => {
-        return Team.fromJSON(team)
-      }))
+  async getTeams(): Promise<Team[]> {
+    let teams = await this.dbFacade.getAllTeams()
+    let racerIdsForTeams = teams.map(team => team.racers);
+    let allRacerIds = _.flatten(racerIdsForTeams)
+    let updateIdsForTeams = teams.map(team => team.statusUpdates);
+    let allUpdateIds = _.flatten(updateIdsForTeams);
+    let results = await Promise.all([this.dbFacade.getRacers(allRacerIds), this.dbFacade.getTeamUpdates(allUpdateIds)])
+    let racersObj = results[0];
+    let updatesObj = results[1];
+    let populated = teams.map(team => {
+      let racers = team.racers.map(racerId => racersObj[racerId]) as Racer[]
+      let statusUpdates = team.statusUpdates.map(updateId => updatesObj[updateId]) as TeamUpdate[]
+      let clone = JSON.parse(JSON.stringify(team));
+      clone.racers = racers;
+      clone.statusUpdates = statusUpdates;
+      return clone;
     })
-    .catch(err => {
-      console.error(`getTeams()`, err);
-      throw err;
-    })
+    return populated.map(team => Team.fromJSON(team));
   }
 
-  private populateTeam(team: UnpopulatedTeam): Promise<PopulatedTeam> {
+  private async populateTeam(team: UnpopulatedTeam): Promise<PopulatedTeam> {
     let updatePromises = team.statusUpdates
       .map(update => this.getStatusUpdate(update));
     let racerPromises = team.racers
       .map(racer => this.getRacer(racer));
     let copy = JSON.parse(JSON.stringify(team));
-    return Promise.all(updatePromises)
-      .then((statuses: TeamUpdate[]) => {
-        copy.statusUpdates = statuses;
-        return Promise.all(racerPromises)
-          .then((racers: Racer[]) => {
-            copy.racers = racers;
-            return Promise.resolve(copy);
-          });
-      });
+    let updates = await Promise.all(updatePromises)
+    copy.statusUpdates = updates;
+    let racers = await Promise.all(racerPromises)
+    copy.racers = racers
+    return copy
   }
 
   getTeam(id: TeamId): Promise<Team> {

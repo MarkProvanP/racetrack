@@ -54,10 +54,8 @@ export class MassTextComponent implements OnInit {
 
   getActiveMassTextEvent() {
     this.dataService.getEvents()
-    .then(events => {
-      return events.filter(event => event instanceof MassTextEvent) as MassTextEvent[]
-    })
-    .then(events => {
+    .then(events => events.filter(event => event instanceof MassTextEvent))
+    .then((events: MassTextEvent[]) => {
       this.oldMassTexts = events.filter(event => event.endedBy);
       return events.filter(event => !event.endedBy)
     })

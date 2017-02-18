@@ -13,15 +13,15 @@ export type TeamId = string;
 export interface DbFormTeam {
   id: TeamId;
   name: string;
-  statusUpdates: [TeamUpdateId];
-  racers: [RacerId];
+  statusUpdates: TeamUpdateId[];
+  racers: RacerId[];
   lastCheckin: CheckinInfo;
 }
 export interface UnpopulatedTeam {
   id: TeamId;
   name: string;
-  statusUpdates: [TeamUpdateId];
-  racers: [RacerId];
+  statusUpdates: TeamUpdateId[];
+  racers: RacerId[];
   lastCheckin: CheckinInfo;
 }
 export interface PopulatedTeam {

@@ -79,7 +79,6 @@ export default function usersRouterWithDb(dataIntermediate: DataIntermediary) {
       return;
     }
     dataIntermediate.resetUserPassword(username)
-    .catch(err => res.status(500).send())
     .then(user => User.fromJSON(user))
     .then(user => user.copyWithoutPassword())
     .then(changedUser => res.json(changedUser))

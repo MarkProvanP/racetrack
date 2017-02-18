@@ -323,18 +323,11 @@ export class DataService {
   }
 
   getRacersWithoutTeams(): Promise<Racer[]> {
-    return this.getRacersFromBackend()
-      .then(racers => {
-        return this.getTeamsFromBackend()
-          .then(teams => {
-            let racersInTeams = teams
-              .map(team => team.racers)
-              .reduce((a, b) => a.concat(b));
-            let comp = (r1, r2) => r1.id === r2.id;
-            let remaining = _.differenceWith(racers, racersInTeams, comp);
-            return Promise.resolve(remaining);
-          });
-      });
+    let racers = this.getRacers()
+    let teams = this.getTeams()
+    let racersInTeams = teams.map(team => team.racers).reduce((a, b) => a.concat(b))
+    let comp = (r1, r2) => r1.id === r2.id;
+    return Promise.resolve(_.differenceWith(racers, racersInTeams, comp))
   }
 
   getRacerForPhoneNumber(phone: PhoneNumber): Racer {

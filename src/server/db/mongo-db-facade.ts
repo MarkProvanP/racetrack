@@ -19,7 +19,6 @@ import {
 import { ThingEvent, ThingEventId } from "../../common/event";
 import { DbFacadeInterface } from "./db-facade";
 import { MongoClient } from "mongodb";
-import { Promise } from "es6-promise";
 
 import { User } from '../auth';
 import { SavedConfig } from "../data-intermediate";

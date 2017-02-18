@@ -7,22 +7,22 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "noEmit": true,
     "noEmitHelpers": true,
+    "importHelpers": true,
     "strictNullChecks": false,
-    "baseUrl": "./src",
-    "paths": [
-    ],
     "lib": [
       "dom",
       "es6"
     ],
+    "files": [],
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
     "types": [
-      "core-js",
       "hammerjs",
       "jasmine",
       "node",
-      "protractor",
-      "selenium-webdriver",
       "source-map",
       "uglify-js",
       "webpack"
