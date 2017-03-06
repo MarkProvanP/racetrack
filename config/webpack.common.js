@@ -149,7 +149,7 @@ module.exports = function (options) {
          */
         {
           test: /\.pug$/,
-          loader: 'pug-html-loader'
+          loader: 'pug-loader'
         },
 
         /* File loader for supporting images, for example, in CSS files.
