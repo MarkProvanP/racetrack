@@ -9,6 +9,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
 import { AgmCoreModule } from "angular2-google-maps/core";
 /*
  * Platform and Environment providers/directives/pipes
@@ -151,6 +152,7 @@ const APP_PROVIDERS = [
     HttpModule,
     RouterModule.forRoot(ROUTES, { useHash: false }),
     MaterialModule,
+    BrowserAnimationsModule,
     AgmCoreModule.forRoot({
       apiKey: GOOGLE_MAPS_API_KEY
     }),
