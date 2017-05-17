@@ -129,7 +129,7 @@ module.exports = function (options) {
         {
           test: /\.scss$/,
           exclude: /node_modules/,
-          loaders: ['raw-loader', 'sass-loader']
+          loaders: ['to-string-loader', 'style-loader', 'css-loader', 'sass-loader']
         },
 
         /* Raw loader support for *.html
@@ -149,7 +149,7 @@ module.exports = function (options) {
          */
         {
           test: /\.pug$/,
-          loader: 'pug-loader'
+          use: ['raw-loader', 'pug-html-loader']
         },
 
         /* File loader for supporting images, for example, in CSS files.
