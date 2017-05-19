@@ -147,18 +147,10 @@ export class Emailer {
   private smtpTransport;
 
   constructor(xoauth2Settings) {
-    let generator = xoauth2.createXOAuth2Generator(xoauth2Settings);
-
-    generator.on('token', (token) => {
-      console.log(`New token for ${token.user}: ${token.accessToken}`)
-    })
-
     this.smtpTransport = nodemailer.createTransport({
       service: "Gmail",
-      auth: {
-        xoauth2: generator
-      }
-    });
+      auth: xoauth2Settings
+    })
 
     this.smtpTransport.verify((err, success) => {
       if (err) {
