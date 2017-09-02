@@ -146,7 +146,7 @@ export class Team {
 
   getPrettyTimeSinceCheckin() {
     let now = moment();
-    let diff = moment(this.lastCheckin).diff(now);
+    let diff = moment(this.lastCheckin.checkinTime).diff(now);
     return moment.duration(diff).humanize(true);
   }
 }
