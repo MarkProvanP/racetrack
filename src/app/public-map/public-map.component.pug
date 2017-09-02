@@ -1,14 +1,14 @@
 .public-map-container
-  sebm-google-map([latitude]='default.lat', [longitude]='default.lng', [zoom]='default.zoom')
-    sebm-google-map-marker([latitude]='hostel.lat',
+  agm-map([latitude]='default.lat', [longitude]='default.lng', [zoom]='default.zoom')
+    agm-marker([latitude]='hostel.lat',
     [longitude]='hostel.lng',
     [iconUrl]='hostel.iconUrl')
-    sebm-google-map-marker(*ngFor='let team of showingAllTeams() | teamHasUpdate ',
+    agm-marker(*ngFor='let team of showingAllTeams() | teamHasUpdate ',
       [latitude]='(team.getLastUpdate().location.latitude)',
       [longitude]='(team.getLastUpdate().location.longitude)',
       [iconUrl]='getIconUrlForTeam(team)',
       [title]='team.name')
-      sebm-google-map-info-window
+      agm-info-window
         table
           tr
             th Team name:
@@ -29,25 +29,25 @@
             td(colspan='2')
               button(md-button, (click)='showTeamProgress(team)') Track 
     ng-container(*ngIf='allProgressLines')
-      sebm-google-map-polyline(*ngFor='let team of showingAllTeams() | teamHasUpdate ',
+      agm-polyline(*ngFor='let team of showingAllTeams() | teamHasUpdate ',
         [strokeColor]='team.color',
         [strokeWeight]='polylineSettings.strokeWeight',
         [strokeOpacity]='polylineSettings.strokeOpacity')
-        sebm-google-map-polyline-point(*ngFor='let update of team.statusUpdates',
+        agm-polyline-point(*ngFor='let update of team.statusUpdates',
           [latitude]='update.location.latitude',
           [longitude]='update.location.longitude')
-    sebm-google-map-polyline(*ngIf='teamShowingProgress',
+    agm-polyline(*ngIf='teamShowingProgress',
       [strokeColor]='teamShowingProgress.color',
       [strokeWeight]='polylineSettings.strokeWeight',
       [strokeOpacity]='polylineSettings.strokeOpacity')
-      sebm-google-map-polyline-point(*ngFor='let update of teamStatusUpdates()',
+      agm-polyline-point(*ngFor='let update of teamStatusUpdates()',
         [latitude]='update.location.latitude',
         [longitude]='update.location.longitude')
-    sebm-google-map-marker(*ngFor='let update of teamStatusUpdates()',
+    agm-marker(*ngFor='let update of teamStatusUpdates()',
       [iconUrl]='getIconUrlForTeam(teamShowingProgress)',
       [latitude]='update.location.latitude',
       [longitude]='update.location.longitude')
-      sebm-google-map-info-window
+      agm-info-window
         table
           tr
             th Time:

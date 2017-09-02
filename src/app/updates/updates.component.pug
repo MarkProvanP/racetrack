@@ -76,11 +76,11 @@
             button(md-icon-button, *ngIf='isEditing(update)', (click)='saveUpdate(update)')
               md-icon save
           .location-map
-            sebm-google-map([latitude]='update.location.latitude',
+            agm-map([latitude]='update.location.latitude',
               [longitude]='update.location.longitude',
               [disableDefaultUI]='default.ui',
               [zoom]='default.zoom')
-              sebm-google-map-marker([latitude]='update.location.latitude',
+              agm-marker([latitude]='update.location.latitude',
                 [longitude]='update.location.longitude',
                 [markerDraggable]='isEditing(update)',
                 (dragEnd)='onMarkerDragEnd($event)')

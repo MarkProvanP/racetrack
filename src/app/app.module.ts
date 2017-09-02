@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
-import { AgmCoreModule } from "angular2-google-maps/core";
+import { AgmCoreModule } from "@agm/core";
 /*
  * Platform and Environment providers/directives/pipes
  */

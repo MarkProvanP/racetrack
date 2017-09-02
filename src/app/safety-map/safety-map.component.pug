@@ -1,18 +1,18 @@
 .safety-map-container
-  sebm-google-map([latitude]='currentMapSettings.lat',
+  agm-map([latitude]='currentMapSettings.lat',
     [longitude]='currentMapSettings.lng',
     [zoom]='currentMapSettings.zoom',
     (centerChange)='onMapCenterChange($event)',
     (zoomChange)='onMapZoomChange($event)')
-    sebm-google-map-marker([latitude]='hostel.lat',
+    agm-marker([latitude]='hostel.lat',
       [longitude]='hostel.lng',
       [iconUrl]='hostel.iconUrl')
-    sebm-google-map-marker(*ngFor='let team of teams | teamHasUpdate ',
+    agm-marker(*ngFor='let team of teams | teamHasUpdate ',
       [latitude]='(team.getLastUpdate().location.latitude)',
       [longitude]='(team.getLastUpdate().location.longitude)',
       [iconUrl]='getIconUrlForTeam(team)',
       [title]='team.name')
-      sebm-google-map-info-window
+      agm-info-window
         table
           tr
             th Team name:

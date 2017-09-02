@@ -37,10 +37,10 @@ md-card.new-update-card
       |  
       button(md-raised-button, (click)='cancelNewUpdate()') Cancel
     .location-map
-      sebm-google-map([latitude]='mapSettings.lat',
+      agm-map([latitude]='mapSettings.lat',
       [longitude]='mapSettings.lng',
       [zoom]='mapSettings.zoom')
-        sebm-google-map-marker([latitude]='(newStatusObj.location.latitude)',
+        agm-marker([latitude]='(newStatusObj.location.latitude)',
         [longitude]='(newStatusObj.location.longitude)',
         [markerDraggable]='true',
         (dragEnd)='onMarkerDragEnd($event)')
