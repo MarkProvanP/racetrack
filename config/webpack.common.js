@@ -189,6 +189,15 @@ module.exports = function (options) {
           use: 'file-loader'
         },
 
+        /**
+         * Pug loader for .jade and .pug files
+         * Converts to HTML
+         */
+        {
+          test: /\.pug$/,
+          use: ['raw-loader', 'pug-html-loader']
+        },
+
         /* File loader for supporting fonts, for example, in CSS files.
         */
         {

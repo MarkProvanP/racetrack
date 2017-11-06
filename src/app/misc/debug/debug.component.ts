@@ -11,7 +11,6 @@ import { Team } from "../../../common/team";
 
 import * as moment from "moment"
 
-import randomColor = require("randomcolor");
 
 @Component({
   selector: 'debug-component',
@@ -81,7 +80,7 @@ export class DebugComponent implements OnInit {
 
   prettyColors() {
     this.teams.forEach(team => {
-      team.color = randomColor();
+      team.color = '#FFF';
       this.dataService.updateTeamAndWriteToBackend(team);
     })
   }
