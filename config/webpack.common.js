@@ -392,7 +392,7 @@ module.exports = function (options) {
          * @default true
          */
         disabled: !AOT,
-        tsConfig: helpers.root('tsconfig.webpack.json'),
+        tsConfigPath: helpers.root('tsconfig.webpack.json'),
       }),
 
       /**
