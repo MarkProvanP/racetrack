@@ -3,7 +3,7 @@ import { Location } from "@angular/common";
 import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
-import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
+import { MatSnackBar} from "@angular/material";
 
 import * as io from "socket.io-client";
 
@@ -128,7 +128,7 @@ export class UserService {
   constructor(
     private http: Http,
     private location: Location,
-    private snackBar: MdSnackBar
+    private snackBar: MatSnackBar
   ) {
     this.auth()
     .toPromise()

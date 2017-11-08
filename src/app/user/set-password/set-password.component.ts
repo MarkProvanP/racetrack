@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 
-import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
+import { MatSnackBar } from "@angular/material";
 
 import { UserService } from '../../user.service';
 
@@ -20,7 +20,7 @@ export class SetPasswordComponent {
   constructor(
     private userService: UserService,
     private router: Router,
-    private snackBar: MdSnackBar
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {

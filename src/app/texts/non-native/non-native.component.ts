@@ -4,8 +4,8 @@ import { TextService } from "../../text.service";
 import { UserService } from "../../user.service";
 import { PhoneNumber } from "../../../common/text";
 
-import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
-const DEFAULT_SNACKBAR_CONFIG = new MdSnackBarConfig();
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
+const DEFAULT_SNACKBAR_CONFIG = new MatSnackBarConfig();
 DEFAULT_SNACKBAR_CONFIG.duration = 5000;
 
 @Component({
@@ -25,7 +25,7 @@ export class AddNonNativeTextComponent {
   constructor(
     private textService: TextService,
     private userService: UserService,
-    private snackBar: MdSnackBar
+    private snackBar: MatSnackBar
   ) {}
 
   createNonNativeText() {

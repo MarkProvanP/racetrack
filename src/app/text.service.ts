@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
-import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
 
 import { Text, TextId, PhoneNumber, InboundText, OutboundText } from '../common/text';
 import { Racer } from '../common/racer';
@@ -124,7 +124,7 @@ export class TextService {
   constructor(
     private http: Http,
     private userService: UserService,
-    private snackBar: MdSnackBar
+    private snackBar: MatSnackBar
   ) {
     this.userService.addOnAuthStatusChangedListener(authenticated => {
       console.log('authenticated status changed to', authenticated);

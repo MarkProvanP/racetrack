@@ -1,6 +1,6 @@
 import { Injectable }    from '@angular/core';
 import { Headers, Http } from '@angular/http';
-import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
+import { MatSnackBar } from "@angular/material";
 import * as _ from "lodash";
 import 'rxjs/add/operator/toPromise';
 
@@ -51,7 +51,7 @@ export class DataService {
   constructor(
     private http: Http,
     private userService: UserService,
-    private snackBar: MdSnackBar
+    private snackBar: MatSnackBar
   ) {
     this.userService.addOnAuthStatusChangedListener(authenticated => {
       if (authenticated) {

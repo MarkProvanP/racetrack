@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 
-import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
+import { MatSnackBar } from "@angular/material";
 
 import { UserService } from "../../user.service";
 import { DataService } from "../../data.service";
@@ -22,7 +22,7 @@ export class MeComponent implements OnInit {
   constructor(
     private userService: UserService,
     private dataService: DataService,
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {

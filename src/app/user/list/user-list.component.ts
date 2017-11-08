@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 
-import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
 
 import * as Papa from "papaparse";
 
@@ -11,7 +11,7 @@ import { PhoneNumber } from "../../../common/text";
 import { UserService } from "../../user.service";
 import { DataService } from "../../data.service";
 
-const DEFAULT_SNACKBAR_CONFIG = new MdSnackBarConfig();
+const DEFAULT_SNACKBAR_CONFIG = new MatSnackBarConfig();
 DEFAULT_SNACKBAR_CONFIG.duration = 5000;
 
 function UsernameToEmail(username: String) {
@@ -45,7 +45,7 @@ export class UserListComponent implements OnInit {
     private userService: UserService,
     private dataService: DataService,
     private router: Router,
-    private snackBar: MdSnackBar
+    private snackBar: MatSnackBar
   ) {
     this.loadUsers();
   }

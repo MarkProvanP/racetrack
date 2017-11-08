@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { MdSnackBar, MdSnackBarConfig } from "@angular/material";
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
 
 import { Racer } from "../../../common/racer";
 import { Team, CheckinInfo } from "../../../common/team";
@@ -14,7 +14,7 @@ import * as moment from "moment";
 const NUM_TEXTS_DISPLAYED_SIMULTANEOUSLY = 10;
 const DEFAULT_SHOW_OPTION = 'all';
 
-const DEFAULT_SNACKBAR_CONFIG = new MdSnackBarConfig();
+const DEFAULT_SNACKBAR_CONFIG = new MatSnackBarConfig();
 DEFAULT_SNACKBAR_CONFIG.duration = 5000;
 
 @Component({
@@ -58,7 +58,7 @@ export class TextsListComponent {
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private snackBar: MdSnackBar
+    private snackBar: MatSnackBar
   ) {}
 
   updateText(text: Text, message?: string) {
