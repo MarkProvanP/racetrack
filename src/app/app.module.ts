@@ -1,6 +1,6 @@
 import "./rxjs-extensions";
 
-import { MaterialModule } from "@angular/material";
+import { RacetrackMaterialModule } from "./racetrack.material.module";
 
 import { NgModule, ApplicationRef } from '@angular/core';
 import { Title, BrowserModule } from '@angular/platform-browser';
@@ -151,7 +151,7 @@ const APP_PROVIDERS = [
     ReactiveFormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES, { useHash: false }),
-    MaterialModule,
+    RacetrackMaterialModule,
     BrowserAnimationsModule,
     AgmCoreModule.forRoot({
       apiKey: GOOGLE_MAPS_API_KEY
