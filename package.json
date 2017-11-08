@@ -78,7 +78,7 @@
     "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js"
   },
   "dependencies": {
-    "@agm/core": "1.0.0-beta.1",
+    "@agm/core": "1.0.0-beta.2",
     "@angular/animations": "5.0.0",
     "@angular/cdk": "5.0.0-rc0",
     "@angular/common": "5.0.0",
