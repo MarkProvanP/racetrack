@@ -1,6 +1,5 @@
 import "./rxjs-extensions";
 
-import { RacetrackMaterialModule } from "./racetrack.material.module";
 
 import { NgModule, ApplicationRef } from '@angular/core';
 import { Title, BrowserModule } from '@angular/platform-browser';
@@ -11,6 +10,8 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
 import { AgmCoreModule } from "@agm/core";
+
+import { RacetrackMaterialModule } from "./racetrack.material.module";
 /*
  * Platform and Environment providers/directives/pipes
  */
