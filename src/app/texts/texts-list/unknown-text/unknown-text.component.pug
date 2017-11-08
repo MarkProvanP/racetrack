@@ -5,7 +5,7 @@ mat-card.text-card.unknown-text([ngClass]='{"linking": inLinkingMode}')
         phone-widget([number]='text.from')
       time-widget([time]='text.timestamp')
       |  
-      button(mat-icon-button, (click)='linkUnknownTextToRacer(text)', [title]='"Link number to racer"', [disabled]='inLinkingMode')
+      button(mat-icon-button, (click)='linkUnknownTextToRacer()', [title]='"Link number to racer"', [disabled]='inLinkingMode')
         mat-icon link
   mat-card.linking-card(*ngIf='inLinkingMode')
     mat-card-content.link-body

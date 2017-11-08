@@ -13,7 +13,7 @@ import { Racer } from '../../../../common/racer';
   styleUrls: ['./unknown-text.component.scss']
 })
 export class UnknownTextComponent implements OnInit {
-  @Input() text: Text;
+  @Input() text: InboundText;
   @Input() display: any;
   @Output() onMakeRead: EventEmitter<any> = new EventEmitter<any>();
   @Output() onCreateReply: EventEmitter<any> = new EventEmitter<any>();

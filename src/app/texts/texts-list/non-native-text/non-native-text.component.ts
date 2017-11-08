@@ -5,7 +5,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 
 import { Team, TeamId } from "../../../../common/team";
 import { Racer, RacerId } from "../../../../common/racer";
-import { Text, InboundText } from '../../../../common/text';
+import { Text, InboundText, NonNativeText } from '../../../../common/text';
 
 import { UserActionInfo } from "../../../../common/user";
 
@@ -18,12 +18,12 @@ import { DataService } from "../../../data.service";
   styleUrls: ['./non-native-text.component.scss']
 })
 export class NonNativeTextComponent implements OnInit {
-  @Input() text: InboundText;
+  @Input() text: NonNativeText;
   @Input() display: any;
-  @Output() onMakeRead: EventEmitter<InboundText> = new EventEmitter();
-  @Output() onCreateReply: EventEmitter<InboundText> = new EventEmitter();
-  @Output() onAddCheckin: EventEmitter<InboundText> = new EventEmitter();
-  @Output() onCreateUpdate: EventEmitter<InboundText> = new EventEmitter();
+  @Output() onMakeRead: EventEmitter<NonNativeText> = new EventEmitter();
+  @Output() onCreateReply: EventEmitter<NonNativeText> = new EventEmitter();
+  @Output() onAddCheckin: EventEmitter<NonNativeText> = new EventEmitter();
+  @Output() onCreateUpdate: EventEmitter<NonNativeText> = new EventEmitter();
   textTeam: Team;
   textRacer: Racer;
 

@@ -182,6 +182,7 @@ export abstract class Text {
 export class NonNativeText extends Text {
   text_subclass = "NonNativeText";
   addedBy: UserActionInfo;
+  readBy: UserActionInfo;
   outgoing: boolean;
 
   isOutgoing() {
@@ -204,6 +205,7 @@ export class NonNativeText extends Text {
     this.from = PhoneNumber.parse(properties.from);
     this.timestamp = properties.timestamp;
     this.addedBy = UserActionInfo.fromJSON(properties.addedBy)
+    this.readBy = UserActionInfo.fromJSON(properties.readBy);
   }
 }
 

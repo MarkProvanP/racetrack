@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 
 import { Team, TeamId } from "../../../../common/team";
 import { Racer, RacerId } from "../../../../common/racer";
-import { Text } from '../../../../common/text';
+import { Text, OutboundText } from '../../../../common/text';
 
 import { DataService } from "../../../data.service";
 
@@ -12,7 +12,7 @@ import { DataService } from "../../../data.service";
   styleUrls: ['./sent-text.component.scss']
 })
 export class SentTextComponent implements OnInit {
-  @Input() text: Text;
+  @Input() text: OutboundText;
   @Input() display: any;
   textTeam: Team;
   textRacer: Racer;

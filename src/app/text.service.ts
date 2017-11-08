@@ -3,7 +3,7 @@ import { Headers, Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
 
-import { Text, TextId, PhoneNumber, InboundText, OutboundText } from '../common/text';
+import { Text, TextId, PhoneNumber, InboundText, OutboundText, NonNativeText } from '../common/text';
 import { Racer } from '../common/racer';
 import { Team } from '../common/team';
 import { TextReceivedMessage, TextUpdatedMessage, TextSentMessage } from "../common/message";
@@ -245,7 +245,7 @@ export class TextService {
       .catch(err => this.handleError(err));
   }
 
-  createNonNativeText(properties) {
+  createNonNativeText(properties): Promise<NonNativeText> {
     return this.http.post(`${this.textsUrl}/non-native`, JSON.stringify(properties), this.httpExtras)
     .toPromise()
     .then(res => res.json())
