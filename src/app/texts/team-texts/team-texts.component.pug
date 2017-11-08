@@ -1,12 +1,12 @@
 .texts-by-team.master-detail
   .teams-list.master
-    md-nav-list
-      a(md-list-item, *ngFor='let team of teams | orderBy: "+id" ',
+    mat-nav-list
+      a(mat-list-item, *ngFor='let team of teams | orderBy: "+id" ',
       [routerLink]='getTeamLink(team)',
       routerLinkActive='selected')
-        div(md-list-avatar)
+        div(mat-list-avatar)
           h1.team-number([ngStyle]='{"background-color": team.color}') {{team.id}}
-        h3(md-line, [ngClass]='{unread: numberUnreadMessagesForTeam(team)}') ({{numberUnreadMessagesForTeam(team)}}) {{team.name}}
-        p(md-line) {{team.getPrettyRacersList()}}
+        h3(mat-line, [ngClass]='{unread: numberUnreadMessagesForTeam(team)}') ({{numberUnreadMessagesForTeam(team)}}) {{team.name}}
+        p(mat-line) {{team.getPrettyRacersList()}}
   texts-list([texts]='selectedTeamTexts', [display]='displayOptions')
 

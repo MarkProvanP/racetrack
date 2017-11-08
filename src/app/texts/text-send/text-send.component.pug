@@ -1,33 +1,33 @@
 .text-send
-  md-card
-    md-card-content
+  mat-card
+    mat-card-content
       div(*ngIf='isSending')
         i Sending
       table(style='width: 100%')
         tr
           th To:
-            button(md-icon-button, (click)='toggleEditingRecipients()')
-              md-icon(*ngIf='editingRecipients') done
-              md-icon(*ngIf='!editingRecipients') edit
+            button(mat-icon-button, (click)='toggleEditingRecipients()')
+              mat-icon(*ngIf='editingRecipients') done
+              mat-icon(*ngIf='!editingRecipients') edit
           td 
             .text-recipients-list
-              md-card.recipient-card(*ngFor='let recipient of recipients')
+              mat-card.recipient-card(*ngFor='let recipient of recipients')
                 span.recipient-name {{recipient.name}}
                 span.recipient-number-note {{recipient.numNote}}
                 phone-widget([number]='recipient.number')
 
-                button(md-icon-button, *ngIf='editingRecipients', (click)='removeRecipient(recipient)')
-                  md-icon delete
+                button(mat-icon-button, *ngIf='editingRecipients', (click)='removeRecipient(recipient)')
+                  mat-icon delete
         tr(*ngIf='editingRecipients')
           th Add
           td
             .next-recipient
-              md-input-container.search-field
+              mat-input-container.search-field
                 input(mdInput, [(ngModel)]='searchQuery', (input)='filterRecipients()', placeholder='Search for racer name or phone number')
-              md-card#filter-recipients-list.filter-recipients-list
+              mat-card#filter-recipients-list.filter-recipients-list
                 i(*ngIf='!matchingRecipients.length') No racers matching query!
-                md-list(*ngIf='matchingRecipients.length')
-                  md-list-item(*ngFor='let recipient of matchingRecipients', (click)='addRecipient(recipient)')
+                mat-list(*ngIf='matchingRecipients.length')
+                  mat-list-item(*ngFor='let recipient of matchingRecipients', (click)='addRecipient(recipient)')
                     ng-container(*ngIf='recipient')
                       | {{recipient.name}}
                       | {{recipient.numNote}}
@@ -35,9 +35,9 @@
         tr
           th Message:
           td
-            md-input-container.text-body
+            mat-input-container.text-body
               textarea(mdInput, [(ngModel)]='message')
       |  
-      button(md-raised-button, color='accent', (click)='sendNewText()') Send
+      button(mat-raised-button, color='accent', (click)='sendNewText()') Send
       |  
-      button(md-raised-button, (click)='cancelNewText()') Cancel
+      button(mat-raised-button, (click)='cancelNewText()') Cancel

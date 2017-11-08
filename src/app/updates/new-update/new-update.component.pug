@@ -1,4 +1,4 @@
-md-card.new-update-card
+mat-card.new-update-card
   .new-status-update
     .info-table
       .status-row
@@ -7,17 +7,17 @@ md-card.new-update-card
         tr
           th Status
           td
-            md-select([(ngModel)]='newStatusObj.status')
-              md-option(*ngFor='let item of statusEnum | keys', [value]='item.key') {{getPrettyStatusName(item)}}
+            mat-select([(ngModel)]='newStatusObj.status')
+              mat-option(*ngFor='let item of statusEnum | keys', [value]='item.key') {{getPrettyStatusName(item)}}
         tr
           th Place:
           td
             .place-name.full-width
-              md-input-container.place-input
+              mat-input-container.place-input
                 input(mdInput, [(ngModel)]='newStatusObj.location.place')
               |  
-              button.search-button(md-icon-button, (click)='searchForPlace()')
-                md-icon search
+              button.search-button(mat-icon-button, (click)='searchForPlace()')
+                mat-icon search
             div
               p.place-suggestion {{placeSuggestion}}
             div
@@ -25,17 +25,17 @@ md-card.new-update-card
         tr
           th Notes:
           td
-            md-input-container.full-width
+            mat-input-container.full-width
               textarea.notes-input(mdInput, [(ngModel)]='newStatusObj.notes')
         tr
           th Linked texts:
           td  {{newStatusObj.linkedTexts}}
-      md-checkbox([(ngModel)]='newStatusObj.isPublic') Make public
-      md-slide-toggle([(ngModel)]='team.inEurope') In Europe?
+      mat-checkbox([(ngModel)]='newStatusObj.isPublic') Make public
+      mat-slide-toggle([(ngModel)]='team.inEurope') In Europe?
       |  
-      button(md-raised-button, color='accent', (click)='saveNewUpdate()') Save update
+      button(mat-raised-button, color='accent', (click)='saveNewUpdate()') Save update
       |  
-      button(md-raised-button, (click)='cancelNewUpdate()') Cancel
+      button(mat-raised-button, (click)='cancelNewUpdate()') Cancel
     .location-map
       agm-map([latitude]='mapSettings.lat',
       [longitude]='mapSettings.lng',

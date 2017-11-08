@@ -1,5 +1,5 @@
 .add-non-native-text-component-wrapper
-  md-card
+  mat-card
     h1 Add non-native text
     table
       tr
@@ -14,16 +14,16 @@
         th Text Direction
         td
           span.direction {{getTextDirection()}}
-          button(md-icon-button, (click)='toggleDirection()')
-            md-icon swap_horiz
+          button(mat-icon-button, (click)='toggleDirection()')
+            mat-icon swap_horiz
       tr
         th Timestamp
         td
-          md-input-container
+          mat-input-container
             input(mdInput, type='datetime-local', [(ngModel)]='newText.timestamp')
       tr
         th Text
         td
-          md-input-container.full-width
+          mat-input-container.full-width
             textarea.text-body(mdInput, [(ngModel)]='newText.body')
-    button(md-raised-button, color='primary', (click)='createNonNativeText()') Add 
+    button(mat-raised-button, color='primary', (click)='createNonNativeText()') Add 

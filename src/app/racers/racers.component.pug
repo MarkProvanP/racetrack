@@ -1,12 +1,12 @@
 .racers.master-detail
   .master
-    md-nav-list
-      a(md-list-item, *ngFor='let racer of racers | orderBy: "+name" ',
+    mat-nav-list
+      a(mat-list-item, *ngFor='let racer of racers | orderBy: "+name" ',
       routerLink="{{getRacerLink(racer)}}",
       routerLinkActive='selected')
-        h3(md-line) {{racer.name}}
+        h3(mat-line) {{racer.name}}
     |  
-    button(md-fab, (click)='createRacer()')
-      md-icon.md-24 add
+    button(mat-fab, (click)='createRacer()')
+      mat-icon.mat-24 add
   .detail
     router-outlet

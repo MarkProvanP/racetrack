@@ -1,12 +1,12 @@
 <div class='location-widget' [title]='getTooltip()'>
   <div class='if-gps' *ngIf='ifGPS()'>
-    <md-icon>gps_fixed</md-icon>
+    <mat-icon>gps_fixed</mat-icon>
   </div>
   <div class='if-network' *ngIf='ifNetwork()'>
-    <md-icon>network_cell</md-icon>
+    <mat-icon>network_cell</mat-icon>
   </div>
   <div class='if-manual' *ngIf='ifManual()'>
-    <md-icon>pin_drop</md-icon>
+    <mat-icon>pin_drop</mat-icon>
   </div>
   <div class='place' *ngIf='!hidePlace'>
     {{location.place}}

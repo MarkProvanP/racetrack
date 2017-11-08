@@ -1,6 +1,6 @@
-md-card.text-card.text-outbound([ngClass]='{"unknown-text": !textRacer}')
-  md-card-header
-    md-card-title
+mat-card.text-card.text-outbound([ngClass]='{"unknown-text": !textRacer}')
+  mat-card-header
+    mat-card-title
       i(*ngIf='!textRacer') Text to unknown number!
         phone-widget([number]='text.to')
       .inline-text-title(*ngIf='textRacer && display.oneline')
@@ -16,9 +16,9 @@ md-card.text-card.text-outbound([ngClass]='{"unknown-text": !textRacer}')
         div(*ngIf='display.number')
           phone-widget([number]='text.from')
         div(*ngIf='display.time') {{text.getPrettyTimestamp()}}
-  md-card-content  {{text.body}}
+  mat-card-content  {{text.body}}
   .text-sent(*ngIf='text.sentBy')
     | Sent by
     user-widget([user]='text.sentBy.user')
-  md-card-actions
+  mat-card-actions
 

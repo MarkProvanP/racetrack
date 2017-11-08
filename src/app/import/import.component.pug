@@ -1,8 +1,8 @@
-md-card
+mat-card
   h3 Import
   |  
   input(type='file', (change)='fileChangeEvent($event)')
-  button(md-raised-button, *ngIf='parsedData && !parsedTeams', (click)='process()') Process
+  button(mat-raised-button, *ngIf='parsedData && !parsedTeams', (click)='process()') Process
   table(*ngIf='parsedData && !parsedTeams')
     thead
       tr
@@ -22,17 +22,17 @@ md-card
         td
           phone-widget([number]='row.mobile')
   .team-list
-    md-card.team(*ngFor='let team of parsedTeams')
-      md-card-header
-        div(md-card-avatar)
+    mat-card.team(*ngFor='let team of parsedTeams')
+      mat-card-header
+        div(mat-card-avatar)
           h1.team-number {{team.id}}
-        md-card-title {{team.name}}
-        md-card-subtitle
+        mat-card-title {{team.name}}
+        mat-card-subtitle
           span.label Affiliation:
           | {{team.affiliation}}
-      md-card-content
+      mat-card-content
         .racer-list
-          md-card.racer(*ngFor='let racer of team.racers')
+          mat-card.racer(*ngFor='let racer of team.racers')
             .racer-detail
               span.label Name
               span.value {{racer.name}}
@@ -50,7 +50,7 @@ md-card
             .racer-detail
               span.label Creation status
               span.value
-                md-icon(*ngIf='isRacerCreated(racer.id)') done
-                md-icon(*ngIf='!isRacerCreated(racer.id)') cancel
-      md-card-actions
-        button(md-raised-button, color='primary', [disabled]='isTeamCreated(team)', (click)='createTeam(team)') Create
+                mat-icon(*ngIf='isRacerCreated(racer.id)') done
+                mat-icon(*ngIf='!isRacerCreated(racer.id)') cancel
+      mat-card-actions
+        button(mat-raised-button, color='primary', [disabled]='isTeamCreated(team)', (click)='createTeam(team)') Create

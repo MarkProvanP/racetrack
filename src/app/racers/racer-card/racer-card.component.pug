@@ -1,10 +1,10 @@
 .racer-card(*ngIf='racer')
-  md-card
-    md-card-title
+  mat-card
+    mat-card-title
       h3(*ngIf='!inEditMode') {{racer.name}}
-      md-input-container(*ngIf='inEditMode')
+      mat-input-container(*ngIf='inEditMode')
         input(mdInput, placeholder='Racer name', [(ngModel)]='racer.name')
-    md-card-content
+    mat-card-content
       table
         tr
           th Id:
@@ -13,7 +13,7 @@
         tr
           th Email:
           td
-            md-input-container
+            mat-input-container
               input(mdInput, type='email', [(ngModel)]='racer.email', [disabled]='!inEditMode')
         tr
           th Phone:
@@ -25,24 +25,24 @@
                   p
                     i Notes:
                     |  {{contact.notes || &quot;No notes&quot;}}
-                  md-checkbox([(ngModel)]='contact.preferred', disabled) Preferred
+                  mat-checkbox([(ngModel)]='contact.preferred', disabled) Preferred
                 .contact-edit.contact-row(*ngIf='inEditMode')
                   phone-widget([number]='contact.number', [edit]='true')
-                  md-input-container
+                  mat-input-container
                     input(mdInput, placeholder='Notes', [(ngModel)]='contact.notes')
-                  md-checkbox([(ngModel)]='contact.preferred') Preferred
+                  mat-checkbox([(ngModel)]='contact.preferred') Preferred
                   |  
-                  button(md-mini-fab, color='warn', (click)='removeContactFromRacer(contact)')
-                    md-icon.md-24 remove
+                  button(mat-mini-fab, color='warn', (click)='removeContactFromRacer(contact)')
+                    mat-icon.mat-24 remove
             |  
-            button(md-mini-fab, *ngIf='inEditMode', (click)='addNumberToRacer()')
-              md-icon.md-24 add
+            button(mat-mini-fab, *ngIf='inEditMode', (click)='addNumberToRacer()')
+              mat-icon.mat-24 add
       |  
-      button(md-raised-button, color='primary', (click)='enterEditMode()', *ngIf='!inEditMode') Edit
+      button(mat-raised-button, color='primary', (click)='enterEditMode()', *ngIf='!inEditMode') Edit
       |  
-      button(md-raised-button, color='primary', (click)='exitEditMode()', *ngIf='inEditMode') Finish
+      button(mat-raised-button, color='primary', (click)='exitEditMode()', *ngIf='inEditMode') Finish
       |  
-      button(md-raised-button, color='warn', (click)='deleteRacer()') Delete
+      button(mat-raised-button, color='warn', (click)='deleteRacer()') Delete
       |  
-      button(md-raised-button, color='primary', (click)='goToRacerTexts(racer)') See Texts
+      button(mat-raised-button, color='primary', (click)='goToRacerTexts(racer)') See Texts
 

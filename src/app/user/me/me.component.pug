@@ -1,7 +1,7 @@
 .me-wrapper
-  md-card
-    md-card-title  My user details
-    md-card-content
+  mat-card
+    mat-card-title  My user details
+    mat-card-content
       table(*ngIf='getUser()')
         tr
           th Username:
@@ -22,14 +22,14 @@
         tr
           th Privilege Level:
           td {{prettyLevelName(getUser().level)}}
-  md-card
-    md-card-title Change Password
-    md-card-content
+  mat-card
+    mat-card-title Change Password
+    mat-card-content
       form([formGroup]='changePassword', (ngSubmit)='onChangePasswordSubmit()', class='form')
-        md-input-container
+        mat-input-container
           input(mdInput, type='password', formControlName='newPassword', required, placeholder='New password')
-        md-input-container
+        mat-input-container
           input(mdInput, type='password', formControlName='newPasswordAgain', required, placeholder='New password (again)')
         p(*ngIf='changePasswordError', class='change-password-error')
           | {{getChangePasswordErrorMessage()}}
-        button(md-raised-button, color='primary', type='submit') Change Password
+        button(mat-raised-button, color='primary', type='submit') Change Password

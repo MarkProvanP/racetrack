@@ -1,20 +1,20 @@
-md-card(class='dashboard-card', [ngClass]='getCardClass()')
-  md-card-header
-    div(md-card-avatar)
+mat-card(class='dashboard-card', [ngClass]='getCardClass()')
+  mat-card-header
+    div(mat-card-avatar)
       h1.team-number([ngStyle]='{"background-color": team.color}') {{team.id}}
-    button(md-icon-button, (click)='toggleBig()')
-      md-icon(*ngIf='isBig') expand_less
-      md-icon(*ngIf='!isBig') expand_more
-    md-card-title
-      a(md-row, [routerLink]="['/safetyteam', 'teams', team.id]") {{team.name}}
+    button(mat-icon-button, (click)='toggleBig()')
+      mat-icon(*ngIf='isBig') expand_less
+      mat-icon(*ngIf='!isBig') expand_more
+    mat-card-title
+      a(mat-row, [routerLink]="['/safetyteam', 'teams', team.id]") {{team.name}}
       .safety-team-flag
         img(src='/assets/img/EU.svg', *ngIf='team.inEurope' title='Team is in Europe')
         |  
         img(src='/assets/img/UK.svg', *ngIf='!team.inEurope' title='Team is in the UK')
-      md-icon([title]='getStatusName()') {{getStatusIcon()}}
-    md-card-subtitle
+      mat-icon([title]='getStatusName()') {{getStatusIcon()}}
+    mat-card-subtitle
       i {{team.getPrettyRacersList()}}
-  md-card-content
+  mat-card-content
     h3(*ngIf='isBig') Notes
     div(*ngIf='isBig')
       | {{team.notes}}
@@ -26,7 +26,7 @@ md-card(class='dashboard-card', [ngClass]='getCardClass()')
       |  at
       time-widget([time]='team.lastCheckin.byUser.timestamp')
     div(*ngIf='teamHasCheckedIn()')
-      md-progress-bar(mode='determinate',
+      mat-progress-bar(mode='determinate',
         [color]='checkinProgressBarColor()',
         [title]='checkinProgressBarTitle()',
         [value]='checkinProgressBarValue()')
@@ -59,7 +59,7 @@ md-card(class='dashboard-card', [ngClass]='getCardClass()')
             time-widget([time]='team.getLastUpdate().byUser.timestamp')
     div(*ngIf='isBig && !team.getLastUpdate()')
       b Team has no updates
-  md-card-actions(*ngIf='isBig')
-    button(md-button, (click)='goToTeamTexts()') Texts
+  mat-card-actions(*ngIf='isBig')
+    button(mat-button, (click)='goToTeamTexts()') Texts
     |  
-    button(md-button, (click)='goToTeamUpdates()') Updates
+    button(mat-button, (click)='goToTeamUpdates()') Updates

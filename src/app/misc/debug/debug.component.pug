@@ -1,29 +1,29 @@
 h1 Debug Things
 div
   h2 Send authenticated API request!
-  md-button-toggle-group(name='apiMethod', [(ngModel)]='apiRequest.method')
-    md-button-toggle(value='get') GET
-    md-button-toggle(value='post') POST
-    md-button-toggle(value='put') PUT
-    md-button-toggle(value='delete') DELETE
-  md-input-container
+  mat-button-toggle-group(name='apiMethod', [(ngModel)]='apiRequest.method')
+    mat-button-toggle(value='get') GET
+    mat-button-toggle(value='post') POST
+    mat-button-toggle(value='put') PUT
+    mat-button-toggle(value='delete') DELETE
+  mat-input-container
     input(mdInput, [(ngModel)]='apiRequest.endpoint', placeholder='Endpoint')
-  md-input-container
+  mat-input-container
     textarea(mdInput, [(ngModel)]='apiRequest.body', placeholder='Body')
-  button(md-raised-button, color='primary', (click)='makeApiCall()') Execute!
+  button(mat-raised-button, color='primary', (click)='makeApiCall()') Execute!
   div.api-response {{apiResponse}}
   h2 Email
   div
-    md-input-container
+    mat-input-container
       input(mdInput, type='email', [(ngModel)]='email.to', placeholder='To:')
-    md-input-container
+    mat-input-container
       input(mdInput, [(ngModel)]='email.subject', placeholder='Re:')
-    md-input-container
+    mat-input-container
       textarea(mdInput, [(ngModel)]='email.body', placeholder='Body:')
-    button(md-raised-button, color='primary', (click)='sendEmail()') Send
+    button(mat-raised-button, color='primary', (click)='sendEmail()') Send
   h2 Give everyone pretty colours!
-  button(md-raised-button, color='primary', (click)='loadTeams()') Load teams!
-  button(md-raised-button, color='primary', (click)='prettyColors()', [disabled]='teams') Prettify!
+  button(mat-raised-button, color='primary', (click)='loadTeams()') Load teams!
+  button(mat-raised-button, color='primary', (click)='prettyColors()', [disabled]='teams') Prettify!
   table
     thead
       tr
@@ -37,9 +37,9 @@ div
         td
           input(type='color', [(ngModel)]='team.color')
   h2 Fetch everything from twilio!
-  button(md-raised-button, color='primary', (click)='twilioFetchBegin()', [disabled]='currentlyFetchingTwilio') Start Fetch!
-  button(md-raised-button, color='primary', (click)='twilioFetchCheck()', [disabled]='!currentlyFetchingTwilio') Check Fetch!
-  button(md-raised-button, color='primary', (click)='importSelectedTexts()', [disabled]='!allTwilioTexts') Import Selected!
+  button(mat-raised-button, color='primary', (click)='twilioFetchBegin()', [disabled]='currentlyFetchingTwilio') Start Fetch!
+  button(mat-raised-button, color='primary', (click)='twilioFetchCheck()', [disabled]='!currentlyFetchingTwilio') Check Fetch!
+  button(mat-raised-button, color='primary', (click)='importSelectedTexts()', [disabled]='!allTwilioTexts') Import Selected!
   table(*ngIf='allTwilioTexts')
     tr
       th Import
@@ -49,8 +49,8 @@ div
       th Body
     tr(*ngFor='let text of allTwilioTexts')
       td
-        md-checkbox(*ngIf='!text.imported', [(ngModel)]='text.import')
-        md-icon(*ngIf='text.imported') check
+        mat-checkbox(*ngIf='!text.imported', [(ngModel)]='text.import')
+        mat-icon(*ngIf='text.imported') check
       td
         phone-widget([number]='textNumber(text.to)')
       td

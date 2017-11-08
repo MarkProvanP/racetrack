@@ -1,23 +1,23 @@
 .dashboard-container
   .filter-options
     span.filter-options-name Showing
-    md-button-toggle-group(name='show', [(ngModel)]='teamsFilterOption', (change)='onFilterUpdate()')
-      md-button-toggle(value='uk') UK
-      md-button-toggle(value='europe') Europe
-      md-button-toggle(value='all', checked) All
+    mat-button-toggle-group(name='show', [(ngModel)]='teamsFilterOption', (change)='onFilterUpdate()')
+      mat-button-toggle(value='uk') UK
+      mat-button-toggle(value='europe') Europe
+      mat-button-toggle(value='all', checked) All
     |  
     span.filter-options-name Sort by
-    md-radio-group(name='sort', [(ngModel)]='sortOption', (change)='onSortUpdate()')
-      md-radio-button([value]='sortOptions.UPDATE_TIME') Checkin Time
-      md-radio-button([value]='sortOptions.TEAM_NAME') Team Name
-      md-radio-button([value]='sortOptions.TEAM_ID') Team Number
+    mat-radio-group(name='sort', [(ngModel)]='sortOption', (change)='onSortUpdate()')
+      mat-radio-button([value]='sortOptions.UPDATE_TIME') Checkin Time
+      mat-radio-button([value]='sortOptions.TEAM_NAME') Team Name
+      mat-radio-button([value]='sortOptions.TEAM_ID') Team Number
     |  
-    button(md-icon-button, (click)='toggleOrder()')
-      md-icon(*ngIf='sortAscending', title='Switch to sort descending order') arrow_upward
-      md-icon(*ngIf='!sortAscending', title='Switch to sort in ascending order') arrow_downward
+    button(mat-icon-button, (click)='toggleOrder()')
+      mat-icon(*ngIf='sortAscending', title='Switch to sort descending order') arrow_upward
+      mat-icon(*ngIf='!sortAscending', title='Switch to sort in ascending order') arrow_downward
   .card-container
     .loading(*ngIf='loading')
-      md-progress-spinner(progress='indeterminate', color='primary')
-      md-spinner
+      mat-progress-spinner(progress='indeterminate', color='primary')
+      mat-spinner
     .status-card-container
       dashboard-card(*ngFor='let team of filteredTeams | orderBy: ordering', [team]='team')

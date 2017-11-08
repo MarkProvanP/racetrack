@@ -1,34 +1,34 @@
 .updates-by-team.master-detail
   .teams-list.master
-    md-nav-list
-      a(md-list-item, *ngFor="let team of teams | orderBy: '+id'",
+    mat-nav-list
+      a(mat-list-item, *ngFor="let team of teams | orderBy: '+id'",
       (click)='routeToTeam(team)',
       [routerLink]='getTeamLink(team)',
       routerLinkActive='selected')
-        div(md-list-avatar)
+        div(mat-list-avatar)
           h1.team-number([ngStyle]='{"background-color": team.color}') {{team.id}}
-        h3(md-line) {{team.name}}
-        p(md-line) {{team.getPrettyRacersList()}}
+        h3(mat-line) {{team.name}}
+        p(mat-line) {{team.getPrettyRacersList()}}
   .no-team-container(*ngIf='!selectedTeam')
     .inner
       h3 No team selected
   .update-list-wrapper
     .updates-list(*ngIf='selectedTeam')
-      md-card.notes-card
-        md-card-title {{selectedTeam.name}}
-        md-card-subtitle {{selectedTeam.getPrettyRacersList()}}
+      mat-card.notes-card
+        mat-card-title {{selectedTeam.name}}
+        mat-card-subtitle {{selectedTeam.getPrettyRacersList()}}
         h4 Notes
-        md-input-container.full-width
+        mat-input-container.full-width
           textarea.notes-input(mdInput, [(ngModel)]='selectedTeam.notes')
-        md-card-actions
-          button(md-button, (click)='saveNotes()') Save
+        mat-card-actions
+          button(mat-button, (click)='saveNotes()') Save
       .add-button-wrapper
-        button(*ngIf='!inCreateUpdateMode', md-fab, color='primary', (click)='createNewUpdate()')
-          md-icon.md-24 add
+        button(*ngIf='!inCreateUpdateMode', mat-fab, color='primary', (click)='createNewUpdate()')
+          mat-icon.mat-24 add
       .new-update-wrapper(*ngIf='inCreateUpdateMode')
         new-update([team]='selectedTeam', (onStatusCreated)='onUpdateCreated()')
       .update-card-wrapper(*ngFor="let update of selectedTeam.statusUpdates | orderBy: '-timestamp'")
-        md-card.update-card
+        mat-card.update-card
           .info-table
             table
               tr
@@ -40,26 +40,26 @@
                 td(*ngIf='!isEditing(update)')
                   location-widget([location]='update.location')
                 td(*ngIf='isEditing(update)')
-                  md-input-container
+                  mat-input-container
                     input.place-input(mdInput, [(ngModel)]='update.location.place')
                   location-widget([location]='update.location', showCoords='true', hidePlace='true')
               tr
                 th Status
                 td(*ngIf='!isEditing(update)')  {{update.prettyStatusName()}}
                 td(*ngIf='isEditing(update)')
-                  md-select([(ngModel)]='update.status')
-                    md-option(*ngFor='let item of statusEnum | keys', [value]='item.key') {{getPrettyStatusName(item)}}
+                  mat-select([(ngModel)]='update.status')
+                    mat-option(*ngFor='let item of statusEnum | keys', [value]='item.key') {{getPrettyStatusName(item)}}
               tr
                 th Linked texts
                 td(*ngIf='update.linkedTexts.length')
-                  button(md-button, *ngIf='!showingLinkedTextsForUpdate(update)', (click)='loadLinkedTextsForUpdate(update)') Show
+                  button(mat-button, *ngIf='!showingLinkedTextsForUpdate(update)', (click)='loadLinkedTextsForUpdate(update)') Show
                   div(*ngIf='showingLinkedTextsForUpdate(update)')
                     text-widget(*ngFor='let text of update.linkedTexts', [text]='text')
                 td(*ngIf='!update.linkedTexts.length') No linked texts!
               tr
                 th Notes
                 td
-                  md-input-container.full-width
+                  mat-input-container.full-width
                     textarea.notes-input(mdInput, [(ngModel)]='update.notes', [disabled]='!isEditing(update)')
               tr(*ngIf='update.byUser')
                 th By User
@@ -67,14 +67,14 @@
                   user-widget([user]='update.byUser.user')
                   |  at
                   time-widget([time]='update.byUser.timestamp')
-            md-checkbox([disabled]='!isEditing(update)', [(ngModel)]='update.isPublic') Is Public
+            mat-checkbox([disabled]='!isEditing(update)', [(ngModel)]='update.isPublic') Is Public
             |  
-            button(md-icon-button, *ngIf='!isEditing(update)', (click)='editUpdate(update)')
-              md-icon mode_edit
+            button(mat-icon-button, *ngIf='!isEditing(update)', (click)='editUpdate(update)')
+              mat-icon mode_edit
             |  
-            button(md-raised-button, *ngIf='isEditing(update)', (click)='resetUpdateTimestamp(update)') Reset Update Time
-            button(md-icon-button, *ngIf='isEditing(update)', (click)='saveUpdate(update)')
-              md-icon save
+            button(mat-raised-button, *ngIf='isEditing(update)', (click)='resetUpdateTimestamp(update)') Reset Update Time
+            button(mat-icon-button, *ngIf='isEditing(update)', (click)='saveUpdate(update)')
+              mat-icon save
           .location-map
             agm-map([latitude]='update.location.latitude',
               [longitude]='update.location.longitude',

@@ -1,6 +1,6 @@
-md-card.text-card.text-card-normal([ngClass]='{unread: !text.readBy}')
-  md-card-header
-    md-card-title
+mat-card.text-card.text-card-normal([ngClass]='{unread: !text.readBy}')
+  mat-card-header
+    mat-card-title
       .inline-text-title
         span
           phone-widget([number]='text.from')
@@ -9,23 +9,23 @@ md-card.text-card.text-card-normal([ngClass]='{unread: !text.readBy}')
         |  - 
         a(*ngIf='textTeam', [routerLink]="['/safetyteam', 'teams', textTeam.id]") ({{textTeam.id}}) {{textTeam.name}}
       time-widget([time]='text.timestamp')
-  md-card-content
+  mat-card-content
     .text-body  {{text.body}}
   .text-read(*ngIf='text.readBy')
     | Read by
     user-widget([user]='text.readBy.user')
     |  at
     time-widget([time]='text.readBy.timestamp')
-  md-card-actions
-    button(md-icon-button, (click)='replyToText()', [title]='"Reply to text"')
-      md-icon reply
+  mat-card-actions
+    button(mat-icon-button, (click)='replyToText()', [title]='"Reply to text"')
+      mat-icon reply
     |  
-    button(md-icon-button, (click)='markTextAsRead()', [disabled]='text.readBy', [title]='"Mark text as read"')
-      md-icon done
+    button(mat-icon-button, (click)='markTextAsRead()', [disabled]='text.readBy', [title]='"Mark text as read"')
+      mat-icon done
     |  
-    button(md-icon-button, [disabled]='!canCheckinFromText()', (click)='addCheckIn()', [title]='"Add checkin for team"')
-      md-icon update
+    button(mat-icon-button, [disabled]='!canCheckinFromText()', (click)='addCheckIn()', [title]='"Add checkin for team"')
+      mat-icon update
     |  
-    button(md-icon-button, [disabled]='!canUpdateFromText()', (click)='createUpdate()', [title]='"Create team update from this text"')
-      md-icon add
+    button(mat-icon-button, [disabled]='!canUpdateFromText()', (click)='createUpdate()', [title]='"Create team update from this text"')
+      mat-icon add
 

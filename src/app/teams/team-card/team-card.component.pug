@@ -1,18 +1,18 @@
 .team-card(*ngIf='team')
-  md-card
-    md-card-title
+  mat-card
+    mat-card-title
       h3(*ngIf='!inEditMode') {{team.name}}
-      md-input-container(*ngIf='inEditMode').full-width
+      mat-input-container(*ngIf='inEditMode').full-width
         input(mdInput, placeholder='Team name', [(ngModel)]='team.name')
-    md-card-content
-      md-slide-toggle([(ngModel)]='team.inEurope', (change)='updateTeam()') In Europe?
+    mat-card-content
+      mat-slide-toggle([(ngModel)]='team.inEurope', (change)='updateTeam()') In Europe?
       h4 Color
       input(type='color', [(ngModel)]='team.color', [disabled]='!inEditMode')
-      button(md-raised-button, (click)='randomColor()', *ngIf='inEditMode') Random
+      button(mat-raised-button, (click)='randomColor()', *ngIf='inEditMode') Random
       h4 Team number
       p {{team.id}}
       h4 Affiliation
-      md-input-container(class='full-width')
+      mat-input-container(class='full-width')
         input(mdInput, [disabled]='!inEditMode', [(ngModel)]='team.affiliation')
       h4 Checkin Status
       div(*ngIf='teamHasCheckedIn()')
@@ -22,7 +22,7 @@
         user-widget([user]='team.lastCheckin.byUser.user')
         |  at
         time-widget([time]='team.lastCheckin.byUser.timestamp')
-        md-progress-bar(mode='determinate',
+        mat-progress-bar(mode='determinate',
           [color]='checkinProgressBarColor()',
           [title]='checkinProgressBarTitle()',
           [value]='checkinProgressBarValue()')
@@ -30,54 +30,54 @@
           b {{getOverdueTime().humanize()}} overdue!
       div(*ngIf='!teamHasCheckedIn()')
         h3 Team has not checked in!
-      button(md-raised-button, color='primary', (click)='addCheckin()') Add Checkin
+      button(mat-raised-button, color='primary', (click)='addCheckin()') Add Checkin
       | 
-      button(md-raised-button, color='primary', (click)='clearCheckin()', [disabled]='!teamHasCheckedIn()') Clear Checkin
+      button(mat-raised-button, color='primary', (click)='clearCheckin()', [disabled]='!teamHasCheckedIn()') Clear Checkin
       h4 Notes
-      md-input-container(class='full-width')
+      mat-input-container(class='full-width')
         textarea(mdInput, [disabled]='!inEditMode', [(ngModel)]='team.notes')
       h4
         | Status updates 
-        button(md-mini-fab, color='accent', (click)='createNewUpdate()', *ngIf='!inNewUpdateMode')
-          md-icon.md-24 add
+        button(mat-mini-fab, color='accent', (click)='createNewUpdate()', *ngIf='!inNewUpdateMode')
+          mat-icon.mat-24 add
       .status-update-list-wrapper
-        md-list
-          md-list-item(*ngFor="let update of team.statusUpdates | orderBy: '-timestamp' ")
-            button(md-raised-button, *ngIf='inEditMode', (click)='deleteUpdate(update)') Delete
-            time-widget(md-line, [time]='update.timestamp')
-            div(md-line)
+        mat-list
+          mat-list-item(*ngFor="let update of team.statusUpdates | orderBy: '-timestamp' ")
+            button(mat-raised-button, *ngIf='inEditMode', (click)='deleteUpdate(update)') Delete
+            time-widget(mat-line, [time]='update.timestamp')
+            div(mat-line)
               span
                 i Status:
                 |  {{update.prettyStatusName()}}
               location-widget([location]='update.location')
-            div(md-line)
+            div(mat-line)
               i Notes:
               |  {{update.notes}}
       new-update([team]='team', (onstatuscreated)='onStatusCreated()', *ngIf='inNewUpdateMode')
       h4 Racers
       .team-racers-list
-        md-card(*ngFor="let racer of team.racers | orderBy: '+name' ")
-          md-card-content
+        mat-card(*ngFor="let racer of team.racers | orderBy: '+name' ")
+          mat-card-content
             a([routerLink]=" ['/safetyteam', 'racers', racer.id]") {{racer.name}}
             phone-widget([number]='racer.getPrimaryContactNumber().number')
           |  
-          button(*ngIf='inEditMode', md-icon-button, (click)='removeRacer(racer)', color='warn')
-            md-icon.md-24 delete
-        md-card(*ngIf='inAddingRacerMode')
-          md-input-container
+          button(*ngIf='inEditMode', mat-icon-button, (click)='removeRacer(racer)', color='warn')
+            mat-icon.mat-24 delete
+        mat-card(*ngIf='inAddingRacerMode')
+          mat-input-container
             input(mdInput, [(ngModel)]='addRacerFilterName', (input)='filterAddRacers()', placeholder='Racer name')
-          md-card#filter-names-list.filter-names-list
-            md-list
-              md-list-item(*ngFor='let newRacer of unteamedMatchingRacers', (click)='addSpecificRacer(newRacer)')  {{newRacer.name}}
+          mat-card#filter-names-list.filter-names-list
+            mat-list
+              mat-list-item(*ngFor='let newRacer of unteamedMatchingRacers', (click)='addSpecificRacer(newRacer)')  {{newRacer.name}}
         |  
-        button(md-mini-fab, *ngIf='inEditMode', (click)='addRacer()', color='primary', [disabled]='noUnteamedRacers()')
-          md-icon.md-24 add
+        button(mat-mini-fab, *ngIf='inEditMode', (click)='addRacer()', color='primary', [disabled]='noUnteamedRacers()')
+          mat-icon.mat-24 add
       |  
-      button(md-raised-button, color='primary', (click)='editTeam()', *ngIf='!inEditMode') Edit
+      button(mat-raised-button, color='primary', (click)='editTeam()', *ngIf='!inEditMode') Edit
       |  
-      button(md-raised-button, color='primary', (click)='saveTeam()', *ngIf='inEditMode') Finish
+      button(mat-raised-button, color='primary', (click)='saveTeam()', *ngIf='inEditMode') Finish
       |  
-      button(md-raised-button, color='warn', (click)='deleteTeam()') Delete
+      button(mat-raised-button, color='warn', (click)='deleteTeam()') Delete
       |  
-      button(md-raised-button, color='primary', (click)='goToTeamTexts(team)') See Texts
+      button(mat-raised-button, color='primary', (click)='goToTeamTexts(team)') See Texts
 

@@ -25,8 +25,8 @@
             td  {{team.getLastUpdate().location.place}}
 
   .team-sidebar
-  md-card.safety-map-guide
-    .md-card-top-padded
+  mat-card.safety-map-guide
+    .mat-card-top-padded
       h2.pane-title Safety Team Map
     .list-title
       h3 Teams
@@ -37,10 +37,10 @@
             b.team-number {{team.id}}
             | {{team.name}}
           .button((click)='moveMapToTeam(team)', [ngStyle]='{color: team.color}')
-            md-icon.small-button-icon place
+            mat-icon.small-button-icon place
           .button((click)='toggleTeamExpand(team)')
-            md-icon.small-button-icon(*ngIf='!isTeamExpanded(team)') expand_more
-            md-icon.small-button-icon(*ngIf='isTeamExpanded(team)') expand_less
+            mat-icon.small-button-icon(*ngIf='!isTeamExpanded(team)') expand_more
+            mat-icon.small-button-icon(*ngIf='isTeamExpanded(team)') expand_less
         .list-item-detail.flex-container
           .expand
             .detail-row

@@ -1,15 +1,15 @@
 .text-list-wrapper
   .filter-options
     span.filter-options-name Showing
-    md-button-toggle-group(name='show', [(ngModel)]='readFilterOption', (change)='onFilterUpdate()')
-      md-button-toggle(value='read') Read
-      md-button-toggle(value='unread') Unread
-      md-button-toggle(value='all', checked) All
+    mat-button-toggle-group(name='show', [(ngModel)]='readFilterOption', (change)='onFilterUpdate()')
+      mat-button-toggle(value='read') Read
+      mat-button-toggle(value='unread') Unread
+      mat-button-toggle(value='all', checked) All
   .no-texts-to-show(*ngIf='!displayedTexts.length')
     i No texts to show!
   .texts-list(*ngIf='displayedTexts.length')
     div(*ngIf='textsBeforeFirst')
-      button(md-raised-button, color='primary', (click)='showMoreBefore()') Show more
+      button(mat-raised-button, color='primary', (click)='showMoreBefore()') Show more
       |  of {{textsBeforeFirst}} previous texts
     .text-card-wrapper(*ngFor='let text of displayedTexts')
       .text-send-wrapper(*ngIf='inTextSendMode && text == selectedText')
@@ -49,5 +49,5 @@
           [text]='text',
           (onStatusCreated)='onStatusCreated()')
     div(*ngIf='textsAfterLast')
-      button(md-raised-button, color='primary', (click)='showMoreAfter()') Show more
+      button(mat-raised-button, color='primary', (click)='showMoreAfter()') Show more
       |  of {{textsAfterLast}} remaining texts

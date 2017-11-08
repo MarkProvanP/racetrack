@@ -1,41 +1,41 @@
 .mass-text-wrapper(*ngIf='ready')
-  md-card.mass-text-component(*ngIf='!currentEvent || isSending')
-    md-card-title  Mass Text
-    md-card-content
+  mat-card.mass-text-component(*ngIf='!currentEvent || isSending')
+    mat-card-title  Mass Text
+    mat-card-content
       .response-safeword
         label Keyword
-        md-input-container
+        mat-input-container
           input(mdInput, [(ngModel)]='newMassTextKeyword')
       .response-timeout
         label Reply time (mins)
         |  
         label 0
-        md-slider(min='1', max='60', tickinterval='auto', thumblabel, [(ngModel)]='newMassTextTimeout')
+        mat-slider(min='1', max='60', tickinterval='auto', thumblabel, [(ngModel)]='newMassTextTimeout')
         |  
         label 60
       .message-body
         label Message body
-        md-input-container
+        mat-input-container
           textarea(mdInput, [(ngModel)]='newMassTextBody')
       .message-preview
         b Message preview:
         |  
         i {{getMessagePreview()}}
-    md-card-actions
-      md-checkbox([(ngModel)]='confirmSend') Confirm sending
+    mat-card-actions
+      mat-checkbox([(ngModel)]='confirmSend') Confirm sending
       |  
-      button(md-raised-button, color='primary', [disabled]='!confirmSend', (click)='massSend()') Mass send
-    md-progress-bar(mode='determinate', *ngIf='isSending', value='getProgressBarValue()')
-  md-card.mass-text-component(*ngIf='currentEvent && !isSending')
-    md-card-title  Sent Text
-    md-card-content
+      button(mat-raised-button, color='primary', [disabled]='!confirmSend', (click)='massSend()') Mass send
+    mat-progress-bar(mode='determinate', *ngIf='isSending', value='getProgressBarValue()')
+  mat-card.mass-text-component(*ngIf='currentEvent && !isSending')
+    mat-card-title  Sent Text
+    mat-card-content
       .message-preview
         i {{getSentMessage()}}
-    md-card-actions
-      button(md-raised-button, color='warn', (click)='endMassTextEvent()') Mark as Complete
-  md-card.mass-text-component(*ngIf='currentEvent')
-    md-card-title  Responses
-    md-card-content
+    mat-card-actions
+      button(mat-raised-button, color='warn', (click)='endMassTextEvent()') Mark as Complete
+  mat-card.mass-text-component(*ngIf='currentEvent')
+    mat-card-title  Responses
+    mat-card-content
       .response-table
       table.response-table
         thead
@@ -55,8 +55,8 @@
               time-widget([time]='getTextResponseTimeForRacer(racer)')
             td {{getTextResponseTextForRacer(racer)}}
   h3.mass-text-component Previous Mass Texts
-  md-card.old-mass-texts.mass-text-component(*ngFor='let oldMassText of oldMassTexts')
-    md-card-content
+  mat-card.old-mass-texts.mass-text-component(*ngFor='let oldMassText of oldMassTexts')
+    mat-card-content
       table
         tr
           th Started by

@@ -1,5 +1,5 @@
-nav(md-tab-nav-bar)
-  a(md-tab-link,
+nav(mat-tab-nav-bar)
+  a(mat-tab-link,
     *ngFor='let tabLink of tabs; let i = index',
     [routerLink]=" ['/safetyteam', 'texts', tabLink.link] ",
     [active]='activeLinkIndex === i',
